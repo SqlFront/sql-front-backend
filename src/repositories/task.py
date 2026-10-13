@@ -197,8 +197,10 @@ class TaskRepository:
         scoring_service = ScoringService(self.session)
         user_repo = UserRepository(self.session)
         user = await user_repo.get_user_by_id(user_id)
+        user_current_score = (user.total_score if user and user.total_score is not None else 0)
         user_progress = await user_repo.get_user_progress_by_id(user_id)
 
+        actual_penalty = 0
         if is_correct:
             if not already_solved:
                 points_earned = self._get_base_points(mission_id)
@@ -220,7 +222,7 @@ class TaskRepository:
         else:
             if not already_solved:
                 points_penalty = int(self._get_base_points(mission_id) * 0.1)
-                actual_penalty = min(points_penalty, user.total_score if user else 0)
+                actual_penalty = min(points_penalty, user_current_score)
                 await scoring_service.deduct_points(user_id, actual_penalty)
                 if actual_penalty > 0:
                     message = f"Ответ неверный! Списано {actual_penalty} баллов"
@@ -236,11 +238,12 @@ class TaskRepository:
                 user_id=user_id, task_tags=tags
             )
 
-        current_points = user.total_score if user and user.total_score is not None else 0
         if is_correct and not already_solved:
-            current_points += points_earned
+            final_points = user_current_score + points_earned
         elif not is_correct and not already_solved:
-            current_points = max(0, current_points - actual_penalty)
+            final_points = max(0, user_current_score - actual_penalty)
+        else:
+            final_points = user_current_score
 
         await self.session.commit()
 
@@ -250,7 +253,7 @@ class TaskRepository:
             "points_penalty": points_penalty,
             "message": message,
             "awarded_achievements": awarded_achievements,
-            "current_points": current_points,
+            "current_points": final_points,
         }
 
     async def purchase_clue(
