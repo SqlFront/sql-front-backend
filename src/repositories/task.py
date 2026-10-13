@@ -236,6 +236,12 @@ class TaskRepository:
                 user_id=user_id, task_tags=tags
             )
 
+        current_points = user.total_score if user and user.total_score is not None else 0
+        if is_correct and not already_solved:
+            current_points += points_earned
+        elif not is_correct and not already_solved:
+            current_points = max(0, current_points - actual_penalty)
+
         await self.session.commit()
 
         return {
@@ -244,7 +250,7 @@ class TaskRepository:
             "points_penalty": points_penalty,
             "message": message,
             "awarded_achievements": awarded_achievements,
-            "current_points": user.total_score if user else 0,
+            "current_points": current_points,
         }
 
     async def purchase_clue(
