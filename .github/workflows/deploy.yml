@@ -5,6 +5,13 @@ on:
     branches:
       - main
       - master
+  workflow_dispatch:
+    inputs:
+      reload_db:
+        description: 'Reload users_db from /backups/users_db.sql'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   deploy:
@@ -30,3 +37,36 @@ jobs:
           echo "Rebuilding and restarting containers..."
           docker compose down || docker-compose down
           docker compose up -d --build || docker-compose up -d --build
+          
+          echo "Waiting 10 seconds for services to initialize..."
+          sleep 10
+          
+          # Check if DB reload requested via commit message [reload-db] or workflow dispatch
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          if echo "$COMMIT_MSG" | grep -qi "\[reload-db\]" || [ "${{ github.event.inputs.reload_db }}" = "true" ]; then
+            echo "=========================================================="
+            echo "=== [reload-db] detected: reloading users_db from dump ==="
+            echo "=========================================================="
+            docker compose exec -T postgres psql -U postgres -c "DROP DATABASE IF EXISTS users_db WITH (FORCE);"
+            docker compose exec -T postgres psql -U postgres -c "CREATE DATABASE users_db;"
+            docker compose exec -T postgres psql -U postgres -d users_db -c "CREATE EXTENSION IF NOT EXISTS timescaledb;"
+            docker compose exec -T postgres psql -U postgres -d users_db -f /backups/users_db.sql
+            echo "Restarting backend to apply migrations..."
+            docker compose restart backend
+            sleep 5
+          fi
+          
+          echo "=========================================================="
+          echo "=== Container Status ==="
+          echo "=========================================================="
+          docker compose ps
+          
+          echo "=========================================================="
+          echo "=== Backend Startup & Migration Logs ==="
+          echo "=========================================================="
+          docker compose logs --tail 100 backend
+          
+          echo "=========================================================="
+          echo "=== Postgres Logs ==="
+          echo "=========================================================="
+          docker compose logs --tail 50 postgres
