@@ -1,12 +1,7 @@
-pg_dump: warning: there are circular foreign-key constraints on this table:
-pg_dump: detail: continuous_agg
-pg_dump: hint: You might not be able to restore the dump without using --disable-triggers or temporarily dropping the constraints.
-pg_dump: hint: Consider using a full dump instead of a --data-only dump to avoid this problem.
 --
 -- PostgreSQL database dump
 --
 
-\restrict 5RS1sKmB7uxBQBQrM6zOEsOByD83KHxdajZfKj40p8voL21baEJux75e1HERliR
 
 -- Dumped from database version 15.18
 -- Dumped by pg_dump version 15.18
@@ -56,53 +51,9 @@ CREATE TABLE public.user_events (
 
 ALTER TABLE public.user_events OWNER TO postgres;
 
---
--- Name: _hyper_1_1_chunk; Type: TABLE; Schema: _timescaledb_internal; Owner: postgres
---
 
-CREATE TABLE _timescaledb_internal._hyper_1_1_chunk (
-    CONSTRAINT constraint_1 CHECK ((("timestamp" >= '2026-09-03 00:00:00+00'::timestamp with time zone) AND ("timestamp" < '2026-09-10 00:00:00+00'::timestamp with time zone)))
-)
-INHERITS (public.user_events);
+SELECT public.create_hypertable('public.user_events', 'timestamp', if_not_exists => TRUE);
 
-
-ALTER TABLE _timescaledb_internal._hyper_1_1_chunk OWNER TO postgres;
-
---
--- Name: _hyper_1_2_chunk; Type: TABLE; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE TABLE _timescaledb_internal._hyper_1_2_chunk (
-    CONSTRAINT constraint_2 CHECK ((("timestamp" >= '2026-09-10 00:00:00+00'::timestamp with time zone) AND ("timestamp" < '2026-09-17 00:00:00+00'::timestamp with time zone)))
-)
-INHERITS (public.user_events);
-
-
-ALTER TABLE _timescaledb_internal._hyper_1_2_chunk OWNER TO postgres;
-
---
--- Name: _hyper_1_3_chunk; Type: TABLE; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE TABLE _timescaledb_internal._hyper_1_3_chunk (
-    CONSTRAINT constraint_3 CHECK ((("timestamp" >= '2026-09-17 00:00:00+00'::timestamp with time zone) AND ("timestamp" < '2026-09-24 00:00:00+00'::timestamp with time zone)))
-)
-INHERITS (public.user_events);
-
-
-ALTER TABLE _timescaledb_internal._hyper_1_3_chunk OWNER TO postgres;
-
---
--- Name: _hyper_1_4_chunk; Type: TABLE; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE TABLE _timescaledb_internal._hyper_1_4_chunk (
-    CONSTRAINT constraint_4 CHECK ((("timestamp" >= '2026-09-24 00:00:00+00'::timestamp with time zone) AND ("timestamp" < '2026-10-01 00:00:00+00'::timestamp with time zone)))
-)
-INHERITS (public.user_events);
-
-
-ALTER TABLE _timescaledb_internal._hyper_1_4_chunk OWNER TO postgres;
 
 --
 -- Name: achievements_achievement_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -327,258 +278,2159 @@ CREATE TABLE public.users_quest (
 ALTER TABLE public.users_quest OWNER TO postgres;
 
 --
--- Name: _hyper_1_1_chunk id; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_1_chunk ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
-
-
---
--- Name: _hyper_1_1_chunk timestamp; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_1_chunk ALTER COLUMN "timestamp" SET DEFAULT now();
-
-
---
--- Name: _hyper_1_1_chunk payload; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_1_chunk ALTER COLUMN payload SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: _hyper_1_2_chunk id; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_2_chunk ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
-
-
---
--- Name: _hyper_1_2_chunk timestamp; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_2_chunk ALTER COLUMN "timestamp" SET DEFAULT now();
-
-
---
--- Name: _hyper_1_2_chunk payload; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_2_chunk ALTER COLUMN payload SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: _hyper_1_3_chunk id; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_3_chunk ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
-
-
---
--- Name: _hyper_1_3_chunk timestamp; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_3_chunk ALTER COLUMN "timestamp" SET DEFAULT now();
-
-
---
--- Name: _hyper_1_3_chunk payload; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_3_chunk ALTER COLUMN payload SET DEFAULT '{}'::jsonb;
-
-
---
--- Name: _hyper_1_4_chunk id; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_4_chunk ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
-
-
---
--- Name: _hyper_1_4_chunk timestamp; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_4_chunk ALTER COLUMN "timestamp" SET DEFAULT now();
-
-
---
--- Name: _hyper_1_4_chunk payload; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_4_chunk ALTER COLUMN payload SET DEFAULT '{}'::jsonb;
-
-
---
 -- Name: user_events id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.user_events ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
+ALTER TABLE public.user_events ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
 
 
 --
--- Data for Name: hypertable; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+-- Data for Name: achievements; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY _timescaledb_catalog.hypertable (id, schema_name, table_name, associated_schema_name, associated_table_prefix, num_dimensions, chunk_sizing_func_schema, chunk_sizing_func_name, chunk_target_size, compression_state, compressed_hypertable_id, status) FROM stdin;
-1	public	user_events	_timescaledb_internal	_hyper_1	1	_timescaledb_functions	calculate_chunk_interval	0	0	\N	0
+COPY public.achievements (achievement_id, category_name, icon, name, description, historical_info, tag, required_count) FROM stdin;
+6	Техническое мастерство	🧩	CTE Специалист	Решить 3 задачи с использованием рекурсивных CTE	Рекурсивные операции, как партизанские сети, требуют глубокого планирования	cte	3
+3	Боевые достижения	🗺	Опытный командир	Решить 20 задач нормальной сложности	Как командующие фронтами, вы учитесь принимать решения под давлением	medium	20
+8	Исторические подвиги	🏆	Блокадный Ленинград	Решить 5 задач на логистику и распределение ресурсов	125 граммов хлеба в день — так жил Ленинград. Ваши расчеты спасают жизни!	supply	5
+5	Техническое мастерство	🔍	Мастер оконных функций	Использовать RANK(), LAG(), и SUM() OVER() в 5 разных задачах	Анализ данных — это современная артиллерия. Точный расчет решает исход битвы!	window	5
+7	Исторические подвиги	🏙	Защитник Сталинграда	Решить все задачи, связанные со Сталинградской битвой	200 дней мужества. Вы защитили город, как это делали герои 1943 года!	stalingrad	5
+1	Боевые достижения	🎖	Первая кровь	Решить первую задачу любого уровня	Первый шаг к победе - самый важный. Так начинался путь многих героев ВОВ	first_any_level	1
+10	Боевые достижения	📈	Стратег Победы	Решить 10 задач, связанных с анализом эффективности военных операций	Великие полководцы, как Жуков и Рокоссовский, строили победы на точных расчётах. Теперь и ваш анализ ведёт к успеху!	efficiency	10
+4	Боевые достижения	🏅	Ветеран SQL-фронта	Решить 15 сложных задач	Сложные миссии требуют мастерства. Вы достойны звания ветерана!	hard	15
+2	Боевые достижения	📜	Стратег-новичок	Решить 10 легких задач	В 1941 году советские солдаты учились воевать в тяжелейших условиях. Ты на верном пути!	easy	10
+9	Исторические подвиги	🚩	Освободитель Берлина	Завершить все миссии финального этапа войны	Знамя Победы над Рейхстагом — ваш код водружает его снова!	final	15
 \.
 
 
 --
--- Data for Name: bgw_job; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+-- Data for Name: password_hashes; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY _timescaledb_catalog.bgw_job (id, application_name, schedule_interval, max_runtime, max_retries, retry_period, proc_schema, proc_name, owner, scheduled, fixed_schedule, initial_start, hypertable_id, config, check_schema, check_name, timezone) FROM stdin;
+COPY public.password_hashes (user_id, password_hash) FROM stdin;
+1	$2b$12$cnMS3rEBgZVT8tKYwBlOwOmSbp7MHcA32LHD84irB9pYAlo9fcUcK
+2	$2b$12$e6elfqyCGMA9ucTtzjsYU.KZhnFjRFxrj3D/9BBMqrwpyOBgBgSnC
+3	$2b$12$ZZaLXfG9vsCsDeIjqWT6fuC4zl5UcWK668dy8FxiGtVOA4dhDeHWC
+4	$2b$12$ZCdyF41r6Hi4FvPCGXgoau367FPGiBoIfAwPd8d4NiAYMnloS4kDW
+5	$2b$12$5qwtZEoHl3368Pll/Q0NiOXwZfidStzlQ3mxMlIfeHotog2CX0owS
+6	$2b$12$kNhCNUiXsAkiOglvhbV5Ueuliq4KF1G.xedgHwWfsb08kCNyzvnBu
+7	$2b$12$FCitfRhbZWIll/aynrNeF.X/2qdeyQJ5pZeC7U/qDkCPVFVjBjfgy
+8	$2b$12$PkgyI5qWzXoswdlGGrWCh.NcxiEx8zyEspH0Vy.rA0AcLE6r1mATK
+9	$2b$12$2OPTyD3jawUhc.8n6pNJNOeeMDidOMZ7dtYJU/wdEDplkm10SZItG
+10	$2b$12$l2AXW9WgI5hvnsSKVTiawuriRq/avLxWmJmM0kYLbhK2BDbbbl91q
+11	$2b$12$SK6llI73AOqAiM7tgzvTFeLSHsIJSipvPHS.CjslZvJikUCbCUSMG
+12	$2b$12$JVe2tLIbNLt3lmXsmuUaSes0HDswx4EM/tSZ.ONjN6vMye32iZyay
+13	$2b$12$NYFTis8hjWXeqkZjZH8QsebJJZ4Htt6POKT0.2mDXwsOEHyl2Akg2
+14	$2b$12$KocSStb2d8ZV2GoTOF1pMeUJK1ZjEcPYfRh6l0LydR02j/LX1.5le
+15	$2b$12$yr3B29IpMMXAcXBbJbfLBu.cHeqy5r5IQyjLxp2soGv8atGwuqoma
+16	$2b$12$8iOJ/MeLJ03qKEmIkaj5refuUTkijEXCFoSOXIvVr.2.hCJk8SET6
+17	$2b$12$k97uI9eZCDhwwn99oD5XU.G/GAVDi.ikLXX/..E2z/Ds1RSJ2YPi6
+18	$2b$12$1e70ndzl56wCqpkuvqprE.5Q8K4MkLADFF9p9cMN1r.Li1DPrLSia
+19	$2b$12$BPNmsnYie8jNoIZnPusUrOmLLf3JMScAnQS0D/sE0lOBUr3BiuXW2
+20	$2b$12$4s0VEVwzdDMoPLG2Ci/d6uJs7qVeAdMVf1FH1eTCh/NMXZcxAgXrO
+21	$2b$12$BaHZ7wG1uRlRCYcHhuGpfObNhgBf5GY5Cv1Do4mPNx1yLCebIgI7C
+22	$2b$12$dYN.qinxYCxvwACcMcPXWutBg4bgYGpVizTqmbVyMeXa5QDWXhHTS
+23	$2b$12$GfN9aKugktv6CDEjZU4K8.OdW7WMtZpldGe4A1XhFLQ6r4M7lGQHK
+24	$2b$12$k7KZwbCq0QRUqVJep/XdRO58IAexEkxtJmi/VxwKtyle3TY1ly0Ny
+25	$2b$12$.U3gt7Cgt/HLnqBQrJUymOnEJpK6Tj.zVVc1L/p7E2VOT5KLUSI6C
+26	$2b$12$434ZTWFAP3J.8.OygXbYe.mu9X0LoXgboyvK9wl/X.nizTisxrt1S
+27	$2b$12$adXLiKN91GlzfFCvWrilO.k1Khu4AtS2EKgDDljwOFc2tnrAaOY1a
+28	$2b$12$EDBzqEAYdDQy.QwzZl9RZeLfpFn6eBwuPRW/B3ZMNZs.GpHHN44W.
+29	$2b$12$7RYzy35PTmLCl6CQ8oLNiuoScgSOgmXuKbwplt7d2ZxJUDT.Gk0Vu
+30	$2b$12$S24IXgaHm6fzltwoWSy.seznNSbDh1iR9sU9SDa3WxtTMt8s/Y9jC
+31	$2b$12$F6VXjHbowpuJ2WdbsRm9bOFWJZ4tUb6TP1.6OVBoX2UZeDMIdvZae
+32	$2b$12$Yvl/mtIGzBd7goCB.agUk.yThMqVRXOMmzPWkKeAKU9LUNIQScFpu
+33	$2b$12$b9rv0M1ouBM02TT2eQlEMOg1Eh8v4xiTHu2eiHkfMgUYIzvf/axX.
+34	$2b$12$ASKaNCHIeHVQo5W9H8DBhufm2W/2fa22gdVdj.LKZP2nu1Pyj70z.
+35	$2b$12$j8DrdQqCtSWVFG6XoObX8u1URprCIwPn5ISilVMIByzwmQD8k51Ea
+36	$2b$12$nUbBAr9e9L4Q21ZAdH.b9O2Ap0jegjWpNwo3tHGvXjYpRQGq4EVTC
+37	$2b$12$Rbu5o5yNgWRwRbGMawZwlOckWSOTNFgVttVKSaEFuug9EpS/m1rOS
+38	$2b$12$fU1RDJ41vGdj6p1fr1AaRuaWWuUkiCbWWBCJCjorVNQbS0rvh9Bna
+39	$2b$12$qz7D/yFYSZwlGLbQPHgUd.0Yh5gyKeMv3oE9YRMtmz/8vSrYYUOjG
+40	$2b$12$zNR5kgmAd3VbzTgdX3qog.qBFKz5x2I/TbrdIJnMsYXOOzzR4g5IK
+41	$2b$12$Bz0xE1j92kmfFkMOz6kecOx5C1XwEBzyIHH4AGdeO/SphiE9oXH1S
+42	$2b$12$PxNK/ca4gYjVYE4fDL2Jl.XTdrozClad5/HfJYbagTDaFGVmfCe7W
+43	$2b$12$fpkf5ZXssLYZHKGOJcVd8.4pRGefq4upkSR1g2yBdOXxRlpKBXaUi
+44	$2b$12$hWWVagALwEKzVHxthfkth.y0Ef1Dxown2vFAJ22H5e5Ed0L0D2bi.
+45	$2b$12$Xoa.W4w6YFglGhYYGh/DauIXgLMYG62AVNJ1sk67aQOAQULDuNT.u
+46	$2b$12$LLplPZYabI/P2EGqcQMHf.AUqBz6/jd533e6cIZq3xUNe/zh0btkO
+47	$2b$12$VwFkzIeBmA1kTnxwAwHJmelbZQNgaKxN14MOykmXeJOFxVJ2zGjeO
+48	$2b$12$gt7TmM6trtujPCLxiaVvbOfoC6IohhvTl6wrCpA2TuBTPYN6iVHEa
+49	$2b$12$8gtKg1kP2UJHkKonLvNaruQoWYSzxy5hBPQOlqVjBIWueF5OvdIJm
+50	$2b$12$4Ch.ljrCElSXVebPA.Qg6O7ufGd5SeNcqYvIrPFX2D.FxZV1LNkMW
+51	$2b$12$Z19spu0VfWD5oPE.Kj7k7uzuqCbLX5.4ucYn4/LYGDczZ8oNvGX3O
+52	$2b$12$AM0B7DSVVfRlzRcuSPl18exW3rD7MJtFL02ftSV35YbGlc5fjYHNm
+53	$2b$12$CegH44N8pUy/ndUtOmhs.OS5lptTYRZBTtAjqt27pC6msBLjYkZ.y
+55	$2b$12$8pZiGHw2jJQyJ71OhKnMF.DfN5dSXuw2LclrRB/OCeWBHdf.yey8S
+62	$2b$12$MH8Asdey/y3sT9gAqn7b/.1zgWk5.i3u2AiMjgz9vMjaaGSvnQOyC
+63	$2b$12$le9XD/o5qNLz8yUvGLAvnuhP/pfGmgxjsAbU7s2ApV1s/i9nLiXnO
+64	$2b$12$rCre6rmSI.Vei8weSMuvO.CbsQxRhhJYC2VHzGg0ec6tzDAQa2TqC
+65	$2b$12$W0LD5P69paPPFu4Eg.lkN.qYxa/zPyf8J3/j/OK3MQM4fCiomu4H.
+66	$2b$12$yGHwe3Wy4Z6a1TQWVDttPOVCahM8Ngi58IrJXXOyNcTKSE8uznLxG
+67	$2b$12$T.m1DE0GwhpL6XuoEAhzs.BQpK2UAIw2ve3yDoXY29mshw7GKdCr6
+68	$2b$12$vfHWpuci1Wt2ylKHOyJRfuy38tXwFuRIS/QmhP3xLxb4TnZ1dyNsi
+69	$2b$12$58oBekv88XnRmO3NxfGsT.aFePEclLbwikJvpn.fqAS00GBQXfsjW
+70	$2b$12$8eSBNLWzcDo.P0jJNrns/u47vEOYuWz3eAxpUBuIcAgm154kQuyQm
+71	$2b$12$JfdlREZwYLoePuJN7g62c./.JWc8yEzCYsd2aLUkS7YIGPbCGN6ty
+72	$2b$12$n2zdTFoFIAgcnt5Bc0LheuQ7vkTlC4q3ZL1nukpqD.CyT9KPsD06a
+73	$2b$12$cNXv.LZD5g4YQzCFis7JK.ECvSaOc4bSlCdm5KJoZm4946l8Mg1X.
+74	$2b$12$KTnPcf079gfYyMcIjpPlbeweZwzOaGat.aZEPB8DojbGKXw1ZoDd.
+75	$2b$12$x0aHjLk9fPCvIw5ojzEks.WY.kBjDY9fDxNmbmRlbGy.rROIoA5u6
+76	$2b$12$JigEOBJ9ECCXLZvVbaYnZuLlxvXCGIybXezTumu7Ddb4Ok/84j1Om
+77	$2b$12$DBeVhoyzq2azHcBoy8VR5.QSKEjARSGDU4iL3/5K1Xa.QUvB1RM56
+78	$2b$12$902oiIEsDuPv0TgzK.o6uemb51SifCc4UQOHYTKKsgiF/x5bnfcAy
+79	$2b$12$KjIiqW65rQvIZkx/JRVEyeIzkNCME4ieZkHAODCAEO5DMB0nP30cq
+80	$2b$12$jBsfxsNxVO4Ez1h4Md6Mp.vGwSYNXGLF/KaZiaao5EQK3FRR0088m
+81	$2b$12$HObYCiJRKVYl5YNiD0.dnO4xNPV9IeTdGqc2rN7158Gy1yEpO2mKm
+132	$2b$12$zhTtN7THJ5qgHjQeddqlyO1jxjna/rwzml1RiqM5Gg3cbehsEva0K
 \.
 
 
 --
--- Data for Name: chunk; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+-- Data for Name: tasks; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY _timescaledb_catalog.chunk (id, hypertable_id, schema_name, table_name, compressed_chunk_id, status, osm_chunk, creation_time) FROM stdin;
-1	1	_timescaledb_internal	_hyper_1_1_chunk	\N	0	f	2026-09-04 15:14:49.951092+00
-2	1	_timescaledb_internal	_hyper_1_2_chunk	\N	0	f	2026-09-10 00:09:49.824633+00
-3	1	_timescaledb_internal	_hyper_1_3_chunk	\N	0	f	2026-09-17 06:01:15.600328+00
-4	1	_timescaledb_internal	_hyper_1_4_chunk	\N	0	f	2026-09-24 09:59:34.246521+00
+INSERT INTO public.tasks VALUES (1, 0, 1, 'Архив личного состава', 'Составьте список всех военнослужащих с указанием их полных имен и годов рождения. Это необходимо для анализа возрастного состава армии и планирования ресурсов', 'Используйте таблицу `soldier`, выбрав два ключевых столбца.', NULL, '{"data": [["Иванов Алексей Петрович", 1923], ["Смирнова Анна Васильевна", 1925], ["Петров Дмитрий Иванович", 1918], ["Козлов Николай Семёнович", 1920], ["Фёдорова Мария Ивановна", 1922], ["Жуков Андрей Григорьевич", 1915], ["Павлов Яков Фёдорович", 1917], ["Зайцева Людмила Михайловна", 1924], ["Громов Михаил Сергеевич", 1919], ["Орлова Вера Павловна", 1921], ["Новиков Александр Иванович", 1924], ["Васнецова Татьяна Дмитриевна", 1923], ["Кузнецов Пётр Васильевич", 1916], ["Белов Алексей Николаевич", 1925], ["Соколова Ольга Ивановна", 1920], ["Морозов Иван Кузьмич", 1914], ["Волкова Елена Сергеевна", 1926], ["Ткаченко Григорий Петрович", 1927], ["Беляев Павел Дмитриевич", 1912], ["Семёнова Валентина Михайловна", 1920], ["Ковалёв Сергей Николаевич", 1925], ["Мельникова Галина Ивановна", 1924], ["Фёдоров Игорь Васильевич", 1913], ["Горбачёв Алексей Дмитриевич", 1926], ["Сидорова Екатерина Петровна", 1921], ["Смирнов Василий Иванович", 1911], ["Крылова Надежда Фёдоровна", 1925], ["Орлов Денис Сергеевич", 1927], ["Жукова Елена Викторовна", 1923], ["Гришин Алексей Петрович", 1918], ["Ткаченко Иван Григорьевич", 1920], ["Воронцова Лидия Павловна", 1924], ["Жуковский Виктор Михайлович", 1915], ["Морозова Анна Сергеевна", 1922], ["Кузнецов Артём Игоревич", 1926], ["Соколовская Надежда Викторовна", 1923], ["Белов Дмитрий Николаевич", 1917], ["Громова Екатерина Ивановна", 1925], ["Фролов Павел Сергеевич", 1928], ["Ковалёва Ольга Дмитриевна", 1921]], "columns": ["full_name", "birth_year"], "row_count": 40}', '{first_any_level,supply,easy}');
+INSERT INTO public.tasks VALUES (2, 0, 2, 'География сражений', 'Определите все боевые операции, проведенные в Сталинграде. Результаты помогут оценить стратегическую значимость этого региона', 'Фильтрация по локации в таблице `battles` с использованием точного значения', NULL, '{"data": [["Сталинградская битва"]], "columns": ["battle_name"], "row_count": 1}', '{stalingrad,easy}');
+INSERT INTO public.tasks VALUES (4, 0, 3, 'Оптимизация численности', 'Найдите количество подразделений, где численность личного состава людей не превышает 500 человек. Вычисленный столбец назовите answer. Это критично для перераспределения сил между частями', 'Используйте вложенный запрос с группировкой и агрегатной функцией для подсчета солдат', NULL, '{"data": [[29]], "columns": ["answer"], "row_count": 1}', '{easy}');
+INSERT INTO public.tasks VALUES (5, 0, 4, 'Хроники войны', 'Выведите список всех сражений с их названиями, датами начала и окончания и местоположениями, отсортированный в хронологическом порядке по дате начала. Это ключ к пониманию этапов войны. Примечание: в результате допустимо дублирование данных.', 'Сортировка по дате в таблице `battle` с указанием направления', NULL, '{"data": [["Оборона Брестской крепости", "1941-06-22", "1941-06-29", "Брест"], ["Оборона Брестской крепости", "1941-06-22", "1941-06-29", "Брест"], ["Оборона Заполярья", "1941-06-29", "1944-10-01", "Мурманск"], ["Смоленское сражение", "1941-07-10", "1941-09-10", "Смоленск"], ["Таллинский переход", "1941-08-27", "1941-08-30", "Балтийское море"], ["Блокада Ленинграда", "1941-09-08", "1944-01-27", "Ленинград"], ["Битва за Москву", "1941-09-30", "1942-04-20", "Москва"], ["Оборона Тулы", "1941-10-24", "1941-12-05", "Тула"], ["Оборона Севастополя", "1941-10-30", "1942-07-04", "Севастополь"], ["Ржевская битва", "1942-01-08", "1943-03-31", "Ржев"], ["Демянская операция", "1942-02-20", "1942-05-20", "Новгородская обл."], ["Харьковская операция", "1942-05-12", "1942-05-28", "Харьков"], ["Битва за Воронеж", "1942-06-28", "1943-01-25", "Воронеж"], ["Сталинградская битва", "1942-07-17", "1943-02-02", "Сталинград"], ["Битва за Кавказ", "1942-07-25", "1943-10-09", "Кавказ"], ["Прорыв блокады Ленинграда", "1943-01-12", "1943-01-30", "Ленинград"], ["Курская битва", "1943-07-05", "1943-08-23", "Курск"], ["Битва за Днепр", "1943-08-26", "1943-12-23", "Днепр"], ["Керченско-Эльтигенская операция", "1943-10-31", "1943-12-11", "Керчь"], ["Корсунь-Шевченковская операция", "1944-01-24", "1944-02-17", "Украина"], ["Операция \"Багратион\"", "1944-06-23", "1944-08-29", "Белоруссия"], ["Битва при Дебрецене", "1944-10-06", "1944-10-29", "Венгрия"], ["Будапештская операция", "1944-10-29", "1945-02-13", "Венгрия"], ["Висло-Одерская операция", "1945-01-12", "1945-02-03", "Польша"], ["Восточно-Прусская операция", "1945-01-13", "1945-04-25", "Кёнигсберг"], ["Балатонская операция", "1945-03-06", "1945-03-15", "Венгрия"], ["Берлинская операция", "1945-04-16", "1945-05-08", "Берлин"], ["Битва за Берлин", "1945-04-16", "1945-05-08", "Берлин"], ["Пражская операция", "1945-05-06", "1945-05-11", "Прага"], ["Маньчжурская операция", "1945-08-09", "1945-09-02", "Маньчжурия"]], "columns": ["battle_name", "start_date", "end_date", "location"], "row_count": 30}', '{easy}');
+INSERT INTO public.tasks VALUES (6, 0, 5, 'Галерея героев', 'Создайте список солдат и наград, которые они получили. Это основа для формирования мемориальных архивов', 'Объединение трех таблиц: `soldier`, `soldier_medal` и `medal` через INNER JOIN', NULL, '{"data": [["Павлов Яков Фёдорович", "Герой Советского Союза"], ["Зайцева Людмила Михайловна", "Медаль \"За отвагу\""], ["Жуков Андрей Григорьевич", "Орден Красной Звезды"], ["Громов Михаил Сергеевич", "Орден Отечественной войны"], ["Орлова Вера Павловна", "Орден Славы"], ["Новиков Александр Иванович", "Орден Красной Звезды"], ["Васнецова Татьяна Дмитриевна", "Медаль \"Партизану Отечественной войны\""], ["Кузнецов Пётр Васильевич", "Герой Советского Союза"], ["Белов Алексей Николаевич", "Медаль \"За оборону Сталинграда\""], ["Соколова Ольга Ивановна", "Медаль \"За оборону Москвы\""], ["Иванов Алексей Петрович", "Медаль \"За отвагу\""], ["Смирнова Анна Васильевна", "Орден Отечественной войны"], ["Петров Дмитрий Иванович", "Медаль \"За взятие Берлина\""]], "columns": ["full_name", "medal_name"], "row_count": 13}', '{easy}');
+INSERT INTO public.tasks VALUES (7, 0, 6, 'Семейная история', 'Выявите всех солдат с фамилией, начинающейся на «Иванов». Возможно, это представители одной семьи', 'Используйте оператор `LIKE` с шаблоном для поиска по началу строки', NULL, '{"data": [["Иванов Алексей Петрович"]], "columns": ["full_name"], "row_count": 1}', '{easy}');
+INSERT INTO public.tasks VALUES (8, 0, 7, 'Элитные подразделения', 'Найдите все воинские части(подразделения), в названии которых встречается слово «гвардейская» (в любом регистре). Такие части часто были элитой армии', 'Регистронезависимый поиск через `ILIKE`', NULL, '{"data": [["1-я гвардейская танковая армия"], ["7-я гвардейская миномётная дивизия"], ["8-я гвардейская армия"]], "columns": ["unit_name"], "row_count": 3}', '{easy}');
+INSERT INTO public.tasks VALUES (9, 0, 8, 'Артиллерийский учет', 'Составьте список снаряжения, в названии которого есть «пушка». Это поможет оценить наличие тяжелого вооружения', 'Используйте POSIX-оператор `~` для поиска по регулярному выражению', 'SELECT item_name FROM equipment WHERE item_name ~ ''пушка'';', '{"data": [["76-мм дивизионная пушка ЗИС-3"]], "columns": ["item_name"], "row_count": 1}', '{easy,supply}');
+INSERT INTO public.tasks VALUES (10, 0, 9, 'Отцовские корни', 'Найдите солдат с отчеством «Петрович» или «Иванович». Данные могут быть полезны для генеалогических исследований', 'Примените POSIX-оператор `|` для выбора одного из двух вариантов', 'SELECT full_name FROM soldier WHERE full_name ~ ''(Петрович|Иванович)$'';', '{"data": [["Иванов Алексей Петрович"], ["Петров Дмитрий Иванович"], ["Новиков Александр Иванович"], ["Ткаченко Григорий Петрович"], ["Смирнов Василий Иванович"], ["Гришин Алексей Петрович"]], "columns": ["full_name"], "row_count": 6}', '{easy}');
+INSERT INTO public.tasks VALUES (11, 0, 10, 'Исключение стрелковых частей', 'Выведите названия подразделений, не относящихся к стрелковым. Это важно для анализа структуры войск', 'Используйте `NOT LIKE` для исключения определенного типа частей', 'SELECT unit_name FROM military_unit WHERE unit_type NOT LIKE ''%танковая%'';', '{"data": [["62-я армия"], ["1-я гвардейская танковая армия"], ["16-я воздушная армия"], ["7-я гвардейская миномётная дивизия"], ["2-я ударная армия"], ["8-я гвардейская армия"], ["3-я воздушная армия"], ["14-я отдельная штрафная рота"], ["1-я морская бригада"], ["Отдельная медико-санитарная рота"], ["88-й отдельный лыжный батальон"], ["101-й полк НКВД"], ["369-й отдельный батальон морской пехоты"], ["1-й чехословацкий отдельный батальон"], ["585-й женский авиаполк"], ["28-я дивизия народного ополчения"], ["Отдельный отряд собак-истребителей танков"], ["37-й гвардейский миномётный полк"], ["Отдельный батальон связи №45"], ["225-й отдельный инженерный батальон"], ["18-я дивизия СС \"Хорст Вессель\""], ["101-й учебный полк"], ["1-й отдельный чехословацкий батальон"], ["46-й гвардейский ночной бомбардировочный полк"], ["101-й инженерно-сапёрный батальон"], ["Отдельный отряд собак-миноискателей"]], "columns": ["unit_name"], "row_count": 26}', '{easy}');
+INSERT INTO public.tasks VALUES (13, 0, 12, 'Тип операции', 'Выявите бои, в названии которых есть слова «освобождение» или «оборона». Это поможет классифицировать сражения по их целям', 'Примените POSIX-оператор `|` для поиска по двум ключевым словам', 'SELECT battle_name FROM battle WHERE battle_name ~ ''(Освобождение|Оборона)'';', '{"data": [["Оборона Брестской крепости"], ["Оборона Севастополя"], ["Оборона Заполярья"], ["Оборона Брестской крепости"], ["Оборона Тулы"]], "columns": ["battle_name"], "row_count": 5}', '{easy}');
+INSERT INTO public.tasks VALUES (12, 0, 11, 'Короткие названия', 'Найдите снаряжение, название которого состоит ровно из 4 символов. Возможно, это кодированные обозначения', 'Используйте `LIKE` с пятью символами `_`', NULL, '{"data": [["Т-34"], ["Ил-2"], ["М-31"], ["ИС-2"], ["ПТРД"]], "columns": ["item_name"], "row_count": 5}', '{easy}');
+INSERT INTO public.tasks VALUES (15, 0, 14, 'Средний возраст победителей', 'Рассчитайте средний возраст солдат на момент окончания войны (1945 год). Назовите столбец average_age. Это ключевой показатель для демографического анализа', 'Используйте арифметические операции с `AVG` и `birth_year`', NULL, '{"data": [[23.875]], "columns": ["average_age"], "row_count": 1}', '{easy}');
+INSERT INTO public.tasks VALUES (41, 1, 9, 'Логистика Сталинградского фронта', 'Рассчитайте объем снаряжения на одного солдата в Сталинграде за период обороны. Это покажет, насколько войска были обеспечены ресурсами', 'Используйте `ROUND` и арифметические операции с группировкой по типам снаряжения', NULL, '{"data": [["артиллерия", 72, "24.00"]], "columns": ["equipment_type", "total", "per_soldier"], "row_count": 1}', '{supply,stalingrad,medium}');
+INSERT INTO public.tasks VALUES (3, 0, 15, 'Логистика вооружений', 'Определите общее количество снаряжения каждого типа. Назовите вычисленное поле "total". Это основа для оценки обеспеченности войск', 'Группировка по типу снаряжения с применением `SUM`', NULL, '{"data": [["авиабомбы", 3200], ["боеприпасы", 310000], ["артиллерия", 24], ["миномёты", 2268], ["противотанковые", 68], ["связь", 15], ["медицина", 1330], ["самолёты", 45], ["инженерное", 850], ["реактивные снаряды", 1500], ["оружие", 1200], ["танки", 100]], "columns": ["equipment_type", "total"], "row_count": 12}', '{window,easy}');
+INSERT INTO public.tasks VALUES (16, 0, 16, 'История формирования', 'Найдите самую раннюю и позднюю даты создания воинских частей. Это отразит этапы развития армии', 'Используйте агрегатные функции `MIN` и `MAX` для дат', NULL, '{"data": [["1939-04-20", "1944-01-10"]], "columns": ["min", "max"], "row_count": 1}', '{easy}');
+INSERT INTO public.tasks VALUES (17, 0, 17, 'Идентификация званий', 'Создайте строку, объединяющую имя солдата и его звание в формате "ФИО (звание)". Назовите получившееся поле soldier_info. Это упростит работу с архивными записями', 'Конкатенация строк с использованием `||`', NULL, '{"data": [["Иванов Алексей Петрович (рядовой)"], ["Смирнова Анна Васильевна (медсестра)"], ["Петров Дмитрий Иванович (сержант)"], ["Козлов Николай Семёнович (лейтенант)"], ["Фёдорова Мария Ивановна (санитар)"], ["Жуков Андрей Григорьевич (капитан)"], ["Павлов Яков Фёдорович (сержант)"], ["Зайцева Людмила Михайловна (снайпер)"], ["Громов Михаил Сергеевич (старшина)"], ["Орлова Вера Павловна (радист)"], ["Новиков Александр Иванович (ефрейтор)"], ["Васнецова Татьяна Дмитриевна (разведчик)"], ["Кузнецов Пётр Васильевич (майор)"], ["Белов Алексей Николаевич (рядовой)"], ["Соколова Ольга Ивановна (хирург)"], ["Морозов Иван Кузьмич (полковник)"], ["Волкова Елена Сергеевна (зенитчик)"], ["Ткаченко Григорий Петрович (рядовой)"], ["Беляев Павел Дмитриевич (подполковник)"], ["Семёнова Валентина Михайловна (связист)"], ["Ковалёв Сергей Николаевич (лейтенант)"], ["Мельникова Галина Ивановна (снайпер)"], ["Фёдоров Игорь Васильевич (полковник)"], ["Горбачёв Алексей Дмитриевич (рядовой)"], ["Сидорова Екатерина Петровна (радист)"], ["Смирнов Василий Иванович (генерал-майор)"], ["Крылова Надежда Фёдоровна (санитар)"], ["Орлов Денис Сергеевич (рядовой)"], ["Жукова Елена Викторовна (радист)"], ["Гришин Алексей Петрович (капитан)"], ["Ткаченко Иван Григорьевич (старший сержант)"], ["Воронцова Лидия Павловна (снайпер)"], ["Жуковский Виктор Михайлович (полковник)"], ["Морозова Анна Сергеевна (радист)"], ["Кузнецов Артём Игоревич (рядовой)"], ["Соколовская Надежда Викторовна (хирург)"], ["Белов Дмитрий Николаевич (капитан)"], ["Громова Екатерина Ивановна (зенитчик)"], ["Фролов Павел Сергеевич (рядовой)"], ["Ковалёва Ольга Дмитриевна (разведчик)"]], "columns": ["soldier_info"], "row_count": 40}', '{easy}');
+INSERT INTO public.tasks VALUES (18, 0, 18, 'География призыва', 'Определите количество уникальных городов, откуда призывались солдаты. Это покажет масштаб мобилизации', 'Используйте `COUNT(DISTINCT ...)` для столбца с городами', NULL, '{"data": [[22]], "columns": ["count"], "row_count": 1}', '{easy}');
+INSERT INTO public.tasks VALUES (19, 0, 19, 'Эффективность подразделений', 'Рассчитайте среднюю боевую эффективность для каждого типа частей. Вычисленное значение назовите avg_efficiency. Результат выведите в алфавитном порядке. Это поможет оценить их вклад в победу', 'Группировка по `unit_type` с функцией `AVG`', NULL, '{"data": [["авиация", 91.175], ["инженерные войска", 89.6], ["лыжные войска", 73.9], ["медицинская", 91.7], ["морская пехота", 85.65], ["общевойсковая", 83.75], ["пехота", 83.0125], ["противник", 88.1], ["реактивная артиллерия", 93.5], ["резерв", 68.3], ["связисты", 85.2], ["спецназ", 86.63333333333334], ["танковые войска", 96.75]], "columns": ["unit_type", "avg_efficiency"], "row_count": 13}', '{easy}');
+INSERT INTO public.tasks VALUES (21, 0, 21, 'Анализ надежности', 'Вычислите дисперсию боевой эффективности для каждого типа частей. Назовите столбец variance и отсортируйте результат по алфавиту. Высокая дисперсия может указывать на нестабильность', 'Используйте `VAR_SAMP` для расчета дисперсии', NULL, '{"data": [["авиация", 27.4625], ["инженерные войска", 0.02], ["лыжные войска", null], ["медицинская", null], ["морская пехота", 21.125], ["общевойсковая", 146.205], ["пехота", 121.09553571428572], ["противник", null], ["реактивная артиллерия", 18.0], ["резерв", null], ["связисты", null], ["спецназ", 68.94333333333333], ["танковые войска", 6.125]], "columns": ["unit_type", "variance"], "row_count": 13}', '{easy}');
+INSERT INTO public.tasks VALUES (67, 1, 10, 'Снаряжение героев', 'Найдите солдат, получивших снаряжение 12 января 1943 года. Это может быть связано с подготовкой к операции «Искра»', 'Примените вложенные запросы и фильтрацию по дате и ID снаряжения', NULL, '{"data": [["Смирнова Анна Васильевна"]], "columns": ["full_name"], "row_count": 1}', '{medium}');
+INSERT INTO public.tasks VALUES (20, 0, 20, 'Статистика потерь', 'Подсчитайте количество солдат по каждому статусу (status). Это основа для анализа людских потерь', 'Группировка по статусу с использованием `CASE` в `COUNT`', NULL, '{"data": [["жив", 16], ["пропал без вести", 7], ["ранен", 8], ["убит", 9]], "columns": ["status", "count"], "row_count": 4}', '{easy}');
+INSERT INTO public.tasks VALUES (22, 0, 22, 'Классификация эффективности', 'Разделите части на три категории: высокая, средняя и низкая эффективность. Столбец с категориями назовите efficiency_category. Это основа для стратегического планирования. Примечание: "Высокая" (КПД ≥ 90), "Средняя" (70 ≤ КПД < 90), "Низкая" (КПД < 70).', 'Примените `CASE` с диапазонами значений `combat_efficiency`', NULL, '{"data": [["316-я стрелковая дивизия", "Средняя"], ["62-я армия", "Высокая"], ["1-я гвардейская танковая армия", "Высокая"], ["150-я стрелковая дивизия", "Высокая"], ["16-я воздушная армия", "Средняя"], ["7-я гвардейская миномётная дивизия", "Высокая"], ["2-я ударная армия", "Средняя"], ["8-я гвардейская армия", "Высокая"], ["3-я воздушная армия", "Средняя"], ["106-я стрелковая дивизия", "Средняя"], ["14-я отдельная штрафная рота", "Низкая"], ["1-я морская бригада", "Средняя"], ["Отдельная медико-санитарная рота", "Высокая"], ["88-й отдельный лыжный батальон", "Средняя"], ["101-й полк НКВД", "Высокая"], ["369-й отдельный батальон морской пехоты", "Средняя"], ["1-й чехословацкий отдельный батальон", "Средняя"], ["585-й женский авиаполк", "Высокая"], ["28-я дивизия народного ополчения", "Низкая"], ["Отдельный отряд собак-истребителей танков", "Средняя"], ["37-й гвардейский миномётный полк", "Высокая"], ["Отдельный батальон связи №45", "Средняя"], ["225-й отдельный инженерный батальон", "Средняя"], ["18-я дивизия СС \"Хорст Вессель\"", "Средняя"], ["101-й учебный полк", "Низкая"], ["64-я стрелковая дивизия", "Высокая"], ["1-й отдельный чехословацкий батальон", "Средняя"], ["46-й гвардейский ночной бомбардировочный полк", "Высокая"], ["101-й инженерно-сапёрный батальон", "Средняя"], ["Отдельный отряд собак-миноискателей", "Средняя"]], "columns": ["unit_name", "efficiency_category"], "row_count": 30}', '{easy}');
+INSERT INTO public.tasks VALUES (69, 1, 11, 'Возрастные категории', 'Посчитайте сколько солдат в каждой возрастной группе на момент начала войны(< 18, 18-25, > 25). Колонку с группой назовите age_group, а с количеством солдат — quantity. Результат отсортируйте по убыванию количества. Это поможет понять, какие возрастные группы преобладали в армии', 'Используйте `CASE` с диапазонами на основе года рождения', NULL, '{"data": [["18-25", 19], ["< 18", 15], ["> 25", 6]], "columns": ["age_group", "quantity"], "row_count": 3}', '{medium}');
+INSERT INTO public.tasks VALUES (27, 0, 27, 'Долгие сражения', 'Найдите бои, длившиеся более 30 дней. Вычисленный столбец назовите duration_days. Результат отсортируйте по убыванию длительности. Такие операции часто становились переломными', 'Рассчитайте разницу между датами начала и окончания с использованием `HAVING`', NULL, '{"data": [["Оборона Заполярья", 1190], ["Блокада Ленинграда", 871], ["Ржевская битва", 447], ["Битва за Кавказ", 441], ["Оборона Севастополя", 247], ["Битва за Воронеж", 211], ["Битва за Москву", 202], ["Сталинградская битва", 200], ["Битва за Днепр", 119], ["Будапештская операция", 107], ["Восточно-Прусская операция", 102], ["Демянская операция", 89], ["Операция \"Багратион\"", 67], ["Смоленское сражение", 62], ["Курская битва", 49], ["Оборона Тулы", 42], ["Керченско-Эльтигенская операция", 41]], "columns": ["battle_name", "duration_days"], "row_count": 17}', '{easy}');
+INSERT INTO public.tasks VALUES (29, 0, 29, 'Молодая кровь', 'Для каждой части определите самого молодого солдата. Выведите название части и год рождения самого молодого солдата. Назовите вычисленный столбец youngest_birth_year, а результат отсортируйте по убыванию годов рождения. Это может указывать на пополнение в критический момент', 'Используйте `MAX` с годом рождения и группировку по частям', NULL, '{"data": [["101-й инженерно-сапёрный батальон", 1928], ["Отдельная медико-санитарная рота", 1927], ["225-й отдельный инженерный батальон", 1927], ["1-я морская бригада", 1926], ["Отдельный отряд собак-миноискателей", 1926], ["28-я дивизия народного ополчения", 1926], ["Отдельный батальон связи №45", 1925], ["369-й отдельный батальон морской пехоты", 1925], ["62-я армия", 1925], ["46-й гвардейский ночной бомбардировочный полк", 1925], ["150-я стрелковая дивизия", 1925], ["1-й чехословацкий отдельный батальон", 1924], ["3-я воздушная армия", 1924], ["1-й отдельный чехословацкий батальон", 1924], ["18-я дивизия СС \"Хорст Вессель\"", 1923], ["64-я стрелковая дивизия", 1923], ["316-я стрелковая дивизия", 1923], ["106-я стрелковая дивизия", 1923], ["8-я гвардейская армия", 1921], ["Отдельный отряд собак-истребителей танков", 1921], ["101-й полк НКВД", 1920], ["16-я воздушная армия", 1920], ["1-я гвардейская танковая армия", 1920], ["2-я ударная армия", 1919], ["101-й учебный полк", 1918], ["14-я отдельная штрафная рота", 1914], ["585-й женский авиаполк", 1913], ["88-й отдельный лыжный батальон", 1912], ["37-й гвардейский миномётный полк", 1911]], "columns": ["unit_name", "youngest_birth_year"], "row_count": 29}', '{easy}');
+INSERT INTO public.tasks VALUES (30, 0, 30, 'Танковые части', 'Найдите подразделения, оснащенные танками. Это важно для анализа бронетанковых сил', 'Используйте подзапрос с `EXISTS` для проверки наличия снаряжения', NULL, '{"data": [["1-я гвардейская танковая армия"], ["8-я гвардейская армия"]], "columns": ["unit_name"], "row_count": 2}', '{easy}');
+INSERT INTO public.tasks VALUES (31, 0, 31, 'Ветераны частей', 'Определите солдат, которые были старше всех в своем подразделении. Возможно, это опытные командиры', 'Примените подзапрос с `ALL` для сравнения возрастов', NULL, '{"data": [["Фёдорова Мария Ивановна"], ["Жуков Андрей Григорьевич"], ["Павлов Яков Фёдорович"], ["Зайцева Людмила Михайловна"], ["Громов Михаил Сергеевич"], ["Орлова Вера Павловна"], ["Новиков Александр Иванович"], ["Васнецова Татьяна Дмитриевна"], ["Кузнецов Пётр Васильевич"], ["Морозов Иван Кузьмич"], ["Волкова Елена Сергеевна"], ["Ткаченко Григорий Петрович"], ["Беляев Павел Дмитриевич"], ["Семёнова Валентина Михайловна"], ["Ковалёв Сергей Николаевич"], ["Мельникова Галина Ивановна"], ["Фёдоров Игорь Васильевич"], ["Горбачёв Алексей Дмитриевич"], ["Сидорова Екатерина Петровна"], ["Смирнов Василий Иванович"], ["Крылова Надежда Фёдоровна"], ["Орлов Денис Сергеевич"], ["Жукова Елена Викторовна"], ["Гришин Алексей Петрович"], ["Ткаченко Иван Григорьевич"], ["Жуковский Виктор Михайлович"], ["Морозова Анна Сергеевна"], ["Белов Дмитрий Николаевич"], ["Ковалёва Ольга Дмитриевна"]], "columns": ["full_name"], "row_count": 29}', '{easy}');
+INSERT INTO public.tasks VALUES (34, 0, 32, 'Неуничтоженные враги', 'Определите вражеские части, которые не были ликвидированы. Отсортируйте результат по убыванию. Это может указывать на сохранившиеся угрозы', 'Используйте `EXCEPT` для исключения уничтоженных частей', NULL, '{"data": [["Эскадра JG54 \"Зелёное сердце\""], ["Люфтваффе: эскадра JG52"]], "columns": ["unit_name"], "row_count": 2}', '{easy}');
+INSERT INTO public.tasks VALUES (37, 1, 1, 'Логистика Сталинградской битвы', 'Определите общее количество боеприпасов, выделенных каждой части в Сталинграде. Выведите уникальный идентификатор части, а вычисленный столбец назовите total_ammo. Это поможет оценить обеспеченность войск в критический период обороны', 'Используйте оконную функцию `SUM` с группировкой по `unit_id` и подзапрос для фильтрации локации', NULL, '{"data": [[2, 50000], [13, 30000], [18, 40000], [21, 50000], [26, 70000]], "columns": ["unit_id", "total_ammo"], "row_count": 5}', '{first_any_level,supply,window,stalingrad,medium}');
+INSERT INTO public.tasks VALUES (63, 1, 2, 'Снабжение перед операцией', 'Для воинских частей, у которых общее количество всего снаряжения на складе превышает 1000 единиц, необходимо вывести название части, а также суммарное количество находящихся в ней боеприпасов ammunition_total и медикаментов medicine_total. Это важно для планирования крупных наступлений', 'Сначала найдите подразделения, где общее количество снаряжения больше 1000, используя GROUP BY и HAVING SUM(quantity). Затем, для этих подразделений, посчитайте суммы по типам, применив условную агрегацию в основном запросе', NULL, '{"data": [["1-я морская бригада", 0, 250], ["3-я воздушная армия", 0, 0], ["316-я стрелковая дивизия", 50000, 0], ["37-й гвардейский миномётный полк", 50000, 0], ["585-й женский авиаполк", 40000, 0], ["62-я армия", 50000, 830], ["64-я стрелковая дивизия", 70000, 0], ["7-я гвардейская миномётная дивизия", 20000, 0], ["Отдельная медико-санитарная рота", 30000, 250]], "columns": ["unit_name", "ammunition_total", "medicine_total"], "row_count": 9}', '{cte,medium}');
+INSERT INTO public.tasks VALUES (38, 1, 3, 'Поиск героев для награждения', 'Выявите 20 солдат, участвовавших в наибольшем количестве сражений, и присвойте им ранги. Вычисленные столбцы назовите battles_participated и hero_rank. Это основа для награждения орденами и медалями', 'Используйте `RANK()` с сортировкой по убыванию количества битв', NULL, '{"data": [["Жуков Андрей Григорьевич", 30, 1], ["Иванов Алексей Петрович", 28, 2], ["Громов Михаил Сергеевич", 23, 3], ["Жуковский Виктор Михайлович", 23, 3], ["Гришин Алексей Петрович", 21, 5], ["Семёнова Валентина Михайловна", 20, 6], ["Соколова Ольга Ивановна", 20, 6], ["Кузнецов Пётр Васильевич", 19, 8], ["Зайцева Людмила Михайловна", 17, 9], ["Орлова Вера Павловна", 17, 9], ["Фёдоров Игорь Васильевич", 16, 11], ["Кузнецов Артём Игоревич", 16, 11], ["Крылова Надежда Фёдоровна", 16, 11], ["Козлов Николай Семёнович", 16, 11], ["Фёдорова Мария Ивановна", 15, 15], ["Смирнов Василий Иванович", 15, 15], ["Соколовская Надежда Викторовна", 15, 15], ["Ковалёва Ольга Дмитриевна", 14, 18], ["Ткаченко Иван Григорьевич", 14, 18], ["Громова Екатерина Ивановна", 13, 20]], "columns": ["full_name", "battles_participated", "hero_rank"], "row_count": 20}', '{window,medium}');
+INSERT INTO public.tasks VALUES (39, 1, 4, 'Анализ эффективности частей', 'Выведите для каждого военного подразделения его исходную и скорректированную боевую эффективность. Корректировка рассчитывается путем уменьшения исходного показателя (combat_efficiency) пропорционально доле безвозвратных потерь (статусы «убит» и «пропал без вести») от общей численности личного состава в данном подразделении. Результат должен содержать: название подразделения, исходную боевую эффективность initial_efficiency, процент потерь loss_percentage, скорректированную боевую эффективность adjusted_efficiency. Это покажет, как потери влияют на боеспособность', 'Сгруппируйте солдат по подразделениям (unit_id). Внутри каждой группы посчитайте общую численность и количество безвозвратных потерь, используя условную агрегацию (CASE). Затем соедините результат с таблицей military_unit и примените формулу для расчета скорректированной эффективности.', NULL, '{"data": [["8-я гвардейская армия", 98.5, 0.0, 98.5], ["150-я стрелковая дивизия", 97.8, 0.0, 97.8], ["46-й гвардейский ночной бомбардировочный полк", 96.7, 0.0, 96.7], ["37-й гвардейский миномётный полк", 96.5, 0.0, 96.5], ["101-й полк НКВД", 96.2, 0.0, 96.2], ["1-я гвардейская танковая армия", 95.0, 0.0, 95.0], ["585-й женский авиаполк", 94.1, 0.0, 94.1], ["64-я стрелковая дивизия", 92.4, 0.0, 92.4], ["62-я армия", 92.3, 0.0, 92.3], ["Отдельная медико-санитарная рота", 91.7, 0.0, 91.7], ["225-й отдельный инженерный батальон", 89.7, 0.0, 89.7], ["101-й инженерно-сапёрный батальон", 89.5, 0.0, 89.5], ["106-я стрелковая дивизия", 89.3, 0.0, 89.3], ["16-я воздушная армия", 88.9, 0.0, 88.9], ["369-й отдельный батальон морской пехоты", 88.9, 0.0, 88.9], ["18-я дивизия СС \"Хорст Вессель\"", 88.1, 0.0, 88.1], ["316-я стрелковая дивизия", 85.5, 0.0, 85.5], ["Отдельный батальон связи №45", 85.2, 0.0, 85.2], ["3-я воздушная армия", 85.0, 0.0, 85.0], ["1-й отдельный чехословацкий батальон", 85.0, 0.0, 85.0], ["Отдельный отряд собак-истребителей танков", 82.4, 0.0, 82.4], ["1-я морская бригада", 82.4, 0.0, 82.4], ["Отдельный отряд собак-миноискателей", 81.3, 0.0, 81.3], ["1-й чехословацкий отдельный батальон", 78.5, 0.0, 78.5], ["2-я ударная армия", 75.2, 0.0, 75.2], ["88-й отдельный лыжный батальон", 73.9, 0.0, 73.9], ["28-я дивизия народного ополчения", 69.8, 0.0, 69.8], ["101-й учебный полк", 68.3, 0.0, 68.3], ["14-я отдельная штрафная рота", 65.8, 0.0, 65.8]], "columns": ["unit_name", "initial_efficiency", "loss_percentage", "adjusted_efficiency"], "row_count": 29}', '{cte,medium}');
+INSERT INTO public.tasks VALUES (40, 1, 5, 'Логистика Курской дуги', 'Определите рейтинг частей в Курске по объему снабжения. Выведите столбцы unit_name, equipment_type, total, supply_rank. Это ключевые данные для анализа подготовки к крупнейшему танковому сражению', 'Используйте `RANK()` с группировкой по типам снаряжения', NULL, '{"data": [["16-я воздушная армия", "самолёты", 45, 1], ["1-я гвардейская танковая армия", "танки", 58, 2]], "columns": ["unit_name", "equipment_type", "total", "supply_rank"], "row_count": 2}', '{supply,window,medium}');
+INSERT INTO public.tasks VALUES (64, 1, 6, 'Снабжение морской пехоты', 'Проанализируйте снаряжение морских пехотинцев в Севастополе. Выведите столбцы equipment_type, total, items. Это необходимо для оценки их готовности к обороне прибрежных зон', 'Используйте `STRING_AGG` для объединения названий снаряжения и фильтрацию по типу части', NULL, '{"data": [["медицина", 250, "Аптечки полевые"], ["миномёты", 2256, "82-мм, 50-мм"]], "columns": ["equipment_type", "total", "items"], "row_count": 2}', '{medium}');
+INSERT INTO public.tasks VALUES (75, 1, 7, 'Первый и последний', 'Определите первого и последнего солдата, вступившего в каждую часть. Выведите название части, ФИО первого first_enlisted и последнего last_enlisted вступившего солдата. Это может указывать на "костяк" подразделения', 'Примените `FIRST_VALUE()` и `LAST_VALUE()` с оконными функциями', NULL, '{"data": [["316-я стрелковая дивизия", "Иванов Алексей Петрович", "Фёдорова Мария Ивановна"], ["62-я армия", "Петров Дмитрий Иванович", "Павлов Яков Фёдорович"], ["1-я гвардейская танковая армия", "Козлов Николай Семёнович", "Кузнецов Пётр Васильевич"], ["150-я стрелковая дивизия", "Зайцева Людмила Михайловна", "Белов Алексей Николаевич"], ["16-я воздушная армия", "Жуков Андрей Григорьевич", "Соколова Ольга Ивановна"], ["2-я ударная армия", "Громов Михаил Сергеевич", "Громов Михаил Сергеевич"], ["8-я гвардейская армия", "Орлова Вера Павловна", "Орлова Вера Павловна"], ["3-я воздушная армия", "Новиков Александр Иванович", "Новиков Александр Иванович"], ["106-я стрелковая дивизия", "Васнецова Татьяна Дмитриевна", "Васнецова Татьяна Дмитриевна"], ["14-я отдельная штрафная рота", "Морозов Иван Кузьмич", "Морозов Иван Кузьмич"], ["1-я морская бригада", "Волкова Елена Сергеевна", "Волкова Елена Сергеевна"], ["Отдельная медико-санитарная рота", "Ткаченко Григорий Петрович", "Ткаченко Григорий Петрович"], ["88-й отдельный лыжный батальон", "Беляев Павел Дмитриевич", "Беляев Павел Дмитриевич"], ["101-й полк НКВД", "Семёнова Валентина Михайловна", "Семёнова Валентина Михайловна"], ["369-й отдельный батальон морской пехоты", "Ковалёв Сергей Николаевич", "Ковалёв Сергей Николаевич"], ["1-й чехословацкий отдельный батальон", "Мельникова Галина Ивановна", "Мельникова Галина Ивановна"], ["585-й женский авиаполк", "Фёдоров Игорь Васильевич", "Фёдоров Игорь Васильевич"], ["28-я дивизия народного ополчения", "Горбачёв Алексей Дмитриевич", "Горбачёв Алексей Дмитриевич"], ["Отдельный отряд собак-истребителей танков", "Сидорова Екатерина Петровна", "Сидорова Екатерина Петровна"], ["37-й гвардейский миномётный полк", "Смирнов Василий Иванович", "Смирнов Василий Иванович"], ["Отдельный батальон связи №45", "Крылова Надежда Фёдоровна", "Крылова Надежда Фёдоровна"], ["225-й отдельный инженерный батальон", "Орлов Денис Сергеевич", "Орлов Денис Сергеевич"], ["18-я дивизия СС \"Хорст Вессель\"", "Жукова Елена Викторовна", "Жукова Елена Викторовна"], ["101-й учебный полк", "Гришин Алексей Петрович", "Гришин Алексей Петрович"], ["64-я стрелковая дивизия", "Ткаченко Иван Григорьевич", "Соколовская Надежда Викторовна"], ["1-й отдельный чехословацкий батальон", "Белов Дмитрий Николаевич", "Воронцова Лидия Павловна"], ["46-й гвардейский ночной бомбардировочный полк", "Жуковский Виктор Михайлович", "Громова Екатерина Ивановна"], ["101-й инженерно-сапёрный батальон", "Морозова Анна Сергеевна", "Фролов Павел Сергеевич"], ["Отдельный отряд собак-миноискателей", "Ковалёва Ольга Дмитриевна", "Кузнецов Артём Игоревич"]], "columns": ["unit_name", "first_enlisted", "last_enlisted"], "row_count": 29}', '{medium}');
+INSERT INTO public.tasks VALUES (77, 1, 8, 'Солдаты 1942 года', 'Выведите список солдат и их частей, где служба началась в 1942 году. Результат отсортируйте по первому столбцу. Это поможет анализировать мобилизацию в критический период', 'Используйте подзапросы для фильтрации дат и объединения таблиц', NULL, '{"data": [["Белов Дмитрий Николаевич", "1-й отдельный чехословацкий батальон"], ["Громов Михаил Сергеевич", "2-я ударная армия"], ["Жукова Елена Викторовна", "18-я дивизия СС \"Хорст Вессель\""], ["Жуковский Виктор Михайлович", "46-й гвардейский ночной бомбардировочный полк"], ["Ковалёва Ольга Дмитриевна", "Отдельный отряд собак-миноискателей"], ["Мельникова Галина Ивановна", "1-й чехословацкий отдельный батальон"], ["Морозова Анна Сергеевна", "101-й инженерно-сапёрный батальон"], ["Морозов Иван Кузьмич", "14-я отдельная штрафная рота"], ["Павлов Яков Фёдорович", "62-я армия"], ["Семёнова Валентина Михайловна", "101-й полк НКВД"], ["Смирнова Анна Васильевна", "62-я армия"], ["Соколова Ольга Ивановна", "16-я воздушная армия"], ["Фёдоров Игорь Васильевич", "585-й женский авиаполк"]], "columns": ["full_name", "unit_name"], "row_count": 13}', '{medium}');
+INSERT INTO public.tasks VALUES (76, 1, 12, 'Скользящие потери', 'Проанализируйте динамику потерь среди солдат в 1942 году, используя данные о дате призыва. Для каждого месяца 1942 года рассчитайте количество солдат, погибших к этому моменту, и постройте трёхмесячное скользящее среднее для сглаживания временного ряда. Выведите номер месяца (month), количество потерь (killed) и скользящее среднее (moving_avg). Это покажет динамику снижения боеспособности', 'Используйте `AVG()` с окном `ROWS BETWEEN 2 PRECEDING AND CURRENT ROW`', NULL, '{"data": [[5.0, 1, 1.0]], "columns": ["month", "killed", "moving_avg"], "row_count": 1}', '{medium}');
+INSERT INTO public.tasks VALUES (54, 1, 14, 'Накопленные ресурсы', 'Определите накопительный итог поставок боеприпасов в 1942 году. Выведите название подразделения, дату последнего пополнения, а вычисленный столбец назовите cumulative_ammo. Это отразит рост запасов перед ключевыми операциями', 'Примените `SUM() OVER` с сортировкой по дате пополнения', NULL, '{"data": [["316-я стрелковая дивизия", "1942-03-05", 50000], ["62-я армия", "1942-03-05", 50000], ["7-я гвардейская миномётная дивизия", "1942-12-01", 20000], ["Отдельная медико-санитарная рота", "1942-03-05", 30000], ["585-й женский авиаполк", "1942-03-05", 40000], ["37-й гвардейский миномётный полк", "1942-03-05", 50000], ["64-я стрелковая дивизия", "1942-03-05", 70000]], "columns": ["unit_name", "last_replenishment", "cumulative_ammo"], "row_count": 7}', '{supply,window,medium}');
+INSERT INTO public.tasks VALUES (71, 1, 15, 'Боевые товарищи', 'Выявите пары солдат, призванных из одного города. Чтобы избежать дубликатов (А, Б) и (Б, А), добавьте условие `s1.id < s2.id` (где s1 и s2 - алиасы таблицы). Назовите столбцы soldier_name1, soldier_name2 и common_city. Отсортируйте результат по всем столбцам. Это может указывать на дружеские связи или совместную службу', 'Примените самосоединение таблицы `soldier` по городу призыва', NULL, '{"data": [["Белов Алексей Николаевич", "Фролов Павел Сергеевич", "Севастополь"], ["Васнецова Татьяна Дмитриевна", "Жукова Елена Викторовна", "Смоленск"], ["Васнецова Татьяна Дмитриевна", "Ковалёва Ольга Дмитриевна", "Смоленск"], ["Волкова Елена Сергеевна", "Громова Екатерина Ивановна", "Горький"], ["Гришин Алексей Петрович", "Ткаченко Иван Григорьевич", "Харьков"], ["Жуков Андрей Григорьевич", "Сидорова Екатерина Петровна", "Минск"], ["Жукова Елена Викторовна", "Ковалёва Ольга Дмитриевна", "Смоленск"], ["Зайцева Людмила Михайловна", "Воронцова Лидия Павловна", "Ленинград"], ["Иванов Алексей Петрович", "Соколовская Надежда Викторовна", "Москва"], ["Козлов Николай Семёнович", "Гришин Алексей Петрович", "Харьков"], ["Козлов Николай Семёнович", "Ткаченко Иван Григорьевич", "Харьков"], ["Крылова Надежда Фёдоровна", "Морозова Анна Сергеевна", "Одесса"], ["Мельникова Галина Ивановна", "Кузнецов Артём Игоревич", "Сталинград"], ["Орлова Вера Павловна", "Крылова Надежда Фёдоровна", "Одесса"], ["Орлова Вера Павловна", "Морозова Анна Сергеевна", "Одесса"], ["Петров Дмитрий Иванович", "Кузнецов Артём Игоревич", "Сталинград"], ["Петров Дмитрий Иванович", "Мельникова Галина Ивановна", "Сталинград"], ["Смирнов Василий Иванович", "Жуковский Виктор Михайлович", "Киев"], ["Смирнова Анна Васильевна", "Воронцова Лидия Павловна", "Ленинград"], ["Смирнова Анна Васильевна", "Зайцева Людмила Михайловна", "Ленинград"], ["Соколова Ольга Ивановна", "Жуковский Виктор Михайлович", "Киев"], ["Соколова Ольга Ивановна", "Смирнов Василий Иванович", "Киев"], ["Соколова Ольга Ивановна", "Ткаченко Григорий Петрович", "Киев"], ["Ткаченко Григорий Петрович", "Жуковский Виктор Михайлович", "Киев"], ["Ткаченко Григорий Петрович", "Смирнов Василий Иванович", "Киев"], ["Фёдорова Мария Ивановна", "Жуковский Виктор Михайлович", "Киев"], ["Фёдорова Мария Ивановна", "Смирнов Василий Иванович", "Киев"], ["Фёдорова Мария Ивановна", "Соколова Ольга Ивановна", "Киев"], ["Фёдорова Мария Ивановна", "Ткаченко Григорий Петрович", "Киев"]], "columns": ["soldier_name1", "soldier_name2", "common_city"], "row_count": 29}', '{medium}');
+INSERT INTO public.tasks VALUES (43, 1, 16, 'Гендерный баланс', 'Определите части, где количество мужчин и женщин неравно. Выведите название части military_unit_name и отсортируйте результат в обратном порядке. Это отразит гендерные особенности мобилизации', 'Используйте `SUM` с `CASE` для подсчета и фильтрацию через `HAVING`', NULL, '{"data": [["Отдельный отряд собак-истребителей танков"], ["Отдельный батальон связи №45"], ["Отдельная медико-санитарная рота"], ["8-я гвардейская армия"], ["88-й отдельный лыжный батальон"], ["62-я армия"], ["585-й женский авиаполк"], ["3-я воздушная армия"], ["37-й гвардейский миномётный полк"], ["369-й отдельный батальон морской пехоты"], ["2-я ударная армия"], ["28-я дивизия народного ополчения"], ["225-й отдельный инженерный батальон"], ["1-я морская бригада"], ["1-я гвардейская танковая армия"], ["1-й чехословацкий отдельный батальон"], ["18-я дивизия СС \"Хорст Вессель\""], ["14-я отдельная штрафная рота"], ["106-я стрелковая дивизия"], ["101-й учебный полк"], ["101-й полк НКВД"]], "columns": ["military_unit_name"], "row_count": 21}', '{window,medium}');
+INSERT INTO public.tasks VALUES (44, 1, 17, 'Участники Сталинграда', 'Найдите всех солдат, служивших в частях, участвовавших в Сталинградской битве. Это основа для создания мемориальных списков', 'Используйте вложенные запросы с `IN` для фильтрации по ID частей', NULL, '{"data": [["Иванов Алексей Петрович"], ["Смирнова Анна Васильевна"], ["Петров Дмитрий Иванович"], ["Козлов Николай Семёнович"], ["Фёдорова Мария Ивановна"], ["Жуков Андрей Григорьевич"], ["Павлов Яков Фёдорович"], ["Зайцева Людмила Михайловна"], ["Громов Михаил Сергеевич"], ["Орлова Вера Павловна"], ["Новиков Александр Иванович"], ["Васнецова Татьяна Дмитриевна"], ["Кузнецов Пётр Васильевич"], ["Белов Алексей Николаевич"], ["Соколова Ольга Ивановна"], ["Морозов Иван Кузьмич"], ["Волкова Елена Сергеевна"], ["Ткаченко Григорий Петрович"], ["Беляев Павел Дмитриевич"], ["Семёнова Валентина Михайловна"], ["Ковалёв Сергей Николаевич"], ["Мельникова Галина Ивановна"], ["Фёдоров Игорь Васильевич"], ["Горбачёв Алексей Дмитриевич"], ["Сидорова Екатерина Петровна"], ["Смирнов Василий Иванович"], ["Крылова Надежда Фёдоровна"], ["Орлов Денис Сергеевич"], ["Жукова Елена Викторовна"], ["Гришин Алексей Петрович"], ["Ткаченко Иван Григорьевич"], ["Воронцова Лидия Павловна"], ["Жуковский Виктор Михайлович"], ["Морозова Анна Сергеевна"], ["Кузнецов Артём Игоревич"], ["Соколовская Надежда Викторовна"], ["Белов Дмитрий Николаевич"], ["Громова Екатерина Ивановна"], ["Фролов Павел Сергеевич"], ["Ковалёва Ольга Дмитриевна"]], "columns": ["full_name"], "row_count": 40}', '{stalingrad,medium}');
+INSERT INTO public.tasks VALUES (72, 1, 18, 'Чисто мужские/женские части', 'Выведите названия частей, состоящих исключительно из мужчин или женщин. Назовите столбец military_unit_name и отсортируйте результат по алфавиту. Это редкие случаи, характерные для отдельных родов войск', 'Примените `UNION` для объединения результатов двух подзапросов с `EXISTS` и `NOT EXISTS`', NULL, '{"data": [["101-й полк НКВД"], ["101-й учебный полк"], ["106-я стрелковая дивизия"], ["14-я отдельная штрафная рота"], ["18-я дивизия СС \"Хорст Вессель\""], ["1-й чехословацкий отдельный батальон"], ["1-я гвардейская танковая армия"], ["1-я морская бригада"], ["225-й отдельный инженерный батальон"], ["28-я дивизия народного ополчения"], ["2-я ударная армия"], ["369-й отдельный батальон морской пехоты"], ["37-й гвардейский миномётный полк"], ["3-я воздушная армия"], ["585-й женский авиаполк"], ["88-й отдельный лыжный батальон"], ["8-я гвардейская армия"], ["Отдельная медико-санитарная рота"], ["Отдельный батальон связи №45"], ["Отдельный отряд собак-истребителей танков"]], "columns": ["military_unit_name"], "row_count": 20}', '{medium}');
+INSERT INTO public.tasks VALUES (46, 1, 19, 'Накопление ресурсов', 'Рассчитайте накопленный объем боеприпасов, поставляемых в части за 1942 год. Выведите столбцы unit_id, month, total_ammo и отсортируйте результат по первому столбцу. Это отразит логистические усилия в критический период', 'Используйте оконную функцию `SUM` с сортировкой по месяцам', NULL, '{"data": [[1, 3.0, 50000.0], [2, 3.0, 50000.0], [6, 12.0, 20000.0], [13, 3.0, 30000.0], [18, 3.0, 40000.0], [21, 3.0, 50000.0], [26, 3.0, 70000.0]], "columns": ["unit_id", "month", "total_ammo"], "row_count": 7}', '{supply,window,medium}');
+INSERT INTO public.tasks VALUES (73, 1, 21, 'Долгосрочная служба', 'Выявите солдат, чья служба длилась более трех лет. Выведите полное имя солдата и длительность службы в днях (days). Отсортируйте результат от меньшей длительности к большей. Это может указывать на ветеранов, участвовавших в ключевых операциях', 'Рассчитайте разницу между датами начала и окончания службы с помощью `AGE`', NULL, '{"data": [["Громов Михаил Сергеевич", 1126], ["Кузнецов Пётр Васильевич", 1153], ["Гришин Алексей Петрович", 1245]], "columns": ["full_name", "days"], "row_count": 3}', '{medium}');
+INSERT INTO public.tasks VALUES (50, 1, 22, 'Союзники врага', 'Определите все вражеские части, участвовавшие в Курской битве. Это поможет понять структуру сил противника. Выведите только unit_name.', 'Используйте рекурсивный CTE для поиска связанных через таблицу союзов', NULL, '{"data": [["Танковая группа \"Кемпф\""], ["505-й тяжёлый танковый батальон"], ["503-й тяжёлый танковый батальон"], ["505-й инженерный батальон"], ["Эскадра SG2 \"Иммельман\""], ["12-я танковая дивизия"], ["Эскадра KG27 \"Бёльке\""], ["337-я пехотная дивизия"]], "columns": ["unit_name"], "row_count": 8}', '{cte,medium}');
+INSERT INTO public.tasks VALUES (58, 2, 4, 'Снаряжение элитных частей', 'Определите, какие типы снаряжения чаще всего используются в частях с эффективностью выше среднего. Вычисленный столбец назовите total. Отсортируйте результат в алфавитном порядке. Это поможет понять, какие ресурсы влияют на успех', 'Примените подзапрос для вычисления средней эффективности и `GROUP BY` для типов снаряжения', NULL, '{"data": [["артиллерия", 1], ["боеприпасы", 6], ["медицина", 3], ["миномёты", 1], ["противотанковые", 1], ["реактивные снаряды", 1], ["самолёты", 1], ["танки", 2]], "columns": ["equipment_type", "total"], "row_count": 8}', '{supply,hard}');
+INSERT INTO public.tasks VALUES (55, 2, 1, 'Рейтинг героев', 'Ранжируйте солдат по количеству наград в их частях. Выведите имя солдата, название подразделения (unit_name),	количество медалей (medals_count) и вычисленный ранг (medal_rank). Фамилии солдат выведите в алфавитном порядке. Это основа для определения самых отличившихся бойцов', 'Используйте `DENSE_RANK()` с группировкой по частям и сортировкой по наградам', NULL, '{"data": [["Белов Алексей Николаевич", "150-я стрелковая дивизия", 1, 1], ["Белов Дмитрий Николаевич", "1-й отдельный чехословацкий батальон", 0, 1], ["Беляев Павел Дмитриевич", "88-й отдельный лыжный батальон", 0, 1], ["Васнецова Татьяна Дмитриевна", "106-я стрелковая дивизия", 1, 1], ["Волкова Елена Сергеевна", "1-я морская бригада", 0, 1], ["Воронцова Лидия Павловна", "1-й отдельный чехословацкий батальон", 0, 1], ["Горбачёв Алексей Дмитриевич", "28-я дивизия народного ополчения", 0, 1], ["Гришин Алексей Петрович", "101-й учебный полк", 0, 1], ["Громова Екатерина Ивановна", "46-й гвардейский ночной бомбардировочный полк", 0, 1], ["Громов Михаил Сергеевич", "2-я ударная армия", 1, 1], ["Жукова Елена Викторовна", "18-я дивизия СС \"Хорст Вессель\"", 0, 1], ["Жуков Андрей Григорьевич", "16-я воздушная армия", 1, 1], ["Жуковский Виктор Михайлович", "46-й гвардейский ночной бомбардировочный полк", 0, 1], ["Зайцева Людмила Михайловна", "150-я стрелковая дивизия", 1, 1], ["Иванов Алексей Петрович", "316-я стрелковая дивизия", 1, 1], ["Ковалёва Ольга Дмитриевна", "Отдельный отряд собак-миноискателей", 0, 1], ["Ковалёв Сергей Николаевич", "369-й отдельный батальон морской пехоты", 0, 1], ["Козлов Николай Семёнович", "1-я гвардейская танковая армия", 0, 2], ["Крылова Надежда Фёдоровна", "Отдельный батальон связи №45", 0, 1], ["Кузнецов Артём Игоревич", "Отдельный отряд собак-миноискателей", 0, 1], ["Кузнецов Пётр Васильевич", "1-я гвардейская танковая армия", 1, 1], ["Мельникова Галина Ивановна", "1-й чехословацкий отдельный батальон", 0, 1], ["Морозова Анна Сергеевна", "101-й инженерно-сапёрный батальон", 0, 1], ["Морозов Иван Кузьмич", "14-я отдельная штрафная рота", 0, 1], ["Новиков Александр Иванович", "3-я воздушная армия", 1, 1], ["Орлова Вера Павловна", "8-я гвардейская армия", 1, 1], ["Орлов Денис Сергеевич", "225-й отдельный инженерный батальон", 0, 1], ["Павлов Яков Фёдорович", "62-я армия", 1, 1], ["Петров Дмитрий Иванович", "62-я армия", 1, 1], ["Семёнова Валентина Михайловна", "101-й полк НКВД", 0, 1], ["Сидорова Екатерина Петровна", "Отдельный отряд собак-истребителей танков", 0, 1], ["Смирнова Анна Васильевна", "62-я армия", 1, 1], ["Смирнов Василий Иванович", "37-й гвардейский миномётный полк", 0, 1], ["Соколова Ольга Ивановна", "16-я воздушная армия", 1, 1], ["Соколовская Надежда Викторовна", "64-я стрелковая дивизия", 0, 1], ["Ткаченко Григорий Петрович", "Отдельная медико-санитарная рота", 0, 1], ["Ткаченко Иван Григорьевич", "64-я стрелковая дивизия", 0, 1], ["Фёдорова Мария Ивановна", "316-я стрелковая дивизия", 0, 2], ["Фёдоров Игорь Васильевич", "585-й женский авиаполк", 0, 1], ["Фролов Павел Сергеевич", "101-й инженерно-сапёрный батальон", 0, 1]], "columns": ["full_name", "unit_name", "medals_count", "medal_rank"], "row_count": 40}', '{first_any_level,hard}');
+INSERT INTO public.tasks VALUES (78, 2, 2, 'Сравнение стратегий', 'Сравните среднюю эффективность частей, участвовавших в стратегических и локальных операциях. Это покажет разницу в результативности. Назовите столбцы battle_group и avg_efficiency. Назовите средние эффективности "Стратегические битвы" и "Локальные операции"', 'Примените `CASE` для классификации битв и `AVG` для сравнения', NULL, '{"data": [["Локальные операции", 88.07142857142857], ["Стратегические битвы", 85.0875]], "columns": ["battle_group", "avg_efficiency"], "row_count": 2}', '{hard}');
+INSERT INTO public.tasks VALUES (57, 2, 3, 'Анализ интервалов поставок', 'Определите среднее время между пополнениями снаряжения для каждой части. Выведите столбцы unit_name, equipment_type, last_replenishment, prev_replenishment (дата предыдущего пополнения), next_replenishment (дата следующего пополнения), days_between (интервал). Это поможет выявить логистические задержки или перебои', 'Примените `LAG()` для получения предыдущей даты пополнения и рассчитайте разницу между датами', NULL, '{"data": [["316-я стрелковая дивизия", "оружие", "1942-03-01", null, "1942-03-05", null], ["316-я стрелковая дивизия", "боеприпасы", "1942-03-05", "1942-03-01", "1942-05-10", 4], ["316-я стрелковая дивизия", "связь", "1942-05-10", "1942-03-05", null, 66], ["62-я армия", "боеприпасы", "1942-03-05", null, "1942-11-10", null], ["62-я армия", "артиллерия", "1942-11-10", "1942-03-05", "1943-01-10", 250], ["62-я армия", "медицина", "1943-01-10", "1942-11-10", "1943-12-01", 61], ["62-я армия", "медицина", "1943-12-01", "1943-01-10", null, 325], ["1-я гвардейская танковая армия", "танки", "1943-07-05", null, null, null], ["150-я стрелковая дивизия", "миномёты", "1944-01-15", null, null, null], ["16-я воздушная армия", "самолёты", "1943-05-01", null, null, null], ["7-я гвардейская миномётная дивизия", "боеприпасы", "1942-12-01", null, "1942-12-01", null], ["7-я гвардейская миномётная дивизия", "реактивные снаряды", "1942-12-01", "1942-12-01", null, 0], ["2-я ударная армия", "инженерное", "1943-08-14", null, null, null], ["8-я гвардейская армия", "танки", "1944-10-01", null, null, null], ["3-я воздушная армия", "авиабомбы", "1943-09-05", null, null, null], ["106-я стрелковая дивизия", "противотанковые", "1944-02-28", null, null, null], ["1-я морская бригада", "медицина", "1942-03-05", null, "1942-03-05", null], ["1-я морская бригада", "миномёты", "1942-03-05", "1942-03-05", "1942-06-06", 0], ["1-я морская бригада", "миномёты", "1942-06-06", "1942-03-05", null, 93], ["Отдельная медико-санитарная рота", "медицина", "1942-03-05", null, "1942-03-05", null], ["Отдельная медико-санитарная рота", "боеприпасы", "1942-03-05", "1942-03-05", null, 0], ["585-й женский авиаполк", "боеприпасы", "1942-03-05", null, null, null], ["37-й гвардейский миномётный полк", "боеприпасы", "1942-03-05", null, null, null], ["64-я стрелковая дивизия", "боеприпасы", "1942-03-05", null, null, null]], "columns": ["unit_name", "equipment_type", "last_replenishment", "prev_replenishment", "next_replenishment", "days_between"], "row_count": 24}', '{window,hard}');
+INSERT INTO public.tasks VALUES (81, 2, 5, 'Живучесть подразделений', 'Для каждого воинского подразделения рассчитайте: общую продолжительность участия в боях (разница между датой последнего и первого боя), количество боёв, в которых оно участвовало, количество солдат с безвозвратными потерями («убит», «пропал без вести»). На основе этих данных вычислите среднее количество потерь на один бой, определите процентильное положение подразделения по продолжительности участия в боях (чем дольше, тем выше процентиль). Выведите название подразделения (unit_name), общую продолжительность участия в боях (total_duration), количество боёв (battles_count), количество потерь (losses), средние потери на бой (loss_per_battle_ratio), округлённые до 2 знаков, процентиль по продолжительности (survival_percentile), рассчитанный как PERCENT_RANK() по убыванию total_duration. Отсортируйте результат по убыванию общей продолжительности участия в боях. Это покажет, какие подразделения были наиболее устойчивыми. Необходимо вывести колонки unit_name, total_duration, battles_count, losses, loss_per_battle_ratio, survival_percentile по убыванию общей продолжительности сражений.', 'Используйте `MIN()` и `MAX()` для дат сражений, а также `ROUND` для расчета соотношения потерь', NULL, '{"data": [["14-я отдельная штрафная рота", 1190, 1, 0, 0.0, 0.0], ["Отдельный отряд собак-истребителей танков", 871, 1, 0, 0.0, 0.043478260869565216], ["3-я воздушная армия", 447, 1, 1, 1.0, 0.08695652173913043], ["101-й учебный полк", 441, 1, 0, 0.0, 0.13043478260869565], ["101-й инженерно-сапёрный батальон", 441, 1, 0, 0.0, 0.13043478260869565], ["46-й гвардейский ночной бомбардировочный полк", 247, 1, 0, 0.0, 0.21739130434782608], ["37-й гвардейский миномётный полк", 247, 1, 1, 1.0, 0.21739130434782608], ["18-я дивизия СС \"Хорст Вессель\"", 202, 1, 0, 0.0, 0.30434782608695654], ["28-я дивизия народного ополчения", 200, 1, 0, 0.0, 0.34782608695652173], ["316-я стрелковая дивизия", 200, 1, 0, 0.0, 0.34782608695652173], ["1-й чехословацкий отдельный батальон", 200, 1, 0, 0.0, 0.34782608695652173], ["225-й отдельный инженерный батальон", 200, 1, 0, 0.0, 0.34782608695652173], ["Отдельная медико-санитарная рота", 89, 1, 1, 1.0, 0.5217391304347826], ["1-й отдельный чехословацкий батальон", 89, 1, 2, 2.0, 0.5217391304347826], ["88-й отдельный лыжный батальон", 62, 1, 0, 0.0, 0.6086956521739131], ["64-я стрелковая дивизия", 62, 1, 0, 0.0, 0.6086956521739131], ["16-я воздушная армия", 62, 1, 0, 0.0, 0.6086956521739131], ["Отдельный отряд собак-миноискателей", 49, 1, 0, 0.0, 0.7391304347826086], ["585-й женский авиаполк", 49, 1, 1, 1.0, 0.7391304347826086], ["62-я армия", 49, 1, 1, 1.0, 0.7391304347826086], ["Отдельный батальон связи №45", 49, 1, 0, 0.0, 0.7391304347826086], ["106-я стрелковая дивизия", 24, 1, 0, 0.0, 0.9130434782608695], ["1-я гвардейская танковая армия", 22, 1, 1, 1.0, 0.9565217391304348], ["369-й отдельный батальон морской пехоты", 7, 1, 0, 0.0, 1.0]], "columns": ["unit_name", "total_duration", "battles_count", "losses", "loss_per_battle_ratio", "survival_percentile"], "row_count": 24}', '{hard}');
+INSERT INTO public.tasks VALUES (80, 2, 6, 'Полный портрет части', 'Сформируйте сводку по каждой воинской части: количество солдат, снаряжения, участие в битвах и полученные награды. Это основа для комплексного анализа. Выведите колонки unit_name, soldiers_total, equipment_types, battles_participated, medals_received. Выведите результат по убыванию количества солдат.', 'Используйте `LEFT JOIN` для объединения таблиц и агрегатные функции (`COUNT`, `STRING_AGG`)', NULL, '{"data": [["62-я армия", 3, 4, 1, "Герой Советского Союза, Медаль \"За взятие Берлина\", Орден Отечественной войны"], ["Отдельный отряд собак-миноискателей", 2, 0, 1, null], ["150-я стрелковая дивизия", 2, 1, 0, "Медаль \"За оборону Сталинграда\", Медаль \"За отвагу\""], ["16-я воздушная армия", 2, 1, 1, "Медаль \"За оборону Москвы\", Орден Красной Звезды"], ["1-й отдельный чехословацкий батальон", 2, 0, 1, null], ["1-я гвардейская танковая армия", 2, 1, 1, "Герой Советского Союза"], ["316-я стрелковая дивизия", 2, 3, 1, "Медаль \"За отвагу\""], ["46-й гвардейский ночной бомбардировочный полк", 2, 0, 1, null], ["64-я стрелковая дивизия", 2, 1, 1, null], ["101-й инженерно-сапёрный батальон", 2, 0, 1, null], ["1-й чехословацкий отдельный батальон", 1, 0, 1, null], ["1-я морская бригада", 1, 3, 0, null], ["225-й отдельный инженерный батальон", 1, 0, 1, null], ["28-я дивизия народного ополчения", 1, 0, 1, null], ["2-я ударная армия", 1, 1, 0, "Орден Отечественной войны"], ["Отдельная медико-санитарная рота", 1, 2, 1, null], ["369-й отдельный батальон морской пехоты", 1, 0, 1, null], ["37-й гвардейский миномётный полк", 1, 1, 1, null], ["3-я воздушная армия", 1, 1, 1, "Орден Красной Звезды"], ["Отдельный батальон связи №45", 1, 0, 1, null], ["585-й женский авиаполк", 1, 1, 1, null], ["101-й полк НКВД", 1, 0, 0, null], ["101-й учебный полк", 1, 0, 1, null], ["106-я стрелковая дивизия", 1, 1, 1, "Медаль \"Партизану Отечественной войны\""], ["14-я отдельная штрафная рота", 1, 0, 1, null], ["Отдельный отряд собак-истребителей танков", 1, 0, 1, null], ["8-я гвардейская армия", 1, 1, 0, "Орден Славы"], ["18-я дивизия СС \"Хорст Вессель\"", 1, 0, 1, null], ["88-й отдельный лыжный батальон", 1, 0, 1, null], ["7-я гвардейская миномётная дивизия", 0, 2, 0, null]], "columns": ["unit_name", "soldiers_total", "equipment_types", "battles_participated", "medals_received"], "row_count": 30}', '{hard}');
+INSERT INTO public.tasks VALUES (59, 2, 7, 'Критический дефицит', 'Для анализа состояния снабжения воинских подразделений необходимо выявить снаряжение, количество которого значительно отклоняется от среднего уровня по каждому типу. Для этого требуется рассчитать среднее количество и стандартное отклонение для каждого типа снаряжения (equipment_type) по всем подразделениям, а затем определить, в каких именно частях и какие конкретно предметы снаряжения находятся в дефиците. Каждая единица снаряжения должна быть классифицирована как «Критический дефицит», если её количество ниже среднего на полторы стандартные девиации, как «Дефицит», если количество ниже среднего, но не достигает уровня критического дефицита, и как «Норма» в остальных случаях. В результате должен быть выведен список всего снаряжения с указанием его типа, названия, названия подразделения, количества и статуса, отсортированный сначала по типу снаряжения, а затем по возрастанию количества, чтобы наглядно выявить потенциальные узкие места в системе снабжения', 'Примените оконные функции (`AVG`, `STDDEV`)', NULL, '{"data": [["Винтовка Мосина", 1200], ["Аптечки полевые", 350], ["76-мм дивизионная пушка ЗИС-3", 24], ["Т-34", 58], ["БМ-13 \"Катюша\"", 12], ["Ил-2", 45], ["М-31", 1500], ["Сапёрная лопатка", 850], ["ИС-2", 42], ["ФАБ-100", 3200], ["ПТРД", 68], ["Радиостанция РБМ", 15], ["Плазменные флаконы", 480]], "columns": ["item_name", "quantity"], "row_count": 13}', '{supply,hard}');
+INSERT INTO public.tasks VALUES (60, 2, 8, 'Топ вражеских частей', 'Для анализа тактики противника требуется определить три вражеских подразделения, одержавших наибольшее количество побед над советскими войсками. Для этого необходимо проанализировать все бои, в которых вражеские подразделения участвовали, и выявить те сражения, где результат не указывал на победу СССР. В каждом таком бою нужно подсчитать количество безвозвратных потерь среди советских солдат, проходивших службу в подразделениях, участвовавших в этом бою, и с помощью ранжирования определить, какое из вражеских подразделений нанесло наибольший урон, считая его победителем в случае, если в бою было несколько вражеских подразделений. Затем для каждого вражеского подразделения необходимо подсчитать общее количество таких побед (по числу боёв, где оно заняло первое место по урону) и суммарное количество советских потерь, понесённых в этих боях. В результате следует вывести названия трёх лучших по числу побед подразделений, а также количество их побед и общее число потерь среди советских солдат в этих сражениях, отсортировав сначала по убыванию числа побед, а затем — по убыванию суммарных потерь. Выведите unit_name, victories и total_soviet_losses по убыванию  victories и total_soviet_losses.', 'Используйте `RANK()`, `COUNT` с фильтрацией по результату битв и `LIMIT 3`', NULL, '{"data": [["17-я танковая дивизия", 1, 2.0], ["1-я танковая дивизия СС \"Лейбштандарт Адольф Гитлер\"", 1, 1.0], ["9-я армия", 1, 1.0]], "columns": ["unit_name", "victories", "total_soviet_losses"], "row_count": 3}', '{window,hard}');
+INSERT INTO public.tasks VALUES (82, 2, 9, 'Прогноз износа техники', 'Для прогнозирования будущих потребностей в ремонте и замене снаряжения необходимо проанализировать его расход по годам с использованием сглаживающего алгоритма. Для каждого типа снаряжения (equipment_type) и каждого года (issue_date) требуется рассчитать коэффициент потерь как отношение количества снаряжения, выданного солдатам, к количеству солдат, проходивших службу в тот же год, чтобы учесть масштабы деятельности частей. Данный коэффициент следует сгладить с помощью трёхлетнего скользящего среднего (включая текущий год и два предыдущих), чтобы устранить случайные колебания и выявить общую тенденцию. Выведите тип снаряжения, год, исходный коэффициент потерь и сглаженное значение, отсортировав результат сначала по типу снаряжения, а затем по году в порядке возрастания', 'Используйте CTE для подсчёта примените AVG(...) OVER (ORDER BY year ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) для сглаживания', NULL, '{"data": [["авиабомбы", 1943.0, 2.1818, 2.1818], ["артиллерия", 1942.0, 0.0769, 0.0769], ["боеприпасы", 1942.0, 9.2308, 9.2308], ["инженерное", 1943.0, 0.0909, 0.0909], ["медицина", 1943.0, 0.7273, 0.7273], ["миномёты", 1944.0, 20.0, 20.0], ["оружие", 1942.0, 0.0769, 0.0769], ["противотанковые", 1944.0, 0.1667, 0.1667], ["самолёты", 1943.0, 0.0909, 0.0909], ["связь", 1942.0, 0.0769, 0.0769], ["танки", 1943.0, 0.0909, 0.0909], ["танки", 1944.0, 0.1667, 0.1288]], "columns": ["equipment_type", "year", "loss_ratio", "smoothed_ratio"], "row_count": 12}', '{hard}');
+INSERT INTO public.tasks VALUES (61, 2, 10, 'Эффективность наград', 'Для оценки соответствия воинских наград реальным результатам в бою необходимо проанализировать подразделения, которые получили наибольшее количество наград. Для каждого такого подразделения следует определить, какие именно награды ему были присвоены, и подсчитать общее количество раз, когда они были вручены (всего наградовано солдат). Далее, для этих же подразделений необходимо подсчитать количество боёв, в которых они одержали победу (результат боя — «победа»), и общее число солдат с безвозвратными потерями («убит» и «пропал без вести»). На основе этих данных рассчитайте соотношение побед к числу наград (victory_per_medal) и потерь к числу наград (death_per_medal) для каждой награды, чтобы оценить, насколько боевые достижения и потери сопоставимы с полученным признанием. Выведите название подразделения, название награды, количество награждений, количество погибших, число побед и два расчётных показателя, отсортировав результат по убыванию соотношения побед к наградам, при этом строки с нулевым значением victory_per_medal должны располагаться в конце списка.', 'Используйте CTE. Объедините данные по unit_id и medal_id. Рассчитайте victory_per_medal и death_per_medal с округлением. В сортировке используйте CASE, чтобы вывести нули в victory_per_medal в конец', NULL, '{"data": [["3-я воздушная армия", "Орден Красной Звезды", 1, 0, 1, 1.0, 0.0], ["150-я стрелковая дивизия", "Медаль \"За оборону Сталинграда\"", 1, 0, 0, 0.0, 0.0], ["106-я стрелковая дивизия", "Медаль \"Партизану Отечественной войны\"", 1, 0, 0, 0.0, 0.0], ["16-я воздушная армия", "Орден Красной Звезды", 1, 0, 0, 0.0, 0.0], ["150-я стрелковая дивизия", "Медаль \"За отвагу\"", 1, 0, 0, 0.0, 0.0], ["8-я гвардейская армия", "Орден Славы", 1, 0, 0, 0.0, 0.0], ["62-я армия", "Медаль \"За взятие Берлина\"", 1, 0, 0, 0.0, 0.0], ["1-я гвардейская танковая армия", "Герой Советского Союза", 1, 0, 0, 0.0, 0.0], ["62-я армия", "Орден Отечественной войны", 1, 0, 0, 0.0, 0.0], ["62-я армия", "Герой Советского Союза", 1, 0, 0, 0.0, 0.0], ["316-я стрелковая дивизия", "Медаль \"За отвагу\"", 1, 0, 0, 0.0, 0.0], ["2-я ударная армия", "Орден Отечественной войны", 1, 0, 0, 0.0, 0.0], ["16-я воздушная армия", "Медаль \"За оборону Москвы\"", 1, 0, 0, 0.0, 0.0]], "columns": ["unit_name", "medal_name", "awarded", "deaths", "victories", "victory_per_medal", "death_per_medal"], "row_count": 13}', '{window,hard}');
+INSERT INTO public.tasks VALUES (83, 2, 11, 'Сезонность боевых действий', 'Для выявления возможных сезонных закономерностей в боевых действиях советских войск необходимо определить, в какие месяцы года они чаще всего одерживали победы. Для этого требуется проанализировать данные о боях, в которых участвовали советские подразделения, и выделить те сражения, исход которых соответствовал победе СССР (например, строка result содержит "победа СССР", "успешно", "советские войска одержали верх" и т.п.). Для каждой победы следует извлечь месяц из даты окончания боя, так как именно к этому моменту становится ясен её итог. Далее необходимо подсчитать количество побед, одержанных в каждом месяце года, и ранжировать результат по убыванию количества побед. Выведите месяц (в виде числа от 1 до 12), его название (для удобства), общее количество побед в этом месяце и процент всех побед, приходящихся на этот месяц, от общего числа побед за весь период. Отсортируйте результат по убыванию количества побед', 'Используйте `EXTRACT(MONTH)` для группировки и `COUNT` с фильтрацией по результату битв', NULL, '{"data": [[4.0, "April", 1, 100.0]], "columns": ["month_num", "month_name", "victory_count", "victory_percentage"], "row_count": 1}', '{hard}');
+INSERT INTO public.tasks VALUES (62, 2, 12, 'Стоимость победы', 'Для анализа ценности побед в боевых действиях требуется определить, какие битвы, несмотря на успех, были наиболее «дорогими» в терминах потерь среди солдат и затрат ресурсов. Для каждой битвы необходимо рассчитать общее количество безвозвратных потерь (солдаты со статусом «убит» или «пропал без вести»), участвовавших в ней, а также среднюю исходную боевую эффективность подразделений, принимавших в ней участие. Дополнительно нужно подсчитать количество единиц снаряжения, использованного солдатами, участвовавшими в битве, что отразит объём израсходованных материальных ресурсов. На основе этих данных следует вычислить условный «стоимостной коэффициент» битвы (cost_ratio) как отношение числа потерь к средней боевой эффективности — чем выше этот коэффициент, тем «дороже» победа. Затем необходимо проранжировать все битвы по убыванию числа потерь (loss_rank) и по убыванию средней эффективности (eff_rank), где ранг 1 присваивается наибольшему значению. В результате нужно вывести название битвы, количество потерь, среднюю боевую эффективность, объём использованного снаряжения, ранги по потерям и эффективности, а также стоимостной коэффициент, отсортировав итоговый список по убыванию cost_ratio', 'Используйте `RANK()` и арифметические операции с агрегатными функциями', NULL, '{"data": [["Оборона Севастополя", 0, 96.6, 0, 1, 1, 0.0], ["Битва за Берлин", 0, 95.0, 2, 1, 2, 0.0], ["Корсунь-Шевченковская операция", 0, 89.3, 1, 1, 3, 0.0], ["Оборона Брестской крепости", 0, 88.9, 0, 1, 4, 0.0], ["Демянская операция", 0, 88.35, 0, 1, 5, 0.0], ["Курская битва", 0, 88.23, 6, 1, 6, 0.0], ["Битва за Москву", 0, 88.1, 0, 1, 7, 0.0], ["Смоленское сражение", 0, 85.07, 4, 1, 8, 0.0], ["Ржевская битва", 0, 85.0, 24, 1, 9, 0.0], ["Блокада Ленинграда", 0, 82.4, 0, 1, 10, 0.0], ["Сталинградская битва", 0, 80.88, 121, 1, 11, 0.0], ["Битва за Кавказ", 0, 78.9, 0, 1, 12, 0.0], ["Оборона Заполярья", 0, 65.8, 0, 1, 13, 0.0], ["Оборона Тулы", 0, 0.0, 0, 1, 14, 0.0], ["Берлинская операция", 0, 0.0, 0, 1, 14, 0.0], ["Пражская операция", 0, 0.0, 0, 1, 14, 0.0], ["Оборона Брестской крепости", 0, 0.0, 0, 1, 14, 0.0], ["Битва при Дебрецене", 0, 0.0, 0, 1, 14, 0.0], ["Операция \"Багратион\"", 0, 0.0, 0, 1, 14, 0.0], ["Висло-Одерская операция", 0, 0.0, 0, 1, 14, 0.0], ["Будапештская операция", 0, 0.0, 0, 1, 14, 0.0], ["Харьковская операция", 0, 0.0, 0, 1, 14, 0.0], ["Битва за Днепр", 0, 0.0, 0, 1, 14, 0.0], ["Таллинский переход", 0, 0.0, 0, 1, 14, 0.0], ["Прорыв блокады Ленинграда", 0, 0.0, 0, 1, 14, 0.0], ["Битва за Воронеж", 0, 0.0, 0, 1, 14, 0.0], ["Керченско-Эльтигенская операция", 0, 0.0, 0, 1, 14, 0.0], ["Балатонская операция", 0, 0.0, 0, 1, 14, 0.0], ["Восточно-Прусская операция", 0, 0.0, 0, 1, 14, 0.0], ["Маньчжурская операция", 0, 0.0, 0, 1, 14, 0.0]], "columns": ["battle_name", "losses", "avg_efficiency", "equipment_used", "loss_rank", "eff_rank", "cost_ratio"], "row_count": 30}', '{window,hard}');
+INSERT INTO public.tasks VALUES (84, 3, 1, 'Пространство имён', 'Отряд занял немецкий вычислительный узел; база пуста — ни одной таблицы, ни одного объекта. Прежде чем вносить разведданные, подпольному архиву нужно своё пространство имён, чтобы не смешаться с тем, что осталось от немцев.
+
+Создайте схему podpolye — отдельное пространство имён для подпольной базы.', 'Пространство имён создаётся одним оператором: CREATE SCHEMA <имя>. Схема — это «папка» для таблиц; больше в этом задании ничего не требуется.', 'CREATE SCHEMA podpolye', '{"mode": "model", "setup": [], "expect": [{"args": {"name": "podpolye"}, "probe": "schema_exists", "title": "схема подполья создана", "value": true}, {"args": {"name": "public"}, "probe": "schema_exists", "title": "схема public не тронута", "value": true}, {"args": {"schema": "podpolye", "grantee": "PUBLIC"}, "probe": "schema_privs", "title": "посторонним схему не открывали", "value": []}, {"args": {}, "probe": "all_roles", "title": "посторонних ролей не заводили", "value": []}], "reveal": "Что проверяется: схема подполья создана; схема public не тронута; посторонним схему не открывали; посторонних ролей не заводили."}', '{ddl,schema}');
+INSERT INTO public.tasks VALUES (85, 3, 2, 'Настройка базы', 'Центр принимает донесения по единому времени, а набирать «podpolye.» перед каждым именем таблицы в полутьме — верный способ ошибиться. Семён требует настроить базу один раз и навсегда.
+
+Настройте базу quest_sandbox: часовой пояс по умолчанию — ''UTC'', а путь поиска схем — сначала podpolye, затем public.', 'Параметры уровня базы задаются оператором изменения базы данных, а не правкой файла настроек: ALTER DATABASE <имя> SET <параметр> TO <значение>. Здесь таких оператора два — по одному на каждый параметр.', 'ALTER DATABASE quest_sandbox SET timezone TO ''UTC''; ALTER DATABASE quest_sandbox SET search_path TO podpolye, public', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye"], "expect": [{"args": {"db": "quest_sandbox"}, "probe": "db_settings", "title": "настройки базы", "value": [["search_path", "podpolye,public"], ["timezone", "UTC"]]}, {"args": {"name": "podpolye"}, "probe": "schema_exists", "title": "схема на месте", "value": true}], "reveal": "Что проверяется: настройки базы; схема на месте."}', '{ddl,config}');
+INSERT INTO public.tasks VALUES (86, 3, 3, 'Таблица складов', 'Первое, что нужно Центру, — учёт немецких складов: номер, название, сектор города и вместимость. Номер — то, чем склад отличается от всех остальных; безымянный склад разведданными не является, а вот вместимость известна не всегда.
+
+Создайте таблицу podpolye.depots: depot_id — целое число, первичный ключ; depot_name — строка не длиннее 40 символов, обязательная; sector — ровно один символ, обязательный; capacity_t — целое число, может оставаться пустым.', '«Целое число» — тип integer, «строка не длиннее N» — varchar(N), «ровно один символ» — char(1). Обязательность — NOT NULL, а первичный ключ можно объявить прямо в определении столбца: depot_id integer PRIMARY KEY.', 'CREATE TABLE podpolye.depots(
+    depot_id   integer PRIMARY KEY,
+    depot_name varchar(40) NOT NULL,
+    sector     char(1) NOT NULL,
+    capacity_t integer)', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye"], "expect": [{"args": {"table": "podpolye.depots"}, "probe": "columns", "title": "столбцы таблицы складов", "value": [["depot_id", "integer", null, true, false], ["depot_name", "character varying", 40, true, false], ["sector", "character", 1, true, false], ["capacity_t", "integer", null, false, false]]}, {"args": {"table": "podpolye.depots"}, "probe": "primary_key", "title": "первичный ключ складов", "value": ["depot_id"]}, {"args": {"table": "podpolye.depots"}, "probe": "uniques", "title": "лишних ограничений уникальности нет", "value": []}, {"args": {"table": "podpolye.depots"}, "probe": "public_privs", "title": "права никому не раздавали", "value": []}], "reveal": "Что проверяется: столбцы таблицы складов; первичный ключ складов; лишних ограничений уникальности нет; права никому не раздавали."}', '{ddl,table,constraint}');
+INSERT INTO public.tasks VALUES (87, 3, 4, 'Заплата на сектор', 'Наблюдатель при свече вывел «8» вместо «B» — и база приняла склад в несуществующем секторе. Город поделён ровно на четыре сектора: A, B, C и D. Дыра должна закрыться этой же ночью.
+
+Добавьте к таблице podpolye.depots ограничение-проверку, которое разрешает в столбце sector только значения ''A'', ''B'', ''C'' и ''D''.', 'Ограничение добавляется к готовой таблице: ALTER TABLE ... ADD CONSTRAINT <имя> CHECK (условие). Условие «одно из перечисленных значений» короче всего записывается через IN: sector IN (''A'',''B'',''C'',''D'').', 'ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)"], "expect": [{"args": {"cases": [{"row": {"sector": "A", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "A"}, {"row": {"sector": "B", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "B"}, {"row": {"sector": "C", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "C"}, {"row": {"sector": "D", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "D"}, {"row": {"sector": "E", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "E"}, {"row": {"sector": "X", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "X"}, {"row": {"sector": "Z", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "Z"}, {"row": {"sector": "a", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "строчная a"}, {"row": {"sector": "Z", "depot_id": 99, "depot_name": "Проба"}, "label": "Z без вместимости"}], "table": "podpolye.depots"}, "probe": "accepts", "title": "какие сектора база принимает", "value": [["A", true], ["B", true], ["C", true], ["D", true], ["E", false], ["X", false], ["Z", false], ["строчная a", false], ["Z без вместимости", false]]}, {"args": {"table": "podpolye.depots"}, "probe": "columns", "title": "столбцы складов не тронуты", "value": [["depot_id", "integer", null, true, false], ["depot_name", "character varying", 40, true, false], ["sector", "character", 1, true, false], ["capacity_t", "integer", null, false, false]]}, {"args": {"table": "podpolye.depots"}, "probe": "primary_key", "title": "первичный ключ на месте", "value": ["depot_id"]}], "reveal": "Что проверяется: какие сектора база принимает; столбцы складов не тронуты; первичный ключ на месте."}', '{ddl,alter,constraint,check}');
+INSERT INTO public.tasks VALUES (88, 3, 5, 'Справочник секторов', 'Сектор — не буква, а самостоятельная вещь с названием: «Заречный», «Вокзальный». Склады должны ссылаться на справочник по-настоящему: сектор, за которым числятся склады, стереть нельзя.
+
+Создайте справочник podpolye.sectors: sector — ровно один символ, первичный ключ; title — строка не длиннее 30 символов, обязательная. Затем свяжите с ним склады: добавьте к podpolye.depots внешний ключ из столбца sector на sectors.sector, запрещающий удалять сектор, пока на него ссылаются склады.', 'Справочник создаётся обычным CREATE TABLE, а связь добавляется к уже существующей таблице: ALTER TABLE ... ADD CONSTRAINT ... FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector). Запрет удаления «пока есть ссылки» — это ON DELETE RESTRICT.', 'CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL); ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))"], "expect": [{"args": {"table": "podpolye.sectors"}, "probe": "columns", "title": "столбцы справочника секторов", "value": [["sector", "character", 1, true, false], ["title", "character varying", 30, true, false]]}, {"args": {"table": "podpolye.sectors"}, "probe": "primary_key", "title": "первичный ключ справочника", "value": ["sector"]}, {"args": {"table": "podpolye.depots"}, "probe": "foreign_keys", "title": "внешний ключ складов на сектора", "value": [["sector", "podpolye.sectors", "sector", "запрещает удаление"]]}, {"args": {"table": "podpolye.depots"}, "probe": "columns", "title": "склады остались прежними", "value": [["depot_id", "integer", null, true, false], ["depot_name", "character varying", 40, true, false], ["sector", "character", 1, true, false], ["capacity_t", "integer", null, false, false]]}, {"args": {"table": "podpolye.depots"}, "probe": "primary_key", "title": "первичный ключ складов на месте", "value": ["depot_id"]}], "reveal": "Что проверяется: столбцы справочника секторов; первичный ключ справочника; внешний ключ складов на сектора; склады остались прежними; первичный ключ складов на месте."}', '{ddl,table,foreign_key}');
+INSERT INTO public.tasks VALUES (89, 3, 6, 'Первые донесения', 'Каркас готов, справочник заполнен, база пуста. Три первых склада должны попасть в базу без единой ошибки: что внесено неверно, Центр примет за правду.
+
+Внесите в podpolye.depots три склада: (1, ''Арсенал №1'', ''A'', 800), (2, ''Топливный склад'', ''A'', 450) и (3, ''Продовольственный'', ''B'', 300).', 'Несколько строк вносятся одним оператором: INSERT INTO <таблица>(столбцы) VALUES (...), (...), (...). Строковые значения — в одинарных кавычках, порядок значений должен совпадать с порядком перечисленных столбцов.', 'INSERT INTO podpolye.depots(depot_id, depot_name, sector, capacity_t) VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES (''A'',''Заречный''),(''B'',''Вокзальный''),(''C'',''Старый город''),(''D'',''Фабричный'')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT"], "expect": [{"args": {"table": "podpolye.depots", "columns": ["depot_id", "depot_name", "sector", "capacity_t"], "order_by": "depot_id"}, "probe": "rows", "title": "содержимое таблицы складов", "value": [[1, "Арсенал №1", "A", 800], [2, "Топливный склад", "A", 450], [3, "Продовольственный", "B", 300]]}, {"args": {"table": "podpolye.depots"}, "probe": "columns", "title": "таблица осталась прежней", "value": [["depot_id", "integer", null, true, false], ["depot_name", "character varying", 40, true, false], ["sector", "character", 1, true, false], ["capacity_t", "integer", null, false, false]]}, {"args": {"table": "podpolye.depots"}, "probe": "primary_key", "title": "первичный ключ на месте", "value": ["depot_id"]}], "reveal": "Что проверяется: содержимое таблицы складов; таблица осталась прежней; первичный ключ на месте."}', '{dml,insert}');
+INSERT INTO public.tasks VALUES (104, 4, 9, 'Передоверие', 'Отряд уходит, узел передаётся соседней группе. Их бойцы вам незнакомы — и не должны быть: раздавать доступ своим людям соседи будут сами. Для этого командованию нужно право передавать чтение дальше.
+
+Выдайте роли commanders право читать таблицу podpolye.safehouses так, чтобы она могла передавать это право другим ролям.', 'Возможность передавать право дальше добавляется к обычной выдаче: GRANT SELECT ON podpolye.safehouses TO commanders WITH GRANT OPTION. Именно WITH GRANT OPTION отличает передоверие от простого чтения.', 'GRANT SELECT ON podpolye.safehouses TO commanders WITH GRANT OPTION', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)", "CREATE ROLE grisha LOGIN", "GRANT scouts TO grisha", "ALTER DEFAULT PRIVILEGES IN SCHEMA podpolye GRANT SELECT ON TABLES TO scouts"], "expect": [{"args": {"table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "grantable", "title": "право командования и возможность передачи", "value": [["DELETE", false], ["INSERT", false], ["REFERENCES", false], ["SELECT", true], ["TRIGGER", false], ["TRUNCATE", false], ["UPDATE", false]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "has_privs", "title": "состав прав командования не менялся", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", true], ["DELETE", true], ["TRUNCATE", true], ["REFERENCES", true], ["TRIGGER", true]]}, {"args": {"schema": "podpolye", "grantee": "commanders"}, "probe": "schema_privs", "title": "доступ командования к схеме сохранён", "value": ["USAGE"]}, {"args": {"privs": ["SELECT"], "table": "podpolye.safehouses", "grantees": ["spies", "PUBLIC"]}, "probe": "privs_matrix", "title": "посторонним явки не открывали", "value": [["spies", "SELECT", false], ["PUBLIC", "SELECT", false]]}, {"args": {}, "probe": "all_memberships", "title": "членство ролей не меняли", "value": [["grisha", "scouts"]]}], "reveal": "Что проверяется: право командования и возможность передачи; состав прав командования не менялся; доступ командования к схеме сохранён; посторонним явки не открывали; членство ролей не меняли."}', '{dcl,grant,grant_option}');
+INSERT INTO public.tasks VALUES (90, 3, 7, 'Журнал рейсов', 'Наблюдатели приносят записки о вывозе: склад, дата, тоннаж. Дата почти всегда сегодняшняя — пусть база подставляет её сама. А рейсы склада, ушедшего из учёта, обязаны исчезнуть вместе с ним.
+
+Создайте таблицу podpolye.movements: move_id — целое, первичный ключ; depot_id — целое, обязательное, внешний ключ на podpolye.depots(depot_id), причём вместе со складом должны удаляться и его рейсы; at_date — дата, обязательная, по умолчанию текущая; tons — целое.', 'Связь можно объявить прямо в столбце: depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE — каскад и означает «удалять рейсы вместе со складом». Текущая дата по умолчанию — DEFAULT current_date.', 'CREATE TABLE podpolye.movements(
+    move_id  integer PRIMARY KEY,
+    depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE,
+    at_date  date NOT NULL DEFAULT current_date,
+    tons     integer)', '{"mode": "model", "post": ["INSERT INTO podpolye.movements(move_id, depot_id, tons) VALUES (1,1,60),(2,1,38),(3,2,52)"], "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES (''A'',''Заречный''),(''B'',''Вокзальный''),(''C'',''Старый город''),(''D'',''Фабричный'')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)"], "expect": [{"args": {"table": "podpolye.movements"}, "probe": "columns", "title": "столбцы таблицы рейсов", "value": [["move_id", "integer", null, true, false], ["depot_id", "integer", null, true, false], ["at_date", "date", null, true, true], ["tons", "integer", null, false, false]]}, {"args": {"table": "podpolye.movements"}, "probe": "primary_key", "title": "первичный ключ рейсов", "value": ["move_id"]}, {"args": {"table": "podpolye.movements"}, "probe": "foreign_keys", "title": "внешний ключ рейсов на склады", "value": [["depot_id", "podpolye.depots", "depot_id", "удаляет следом"]]}, {"args": {"table": "podpolye.movements", "columns": ["at_date"]}, "probe": "default_kind", "title": "дата подставляется сама", "value": [["at_date", "текущий момент"]]}, {"args": {"table": "podpolye.depots", "value": 1, "column": "depot_id"}, "probe": "delete_allowed", "title": "склад удаляется вместе со своими рейсами", "value": true}, {"args": {"cases": [{"row": {"tons": 5, "move_id": 1, "depot_id": 2}, "label": "повтор номера"}, {"row": {"tons": 5, "move_id": 99, "depot_id": 2}, "label": "новый номер"}], "table": "podpolye.movements"}, "probe": "accepts", "title": "повтор номера рейса и новый номер", "value": [["повтор номера", false], ["новый номер", true]]}], "reveal": "Что проверяется: столбцы таблицы рейсов; первичный ключ рейсов; внешний ключ рейсов на склады; дата подставляется сама; склад удаляется вместе со своими рейсами; повтор номера рейса и новый номер."}', '{ddl,table,foreign_key,default}');
+INSERT INTO public.tasks VALUES (91, 3, 8, 'Груз и вес', 'В таблице рейсов не хватает главного — что именно вывозят. Заодно в базу попал рейс с отрицательным весом: отрицательных тонн не бывает, и база должна знать это сама.
+
+В таблицу podpolye.movements добавьте столбец cargo_ru — строка не длиннее 30 символов, и ограничение, требующее, чтобы значение tons было строго больше нуля.', 'Здесь два отдельных действия над готовой таблицей: ALTER TABLE ... ADD COLUMN cargo_ru varchar(30) и ALTER TABLE ... ADD CONSTRAINT ... CHECK (tons > 0). «Строго больше нуля» — именно >, а не >=.', 'ALTER TABLE podpolye.movements ADD COLUMN cargo_ru varchar(30); ALTER TABLE podpolye.movements ADD CONSTRAINT movements_tons_chk CHECK (tons > 0)', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES (''A'',''Заречный''),(''B'',''Вокзальный''),(''C'',''Старый город''),(''D'',''Фабричный'')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.movements(\n    move_id  integer PRIMARY KEY,\n    depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE,\n    at_date  date NOT NULL DEFAULT current_date,\n    tons     integer)", "INSERT INTO podpolye.movements(move_id, depot_id, at_date, tons) VALUES (1,1,''1944-09-11'',60),(2,1,''1944-09-15'',38),(3,2,''1944-09-12'',52),(4,3,''1944-09-14'',22),(5,3,''1944-09-18'',45)"], "expect": [{"args": {"table": "podpolye.movements"}, "probe": "columns", "title": "столбцы рейсов после правки", "value": [["move_id", "integer", null, true, false], ["depot_id", "integer", null, true, false], ["at_date", "date", null, true, true], ["tons", "integer", null, false, false], ["cargo_ru", "character varying", 30, false, false]]}, {"args": {"cases": [{"row": {"tons": 10, "move_id": 99, "depot_id": 1}, "label": "10 тонн"}, {"row": {"tons": 5, "move_id": 99, "depot_id": 1}, "label": "5 тонн"}, {"row": {"tons": 1, "move_id": 99, "depot_id": 1}, "label": "1 тонна"}, {"row": {"tons": 0, "move_id": 99, "depot_id": 1}, "label": "ноль"}, {"row": {"tons": -5, "move_id": 99, "depot_id": 1}, "label": "минус пять"}, {"row": {"tons": -100, "move_id": 99, "depot_id": 1}, "label": "минус сто"}], "table": "podpolye.movements"}, "probe": "accepts", "title": "какой вес база принимает", "value": [["10 тонн", true], ["5 тонн", true], ["1 тонна", true], ["ноль", false], ["минус пять", false], ["минус сто", false]]}, {"args": {"table": "podpolye.movements"}, "probe": "foreign_keys", "title": "связь со складами не потеряна", "value": [["depot_id", "podpolye.depots", "depot_id", "удаляет следом"]]}, {"args": {"table": "podpolye.movements"}, "probe": "primary_key", "title": "первичный ключ рейсов на месте", "value": ["move_id"]}, {"args": {"table": "podpolye.movements", "columns": ["move_id", "depot_id", "tons"], "order_by": "move_id"}, "probe": "rows", "title": "рейсы на месте", "value": [[1, 1, 60], [2, 1, 38], [3, 2, 52], [4, 3, 22], [5, 3, 45]]}], "reveal": "Что проверяется: столбцы рейсов после правки; какой вес база принимает; связь со складами не потеряна; первичный ключ рейсов на месте; рейсы на месте."}', '{ddl,alter,constraint,check}');
+INSERT INTO public.tasks VALUES (92, 3, 9, 'Указатель', 'Счётная машина перебирает весь журнал рейсов ради одной сводки по складу. Нужен указатель по столбцу связи — и он не обязан быть уникальным: с одного склада рейсов много.
+
+Постройте по столбцу depot_id таблицы podpolye.movements обычный, не уникальный индекс.', 'Индекс создаётся оператором CREATE INDEX <имя> ON <таблица>(<столбец>). Слово UNIQUE добавлять не нужно — как раз потому, что значения в depot_id повторяются.', 'CREATE INDEX movements_depot_idx ON podpolye.movements(depot_id)', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES (''A'',''Заречный''),(''B'',''Вокзальный''),(''C'',''Старый город''),(''D'',''Фабричный'')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.movements(\n    move_id  integer PRIMARY KEY,\n    depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE,\n    at_date  date NOT NULL DEFAULT current_date,\n    tons     integer)", "INSERT INTO podpolye.movements(move_id, depot_id, at_date, tons) VALUES (1,1,''1944-09-11'',60),(2,1,''1944-09-15'',38),(3,2,''1944-09-12'',52),(4,3,''1944-09-14'',22),(5,3,''1944-09-18'',45)"], "expect": [{"args": {"table": "podpolye.movements"}, "probe": "indexes", "title": "индексы рейсов, кроме первичного ключа", "value": [["depot_id", false, "btree", false]]}, {"args": {"table": "podpolye.movements"}, "probe": "primary_key", "title": "первичный ключ не тронут", "value": ["move_id"]}, {"args": {"table": "podpolye.movements", "columns": ["move_id", "depot_id", "tons"], "order_by": "move_id"}, "probe": "rows", "title": "рейсы на месте", "value": [[1, 1, 60], [2, 1, 38], [3, 2, 52], [4, 3, 22], [5, 3, 45]]}], "reveal": "Что проверяется: индексы рейсов, кроме первичного ключа; первичный ключ не тронут; рейсы на месте."}', '{ddl,index}');
+INSERT INTO public.tasks VALUES (93, 3, 10, 'Сводка одним словом', 'Семён требует, чтобы сводка вывоза по секторам собиралась сама, одним словом. Мелкие рейсы до 30 тонн — текучка гарнизона, в сводку они не идут.
+
+Создайте представление podpolye.depot_load, явно объявив его столбцы: sector — сектор склада и tons — суммарный вывоз по этому сектору. Учитывайте только рейсы тяжелее 30 тонн, записав условие отбора именно как tons > 30. Имена столбцов укажите в скобках после имени представления: CREATE VIEW podpolye.depot_load(sector, tons) AS ...', 'Представление — это сохранённый запрос: CREATE VIEW <имя>(<столбцы>) AS SELECT ... Внутри — соединение depots и movements по depot_id, отбор WHERE tons > 30 и группировка по сектору с sum(tons).', 'CREATE VIEW podpolye.depot_load(sector, tons) AS SELECT d.sector, sum(m.tons) FROM podpolye.depots d JOIN podpolye.movements m ON m.depot_id = d.depot_id WHERE m.tons > 30 GROUP BY d.sector', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES (''A'',''Заречный''),(''B'',''Вокзальный''),(''C'',''Старый город''),(''D'',''Фабричный'')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.movements(\n    move_id  integer PRIMARY KEY,\n    depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE,\n    at_date  date NOT NULL DEFAULT current_date,\n    tons     integer)", "INSERT INTO podpolye.movements(move_id, depot_id, at_date, tons) VALUES (1,1,''1944-09-11'',60),(2,1,''1944-09-15'',38),(3,2,''1944-09-12'',52),(4,3,''1944-09-14'',22),(5,3,''1944-09-18'',45)"], "expect": [{"args": {"name": "podpolye.depot_load"}, "probe": "view_columns", "title": "столбцы представления", "value": ["sector", "tons"]}, {"args": {"name": "podpolye.depot_load", "mentions": ["depots", "movements", "sum", "group", "sector", "30"]}, "probe": "view_shape", "title": "форма определения представления", "value": [["существует", true], ["упоминает depots", true], ["упоминает movements", true], ["упоминает sum", true], ["упоминает group", true], ["упоминает sector", true], ["упоминает 30", true]]}], "reveal": "Что проверяется: столбцы представления; форма определения представления."}', '{ddl,view,select,where}');
+INSERT INTO public.tasks VALUES (94, 3, 11, 'Наблюдение за складами', 'За каждым складом закреплён свой человек. Один наблюдатель ведёт несколько складов, за одним складом могут следить двое — но пара «человек и склад» должна встречаться ровно один раз. Ключ здесь — именно пара.
+
+Создайте таблицу podpolye.watch: spotter — строка не длиннее 20 символов; depot_id — целое, ссылающееся на podpolye.depots(depot_id). Первичный ключ должен быть составным: пара (spotter, depot_id).', 'Составной ключ нельзя объявить в одном столбце — он записывается отдельным элементом таблицы: PRIMARY KEY (spotter, depot_id). Ссылка на склады при этом остаётся обычным REFERENCES в определении depot_id.', 'CREATE TABLE podpolye.watch(spotter varchar(20), depot_id integer REFERENCES podpolye.depots(depot_id), PRIMARY KEY (spotter, depot_id))', '{"mode": "model", "post": ["INSERT INTO podpolye.watch VALUES (''Гриша'', 1)"], "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES (''A'',''Заречный''),(''B'',''Вокзальный''),(''C'',''Старый город''),(''D'',''Фабричный'')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)"], "expect": [{"args": {"table": "podpolye.watch"}, "probe": "primary_key", "title": "состав первичного ключа наблюдения", "value": ["spotter", "depot_id"]}, {"args": {"table": "podpolye.watch"}, "probe": "columns", "title": "столбцы наблюдения", "value": [["spotter", "character varying", 20, true, false], ["depot_id", "integer", null, true, false]]}, {"args": {"table": "podpolye.watch"}, "probe": "foreign_keys", "title": "ссылка на склады", "value": [["depot_id", "podpolye.depots", "depot_id", "запрещает удаление"]]}, {"args": {"cases": [{"row": {"spotter": "Гриша", "depot_id": 1}, "label": "та же пара"}, {"row": {"spotter": "Гриша", "depot_id": 2}, "label": "другой склад"}, {"row": {"spotter": "Гриша", "depot_id": 77}, "label": "несуществующий склад"}], "table": "podpolye.watch"}, "probe": "accepts", "title": "повтор пары и другая пара", "value": [["та же пара", false], ["другой склад", true], ["несуществующий склад", false]]}], "reveal": "Что проверяется: состав первичного ключа наблюдения; столбцы наблюдения; ссылка на склады; повтор пары и другая пара."}', '{ddl,table,primary_key,foreign_key}');
+INSERT INTO public.tasks VALUES (95, 3, 12, 'Журнал радиограмм', 'Повтор донесения Центр считает подтверждением и удваивает оценку сил противника — одинаковых текстов быть не должно. Время отправки база ставит сама: радист в эфире на часы не смотрит.
+
+Создайте таблицу podpolye.radiograms: radio_id — целое, первичный ключ; body — текст, обязательный, причём два донесения с одинаковым текстом в журнал попадать не должны; sent_at — отметка времени, обязательная, по умолчанию текущий момент.', '«Одинаковых текстов быть не должно» — это ограничение UNIQUE на столбце body. «Отметка времени» — тип timestamp, а текущий момент по умолчанию — DEFAULT now().', 'CREATE TABLE podpolye.radiograms(radio_id integer PRIMARY KEY, body text NOT NULL UNIQUE, sent_at timestamp NOT NULL DEFAULT now())', '{"mode": "model", "post": ["INSERT INTO podpolye.radiograms(radio_id, body) VALUES (1, ''связь установлена'')"], "setup": ["CREATE SCHEMA podpolye"], "expect": [{"args": {"table": "podpolye.radiograms"}, "probe": "columns", "title": "столбцы журнала донесений", "value": [["radio_id", "integer", null, true, false], ["body", "text", null, true, false], ["sent_at", "timestamp without time zone", null, true, true]]}, {"args": {"table": "podpolye.radiograms"}, "probe": "primary_key", "title": "первичный ключ журнала", "value": ["radio_id"]}, {"args": {"table": "podpolye.radiograms"}, "probe": "uniques", "title": "уникальность в журнале", "value": ["body"]}, {"args": {"table": "podpolye.radiograms", "columns": ["sent_at"]}, "probe": "default_kind", "title": "время проставляется само", "value": [["sent_at", "текущий момент"]]}, {"args": {"table": "podpolye.radiograms", "column": "sent_at"}, "probe": "rows_filled", "title": "отметка времени заполнена", "value": true}, {"args": {"cases": [{"row": {"body": "связь установлена", "radio_id": 2}, "label": "повтор текста"}, {"row": {"body": "иное донесение", "radio_id": 1}, "label": "повтор номера"}, {"row": {"body": "эшелон на восток", "radio_id": 2}, "label": "новое"}], "table": "podpolye.radiograms"}, "probe": "accepts", "title": "повтор текста, повтор номера и новое донесение", "value": [["повтор текста", false], ["повтор номера", false], ["новое", true]]}], "reveal": "Что проверяется: столбцы журнала донесений; первичный ключ журнала; уникальность в журнале; время проставляется само; отметка времени заполнена; повтор текста, повтор номера и новое донесение."}', '{ddl,table,unique,default}');
+INSERT INTO public.tasks VALUES (96, 4, 1, 'Роли отряда', 'Условное имя явки всплыло в немецкой сводке, а работали до сих пор все под одной учётной записью. Разграничение начинается с ролей: командование, разведка, агентура. Это группы, а не люди — входить под ними нельзя.
+
+Заведите три роли: commanders, scouts и spies. Входить в систему непосредственно под ними нельзя.', 'Роль заводится оператором CREATE ROLE <имя> — по одному на каждую. Право входа по умолчанию выключено, поэтому дописывать ничего не нужно; главное — не написать CREATE USER, который как раз вход разрешает.', 'CREATE ROLE commanders; CREATE ROLE scouts; CREATE ROLE spies', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)"], "expect": [{"args": {"names": ["commanders", "scouts", "spies"]}, "probe": "roles", "title": "роли отряда", "value": [["commanders", false, false], ["scouts", false, false], ["spies", false, false]]}, {"args": {}, "probe": "all_roles", "title": "посторонних ролей не заведено", "value": ["commanders", "scouts", "spies"]}, {"args": {}, "probe": "all_memberships", "title": "роли друг в друга не вложены", "value": []}], "reveal": "Что проверяется: роли отряда; посторонних ролей не заведено; роли друг в друга не вложены."}', '{dcl,role}');
+INSERT INTO public.tasks VALUES (97, 4, 2, 'Полный доступ командованию', 'Семён отвечает за отряд целиком; урезать его в правах бессмысленно — он возьмёт их обратно окольным путём. Полный доступ начинается с права войти в саму схему.
+
+Откройте командованию полный доступ: роль commanders должна получить право пользоваться схемой podpolye и все привилегии на таблицы podpolye.depots и podpolye.safehouses.', 'Право войти в схему и права на таблицы выдаются разными операторами: GRANT USAGE ON SCHEMA podpolye TO commanders и GRANT ALL PRIVILEGES ON <таблицы> TO commanders. Слово ALL PRIVILEGES заменяет перечисление всех прав, а таблицы можно указать через запятую.', 'GRANT USAGE ON SCHEMA podpolye TO commanders; GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies"], "expect": [{"args": {"schema": "podpolye", "grantee": "commanders"}, "probe": "schema_privs", "title": "права командования на схему", "value": ["USAGE"]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.depots", "grantee": "commanders"}, "probe": "has_privs", "title": "права командования на склады", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", true], ["DELETE", true], ["TRUNCATE", true], ["REFERENCES", true], ["TRIGGER", true]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "has_privs", "title": "права командования на явки", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", true], ["DELETE", true], ["TRUNCATE", true], ["REFERENCES", true], ["TRIGGER", true]]}, {"args": {"table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "grantable", "title": "передоверия не давали", "value": [["DELETE", false], ["INSERT", false], ["REFERENCES", false], ["SELECT", false], ["TRIGGER", false], ["TRUNCATE", false], ["UPDATE", false]]}, {"args": {"privs": ["SELECT", "UPDATE"], "table": "podpolye.safehouses", "grantees": ["scouts", "spies", "PUBLIC"]}, "probe": "privs_matrix", "title": "остальным ничего не открыли", "value": [["scouts", "SELECT", false], ["scouts", "UPDATE", false], ["spies", "SELECT", false], ["spies", "UPDATE", false], ["PUBLIC", "SELECT", false], ["PUBLIC", "UPDATE", false]]}], "reveal": "Что проверяется: права командования на схему; права командования на склады; права командования на явки; передоверия не давали; остальным ничего не открыли."}', '{dcl,grant}');
+INSERT INTO public.tasks VALUES (98, 4, 3, 'Разведке — только перо', 'Разведчику нужно одно: принести новое. Увидел эшелон — вписал строку. Право править и стирать чужие записи в руках противника опаснее, чем право читать: тихо изменённые координаты уведут удар в жилой квартал.
+
+Выдайте роли scouts право пользоваться схемой podpolye и на таблицу podpolye.depots — только чтение и добавление строк. Права изменять и удалять записи у неё быть не должно.', 'Права перечисляются через запятую в одном операторе: GRANT SELECT, INSERT ON podpolye.depots TO scouts. Отдельным оператором — доступ к схеме: GRANT USAGE ON SCHEMA podpolye TO scouts. ALL здесь писать нельзя — это выдаст лишнее.', 'GRANT USAGE ON SCHEMA podpolye TO scouts; GRANT SELECT, INSERT ON podpolye.depots TO scouts', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders"], "expect": [{"args": {"schema": "podpolye", "grantee": "scouts"}, "probe": "schema_privs", "title": "права разведки на схему", "value": ["USAGE"]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.depots", "grantee": "scouts"}, "probe": "has_privs", "title": "права разведки на склады", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"table": "podpolye.depots", "grantee": "scouts"}, "probe": "grantable", "title": "передоверия не давали", "value": [["INSERT", false], ["SELECT", false]]}, {"args": {"privs": ["SELECT"], "table": "podpolye.depots", "grantees": ["spies", "PUBLIC"]}, "probe": "privs_matrix", "title": "остальным складов не открывали", "value": [["spies", "SELECT", false], ["PUBLIC", "SELECT", false]]}, {"args": {}, "probe": "all_memberships", "title": "роли друг в друга не вложены", "value": []}, {"args": {"schema": "podpolye"}, "probe": "default_privs", "title": "прав по умолчанию не заводили", "value": []}], "reveal": "Что проверяется: права разведки на схему; права разведки на склады; передоверия не давали; остальным складов не открывали; роли друг в друга не вложены; прав по умолчанию не заводили."}', '{dcl,grant}');
+INSERT INTO public.tasks VALUES (99, 4, 4, 'Явки по столбцам', 'В ночь спешки агентам открыли таблицу явок целиком: адреса, хозяева, всё. Агенту нужны только номер явки и сектор; улица и хозяин не должны быть доступны ему ни при каких условиях. Сначала отобрать всё — потом вернуть ровно необходимое.
+
+Отберите у роли spies все права на таблицу podpolye.safehouses, а затем выдайте ей право читать только два столбца — house_id и sector.', 'Сначала REVOKE ALL ON podpolye.safehouses FROM spies. Права на отдельные столбцы выдаются перечислением в скобках сразу после названия права: GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies.', 'REVOKE ALL ON podpolye.safehouses FROM spies; GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT ON podpolye.safehouses TO spies"], "expect": [{"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "spies"}, "probe": "has_privs", "title": "права на таблицу явок целиком", "value": [["SELECT", false], ["INSERT", false], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"table": "podpolye.safehouses", "grantee": "spies"}, "probe": "column_grants_all", "title": "права на отдельные столбцы", "value": [["house_id", "SELECT", false], ["sector", "SELECT", false]]}, {"args": {"table": "podpolye.safehouses", "columns": ["house_id", "sector", "street", "keeper"], "grantee": "spies"}, "probe": "can_read_columns", "title": "что агент может прочитать", "value": [["house_id", true], ["sector", true], ["street", false], ["keeper", false]]}, {"args": {"table": "podpolye.safehouses", "grantee": "spies"}, "probe": "grantable", "title": "передоверия не давали", "value": []}, {"args": {"privs": ["SELECT"], "table": "podpolye.safehouses", "grantees": ["scouts", "PUBLIC"]}, "probe": "privs_matrix", "title": "посторонним явки не открывали", "value": [["scouts", "SELECT", false], ["PUBLIC", "SELECT", false]]}, {"args": {"schema": "podpolye"}, "probe": "default_privs", "title": "прав по умолчанию не заводили", "value": []}], "reveal": "Что проверяется: права на таблицу явок целиком; права на отдельные столбцы; что агент может прочитать; передоверия не давали; посторонним явки не открывали; прав по умолчанию не заводили."}', '{dcl,revoke,column_privileges}');
+INSERT INTO public.tasks VALUES (100, 4, 5, 'Явки по строкам', 'Вторая линия обороны: проваленная явка опаснее незнания — агент придёт по адресу, который уже под наблюдением. Строки с провалом должны исчезнуть из его выборки на уровне правила самой таблицы.
+
+Включите на таблице podpolye.safehouses защиту строк и создайте политику с именем house_open, разрешающую роли spies читать только те строки, где is_burnt равно false.', 'Защита строк включается отдельным оператором: ALTER TABLE ... ENABLE ROW LEVEL SECURITY. Правило видимости — политикой: CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false). Пока защита не включена, политика не действует.', 'ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY; CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)', '{"mode": "model", "post": ["INSERT INTO podpolye.safehouses VALUES (7,''Мост'',''Речная, 4'',''Игнат'',''D'',false),(8,''Склеп'',''Тихая, 1'',''Ким'',''D'',true)"], "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies"], "expect": [{"args": {"table": "podpolye.safehouses"}, "probe": "rls", "title": "защита строк на таблице явок", "value": [true, false]}, {"args": {"table": "podpolye.safehouses"}, "probe": "policies", "title": "политика", "value": [["house_open", "SELECT", "spies"]]}, {"args": {"role": "spies", "table": "podpolye.safehouses", "columns": ["house_id"], "order_by": "house_id"}, "probe": "visible_rows", "title": "номера явок, видимых агенту", "value": [[1], [3], [4], [6], [7]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "spies"}, "probe": "has_privs", "title": "лишних прав агенту не выдали", "value": [["SELECT", false], ["INSERT", false], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"table": "podpolye.safehouses", "grantee": "spies"}, "probe": "column_grants_all", "title": "столбцовые права не расширяли", "value": [["house_id", "SELECT", false], ["sector", "SELECT", false]]}], "reveal": "Что проверяется: защита строк на таблице явок; политика; номера явок, видимых агенту; лишних прав агенту не выдали; столбцовые права не расширяли."}', '{dcl,rls,policy}');
+INSERT INTO public.tasks VALUES (101, 4, 6, 'Боец Гриша', 'Пора заводить людей поимённо. Если Гришу возьмут, отключить надо будет именно его, не тронув остальных. Личных прав не выдавать ни одного: боец получает их только через роль.
+
+Заведите учётную запись grisha, которая может входить в систему, и включите её в роль scouts. Никаких прав на таблицы непосредственно этой учётной записи выдавать не нужно.', 'Учётная запись с правом входа — CREATE ROLE grisha LOGIN (или CREATE USER grisha). Включение в роль — тем же словом, что и выдача прав: GRANT scouts TO grisha. На таблицы при этом не выдаётся ничего.', 'CREATE ROLE grisha LOGIN; GRANT scouts TO grisha', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)"], "expect": [{"args": {"names": ["grisha"]}, "probe": "roles", "title": "учётная запись бойца", "value": [["grisha", true, false]]}, {"args": {"member": "grisha"}, "probe": "member_of", "title": "в какие роли включён боец", "value": ["scouts"]}, {"args": {"member": "grisha"}, "probe": "member_admin", "title": "раздавать членство боец не может", "value": [["scouts", false]]}, {"args": {"table": "podpolye.depots", "grantee": "grisha"}, "probe": "direct_table_grants", "title": "личных прав на таблицы нет", "value": []}, {"args": {"table": "podpolye.depots", "grantee": "grisha"}, "probe": "column_grants_all", "title": "личных прав на столбцы нет", "value": []}, {"args": {"privs": ["SELECT", "INSERT"], "table": "podpolye.depots", "grantee": "grisha"}, "probe": "has_privs", "title": "права пришли через роль", "value": [["SELECT", true], ["INSERT", true]]}, {"args": {"table": "podpolye.depots"}, "probe": "public_privs", "title": "посторонним ничего не открыли", "value": []}, {"args": {"schema": "podpolye"}, "probe": "default_privs", "title": "прав по умолчанию не заводили", "value": []}], "reveal": "Что проверяется: учётная запись бойца; в какие роли включён боец; раздавать членство боец не может; личных прав на таблицы нет; личных прав на столбцы нет; права пришли через роль; посторонним ничего не открыли; прав по умолчанию не заводили."}', '{dcl,role,membership}');
+INSERT INTO public.tasks VALUES (102, 4, 7, 'Отзыв у PUBLIC', 'Права на таблицу явок в спешке выдали PUBLIC — всем, кто сумеет подключиться. Вот почему имя явки оказалось в немецкой сводке: взламывать ничего не пришлось.
+
+Отберите у PUBLIC все права на таблицу podpolye.safehouses. Права, выданные роли commanders отдельно, при этом трогать нельзя.', 'PUBLIC в операторе отзыва пишется как обычное имя роли: REVOKE ALL ON podpolye.safehouses FROM PUBLIC. Отзыв у PUBLIC не трогает права, выданные ролям поимённо, — их отбирать не нужно.', 'REVOKE ALL ON podpolye.safehouses FROM PUBLIC', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)", "CREATE ROLE grisha LOGIN", "GRANT scouts TO grisha", "GRANT SELECT ON podpolye.safehouses TO PUBLIC"], "expect": [{"args": {"table": "podpolye.safehouses"}, "probe": "public_privs", "title": "права PUBLIC на явки", "value": []}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "has_privs", "title": "права командования не тронуты", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", true], ["DELETE", true], ["TRUNCATE", true], ["REFERENCES", true], ["TRIGGER", true]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "spies"}, "probe": "has_privs", "title": "агентура сверх столбцов ничего не получила", "value": [["SELECT", false], ["INSERT", false], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "scouts"}, "probe": "has_privs", "title": "разведке явки не открывали", "value": [["SELECT", false], ["INSERT", false], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"table": "podpolye.safehouses"}, "probe": "columns", "title": "таблица явок цела", "value": [["house_id", "integer", null, true, false], ["code_name", "character varying", 20, true, false], ["street", "character varying", 40, true, false], ["keeper", "character varying", 20, true, false], ["sector", "character", 1, true, false], ["is_burnt", "boolean", null, true, true]]}], "reveal": "Что проверяется: права PUBLIC на явки; права командования не тронуты; агентура сверх столбцов ничего не получила; разведке явки не открывали; таблица явок цела."}', '{dcl,revoke,public}');
+INSERT INTO public.tasks VALUES (103, 4, 8, 'Права наперёд', 'Каждая новая таблица появляется закрытой, и разведка узнаёт о ней, когда кто-нибудь вспомнит выдать права. Правило должно действовать наперёд: всё, что появится в схеме, разведка видит сразу.
+
+Задайте право по умолчанию: все таблицы, которые впредь будут создаваться в схеме podpolye, должны становиться доступными роли scouts на чтение.', 'Права по умолчанию задаются оператором ALTER DEFAULT PRIVILEGES IN SCHEMA podpolye GRANT SELECT ON TABLES TO scouts. Он не трогает существующие таблицы, а описывает, что произойдёт с будущими.', 'ALTER DEFAULT PRIVILEGES IN SCHEMA podpolye GRANT SELECT ON TABLES TO scouts', '{"mode": "model", "post": ["CREATE TABLE podpolye.trains(train_id integer PRIMARY KEY, cargo_ru text)"], "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)", "CREATE ROLE grisha LOGIN", "GRANT scouts TO grisha"], "expect": [{"args": {"schema": "podpolye"}, "probe": "default_privs", "title": "правило по умолчанию в схеме подполья", "value": [["r", "scouts", "SELECT"]]}, {"args": {"schema": "public"}, "probe": "default_privs", "title": "в других схемах правил не заводили", "value": []}, {"args": {"privs": ["SELECT"], "table": "podpolye.trains", "grantee": "scouts"}, "probe": "has_privs", "title": "новая таблица сразу доступна разведке", "value": [["SELECT", true]]}, {"args": {"privs": ["SELECT"], "table": "podpolye.trains", "grantees": ["spies", "PUBLIC"]}, "probe": "privs_matrix", "title": "посторонним она недоступна", "value": [["spies", "SELECT", false], ["PUBLIC", "SELECT", false]]}, {"args": {"schema": "podpolye", "grantee": "scouts"}, "probe": "schema_privs", "title": "доступ разведки к схеме не тронут", "value": ["USAGE"]}, {"args": {}, "probe": "all_memberships", "title": "членство ролей не меняли", "value": [["grisha", "scouts"]]}], "reveal": "Что проверяется: правило по умолчанию в схеме подполья; в других схемах правил не заводили; новая таблица сразу доступна разведке; посторонним она недоступна; доступ разведки к схеме не тронут; членство ролей не меняли."}', '{dcl,default_privileges}');
+INSERT INTO public.tasks VALUES (105, 4, 10, 'Защита от владельца', 'Политика защиты строк не действует на владельца таблицы: тот, кто доберётся до учётной записи узла, увидит все явки разом. Правило надо сделать обязательным и для владельца — пусть узел, оставшись без хозяев, не выдаст никого.
+
+Включите для таблицы podpolye.safehouses принудительную защиту строк, чтобы действующие политики распространялись и на владельца таблицы.', 'Принудительный режим включается оператором ALTER TABLE podpolye.safehouses FORCE ROW LEVEL SECURITY. Обычный ENABLE уже включён раньше — FORCE добавляется поверх него и распространяет правила на владельца.', 'ALTER TABLE podpolye.safehouses FORCE ROW LEVEL SECURITY', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)", "CREATE ROLE grisha LOGIN", "GRANT scouts TO grisha", "ALTER DEFAULT PRIVILEGES IN SCHEMA podpolye GRANT SELECT ON TABLES TO scouts", "GRANT SELECT ON podpolye.safehouses TO commanders WITH GRANT OPTION"], "expect": [{"args": {"table": "podpolye.safehouses"}, "probe": "rls", "title": "принудительная защита строк", "value": [true, true]}, {"args": {"table": "podpolye.safehouses"}, "probe": "policies", "title": "политика на месте", "value": [["house_open", "SELECT", "spies"]]}, {"args": {"role": "owner", "table": "podpolye.safehouses", "columns": ["house_id"], "order_by": "house_id"}, "probe": "visible_rows", "title": "владелец больше не видит ни одной явки", "value": []}, {"args": {"table": "podpolye.safehouses"}, "probe": "public_privs", "title": "посторонним прав не раздавали", "value": []}], "reveal": "Что проверяется: принудительная защита строк; политика на месте; владелец больше не видит ни одной явки; посторонним прав не раздавали."}', '{dcl,rls,force}');
+INSERT INTO public.tasks VALUES (14, 0, 13, 'Сила в единстве', 'Подсчитайте количество солдат в каждой воинской части и выведите названия этих частей. Названия частей выведите в алфавитном порядке. Это покажет, какие подразделения были наиболее многочисленными', 'Группировка по `unit_id` с использованием `COUNT(*)`', NULL, '{"data": [["1-й отдельный чехословацкий батальон", 2], ["1-й чехословацкий отдельный батальон", 1], ["1-я гвардейская танковая армия", 2], ["1-я морская бригада", 1], ["101-й инженерно-сапёрный батальон", 2], ["101-й полк НКВД", 1], ["101-й учебный полк", 1], ["106-я стрелковая дивизия", 1], ["14-я отдельная штрафная рота", 1], ["150-я стрелковая дивизия", 2], ["16-я воздушная армия", 2], ["18-я дивизия СС \"Хорст Вессель\"", 1], ["2-я ударная армия", 1], ["225-й отдельный инженерный батальон", 1], ["28-я дивизия народного ополчения", 1], ["3-я воздушная армия", 1], ["316-я стрелковая дивизия", 2], ["369-й отдельный батальон морской пехоты", 1], ["37-й гвардейский миномётный полк", 1], ["46-й гвардейский ночной бомбардировочный полк", 2], ["585-й женский авиаполк", 1], ["62-я армия", 3], ["64-я стрелковая дивизия", 2], ["8-я гвардейская армия", 1], ["88-й отдельный лыжный батальон", 1], ["Отдельная медико-санитарная рота", 1], ["Отдельный батальон связи №45", 1], ["Отдельный отряд собак-истребителей танков", 1], ["Отдельный отряд собак-миноискателей", 2]], "columns": ["unit_name", "total_soldiers"], "row_count": 29}', '{easy}');
+INSERT INTO public.tasks VALUES (70, 1, 13, 'Путь солдата', 'Подсчитайте количество солдат в каждой воинской части и выведите названия этих частей. Названия частей выведите в алфавитном порядке. Это покажет, какие подразделения были наиболее многочисленными', 'Объедините таблицы снаряжения, солдат и частей через `JOIN`', NULL, '{"data": [["1-й отдельный чехословацкий батальон", 2], ["1-й чехословацкий отдельный батальон", 1], ["1-я гвардейская танковая армия", 2], ["1-я морская бригада", 1], ["101-й инженерно-сапёрный батальон", 2], ["101-й полк НКВД", 1], ["101-й учебный полк", 1], ["106-я стрелковая дивизия", 1], ["14-я отдельная штрафная рота", 1], ["150-я стрелковая дивизия", 2], ["16-я воздушная армия", 2], ["18-я дивизия СС \"Хорст Вессель\"", 1], ["2-я ударная армия", 1], ["225-й отдельный инженерный батальон", 1], ["28-я дивизия народного ополчения", 1], ["3-я воздушная армия", 1], ["316-я стрелковая дивизия", 2], ["369-й отдельный батальон морской пехоты", 1], ["37-й гвардейский миномётный полк", 1], ["46-й гвардейский ночной бомбардировочный полк", 2], ["585-й женский авиаполк", 1], ["62-я армия", 3], ["64-я стрелковая дивизия", 2], ["8-я гвардейская армия", 1], ["88-й отдельный лыжный батальон", 1], ["Отдельная медико-санитарная рота", 1], ["Отдельный батальон связи №45", 1], ["Отдельный отряд собак-истребителей танков", 1], ["Отдельный отряд собак-миноискателей", 2]], "columns": ["unit_name", "total_soldiers"], "row_count": 29}', '{medium}');
+INSERT INTO public.tasks VALUES (48, 1, 20, 'Статистика ранений', 'Подсчитайте количество солдат по каждому статусу (status). Это основа для анализа людских потерь', 'Примените CTE для группировки по месяцам и `AVG` в оконной функции', NULL, '{"data": [["жив", 16], ["пропал без вести", 7], ["ранен", 8], ["убит", 9]], "columns": ["status", "count"], "row_count": 4}', '{cte,medium}');
+INSERT INTO public.tasks VALUES (23, 0, 23, 'Годовой отчет сражений', 'Определите, в какие годы начинались боевые операции, и подсчитайте их количество. Выведите год начала (как year) и количество (как battles_count). Отсортируйте по году. (Учитывайте только год начала start_date)', 'Извлеките год из даты с помощью `EXTRACT` и сгруппируйте по нему', NULL, '{"data": [[1941.0, 9], [1942.0, 6], [1943.0, 4], [1944.0, 4], [1945.0, 7]], "columns": ["year", "battles_count"], "row_count": 5}', '{easy}');
+INSERT INTO public.tasks VALUES (51, 1, 23, 'Цена победы', 'Определите, в какие годы начинались боевые операции, и подсчитайте их количество. Выведите год начала (как year) и количество (как battles_count). Отсортируйте по году. (Учитывайте только год начала start_date)', 'Примените CTE для раздельного подсчета потерь и `UNION` для объединения результатов', NULL, '{"data": [[1941.0, 9], [1942.0, 6], [1943.0, 4], [1944.0, 4], [1945.0, 7]], "columns": ["year", "battles_count"], "row_count": 5}', '{cte,stalingrad,medium}');
+INSERT INTO public.tasks VALUES (24, 0, 24, 'Возраст призывника', 'Рассчитайте возраст солдат на момент призыва (год призыва минус год рождения). Назовите колонку enlistment_age. Выведите ФИО и возраст.', 'Используйте функцию `AGE` для расчета разницы между датами', NULL, '{"data": [["Иванов Алексей Петрович", 18.0], ["Смирнова Анна Васильевна", 17.0], ["Петров Дмитрий Иванович", 23.0], ["Козлов Николай Семёнович", 21.0], ["Фёдорова Мария Ивановна", 21.0], ["Жуков Андрей Григорьевич", 26.0], ["Павлов Яков Фёдорович", 25.0], ["Зайцева Людмила Михайловна", 19.0], ["Громов Михаил Сергеевич", 23.0], ["Орлова Вера Павловна", 22.0], ["Новиков Александр Иванович", 20.0], ["Васнецова Татьяна Дмитриевна", 20.0], ["Кузнецов Пётр Васильевич", 25.0], ["Белов Алексей Николаевич", 19.0], ["Соколова Ольга Ивановна", 22.0], ["Морозов Иван Кузьмич", 27.0], ["Волкова Елена Сергеевна", 17.0], ["Ткаченко Григорий Петрович", 17.0], ["Беляев Павел Дмитриевич", 29.0], ["Семёнова Валентина Михайловна", 22.0], ["Ковалёв Сергей Николаевич", 18.0], ["Мельникова Галина Ивановна", 18.0], ["Фёдоров Игорь Васильевич", 28.0], ["Горбачёв Алексей Дмитриевич", 17.0], ["Сидорова Екатерина Петровна", 23.0], ["Смирнов Василий Иванович", 30.0], ["Крылова Надежда Фёдоровна", 18.0], ["Орлов Денис Сергеевич", 17.0], ["Жукова Елена Викторовна", 19.0], ["Гришин Алексей Петрович", 23.0], ["Ткаченко Иван Григорьевич", 21.0], ["Воронцова Лидия Павловна", 19.0], ["Жуковский Виктор Михайлович", 26.0], ["Морозова Анна Сергеевна", 20.0], ["Кузнецов Артём Игоревич", 17.0], ["Соколовская Надежда Викторовна", 18.0], ["Белов Дмитрий Николаевич", 25.0], ["Громова Екатерина Ивановна", 18.0], ["Фролов Павел Сергеевич", 16.0], ["Ковалёва Ольга Дмитриевна", 21.0]], "columns": ["full_name", "enlistment_age"], "row_count": 40}', '{easy}');
+INSERT INTO public.tasks VALUES (52, 1, 24, 'Рейтинг эффективности', 'Рассчитайте возраст солдат на момент призыва (год призыва минус год рождения). Назовите колонку enlistment_age. Выведите ФИО и возраст.', 'Примените `RANK()` и `DENSE_RANK()` для сортировки значений', NULL, '{"data": [["Иванов Алексей Петрович", 18.0], ["Смирнова Анна Васильевна", 17.0], ["Петров Дмитрий Иванович", 23.0], ["Козлов Николай Семёнович", 21.0], ["Фёдорова Мария Ивановна", 21.0], ["Жуков Андрей Григорьевич", 26.0], ["Павлов Яков Фёдорович", 25.0], ["Зайцева Людмила Михайловна", 19.0], ["Громов Михаил Сергеевич", 23.0], ["Орлова Вера Павловна", 22.0], ["Новиков Александр Иванович", 20.0], ["Васнецова Татьяна Дмитриевна", 20.0], ["Кузнецов Пётр Васильевич", 25.0], ["Белов Алексей Николаевич", 19.0], ["Соколова Ольга Ивановна", 22.0], ["Морозов Иван Кузьмич", 27.0], ["Волкова Елена Сергеевна", 17.0], ["Ткаченко Григорий Петрович", 17.0], ["Беляев Павел Дмитриевич", 29.0], ["Семёнова Валентина Михайловна", 22.0], ["Ковалёв Сергей Николаевич", 18.0], ["Мельникова Галина Ивановна", 18.0], ["Фёдоров Игорь Васильевич", 28.0], ["Горбачёв Алексей Дмитриевич", 17.0], ["Сидорова Екатерина Петровна", 23.0], ["Смирнов Василий Иванович", 30.0], ["Крылова Надежда Фёдоровна", 18.0], ["Орлов Денис Сергеевич", 17.0], ["Жукова Елена Викторовна", 19.0], ["Гришин Алексей Петрович", 23.0], ["Ткаченко Иван Григорьевич", 21.0], ["Воронцова Лидия Павловна", 19.0], ["Жуковский Виктор Михайлович", 26.0], ["Морозова Анна Сергеевна", 20.0], ["Кузнецов Артём Игоревич", 17.0], ["Соколовская Надежда Викторовна", 18.0], ["Белов Дмитрий Николаевич", 25.0], ["Громова Екатерина Ивановна", 18.0], ["Фролов Павел Сергеевич", 16.0], ["Ковалёва Ольга Дмитриевна", 21.0]], "columns": ["full_name", "enlistment_age"], "row_count": 40}', '{window,medium}');
+INSERT INTO public.tasks VALUES (25, 0, 25, 'Демография частей', 'Определите минимальный и максимальный возраст солдат на момент призыва в каждой части. Выведите название частей и минимальные (min) и максимальные (max) возраста. Отсортируйте по названию части по алфавиту.', 'Примените `MIN` и `MAX` к году рождения с группировкой по частям', NULL, '{"data": [["1-й отдельный чехословацкий батальон", 19.0, 25.0], ["1-й чехословацкий отдельный батальон", 18.0, 18.0], ["1-я гвардейская танковая армия", 21.0, 25.0], ["1-я морская бригада", 17.0, 17.0], ["101-й инженерно-сапёрный батальон", 16.0, 20.0], ["101-й полк НКВД", 22.0, 22.0], ["101-й учебный полк", 23.0, 23.0], ["106-я стрелковая дивизия", 20.0, 20.0], ["14-я отдельная штрафная рота", 27.0, 27.0], ["150-я стрелковая дивизия", 19.0, 19.0], ["16-я воздушная армия", 22.0, 26.0], ["18-я дивизия СС \"Хорст Вессель\"", 19.0, 19.0], ["2-я ударная армия", 23.0, 23.0], ["225-й отдельный инженерный батальон", 17.0, 17.0], ["28-я дивизия народного ополчения", 17.0, 17.0], ["3-я воздушная армия", 20.0, 20.0], ["316-я стрелковая дивизия", 18.0, 21.0], ["369-й отдельный батальон морской пехоты", 18.0, 18.0], ["37-й гвардейский миномётный полк", 30.0, 30.0], ["46-й гвардейский ночной бомбардировочный полк", 18.0, 26.0], ["585-й женский авиаполк", 28.0, 28.0], ["62-я армия", 17.0, 25.0], ["64-я стрелковая дивизия", 18.0, 21.0], ["8-я гвардейская армия", 22.0, 22.0], ["88-й отдельный лыжный батальон", 29.0, 29.0], ["Отдельная медико-санитарная рота", 17.0, 17.0], ["Отдельный батальон связи №45", 18.0, 18.0], ["Отдельный отряд собак-истребителей танков", 23.0, 23.0], ["Отдельный отряд собак-миноискателей", 17.0, 21.0]], "columns": ["unit_name", "min", "max"], "row_count": 29}', '{easy}');
+INSERT INTO public.tasks VALUES (74, 1, 25, 'Хронология призыва', 'Определите минимальный и максимальный возраст солдат на момент призыва в каждой части. Выведите название частей и минимальные (min) и максимальные (max) возраста. Отсортируйте по названию части по алфавиту.', 'Используйте `ROW_NUMBER()` с группировкой по частям и сортировкой по дате', NULL, '{"data": [["1-й отдельный чехословацкий батальон", 19.0, 25.0], ["1-й чехословацкий отдельный батальон", 18.0, 18.0], ["1-я гвардейская танковая армия", 21.0, 25.0], ["1-я морская бригада", 17.0, 17.0], ["101-й инженерно-сапёрный батальон", 16.0, 20.0], ["101-й полк НКВД", 22.0, 22.0], ["101-й учебный полк", 23.0, 23.0], ["106-я стрелковая дивизия", 20.0, 20.0], ["14-я отдельная штрафная рота", 27.0, 27.0], ["150-я стрелковая дивизия", 19.0, 19.0], ["16-я воздушная армия", 22.0, 26.0], ["18-я дивизия СС \"Хорст Вессель\"", 19.0, 19.0], ["2-я ударная армия", 23.0, 23.0], ["225-й отдельный инженерный батальон", 17.0, 17.0], ["28-я дивизия народного ополчения", 17.0, 17.0], ["3-я воздушная армия", 20.0, 20.0], ["316-я стрелковая дивизия", 18.0, 21.0], ["369-й отдельный батальон морской пехоты", 18.0, 18.0], ["37-й гвардейский миномётный полк", 30.0, 30.0], ["46-й гвардейский ночной бомбардировочный полк", 18.0, 26.0], ["585-й женский авиаполк", 28.0, 28.0], ["62-я армия", 17.0, 25.0], ["64-я стрелковая дивизия", 18.0, 21.0], ["8-я гвардейская армия", 22.0, 22.0], ["88-й отдельный лыжный батальон", 29.0, 29.0], ["Отдельная медико-санитарная рота", 17.0, 17.0], ["Отдельный батальон связи №45", 18.0, 18.0], ["Отдельный отряд собак-истребителей танков", 23.0, 23.0], ["Отдельный отряд собак-миноискателей", 17.0, 21.0]], "columns": ["unit_name", "min", "max"], "row_count": 29}', '{medium}');
+INSERT INTO public.tasks VALUES (26, 0, 26, 'Городская аналитика', 'Вычислите средний возраст солдат на момент призыва по городам призыва. Выведите название города и средний возраст как avg_age. Результат округлите до целого, а города выведите в обратном алфавитном порядке.', 'Группировка по городам с использованием `AVG` и арифметических операций. Округление с помощью `ROUND`', NULL, '{"data": [["Челябинск", 18.0], ["Харьков", 22.0], ["Тула", 27.0], ["Сталинград", 19.0], ["Смоленск", 20.0], ["Севастополь", 18.0], ["Свердловск", 23.0], ["Самара", 29.0], ["Ростов-на-Дону", 20.0], ["Омск", 22.0], ["Одесса", 20.0], ["Новосибирск", 25.0], ["Мурманск", 25.0], ["Москва", 18.0], ["Минск", 25.0], ["Ленинград", 18.0], ["Киев", 23.0], ["Казань", 28.0], ["Горький", 18.0], ["Воронеж", 17.0], ["Волгоград", 25.0], ["Брянск", 17.0]], "columns": ["enlistment_city", "avg_age"], "row_count": 22}', '{easy}');
+INSERT INTO public.tasks VALUES (53, 1, 26, 'Циклы пополнения', 'Вычислите средний возраст солдат на момент призыва по городам призыва. Выведите название города и средний возраст как avg_age. Результат округлите до целого, а города выведите в обратном алфавитном порядке.', 'Используйте `LAG()` и `LEAD()` для навигации по датам в рамках части', NULL, '{"data": [["Челябинск", 18.0], ["Харьков", 22.0], ["Тула", 27.0], ["Сталинград", 19.0], ["Смоленск", 20.0], ["Севастополь", 18.0], ["Свердловск", 23.0], ["Самара", 29.0], ["Ростов-на-Дону", 20.0], ["Омск", 22.0], ["Одесса", 20.0], ["Новосибирск", 25.0], ["Мурманск", 25.0], ["Москва", 18.0], ["Минск", 25.0], ["Ленинград", 18.0], ["Киев", 23.0], ["Казань", 28.0], ["Горький", 18.0], ["Воронеж", 17.0], ["Волгоград", 25.0], ["Брянск", 17.0]], "columns": ["enlistment_city", "avg_age"], "row_count": 22}', '{window,medium}');
+INSERT INTO public.tasks VALUES (28, 0, 28, 'История воинских частей', 'Сгруппируйте части по году формирования и подсчитайте их количество. Выведите год формирования (как formation_year) и количество частей (как units_count). Отсортируйте по году формирования.', 'Извлеките год из `formation_date` с помощью `EXTRACT`', NULL, '{"data": [[1939.0, 1], [1941.0, 8], [1942.0, 12], [1943.0, 8], [1944.0, 1]], "columns": ["formation_year", "units_count"], "row_count": 5}', '{easy}');
+INSERT INTO public.tasks (task_global_id, mission_id, task_id, title, description, clue, correct_query, expected_result, tags) VALUES (106, 5, 1, 'Возраст призыва', 'Напишите скалярную функцию get_enlistment_age(p_soldier_id INT), возвращающую возраст солдата на момент призыва (год призыва из enlistment_date минус birth_year).', 'Используйте CREATE OR REPLACE FUNCTION get_enlistment_age(p_soldier_id INT) RETURNS INT AS $$ ... $$ LANGUAGE plpgsql;', 'CREATE OR REPLACE FUNCTION get_enlistment_age(p_soldier_id INT) RETURNS INT AS $$ DECLARE v_age INT; BEGIN SELECT (EXTRACT(YEAR FROM enlistment_date) - birth_year)::INT INTO v_age FROM soldier WHERE id = p_soldier_id; RETURN v_age; END; $$ LANGUAGE plpgsql;', '{"mode": "ddl", "test_query": "SELECT get_enlistment_age(1);", "columns": ["get_enlistment_age"], "data": [[18]]}', '{plpgsql,function,scalar,mission5}');
+INSERT INTO public.tasks (task_global_id, mission_id, task_id, title, description, clue, correct_query, expected_result, tags) VALUES (107, 5, 2, 'Бойцы подразделения', 'Напишите табличную функцию get_unit_soldiers(p_unit_name VARCHAR), возвращающую таблицу (full_name VARCHAR, enlistment_city VARCHAR) с бойцами, служившими в указанной части.', 'Используйте RETURNS TABLE (full_name VARCHAR, enlistment_city VARCHAR) и RETURN QUERY SELECT s.full_name, s.enlistment_city FROM soldier s JOIN military_service ms ON s.id = ms.soldier_id JOIN military_unit mu ON ms.unit_id = mu.id WHERE mu.unit_name = p_unit_name;', 'CREATE OR REPLACE FUNCTION get_unit_soldiers(p_unit_name VARCHAR) RETURNS TABLE (full_name VARCHAR, enlistment_city VARCHAR) AS $$ BEGIN RETURN QUERY SELECT s.full_name, s.enlistment_city FROM soldier s JOIN military_service ms ON s.id = ms.soldier_id JOIN military_unit mu ON ms.unit_id = mu.id WHERE mu.unit_name = p_unit_name; END; $$ LANGUAGE plpgsql;', '{"mode": "ddl", "test_query": "SELECT * FROM get_unit_soldiers(''1-я морская бригада'') ORDER BY full_name;", "columns": ["full_name", "enlistment_city"], "data": [["Волкова Елена Сергеевна", "Ленинград"]]}', '{plpgsql,function,table_function,mission5}');
+INSERT INTO public.tasks (task_global_id, mission_id, task_id, title, description, clue, correct_query, expected_result, tags) VALUES (108, 5, 3, 'Перевод военнослужащего', 'Напишите хранимую процедуру transfer_soldier(p_soldier_id INT, p_new_unit_id INT), которая переводит солдата в новую часть: закрывает текущую службу (end_date = CURRENT_DATE, где end_date IS NULL) и создает новую запись о службе с unit_id = p_new_unit_id и start_date = CURRENT_DATE.', 'Используйте CREATE OR REPLACE PROCEDURE transfer_soldier(p_soldier_id INT, p_new_unit_id INT) AS $$ BEGIN UPDATE military_service SET end_date = CURRENT_DATE WHERE soldier_id = p_soldier_id AND end_date IS NULL; INSERT INTO military_service (soldier_id, unit_id, start_date) VALUES (p_soldier_id, p_new_unit_id, CURRENT_DATE); END; $$ LANGUAGE plpgsql;', 'CREATE OR REPLACE PROCEDURE transfer_soldier(p_soldier_id INT, p_new_unit_id INT) AS $$ BEGIN UPDATE military_service SET end_date = CURRENT_DATE WHERE soldier_id = p_soldier_id AND end_date IS NULL; INSERT INTO military_service (soldier_id, unit_id, start_date) VALUES (p_soldier_id, p_new_unit_id, CURRENT_DATE); END; $$ LANGUAGE plpgsql;', '{"mode": "ddl", "test_query": "CALL transfer_soldier(1, 2); SELECT unit_id FROM military_service WHERE soldier_id = 1 ORDER BY id DESC LIMIT 1;", "columns": ["unit_id"], "data": [[2]]}', '{plpgsql,procedure,mission5}');
+INSERT INTO public.tasks (task_global_id, mission_id, task_id, title, description, clue, correct_query, expected_result, tags) VALUES (109, 5, 4, 'Аудит поступления техники', 'Создайте триггерную функцию log_equipment_addition() и триггер trg_after_equipment_insert на таблице equipment (AFTER INSERT FOR EACH ROW), который при добавлении новой техники записывает в таблицу equipment_audit строку с item_name (NEW.item_name) и added_at (CURRENT_DATE).', 'Триггерная функция должна иметь RETURNS TRIGGER, выполнять INSERT INTO equipment_audit (item_name, added_at) VALUES (NEW.item_name, CURRENT_DATE); RETURN NEW; а триггер: CREATE TRIGGER trg_after_equipment_insert AFTER INSERT ON equipment FOR EACH ROW EXECUTE FUNCTION log_equipment_addition();', 'CREATE OR REPLACE FUNCTION log_equipment_addition() RETURNS TRIGGER AS $$ BEGIN INSERT INTO equipment_audit (item_name, added_at) VALUES (NEW.item_name, CURRENT_DATE); RETURN NEW; END; $$ LANGUAGE plpgsql; CREATE TRIGGER trg_after_equipment_insert AFTER INSERT ON equipment FOR EACH ROW EXECUTE FUNCTION log_equipment_addition();', '{"mode": "ddl", "test_query": "INSERT INTO equipment (id, unit_id, equipment_type, item_name, quantity, last_replenishment) VALUES (9999, 1, ''тест'', ''Тестовый образец'', 1, CURRENT_DATE); SELECT item_name FROM equipment_audit WHERE item_name = ''Тестовый образец'';", "columns": ["item_name"], "data": [["Тестовый образец"]]}', '{plpgsql,trigger,audit,mission5}');
+INSERT INTO public.tasks (task_global_id, mission_id, task_id, title, description, clue, correct_query, expected_result, tags) VALUES (110, 5, 5, 'Контроль возраста призыва', 'Создайте триггерную функцию validate_soldier_age() и триггер trg_before_soldier_insert на таблице soldier (BEFORE INSERT FOR EACH ROW), который проверяет возраст бойца: если EXTRACT(YEAR FROM NEW.enlistment_date) - NEW.birth_year < 16, вызывается ошибка RAISE EXCEPTION ''Возраст призывника не может быть меньше 16 лет''. В остальных случаях возвращается NEW.', 'В теле триггерной функции проверьте IF (EXTRACT(YEAR FROM NEW.enlistment_date) - NEW.birth_year) < 16 THEN RAISE EXCEPTION ''Возраст призывника не может быть меньше 16 лет''; END IF; RETURN NEW;', 'CREATE OR REPLACE FUNCTION validate_soldier_age() RETURNS TRIGGER AS $$ BEGIN IF (EXTRACT(YEAR FROM NEW.enlistment_date) - NEW.birth_year) < 16 THEN RAISE EXCEPTION ''Возраст призывника не может быть меньше 16 лет''; END IF; RETURN NEW; END; $$ LANGUAGE plpgsql; CREATE TRIGGER trg_before_soldier_insert BEFORE INSERT ON soldier FOR EACH ROW EXECUTE FUNCTION validate_soldier_age();', '{"mode": "ddl", "test_query": "INSERT INTO soldier (id, full_name, birth_year, rank, branch, enlistment_city, enlistment_date) VALUES (9999, ''Малолетний боец'', 1930, ''рядовой'', ''пехота'', ''Москва'', ''1941-01-01'');", "expect_error": true}', '{plpgsql,trigger,validation,mission5}');
+
+
+--
+-- Data for Name: tasks_solved; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tasks_solved (user_id, task_global_id, solved_at) FROM stdin;
+5	1	2026-09-08
+5	2	2026-09-08
+7	1	2026-09-08
+7	2	2026-09-08
+5	4	2026-09-08
+7	4	2026-09-08
+5	5	2026-09-08
+7	5	2026-09-08
+5	7	2026-09-08
+5	8	2026-09-08
+5	9	2026-09-08
+5	10	2026-09-08
+5	11	2026-09-08
+5	12	2026-09-08
+5	13	2026-09-08
+9	1	2026-09-08
+9	2	2026-09-08
+9	4	2026-09-08
+9	5	2026-09-08
+9	7	2026-09-08
+9	8	2026-09-08
+9	9	2026-09-08
+9	10	2026-09-08
+9	11	2026-09-08
+9	12	2026-09-08
+9	13	2026-09-08
+9	15	2026-09-08
+9	3	2026-09-08
+9	17	2026-09-08
+9	14	2026-09-08
+9	27	2026-09-08
+9	30	2026-09-08
+9	34	2026-09-08
+9	19	2026-09-08
+9	21	2026-09-08
+9	22	2026-09-08
+9	26	2026-09-08
+9	31	2026-09-08
+9	16	2026-09-08
+9	18	2026-09-08
+9	24	2026-09-08
+9	28	2026-09-08
+9	25	2026-09-08
+9	29	2026-09-08
+9	23	2026-09-08
+9	20	2026-09-08
+7	7	2026-09-08
+7	8	2026-09-08
+9	6	2026-09-08
+7	9	2026-09-08
+7	10	2026-09-08
+7	11	2026-09-08
+7	12	2026-09-08
+7	13	2026-09-08
+7	15	2026-09-08
+7	3	2026-09-08
+7	16	2026-09-08
+7	17	2026-09-08
+7	18	2026-09-08
+7	19	2026-09-08
+7	20	2026-09-08
+7	21	2026-09-08
+7	22	2026-09-08
+7	23	2026-09-08
+7	26	2026-09-09
+7	27	2026-09-09
+7	28	2026-09-09
+7	29	2026-09-09
+12	1	2026-09-09
+10	1	2026-09-09
+10	2	2026-09-09
+11	1	2026-09-09
+16	1	2026-09-09
+17	1	2026-09-09
+11	2	2026-09-09
+15	1	2026-09-09
+13	1	2026-09-09
+16	4	2026-09-09
+19	1	2026-09-09
+18	1	2026-09-09
+16	5	2026-09-09
+13	2	2026-09-09
+17	4	2026-09-09
+12	4	2026-09-09
+12	5	2026-09-09
+17	5	2026-09-09
+19	2	2026-09-09
+18	2	2026-09-09
+15	2	2026-09-09
+16	7	2026-09-09
+14	1	2026-09-09
+12	7	2026-09-09
+16	8	2026-09-09
+12	8	2026-09-09
+16	9	2026-09-09
+17	7	2026-09-09
+12	9	2026-09-09
+16	10	2026-09-09
+12	10	2026-09-09
+16	11	2026-09-09
+12	11	2026-09-09
+17	8	2026-09-09
+16	12	2026-09-09
+12	12	2026-09-09
+17	9	2026-09-09
+15	4	2026-09-09
+17	10	2026-09-09
+17	11	2026-09-09
+17	12	2026-09-09
+14	2	2026-09-09
+13	5	2026-09-09
+17	13	2026-09-09
+15	5	2026-09-09
+16	15	2026-09-09
+17	15	2026-09-09
+12	15	2026-09-09
+16	16	2026-09-09
+20	1	2026-09-09
+17	18	2026-09-09
+12	18	2026-09-09
+18	4	2026-09-09
+16	21	2026-09-09
+19	4	2026-09-09
+12	19	2026-09-09
+17	19	2026-09-09
+16	22	2026-09-09
+20	2	2026-09-09
+14	4	2026-09-09
+18	5	2026-09-09
+13	4	2026-09-09
+16	18	2026-09-09
+16	17	2026-09-09
+19	5	2026-09-09
+15	7	2026-09-09
+12	21	2026-09-09
+12	13	2026-09-09
+17	21	2026-09-09
+16	13	2026-09-09
+12	16	2026-09-09
+17	16	2026-09-09
+16	19	2026-09-09
+14	5	2026-09-09
+13	7	2026-09-09
+12	17	2026-09-09
+17	17	2026-09-09
+15	8	2026-09-09
+16	3	2026-09-09
+15	9	2026-09-09
+17	3	2026-09-09
+12	3	2026-09-09
+16	2	2026-09-09
+15	10	2026-09-09
+13	8	2026-09-09
+12	2	2026-09-09
+17	2	2026-09-09
+13	10	2026-09-09
+13	9	2026-09-09
+13	11	2026-09-09
+15	11	2026-09-09
+15	12	2026-09-09
+15	13	2026-09-09
+20	4	2026-09-09
+10	4	2026-09-09
+11	4	2026-09-09
+10	5	2026-09-09
+20	5	2026-09-09
+14	7	2026-09-09
+15	15	2026-09-09
+14	8	2026-09-09
+14	9	2026-09-09
+15	3	2026-09-09
+14	10	2026-09-09
+15	16	2026-09-09
+15	17	2026-09-09
+14	11	2026-09-09
+15	18	2026-09-09
+14	12	2026-09-09
+16	20	2026-09-09
+5	15	2026-09-09
+15	19	2026-09-09
+12	20	2026-09-09
+14	13	2026-09-09
+5	3	2026-09-09
+5	16	2026-09-09
+17	20	2026-09-09
+20	7	2026-09-09
+5	17	2026-09-09
+5	18	2026-09-09
+16	34	2026-09-09
+12	22	2026-09-09
+17	22	2026-09-09
+11	5	2026-09-09
+16	23	2026-09-09
+15	21	2026-09-09
+12	23	2026-09-09
+17	23	2026-09-09
+10	7	2026-09-09
+14	15	2026-09-09
+10	8	2026-09-09
+10	9	2026-09-09
+20	8	2026-09-09
+10	10	2026-09-09
+10	11	2026-09-09
+10	12	2026-09-09
+20	9	2026-09-09
+12	26	2026-09-09
+16	26	2026-09-09
+17	26	2026-09-09
+16	27	2026-09-09
+12	27	2026-09-09
+10	13	2026-09-09
+17	27	2026-09-09
+16	28	2026-09-09
+12	28	2026-09-09
+20	10	2026-09-09
+17	28	2026-09-09
+20	11	2026-09-09
+15	27	2026-09-09
+21	1	2026-09-09
+21	2	2026-09-09
+13	12	2026-09-09
+13	13	2026-09-09
+5	19	2026-09-09
+5	20	2026-09-09
+21	4	2026-09-09
+22	1	2026-09-09
+21	5	2026-09-09
+22	2	2026-09-09
+14	16	2026-09-09
+14	17	2026-09-09
+14	18	2026-09-09
+14	19	2026-09-09
+22	4	2026-09-09
+19	6	2026-09-09
+19	7	2026-09-09
+14	22	2026-09-09
+14	20	2026-09-09
+14	23	2026-09-09
+5	21	2026-09-09
+5	22	2026-09-09
+5	23	2026-09-09
+15	29	2026-09-10
+15	30	2026-09-10
+24	1	2026-09-10
+24	2	2026-09-10
+26	1	2026-09-10
+28	1	2026-09-10
+27	1	2026-09-10
+28	2	2026-09-10
+25	1	2026-09-10
+24	5	2026-09-10
+26	2	2026-09-10
+27	2	2026-09-10
+25	2	2026-09-10
+24	7	2026-09-10
+24	8	2026-09-10
+24	9	2026-09-10
+28	5	2026-09-10
+24	10	2026-09-10
+24	11	2026-09-10
+24	12	2026-09-10
+28	7	2026-09-10
+28	8	2026-09-10
+28	9	2026-09-10
+28	10	2026-09-10
+25	4	2026-09-10
+26	4	2026-09-10
+28	11	2026-09-10
+12	30	2026-09-10
+12	31	2026-09-10
+12	34	2026-09-10
+12	37	2026-09-10
+13	15	2026-09-10
+13	3	2026-09-10
+13	16	2026-09-10
+13	17	2026-09-10
+13	18	2026-09-10
+13	19	2026-09-10
+13	22	2026-09-10
+13	21	2026-09-10
+14	27	2026-09-10
+14	28	2026-09-10
+20	12	2026-09-10
+20	13	2026-09-10
+14	30	2026-09-10
+21	7	2026-09-10
+21	8	2026-09-10
+14	34	2026-09-10
+21	9	2026-09-10
+21	10	2026-09-10
+21	11	2026-09-10
+21	12	2026-09-10
+21	13	2026-09-10
+7	30	2026-09-10
+21	15	2026-09-10
+21	17	2026-09-10
+21	18	2026-09-10
+21	19	2026-09-10
+21	27	2026-09-10
+7	31	2026-09-10
+7	34	2026-09-10
+30	1	2026-09-10
+30	2	2026-09-10
+7	37	2026-09-10
+30	4	2026-09-10
+30	5	2026-09-10
+5	6	2026-09-10
+30	6	2026-09-10
+30	7	2026-09-10
+30	8	2026-09-10
+30	9	2026-09-10
+30	10	2026-09-10
+30	11	2026-09-10
+30	12	2026-09-10
+30	13	2026-09-10
+30	15	2026-09-10
+5	14	2026-09-10
+30	3	2026-09-10
+30	16	2026-09-10
+30	17	2026-09-10
+30	18	2026-09-10
+30	19	2026-09-10
+5	24	2026-09-10
+5	25	2026-09-10
+22	5	2026-09-10
+5	26	2026-09-10
+14	37	2026-09-10
+5	27	2026-09-10
+5	28	2026-09-10
+5	29	2026-09-10
+5	30	2026-09-10
+14	63	2026-09-10
+14	40	2026-09-10
+14	64	2026-09-11
+32	1	2026-09-11
+32	2	2026-09-11
+32	4	2026-09-11
+14	77	2026-09-11
+5	31	2026-09-11
+5	34	2026-09-11
+19	8	2026-09-11
+19	9	2026-09-11
+19	10	2026-09-11
+19	11	2026-09-11
+19	12	2026-09-11
+19	13	2026-09-11
+20	15	2026-09-11
+20	3	2026-09-11
+20	16	2026-09-11
+20	17	2026-09-11
+20	19	2026-09-11
+17	30	2026-09-11
+17	31	2026-09-11
+17	34	2026-09-11
+20	21	2026-09-11
+20	26	2026-09-11
+20	27	2026-09-11
+20	34	2026-09-12
+36	1	2026-09-12
+37	1	2026-09-12
+35	1	2026-09-12
+35	2	2026-09-12
+36	2	2026-09-12
+37	2	2026-09-12
+35	5	2026-09-12
+38	1	2026-09-12
+39	1	2026-09-12
+36	4	2026-09-12
+38	2	2026-09-12
+39	2	2026-09-12
+39	5	2026-09-12
+37	4	2026-09-12
+38	4	2026-09-12
+35	7	2026-09-12
+35	8	2026-09-12
+35	9	2026-09-12
+38	5	2026-09-12
+35	10	2026-09-12
+36	5	2026-09-12
+37	5	2026-09-12
+35	11	2026-09-12
+39	4	2026-09-12
+35	12	2026-09-12
+35	13	2026-09-12
+35	15	2026-09-12
+35	3	2026-09-12
+35	17	2026-09-12
+35	18	2026-09-12
+40	1	2026-09-12
+35	19	2026-09-12
+38	7	2026-09-12
+40	2	2026-09-12
+38	8	2026-09-12
+41	1	2026-09-12
+38	9	2026-09-12
+38	10	2026-09-12
+41	2	2026-09-12
+39	7	2026-09-12
+38	11	2026-09-12
+39	8	2026-09-12
+37	7	2026-09-12
+36	7	2026-09-12
+38	12	2026-09-12
+39	9	2026-09-12
+40	4	2026-09-12
+38	13	2026-09-12
+36	8	2026-09-12
+39	10	2026-09-12
+37	8	2026-09-12
+36	9	2026-09-12
+37	9	2026-09-12
+36	10	2026-09-12
+37	10	2026-09-12
+37	11	2026-09-12
+36	11	2026-09-12
+40	5	2026-09-12
+37	12	2026-09-12
+36	12	2026-09-12
+37	13	2026-09-12
+39	11	2026-09-12
+36	13	2026-09-12
+35	22	2026-09-12
+38	15	2026-09-12
+39	12	2026-09-12
+39	13	2026-09-12
+7	63	2026-09-12
+41	4	2026-09-12
+39	15	2026-09-12
+39	3	2026-09-12
+38	16	2026-09-12
+39	16	2026-09-12
+38	17	2026-09-12
+39	17	2026-09-12
+41	5	2026-09-12
+41	7	2026-09-12
+41	8	2026-09-12
+41	9	2026-09-12
+38	18	2026-09-12
+38	19	2026-09-12
+32	5	2026-09-12
+38	20	2026-09-12
+38	23	2026-09-12
+32	7	2026-09-12
+32	8	2026-09-12
+32	9	2026-09-12
+32	10	2026-09-12
+32	11	2026-09-12
+32	12	2026-09-12
+32	13	2026-09-12
+14	6	2026-09-12
+40	7	2026-09-12
+40	8	2026-09-12
+40	9	2026-09-12
+14	3	2026-09-12
+14	21	2026-09-12
+14	24	2026-09-12
+42	1	2026-09-12
+42	2	2026-09-12
+32	15	2026-09-12
+32	3	2026-09-12
+18	6	2026-09-12
+32	16	2026-09-12
+18	7	2026-09-12
+42	4	2026-09-12
+42	5	2026-09-12
+18	8	2026-09-12
+18	9	2026-09-12
+18	10	2026-09-12
+42	7	2026-09-12
+42	8	2026-09-12
+18	11	2026-09-12
+42	9	2026-09-12
+42	10	2026-09-12
+42	11	2026-09-12
+18	12	2026-09-12
+42	12	2026-09-12
+16	58	2026-09-12
+42	13	2026-09-12
+18	13	2026-09-12
+42	15	2026-09-12
+43	1	2026-09-12
+42	3	2026-09-12
+42	17	2026-09-12
+42	18	2026-09-12
+18	14	2026-09-12
+42	20	2026-09-12
+43	2	2026-09-12
+32	17	2026-09-13
+32	18	2026-09-13
+32	19	2026-09-13
+32	20	2026-09-13
+32	22	2026-09-13
+32	28	2026-09-13
+34	1	2026-09-13
+42	21	2026-09-13
+42	22	2026-09-13
+34	2	2026-09-13
+42	23	2026-09-13
+34	4	2026-09-13
+34	5	2026-09-13
+42	27	2026-09-13
+42	28	2026-09-13
+42	30	2026-09-13
+34	7	2026-09-13
+34	8	2026-09-13
+34	9	2026-09-13
+34	10	2026-09-13
+32	23	2026-09-13
+34	11	2026-09-13
+34	12	2026-09-13
+32	27	2026-09-13
+34	13	2026-09-13
+19	14	2026-09-13
+19	15	2026-09-13
+19	3	2026-09-13
+19	16	2026-09-13
+19	17	2026-09-13
+19	18	2026-09-13
+19	19	2026-09-13
+34	15	2026-09-13
+34	3	2026-09-13
+34	16	2026-09-13
+34	17	2026-09-13
+34	18	2026-09-13
+34	19	2026-09-13
+44	1	2026-09-13
+34	20	2026-09-13
+34	22	2026-09-13
+39	18	2026-09-14
+39	19	2026-09-14
+39	20	2026-09-14
+41	10	2026-09-14
+39	21	2026-09-14
+39	22	2026-09-14
+41	11	2026-09-14
+41	12	2026-09-14
+41	13	2026-09-14
+41	14	2026-09-14
+41	15	2026-09-14
+39	23	2026-09-14
+10	15	2026-09-14
+10	3	2026-09-14
+10	16	2026-09-14
+10	17	2026-09-14
+10	18	2026-09-14
+10	19	2026-09-14
+10	21	2026-09-14
+11	7	2026-09-14
+11	8	2026-09-14
+11	9	2026-09-14
+11	10	2026-09-14
+11	12	2026-09-14
+11	11	2026-09-14
+10	22	2026-09-14
+11	13	2026-09-14
+10	23	2026-09-14
+11	15	2026-09-14
+11	3	2026-09-14
+11	16	2026-09-14
+11	17	2026-09-14
+11	18	2026-09-14
+10	26	2026-09-14
+11	19	2026-09-14
+10	27	2026-09-14
+10	28	2026-09-14
+11	20	2026-09-14
+10	30	2026-09-14
+11	21	2026-09-14
+10	34	2026-09-14
+14	41	2026-09-14
+14	67	2026-09-14
+14	69	2026-09-14
+14	76	2026-09-14
+14	70	2026-09-14
+14	71	2026-09-14
+48	1	2026-09-15
+48	2	2026-09-15
+14	43	2026-09-15
+35	30	2026-09-15
+48	4	2026-09-15
+48	5	2026-09-15
+35	34	2026-09-15
+14	44	2026-09-15
+48	7	2026-09-15
+48	8	2026-09-15
+48	9	2026-09-15
+48	10	2026-09-15
+48	11	2026-09-15
+14	72	2026-09-15
+41	3	2026-09-15
+41	16	2026-09-15
+41	17	2026-09-15
+13	27	2026-09-15
+41	18	2026-09-15
+41	19	2026-09-15
+13	29	2026-09-15
+13	30	2026-09-15
+13	34	2026-09-15
+43	5	2026-09-15
+41	21	2026-09-15
+41	22	2026-09-15
+49	1	2026-09-15
+49	2	2026-09-15
+43	7	2026-09-15
+49	4	2026-09-15
+43	8	2026-09-15
+43	9	2026-09-15
+43	10	2026-09-15
+43	11	2026-09-15
+43	12	2026-09-15
+43	13	2026-09-15
+43	15	2026-09-15
+43	16	2026-09-15
+43	17	2026-09-15
+43	21	2026-09-15
+47	1	2026-09-16
+47	2	2026-09-16
+33	1	2026-09-16
+33	2	2026-09-16
+33	4	2026-09-16
+33	5	2026-09-16
+33	7	2026-09-16
+33	8	2026-09-16
+33	9	2026-09-16
+33	10	2026-09-16
+55	1	2026-09-16
+62	1	2026-09-16
+33	11	2026-09-16
+62	2	2026-09-16
+33	12	2026-09-16
+47	4	2026-09-16
+55	2	2026-09-16
+33	13	2026-09-16
+53	1	2026-09-16
+47	5	2026-09-16
+33	15	2026-09-16
+33	3	2026-09-16
+33	16	2026-09-16
+18	15	2026-09-16
+53	2	2026-09-16
+18	3	2026-09-16
+33	17	2026-09-16
+18	16	2026-09-16
+53	4	2026-09-16
+34	23	2026-09-16
+18	17	2026-09-16
+33	18	2026-09-16
+53	5	2026-09-16
+18	18	2026-09-16
+18	19	2026-09-16
+34	27	2026-09-16
+43	18	2026-09-16
+34	28	2026-09-16
+43	19	2026-09-16
+18	20	2026-09-16
+18	21	2026-09-16
+18	22	2026-09-16
+43	27	2026-09-16
+43	26	2026-09-16
+43	3	2026-09-16
+43	22	2026-09-16
+55	5	2026-09-16
+55	7	2026-09-16
+45	1	2026-09-16
+45	2	2026-09-16
+45	5	2026-09-16
+45	7	2026-09-16
+45	8	2026-09-16
+45	9	2026-09-16
+45	10	2026-09-16
+45	11	2026-09-16
+45	12	2026-09-16
+45	13	2026-09-16
+25	5	2026-09-16
+45	15	2026-09-16
+26	5	2026-09-16
+45	3	2026-09-16
+45	16	2026-09-16
+45	17	2026-09-16
+45	18	2026-09-16
+45	19	2026-09-16
+26	8	2026-09-16
+26	7	2026-09-16
+26	9	2026-09-16
+26	10	2026-09-16
+26	11	2026-09-16
+26	12	2026-09-16
+26	13	2026-09-16
+25	7	2026-09-16
+25	8	2026-09-16
+25	9	2026-09-16
+25	10	2026-09-16
+25	11	2026-09-16
+25	12	2026-09-16
+25	13	2026-09-16
+25	15	2026-09-17
+22	7	2026-09-17
+26	15	2026-09-17
+26	3	2026-09-17
+25	3	2026-09-17
+26	16	2026-09-17
+22	8	2026-09-17
+22	9	2026-09-17
+22	10	2026-09-17
+25	16	2026-09-17
+38	3	2026-09-17
+38	21	2026-09-17
+26	18	2026-09-17
+25	18	2026-09-17
+62	5	2026-09-17
+39	26	2026-09-17
+38	22	2026-09-17
+39	27	2026-09-17
+25	19	2026-09-17
+47	7	2026-09-17
+26	19	2026-09-17
+62	7	2026-09-17
+47	8	2026-09-17
+62	8	2026-09-17
+39	28	2026-09-17
+47	9	2026-09-17
+62	9	2026-09-17
+62	10	2026-09-17
+47	10	2026-09-17
+7	64	2026-09-17
+22	12	2026-09-17
+47	11	2026-09-17
+62	11	2026-09-17
+64	1	2026-09-17
+39	34	2026-09-17
+38	26	2026-09-17
+47	12	2026-09-17
+62	12	2026-09-17
+64	2	2026-09-17
+64	4	2026-09-17
+38	27	2026-09-17
+64	5	2026-09-17
+65	1	2026-09-17
+24	13	2026-09-17
+64	7	2026-09-17
+22	15	2026-09-17
+64	8	2026-09-17
+38	28	2026-09-17
+66	1	2026-09-17
+26	21	2026-09-17
+25	21	2026-09-17
+65	2	2026-09-17
+64	9	2026-09-17
+47	15	2026-09-17
+62	15	2026-09-17
+66	2	2026-09-17
+22	3	2026-09-17
+24	15	2026-09-17
+64	10	2026-09-17
+47	3	2026-09-17
+62	3	2026-09-17
+22	16	2026-09-17
+24	17	2026-09-17
+47	16	2026-09-17
+38	34	2026-09-17
+65	5	2026-09-17
+48	12	2026-09-17
+22	17	2026-09-17
+22	18	2026-09-17
+36	15	2026-09-17
+48	13	2026-09-17
+64	12	2026-09-17
+64	13	2026-09-17
+24	18	2026-09-17
+65	7	2026-09-17
+64	15	2026-09-17
+45	21	2026-09-17
+64	3	2026-09-17
+65	8	2026-09-17
+48	14	2026-09-17
+68	1	2026-09-17
+48	15	2026-09-17
+67	1	2026-09-17
+65	9	2026-09-17
+47	17	2026-09-17
+48	3	2026-09-17
+48	16	2026-09-17
+68	2	2026-09-17
+64	17	2026-09-17
+66	5	2026-09-17
+47	18	2026-09-17
+48	17	2026-09-17
+65	10	2026-09-17
+48	18	2026-09-17
+24	16	2026-09-17
+48	19	2026-09-17
+45	22	2026-09-17
+24	3	2026-09-17
+33	19	2026-09-17
+47	19	2026-09-17
+64	16	2026-09-17
+64	18	2026-09-17
+67	2	2026-09-17
+48	20	2026-09-17
+65	11	2026-09-17
+68	4	2026-09-17
+64	19	2026-09-17
+65	12	2026-09-17
+48	21	2026-09-17
+48	22	2026-09-17
+35	16	2026-09-17
+65	15	2026-09-17
+48	23	2026-09-17
+36	16	2026-09-17
+68	5	2026-09-17
+48	24	2026-09-17
+65	3	2026-09-17
+33	21	2026-09-17
+48	25	2026-09-17
+65	16	2026-09-17
+41	25	2026-09-17
+48	26	2026-09-17
+48	27	2026-09-17
+33	20	2026-09-17
+48	28	2026-09-17
+41	26	2026-09-17
+41	27	2026-09-17
+65	17	2026-09-17
+65	4	2026-09-17
+65	13	2026-09-17
+65	14	2026-09-17
+62	16	2026-09-17
+67	4	2026-09-17
+48	29	2026-09-17
+65	18	2026-09-17
+41	28	2026-09-17
+62	17	2026-09-17
+67	5	2026-09-17
+33	22	2026-09-17
+62	18	2026-09-17
+48	30	2026-09-17
+65	19	2026-09-17
+48	31	2026-09-17
+41	29	2026-09-17
+48	34	2026-09-17
+62	19	2026-09-17
+33	23	2026-09-17
+22	19	2026-09-17
+22	21	2026-09-17
+7	70	2026-09-17
+48	6	2026-09-17
+65	21	2026-09-17
+41	30	2026-09-17
+41	31	2026-09-17
+65	22	2026-09-17
+41	34	2026-09-17
+47	21	2026-09-17
+22	22	2026-09-17
+33	26	2026-09-17
+33	27	2026-09-17
+32	30	2026-09-17
+33	28	2026-09-17
+47	22	2026-09-17
+67	6	2026-09-17
+33	30	2026-09-17
+33	31	2026-09-17
+33	34	2026-09-17
+53	6	2026-09-17
+67	7	2026-09-17
+53	7	2026-09-17
+62	20	2026-09-17
+53	8	2026-09-17
+49	5	2026-09-17
+67	8	2026-09-17
+53	9	2026-09-17
+67	9	2026-09-17
+53	10	2026-09-17
+53	11	2026-09-17
+32	34	2026-09-17
+67	10	2026-09-17
+53	12	2026-09-17
+34	30	2026-09-17
+67	11	2026-09-17
+34	34	2026-09-17
+67	12	2026-09-17
+53	13	2026-09-17
+15	22	2026-09-17
+67	13	2026-09-17
+22	27	2026-09-17
+53	14	2026-09-17
+22	23	2026-09-17
+22	28	2026-09-17
+53	15	2026-09-17
+53	3	2026-09-17
+53	16	2026-09-17
+53	17	2026-09-17
+53	18	2026-09-17
+15	31	2026-09-17
+15	34	2026-09-17
+55	8	2026-09-17
+55	9	2026-09-17
+55	10	2026-09-17
+63	1	2026-09-17
+55	11	2026-09-17
+63	2	2026-09-17
+55	12	2026-09-17
+63	5	2026-09-17
+55	13	2026-09-17
+34	31	2026-09-17
+63	7	2026-09-17
+63	8	2026-09-17
+63	9	2026-09-17
+63	10	2026-09-17
+55	15	2026-09-17
+63	11	2026-09-17
+45	25	2026-09-17
+63	12	2026-09-17
+63	15	2026-09-17
+63	3	2026-09-17
+63	16	2026-09-17
+63	17	2026-09-17
+63	18	2026-09-17
+45	26	2026-09-17
+55	3	2026-09-17
+63	19	2026-09-17
+55	16	2026-09-17
+45	27	2026-09-17
+55	17	2026-09-17
+45	28	2026-09-17
+63	20	2026-09-17
+63	21	2026-09-17
+63	22	2026-09-17
+55	18	2026-09-17
+63	23	2026-09-17
+63	27	2026-09-17
+63	28	2026-09-17
+63	31	2026-09-17
+63	34	2026-09-17
+55	19	2026-09-17
+45	29	2026-09-17
+45	30	2026-09-17
+14	46	2026-09-17
+63	30	2026-09-17
+45	31	2026-09-17
+45	34	2026-09-17
+45	4	2026-09-17
+45	14	2026-09-17
+14	48	2026-09-17
+62	21	2026-09-17
+14	73	2026-09-17
+14	50	2026-09-17
+62	22	2026-09-17
+47	23	2026-09-17
+62	23	2026-09-17
+14	74	2026-09-17
+62	25	2026-09-17
+47	25	2026-09-17
+62	26	2026-09-17
+47	26	2026-09-17
+22	30	2026-09-17
+14	53	2026-09-17
+62	27	2026-09-17
+47	27	2026-09-17
+47	28	2026-09-17
+62	28	2026-09-17
+65	29	2026-09-17
+65	34	2026-09-17
+65	30	2026-09-17
+62	29	2026-09-17
+47	29	2026-09-17
+65	28	2026-09-17
+65	27	2026-09-17
+65	26	2026-09-17
+65	25	2026-09-17
+65	20	2026-09-17
+47	30	2026-09-17
+62	30	2026-09-17
+62	34	2026-09-17
+47	34	2026-09-17
+32	31	2026-09-17
+30	14	2026-09-17
+32	21	2026-09-17
+20	18	2026-09-17
+30	20	2026-09-17
+30	21	2026-09-17
+30	22	2026-09-17
+68	7	2026-09-17
+68	8	2026-09-17
+68	9	2026-09-17
+68	10	2026-09-17
+68	11	2026-09-17
+22	34	2026-09-17
+68	12	2026-09-17
+68	15	2026-09-18
+68	3	2026-09-18
+68	16	2026-09-18
+68	17	2026-09-18
+68	18	2026-09-18
+68	19	2026-09-18
+68	21	2026-09-18
+68	22	2026-09-18
+68	23	2026-09-18
+68	26	2026-09-18
+70	1	2026-09-18
+70	2	2026-09-18
+70	5	2026-09-18
+70	7	2026-09-18
+70	8	2026-09-18
+70	9	2026-09-18
+70	10	2026-09-18
+70	11	2026-09-18
+70	12	2026-09-18
+70	13	2026-09-18
+70	15	2026-09-18
+68	27	2026-09-18
+68	28	2026-09-18
+70	3	2026-09-18
+68	29	2026-09-18
+70	16	2026-09-18
+32	29	2026-09-18
+32	25	2026-09-18
+70	17	2026-09-18
+70	18	2026-09-18
+68	30	2026-09-18
+70	19	2026-09-18
+68	31	2026-09-18
+68	34	2026-09-18
+68	13	2026-09-18
+32	26	2026-09-18
+70	20	2026-09-18
+70	21	2026-09-18
+70	22	2026-09-18
+70	23	2026-09-18
+14	55	2026-09-18
+30	26	2026-09-18
+28	12	2026-09-18
+30	27	2026-09-18
+30	23	2026-09-18
+30	25	2026-09-18
+30	28	2026-09-18
+22	26	2026-09-18
+52	1	2026-09-18
+52	2	2026-09-18
+66	7	2026-09-18
+22	31	2026-09-18
+25	27	2026-09-18
+34	14	2026-09-18
+34	21	2026-09-18
+25	34	2026-09-18
+34	24	2026-09-18
+34	25	2026-09-18
+65	31	2026-09-18
+52	5	2026-09-18
+52	7	2026-09-18
+52	8	2026-09-18
+71	1	2026-09-18
+52	9	2026-09-18
+71	2	2026-09-18
+52	10	2026-09-18
+52	11	2026-09-18
+72	1	2026-09-18
+71	4	2026-09-18
+71	5	2026-09-18
+14	58	2026-09-18
+71	7	2026-09-18
+71	8	2026-09-18
+71	9	2026-09-18
+71	10	2026-09-18
+71	11	2026-09-18
+71	12	2026-09-18
+72	5	2026-09-18
+71	13	2026-09-18
+52	12	2026-09-18
+52	15	2026-09-18
+71	15	2026-09-18
+72	2	2026-09-18
+71	3	2026-09-18
+52	3	2026-09-18
+71	16	2026-09-18
+52	16	2026-09-18
+71	17	2026-09-18
+52	17	2026-09-18
+52	18	2026-09-18
+52	19	2026-09-18
+71	18	2026-09-18
+72	7	2026-09-18
+72	8	2026-09-18
+72	9	2026-09-18
+72	10	2026-09-18
+72	11	2026-09-18
+72	12	2026-09-18
+72	13	2026-09-18
+14	26	2026-09-18
+71	19	2026-09-18
+71	20	2026-09-18
+72	15	2026-09-18
+71	21	2026-09-18
+72	3	2026-09-18
+71	22	2026-09-18
+14	31	2026-09-18
+72	16	2026-09-18
+72	17	2026-09-18
+72	18	2026-09-18
+14	25	2026-09-18
+72	19	2026-09-18
+14	14	2026-09-18
+72	20	2026-09-18
+74	1	2026-09-19
+74	2	2026-09-19
+74	4	2026-09-19
+74	5	2026-09-19
+74	7	2026-09-19
+74	8	2026-09-19
+74	9	2026-09-19
+74	10	2026-09-19
+74	11	2026-09-19
+74	12	2026-09-19
+74	13	2026-09-19
+74	15	2026-09-19
+74	3	2026-09-19
+74	16	2026-09-19
+74	17	2026-09-19
+74	18	2026-09-19
+74	19	2026-09-19
+74	20	2026-09-19
+74	21	2026-09-19
+74	22	2026-09-19
+74	23	2026-09-19
+74	26	2026-09-19
+74	27	2026-09-19
+74	28	2026-09-19
+69	1	2026-09-19
+74	29	2026-09-19
+69	2	2026-09-19
+74	30	2026-09-19
+74	31	2026-09-19
+69	4	2026-09-19
+74	34	2026-09-19
+69	5	2026-09-19
+69	7	2026-09-19
+69	8	2026-09-19
+69	9	2026-09-19
+69	10	2026-09-19
+69	11	2026-09-19
+69	12	2026-09-19
+69	13	2026-09-19
+69	15	2026-09-19
+69	3	2026-09-19
+69	16	2026-09-19
+69	17	2026-09-19
+69	18	2026-09-19
+69	19	2026-09-19
+69	21	2026-09-19
+69	22	2026-09-19
+69	24	2026-09-19
+69	26	2026-09-19
+69	27	2026-09-19
+71	23	2026-09-19
+71	24	2026-09-19
+69	29	2026-09-19
+69	30	2026-09-19
+42	16	2026-09-19
+42	19	2026-09-19
+69	31	2026-09-19
+69	34	2026-09-19
+36	18	2026-09-19
+73	1	2026-09-19
+36	19	2026-09-19
+73	2	2026-09-19
+42	26	2026-09-19
+37	15	2026-09-19
+37	16	2026-09-19
+37	17	2026-09-19
+37	18	2026-09-19
+73	5	2026-09-19
+73	7	2026-09-19
+73	8	2026-09-19
+73	9	2026-09-19
+73	10	2026-09-19
+73	11	2026-09-19
+73	12	2026-09-19
+73	15	2026-09-19
+73	3	2026-09-19
+73	16	2026-09-19
+55	21	2026-09-19
+7	24	2026-09-19
+73	17	2026-09-19
+55	22	2026-09-19
+73	18	2026-09-19
+55	23	2026-09-19
+44	2	2026-09-19
+73	19	2026-09-19
+44	5	2026-09-19
+72	21	2026-09-19
+44	7	2026-09-19
+44	8	2026-09-19
+44	9	2026-09-19
+72	22	2026-09-19
+44	10	2026-09-19
+71	26	2026-09-19
+44	11	2026-09-19
+71	27	2026-09-19
+73	20	2026-09-19
+73	21	2026-09-19
+42	34	2026-09-19
+71	28	2026-09-19
+43	23	2026-09-19
+44	12	2026-09-19
+72	23	2026-09-19
+4	1	2026-09-19
+71	34	2026-09-19
+73	22	2026-09-19
+44	13	2026-09-19
+75	1	2026-09-19
+71	30	2026-09-19
+73	23	2026-09-19
+44	15	2026-09-19
+44	3	2026-09-19
+73	25	2026-09-19
+75	2	2026-09-19
+21	3	2026-09-19
+21	16	2026-09-19
+21	21	2026-09-19
+44	17	2026-09-19
+21	22	2026-09-19
+21	23	2026-09-19
+42	31	2026-09-19
+44	18	2026-09-19
+73	26	2026-09-19
+73	27	2026-09-19
+72	26	2026-09-19
+44	19	2026-09-19
+73	28	2026-09-19
+21	26	2026-09-19
+72	27	2026-09-19
+42	24	2026-09-19
+21	28	2026-09-19
+73	29	2026-09-19
+73	30	2026-09-19
+21	30	2026-09-19
+72	28	2026-09-19
+73	31	2026-09-19
+73	34	2026-09-19
+21	34	2026-09-19
+21	37	2026-09-19
+44	21	2026-09-19
+44	22	2026-09-19
+26	27	2026-09-19
+21	40	2026-09-19
+26	28	2026-09-19
+21	64	2026-09-19
+75	4	2026-09-19
+44	23	2026-09-19
+26	31	2026-09-19
+75	5	2026-09-19
+21	69	2026-09-19
+21	70	2026-09-19
+21	46	2026-09-19
+21	73	2026-09-19
+21	50	2026-09-19
+21	58	2026-09-19
+37	19	2026-09-19
+21	71	2026-09-19
+37	20	2026-09-19
+37	21	2026-09-19
+72	30	2026-09-19
+72	31	2026-09-19
+72	34	2026-09-19
+30	30	2026-09-19
+37	26	2026-09-19
+30	34	2026-09-19
+37	27	2026-09-19
+52	30	2026-09-19
+52	34	2026-09-19
+25	31	2026-09-19
+25	28	2026-09-19
+37	28	2026-09-19
+37	22	2026-09-19
+37	23	2026-09-19
+37	3	2026-09-19
+37	34	2026-09-19
+37	31	2026-09-19
+67	15	2026-09-20
+67	3	2026-09-20
+67	16	2026-09-20
+67	17	2026-09-20
+67	18	2026-09-20
+67	19	2026-09-20
+67	20	2026-09-20
+44	26	2026-09-20
+44	27	2026-09-20
+44	28	2026-09-20
+44	30	2026-09-20
+52	22	2026-09-20
+52	23	2026-09-20
+10	31	2026-09-20
+52	27	2026-09-20
+66	10	2026-09-20
+66	9	2026-09-20
+66	11	2026-09-20
+66	12	2026-09-20
+66	13	2026-09-20
+14	29	2026-09-20
+16	30	2026-09-20
+16	31	2026-09-20
+16	29	2026-09-20
+55	26	2026-09-20
+55	27	2026-09-20
+55	28	2026-09-20
+11	22	2026-09-20
+11	23	2026-09-20
+71	31	2026-09-20
+71	29	2026-09-20
+8	1	2026-09-20
+8	2	2026-09-20
+78	1	2026-09-20
+19	20	2026-09-20
+75	7	2026-09-20
+36	30	2026-09-20
+66	14	2026-09-20
+37	30	2026-09-20
+66	3	2026-09-20
+66	16	2026-09-20
+11	26	2026-09-20
+8	5	2026-09-20
+75	8	2026-09-20
+8	7	2026-09-20
+66	17	2026-09-20
+75	9	2026-09-20
+66	18	2026-09-20
+19	21	2026-09-20
+8	8	2026-09-20
+75	10	2026-09-20
+8	9	2026-09-20
+11	27	2026-09-20
+19	22	2026-09-20
+66	8	2026-09-20
+75	11	2026-09-20
+8	10	2026-09-20
+75	12	2026-09-20
+75	13	2026-09-20
+11	28	2026-09-20
+75	15	2026-09-20
+75	3	2026-09-20
+8	11	2026-09-20
+75	16	2026-09-20
+19	23	2026-09-20
+8	12	2026-09-20
+75	17	2026-09-20
+11	30	2026-09-20
+75	18	2026-09-20
+19	24	2026-09-20
+75	19	2026-09-20
+75	20	2026-09-20
+75	21	2026-09-20
+19	25	2026-09-20
+75	22	2026-09-20
+66	15	2026-09-20
+19	26	2026-09-20
+11	31	2026-09-20
+11	34	2026-09-20
+19	27	2026-09-20
+8	15	2026-09-20
+79	1	2026-09-20
+18	23	2026-09-20
+79	2	2026-09-20
+8	3	2026-09-20
+75	26	2026-09-20
+79	4	2026-09-20
+18	24	2026-09-20
+4	2	2026-09-20
+66	19	2026-09-20
+19	28	2026-09-20
+73	4	2026-09-20
+75	27	2026-09-20
+8	16	2026-09-20
+75	28	2026-09-20
+79	5	2026-09-20
+73	13	2026-09-20
+18	25	2026-09-20
+75	31	2026-09-20
+66	21	2026-09-20
+75	34	2026-09-20
+8	17	2026-09-20
+18	26	2026-09-20
+19	29	2026-09-20
+19	30	2026-09-20
+8	18	2026-09-20
+18	27	2026-09-20
+73	24	2026-09-20
+55	30	2026-09-20
+18	28	2026-09-20
+8	19	2026-09-20
+19	31	2026-09-20
+79	7	2026-09-20
+18	29	2026-09-20
+8	20	2026-09-20
+79	8	2026-09-20
+19	34	2026-09-20
+79	9	2026-09-20
+79	10	2026-09-20
+18	30	2026-09-20
+79	12	2026-09-20
+66	22	2026-09-20
+66	20	2026-09-20
+8	21	2026-09-20
+79	13	2026-09-20
+4	4	2026-09-20
+79	15	2026-09-20
+55	31	2026-09-20
+4	5	2026-09-20
+79	3	2026-09-20
+18	31	2026-09-20
+55	34	2026-09-20
+18	34	2026-09-20
+79	17	2026-09-20
+79	18	2026-09-20
+8	22	2026-09-20
+79	19	2026-09-20
+79	21	2026-09-20
+79	22	2026-09-20
+66	23	2026-09-20
+4	7	2026-09-20
+4	8	2026-09-20
+4	9	2026-09-20
+4	10	2026-09-20
+79	27	2026-09-20
+79	28	2026-09-20
+4	11	2026-09-20
+4	12	2026-09-20
+70	25	2026-09-20
+66	25	2026-09-20
+79	34	2026-09-20
+79	34	2026-09-20
+4	13	2026-09-20
+80	1	2026-09-20
+79	31	2026-09-20
+80	2	2026-09-20
+80	4	2026-09-20
+70	26	2026-09-20
+80	5	2026-09-20
+70	27	2026-09-20
+79	11	2026-09-20
+66	27	2026-09-20
+79	16	2026-09-20
+80	7	2026-09-20
+53	19	2026-09-20
+80	8	2026-09-20
+80	9	2026-09-20
+80	10	2026-09-20
+66	28	2026-09-20
+80	11	2026-09-20
+80	12	2026-09-20
+80	13	2026-09-20
+80	15	2026-09-20
+80	3	2026-09-20
+80	16	2026-09-20
+80	17	2026-09-20
+80	18	2026-09-20
+80	19	2026-09-20
+80	21	2026-09-20
+80	22	2026-09-20
+53	20	2026-09-20
+70	28	2026-09-20
+53	21	2026-09-20
+80	26	2026-09-20
+80	27	2026-09-20
+66	29	2026-09-20
+53	22	2026-09-20
+4	15	2026-09-20
+66	30	2026-09-20
+53	23	2026-09-20
+66	26	2026-09-20
+53	24	2026-09-20
+53	25	2026-09-20
+53	26	2026-09-20
+53	27	2026-09-20
+53	28	2026-09-20
+53	29	2026-09-20
+70	29	2026-09-20
+66	31	2026-09-20
+4	3	2026-09-20
+53	30	2026-09-20
+70	30	2026-09-20
+4	16	2026-09-20
+53	31	2026-09-20
+17	29	2026-09-20
+66	34	2026-09-20
+53	34	2026-09-20
+4	17	2026-09-20
+70	31	2026-09-20
+4	18	2026-09-20
+70	34	2026-09-20
+4	19	2026-09-20
+4	20	2026-09-20
+4	21	2026-09-20
+4	22	2026-09-20
+14	39	2026-09-21
+14	75	2026-09-21
+14	54	2026-09-21
+71	37	2026-09-22
+26	34	2026-09-22
+71	63	2026-09-23
+13	37	2026-09-23
+16	37	2026-09-23
+16	40	2026-09-23
+16	64	2026-09-23
+16	75	2026-09-23
+12	40	2026-09-23
+15	63	2026-09-23
+15	40	2026-09-23
+17	37	2026-09-24
+17	63	2026-09-24
+17	40	2026-09-24
+22	37	2026-09-24
+65	37	2026-09-24
+65	67	2026-09-24
+65	69	2026-09-24
+65	70	2026-09-24
+17	64	2026-09-25
+17	41	2026-09-25
+17	67	2026-09-25
+17	69	2026-09-25
+17	76	2026-09-25
+17	70	2026-09-25
+17	71	2026-09-26
+17	46	2026-09-26
+17	48	2026-09-26
+17	73	2026-09-26
+17	50	2026-09-26
+17	74	2026-09-26
+17	53	2026-09-26
+35	20	2026-09-26
+35	23	2026-09-26
+71	40	2026-09-26
+71	64	2026-09-26
+42	37	2026-09-26
+42	63	2026-09-26
+49	7	2026-09-26
+49	8	2026-09-26
+49	9	2026-09-26
+49	10	2026-09-26
+49	11	2026-09-26
+49	12	2026-09-26
+49	15	2026-09-26
+49	3	2026-09-26
+71	70	2026-09-27
+6	1	2026-09-27
+19	37	2026-09-27
+6	2	2026-09-27
+15	75	2026-09-27
+15	67	2026-09-27
+15	69	2026-09-27
+15	76	2026-09-27
+15	70	2026-09-27
+15	54	2026-09-27
+15	71	2026-09-27
+49	16	2026-09-27
+49	17	2026-09-27
+49	18	2026-09-27
+49	19	2026-09-27
+15	46	2026-09-27
+15	48	2026-09-27
+15	73	2026-09-27
+15	50	2026-09-27
+15	74	2026-09-27
+15	53	2026-09-27
+49	20	2026-09-27
+49	21	2026-09-27
+49	22	2026-09-27
+49	23	2026-09-27
+15	37	2026-09-28
+49	27	2026-09-28
+49	28	2026-09-28
+49	30	2026-09-28
+49	31	2026-09-28
+49	34	2026-09-28
+49	29	2026-09-28
+19	63	2026-09-28
+5	37	2026-09-28
+13	63	2026-09-29
+62	37	2026-09-30
+47	37	2026-09-30
+9	37	2026-09-30
+9	63	2026-09-30
+9	38	2026-09-30
+9	39	2026-09-30
+9	40	2026-09-30
+9	64	2026-09-30
+9	75	2026-09-30
+9	77	2026-09-30
+9	41	2026-09-30
+9	67	2026-09-30
+9	69	2026-09-30
+9	76	2026-09-30
+9	70	2026-09-30
+9	54	2026-09-30
+9	71	2026-09-30
+9	43	2026-09-30
+9	44	2026-09-30
+9	72	2026-09-30
+9	46	2026-09-30
+9	48	2026-09-30
+9	73	2026-09-30
+9	50	2026-09-30
+9	51	2026-09-30
+9	74	2026-09-30
+9	53	2026-09-30
+9	58	2026-09-30
+9	55	2026-09-30
+9	57	2026-09-30
+9	81	2026-09-30
+9	78	2026-09-30
+9	80	2026-09-30
+9	59	2026-09-30
+9	60	2026-09-30
+9	82	2026-09-30
+9	61	2026-09-30
+9	83	2026-09-30
+9	62	2026-09-30
+62	63	2026-09-30
+47	63	2026-09-30
+18	37	2026-09-30
+18	63	2026-09-30
+28	4	2026-09-30
+28	15	2026-09-30
+28	3	2026-09-30
+28	17	2026-09-30
+28	19	2026-09-30
+28	21	2026-09-30
+26	37	2026-10-01
+25	37	2026-10-01
+5	63	2026-10-01
+70	37	2026-10-04
+48	37	2026-10-04
+48	63	2026-10-04
+48	38	2026-10-04
+48	39	2026-10-04
+48	40	2026-10-04
+33	37	2026-10-05
+33	63	2026-10-05
+16	67	2026-10-07
+16	69	2026-10-07
+15	58	2026-10-07
+48	64	2026-10-07
+48	75	2026-10-07
+48	77	2026-10-07
+15	82	2026-10-07
+24	19	2026-10-08
+24	4	2026-10-08
+24	21	2026-10-08
+16	70	2026-10-08
+24	22	2026-10-08
+24	23	2026-10-08
+16	54	2026-10-08
+16	46	2026-10-09
+16	71	2026-10-10
+16	48	2026-10-11
+16	73	2026-10-11
+16	50	2026-10-11
+16	74	2026-10-11
+16	53	2026-10-11
+64	22	2026-10-11
+64	27	2026-10-11
 \.
 
 
 --
--- Data for Name: chunk_column_stats; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+-- Data for Name: user_achievement_progress; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY _timescaledb_catalog.chunk_column_stats (id, hypertable_id, chunk_id, column_name, range_start, range_end, valid) FROM stdin;
+COPY public.user_achievement_progress (user_id, achievement_id, current_count) FROM stdin;
+28	8	2
+75	8	2
+75	5	1
+17	3	16
+8	5	1
+80	7	1
+15	7	2
+62	8	3
+40	8	2
+19	6	1
+9	4	12
+47	3	2
+12	7	2
+40	2	7
+35	8	2
+4	8	2
+79	5	1
+10	8	2
+22	8	3
+4	5	1
+42	8	3
+32	5	1
+20	8	2
+42	5	2
+63	5	1
+30	7	1
+10	7	1
+35	5	1
+71	7	2
+47	6	1
+71	6	1
+18	8	3
+11	7	1
+7	8	3
+18	5	2
+7	5	2
+7	7	2
+14	7	4
+40	7	1
+53	7	1
+13	8	3
+26	8	3
+13	5	2
+20	7	1
+13	7	2
+38	8	2
+33	8	3
+30	8	2
+41	7	1
+68	7	1
+18	7	2
+24	7	1
+30	5	1
+12	3	2
+16	7	2
+27	8	1
+12	8	4
+28	7	1
+41	5	1
+12	5	3
+16	3	15
+42	3	2
+27	7	1
+27	2	2
+22	5	2
+18	6	1
+24	8	2
+49	7	1
+43	5	1
+39	8	2
+22	7	2
+71	8	4
+16	4	1
+32	7	1
+71	5	3
+65	8	3
+19	3	2
+43	7	1
+36	8	2
+20	5	1
+42	7	2
+37	8	2
+22	3	1
+65	5	2
+34	7	1
+35	7	1
+55	5	1
+36	7	1
+37	7	1
+43	8	2
+65	7	2
+49	8	2
+34	8	2
+45	7	1
+17	7	3
+38	7	1
+39	7	1
+19	8	3
+34	5	1
+49	5	1
+19	5	2
+7	6	1
+19	7	2
+39	5	1
+38	5	1
+10	5	1
+41	8	2
+5	8	3
+5	5	2
+11	8	2
+32	8	2
+52	8	2
+45	8	2
+64	8	2
+11	5	1
+5	7	2
+24	5	1
+66	7	1
+26	3	1
+63	7	1
+47	8	3
+13	6	1
+62	5	2
+62	7	2
+47	5	2
+45	5	1
+67	7	1
+55	7	1
+25	8	3
+53	8	2
+26	5	2
+67	8	2
+68	5	1
+47	7	2
+70	8	3
+26	7	2
+25	5	2
+25	7	2
+64	7	1
+64	5	1
+70	5	2
+70	7	2
+33	5	2
+48	8	4
+48	7	2
+53	5	1
+7	3	4
+63	8	2
+48	5	4
+33	7	2
+55	8	2
+52	7	1
+66	8	2
+68	8	2
+72	8	2
+72	5	1
+14	4	2
+52	5	1
+72	7	1
+74	7	1
+74	8	2
+69	7	1
+74	5	1
+69	8	2
+73	7	1
+69	5	1
+73	8	2
+44	8	2
+73	5	1
+44	7	1
+21	7	2
+44	5	1
+75	7	1
+8	8	2
+62	6	1
+62	3	2
+21	5	4
+21	6	1
+21	4	1
+21	3	9
+37	5	1
+67	5	1
+18	3	2
+28	5	1
+8	7	1
+79	7	1
+78	8	1
+25	3	1
+78	2	1
+5	6	1
+66	5	1
+4	7	1
+5	3	2
+70	3	1
+79	8	2
+48	6	2
+33	6	1
+33	3	2
+48	3	8
+80	8	2
+15	4	2
+16	6	2
+80	5	1
+65	3	4
+42	6	1
+71	3	5
+6	8	1
+6	7	1
+6	2	2
+15	3	16
+13	3	2
 \.
 
 
 --
--- Data for Name: compression_chunk_size; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+-- Data for Name: user_events; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY _timescaledb_catalog.compression_chunk_size (chunk_id, compressed_chunk_id, uncompressed_heap_size, uncompressed_toast_size, uncompressed_index_size, compressed_heap_size, compressed_toast_size, compressed_index_size, numrows_pre_compression, numrows_post_compression, numrows_frozen_immediately) FROM stdin;
-\.
-
-
---
--- Data for Name: compression_settings; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.compression_settings (relid, compress_relid, segmentby, orderby, orderby_desc, orderby_nullsfirst, index) FROM stdin;
-\.
-
-
---
--- Data for Name: continuous_agg; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.continuous_agg (mat_hypertable_id, raw_hypertable_id, parent_mat_hypertable_id, user_view_schema, user_view_name, partial_view_schema, partial_view_name, direct_view_schema, direct_view_name, materialized_only, schema_change_timestamp) FROM stdin;
-\.
-
-
---
--- Data for Name: continuous_aggs_bucket_function; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.continuous_aggs_bucket_function (mat_hypertable_id, bucket_func, bucket_width, bucket_origin, bucket_offset, bucket_timezone, bucket_fixed_width) FROM stdin;
-\.
-
-
---
--- Data for Name: continuous_aggs_hypertable_invalidation_log; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.continuous_aggs_hypertable_invalidation_log (hypertable_id, lowest_modified_value, greatest_modified_value) FROM stdin;
-\.
-
-
---
--- Data for Name: continuous_aggs_invalidation_threshold; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.continuous_aggs_invalidation_threshold (hypertable_id, watermark) FROM stdin;
-\.
-
-
---
--- Data for Name: continuous_aggs_jobs_refresh_ranges; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.continuous_aggs_jobs_refresh_ranges (materialization_id, start_range, end_range, pid, job_id, created_at) FROM stdin;
-\.
-
-
---
--- Data for Name: continuous_aggs_materialization_invalidation_log; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.continuous_aggs_materialization_invalidation_log (materialization_id, lowest_modified_value, greatest_modified_value) FROM stdin;
-\.
-
-
---
--- Data for Name: continuous_aggs_materialization_ranges; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.continuous_aggs_materialization_ranges (materialization_id, lowest_modified_value, greatest_modified_value) FROM stdin;
-\.
-
-
---
--- Data for Name: continuous_aggs_watermark; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.continuous_aggs_watermark (mat_hypertable_id, watermark) FROM stdin;
-\.
-
-
---
--- Data for Name: dimension; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.dimension (id, hypertable_id, column_name, column_type, aligned, num_slices, partitioning_func_schema, partitioning_func, interval_length, compress_interval_length, integer_now_func_schema, integer_now_func) FROM stdin;
-1	1	timestamp	timestamp with time zone	t	\N	\N	\N	604800000000	\N	\N	\N
-\.
-
-
---
--- Data for Name: dimension_slice; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.dimension_slice (id, chunk_id, dimension_id, range_start, range_end) FROM stdin;
-1	1	1	1788393600000000	1788998400000000
-2	2	1	1788998400000000	1789603200000000
-3	3	1	1789603200000000	1790208000000000
-4	4	1	1790208000000000	1790812800000000
-\.
-
-
---
--- Data for Name: metadata; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.metadata (key, value, include_in_telemetry) FROM stdin;
-install_timestamp	2026-09-01 19:19:52.381015+00	t
-timescaledb_version	2.28.3	f
-exported_uuid	f0ecfb38-3594-4277-a210-18e90d994c39	t
-\.
-
-
---
--- Data for Name: tablespace; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
---
-
-COPY _timescaledb_catalog.tablespace (id, hypertable_id, tablespace_name) FROM stdin;
-\.
-
-
---
--- Data for Name: _hyper_1_1_chunk; Type: TABLE DATA; Schema: _timescaledb_internal; Owner: postgres
---
-
-COPY _timescaledb_internal._hyper_1_1_chunk (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
+COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
 1	2026-09-04 15:14:49.929484+00	1	1	task_started	{"task_id": 1, "mission_id": 0}
 2	2026-09-04 15:14:55.10822+00	1	55	task_started	{"task_id": 1, "mission_id": 2}
 3	2026-09-06 21:08:37.623545+00	3	1	task_started	{"task_id": 1, "mission_id": 0}
@@ -3834,14 +5686,6 @@ COPY _timescaledb_internal._hyper_1_1_chunk (id, "timestamp", user_id, task_id, 
 2941	2026-09-09 17:20:50.335574+00	21	4	task_attempt	{"task_id": 3, "mission_id": 0}
 2944	2026-09-09 17:21:29.85017+00	21	4	task_attempt	{"task_id": 3, "mission_id": 0}
 2946	2026-09-09 17:21:55.009728+00	13	14	task_attempt	{"task_id": 13, "mission_id": 0}
-\.
-
-
---
--- Data for Name: _hyper_1_2_chunk; Type: TABLE DATA; Schema: _timescaledb_internal; Owner: postgres
---
-
-COPY _timescaledb_internal._hyper_1_2_chunk (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
 3259	2026-09-10 00:09:49.814134+00	15	28	task_started	{"task_id": 28, "mission_id": 0}
 3260	2026-09-10 00:09:53.702058+00	15	28	task_attempt	{"task_id": 28, "mission_id": 0}
 3261	2026-09-10 00:10:18.347264+00	15	28	task_attempt	{"task_id": 28, "mission_id": 0}
@@ -11726,14 +13570,6 @@ COPY _timescaledb_internal._hyper_1_2_chunk (id, "timestamp", user_id, task_id, 
 11098	2026-09-16 19:49:20.864578+00	26	13	purchase_clue	{"task_id": 12, "clue_type": 2, "mission_id": 0}
 11100	2026-09-16 19:49:40.99873+00	41	4	task_started	{"task_id": 3, "mission_id": 0}
 11102	2026-09-16 19:49:57.526315+00	26	13	task_submitted	{"task_id": 12, "is_correct": true, "mission_id": 0}
-\.
-
-
---
--- Data for Name: _hyper_1_3_chunk; Type: TABLE DATA; Schema: _timescaledb_internal; Owner: postgres
---
-
-COPY _timescaledb_internal._hyper_1_3_chunk (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
 11154	2026-09-17 06:01:15.570286+00	26	6	task_started	{"task_id": 5, "mission_id": 0}
 11155	2026-09-17 06:01:26.524749+00	26	14	task_started	{"task_id": 13, "mission_id": 0}
 11156	2026-09-17 06:02:56.434475+00	25	14	task_started	{"task_id": 13, "mission_id": 0}
@@ -24455,14 +26291,6 @@ COPY _timescaledb_internal._hyper_1_3_chunk (id, "timestamp", user_id, task_id, 
 21562	2026-09-20 16:50:51.831794+00	79	7	task_attempt	{"task_id": 6, "mission_id": 0}
 21569	2026-09-20 16:51:22.688847+00	18	27	task_attempt	{"task_id": 27, "mission_id": 0}
 22207	2026-09-20 18:42:41.784221+00	12	5	task_started	{"task_id": 4, "mission_id": 0}
-\.
-
-
---
--- Data for Name: _hyper_1_4_chunk; Type: TABLE DATA; Schema: _timescaledb_internal; Owner: postgres
---
-
-COPY _timescaledb_internal._hyper_1_4_chunk (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
 23878	2026-09-24 09:59:34.21245+00	71	38	task_started	{"task_id": 3, "mission_id": 1}
 23879	2026-09-24 10:21:10.932805+00	7	39	task_started	{"task_id": 4, "mission_id": 1}
 23880	2026-09-24 12:03:25.599043+00	71	39	task_started	{"task_id": 4, "mission_id": 1}
@@ -24470,1931 +26298,4150 @@ COPY _timescaledb_internal._hyper_1_4_chunk (id, "timestamp", user_id, task_id, 
 23882	2026-09-24 12:14:04.212187+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
 23883	2026-09-24 12:14:10.440816+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
 23884	2026-09-24 12:14:13.203731+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23885	2026-09-24 12:15:37.607284+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23886	2026-09-24 12:15:54.15457+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23887	2026-09-24 12:15:54.728715+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23888	2026-09-24 12:15:54.875551+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23889	2026-09-24 12:15:55.019082+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23890	2026-09-24 12:15:55.160062+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23891	2026-09-24 12:16:09.68685+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23892	2026-09-24 12:16:10.129654+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23893	2026-09-24 12:16:10.272784+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23894	2026-09-24 12:16:10.39665+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23895	2026-09-24 12:16:15.110941+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23896	2026-09-24 12:16:15.49111+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23897	2026-09-24 12:16:15.641771+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23898	2026-09-24 12:16:15.796671+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23899	2026-09-24 12:16:15.944656+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23900	2026-09-24 12:16:22.468873+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23901	2026-09-24 12:16:22.869757+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23902	2026-09-24 12:16:23.013385+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23903	2026-09-24 12:16:26.572543+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23904	2026-09-24 12:16:26.734489+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23905	2026-09-24 12:16:32.432654+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23906	2026-09-24 12:16:32.556649+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23907	2026-09-24 12:16:32.721333+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23908	2026-09-24 12:18:00.146501+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23909	2026-09-24 12:18:16.876013+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23910	2026-09-24 12:18:17.270737+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23911	2026-09-24 12:18:17.408503+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23912	2026-09-24 12:18:17.547795+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23913	2026-09-24 12:18:17.677726+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23914	2026-09-24 12:18:17.802368+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23915	2026-09-24 12:18:17.927882+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23916	2026-09-24 12:18:18.053226+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23917	2026-09-24 12:20:15.649722+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23918	2026-09-24 12:21:08.640231+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23919	2026-09-24 12:21:26.528778+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23920	2026-09-24 12:21:36.360267+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23921	2026-09-24 12:22:25.649827+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23922	2026-09-24 12:22:36.299044+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23923	2026-09-24 12:22:45.013035+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23924	2026-09-24 12:22:54.002447+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23925	2026-09-24 12:23:35.34597+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23926	2026-09-24 12:24:30.49061+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23927	2026-09-24 12:24:37.375085+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23928	2026-09-24 12:24:43.432041+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23929	2026-09-24 12:25:02.100293+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23930	2026-09-24 12:26:32.812104+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23931	2026-09-24 12:27:14.347474+00	71	39	purchase_clue	{"task_id": 4, "clue_type": 2, "mission_id": 1}
+23932	2026-09-24 12:28:34.725624+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23933	2026-09-24 12:28:51.077771+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23934	2026-09-24 12:28:57.36061+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23935	2026-09-24 12:29:20.482573+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23936	2026-09-24 12:29:32.4133+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23937	2026-09-24 12:29:39.131144+00	4	23	task_started	{"task_id": 23, "mission_id": 0}
+23938	2026-09-24 12:30:10.458735+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23939	2026-09-24 12:30:17.487101+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23940	2026-09-24 12:30:26.340327+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23941	2026-09-24 12:31:21.402382+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23942	2026-09-24 12:31:39.741615+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23943	2026-09-24 12:31:40.144067+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23948	2026-09-24 12:33:48.463114+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23950	2026-09-24 12:40:20.769211+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23954	2026-09-24 12:47:37.279147+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23960	2026-09-24 12:48:57.504753+00	71	39	task_started	{"task_id": 4, "mission_id": 1}
+23965	2026-09-24 12:55:02.571669+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25100	2026-09-27 18:37:53.236201+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25104	2026-09-27 18:45:04.540798+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25107	2026-09-27 18:49:41.093484+00	49	16	task_attempt	{"task_id": 16, "mission_id": 0}
+25112	2026-09-27 18:50:36.209881+00	49	17	task_started	{"task_id": 17, "mission_id": 0}
+25116	2026-09-27 18:53:07.668529+00	15	72	task_attempt	{"task_id": 18, "mission_id": 1}
+25121	2026-09-27 18:53:47.944282+00	49	17	task_attempt	{"task_id": 17, "mission_id": 0}
+26019	2026-09-30 11:16:27.247057+00	9	52	purchase_clue	{"task_id": 24, "clue_type": 1, "mission_id": 1}
+26020	2026-09-30 11:17:12.737653+00	9	52	task_attempt	{"task_id": 24, "mission_id": 1}
+26022	2026-09-30 11:17:44.216459+00	9	52	task_attempt	{"task_id": 24, "mission_id": 1}
+26521	2026-09-30 21:04:08.893752+00	28	14	task_attempt	{"task_id": 13, "mission_id": 0}
+23944	2026-09-24 12:31:40.385047+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23951	2026-09-24 12:44:30.504191+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23955	2026-09-24 12:47:38.10722+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25101	2026-09-27 18:42:31.490762+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25105	2026-09-27 18:45:34.805799+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25108	2026-09-27 18:50:24.921091+00	49	16	task_attempt	{"task_id": 16, "mission_id": 0}
+25110	2026-09-27 18:50:32.047185+00	49	16	purchase_clue	{"task_id": 16, "clue_type": 1, "mission_id": 0}
+25117	2026-09-27 18:53:13.732175+00	15	72	task_attempt	{"task_id": 18, "mission_id": 1}
+25122	2026-09-27 18:53:56.234452+00	49	17	task_attempt	{"task_id": 17, "mission_id": 0}
+25123	2026-09-27 18:54:01.556693+00	49	17	task_attempt	{"task_id": 17, "mission_id": 0}
+25128	2026-09-27 18:56:08.442941+00	15	72	task_attempt	{"task_id": 18, "mission_id": 1}
+25138	2026-09-27 18:59:25.283988+00	49	19	task_started	{"task_id": 19, "mission_id": 0}
+25142	2026-09-27 19:01:24.491193+00	49	19	task_attempt	{"task_id": 19, "mission_id": 0}
+25388	2026-09-28 12:44:17.638026+00	5	63	task_started	{"task_id": 2, "mission_id": 1}
+26024	2026-09-30 11:18:38.046004+00	9	51	task_started	{"task_id": 23, "mission_id": 1}
+26027	2026-09-30 11:18:54.580088+00	9	52	task_started	{"task_id": 24, "mission_id": 1}
+26028	2026-09-30 11:19:15.436331+00	9	74	task_started	{"task_id": 25, "mission_id": 1}
+26030	2026-09-30 11:19:25.166026+00	9	74	task_submitted	{"task_id": 25, "is_correct": true, "mission_id": 1}
+26031	2026-09-30 11:19:34.678205+00	9	53	task_started	{"task_id": 26, "mission_id": 1}
+26033	2026-09-30 11:19:41.096671+00	9	53	task_submitted	{"task_id": 26, "is_correct": true, "mission_id": 1}
+26034	2026-09-30 11:19:50.194394+00	9	52	task_started	{"task_id": 24, "mission_id": 1}
+26036	2026-09-30 11:20:40.665307+00	9	52	task_attempt	{"task_id": 24, "mission_id": 1}
+26522	2026-09-30 21:04:09.088096+00	28	14	task_attempt	{"task_id": 13, "mission_id": 0}
+23945	2026-09-24 12:31:40.492534+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23952	2026-09-24 12:44:34.325681+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23956	2026-09-24 12:47:38.243475+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23959	2026-09-24 12:47:56.38298+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23962	2026-09-24 12:49:44.640241+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23967	2026-09-24 12:55:05.73462+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23970	2026-09-24 12:56:11.344254+00	71	40	task_started	{"task_id": 5, "mission_id": 1}
+25102	2026-09-27 18:43:11.166504+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25113	2026-09-27 18:51:33.255471+00	49	17	purchase_clue	{"task_id": 17, "clue_type": 1, "mission_id": 0}
+25118	2026-09-27 18:53:22.327187+00	15	72	task_attempt	{"task_id": 18, "mission_id": 1}
+25124	2026-09-27 18:54:03.924682+00	49	17	task_attempt	{"task_id": 17, "mission_id": 0}
+25389	2026-09-28 12:44:21.31181+00	5	37	task_started	{"task_id": 1, "mission_id": 1}
+26037	2026-09-30 11:21:37.853705+00	9	52	task_attempt	{"task_id": 24, "mission_id": 1}
+26040	2026-09-30 11:25:48.027391+00	9	52	task_started	{"task_id": 24, "mission_id": 1}
+26042	2026-09-30 11:29:59.722854+00	9	52	task_started	{"task_id": 24, "mission_id": 1}
+26047	2026-09-30 11:38:59.408775+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26052	2026-09-30 11:39:27.690039+00	9	80	task_started	{"task_id": 6, "mission_id": 2}
+26063	2026-09-30 11:39:57.068978+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26066	2026-09-30 11:40:00.218423+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26071	2026-09-30 11:41:23.610939+00	9	57	task_started	{"task_id": 3, "mission_id": 2}
+26074	2026-09-30 11:41:25.189788+00	9	80	task_started	{"task_id": 6, "mission_id": 2}
+26078	2026-09-30 11:41:26.945198+00	9	61	task_started	{"task_id": 10, "mission_id": 2}
+26082	2026-09-30 11:42:17.259268+00	9	58	task_attempt	{"task_id": 4, "mission_id": 2}
+26086	2026-09-30 11:43:46.988736+00	9	58	task_attempt	{"task_id": 4, "mission_id": 2}
+26092	2026-09-30 11:44:33.031347+00	9	55	task_attempt	{"task_id": 1, "mission_id": 2}
+26098	2026-09-30 11:45:15.514774+00	9	78	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 2}
+26103	2026-09-30 11:45:43.03533+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26112	2026-09-30 11:46:45.735416+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26117	2026-09-30 11:46:52.00761+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26122	2026-09-30 11:46:57.904559+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26127	2026-09-30 11:47:03.827471+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26132	2026-09-30 11:47:08.663631+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26137	2026-09-30 11:47:14.0077+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26142	2026-09-30 11:47:20.1557+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26147	2026-09-30 11:47:26.047682+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26152	2026-09-30 11:47:32.233332+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26157	2026-09-30 11:47:37.587145+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26162	2026-09-30 11:47:41.228558+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26167	2026-09-30 11:47:45.648522+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26172	2026-09-30 11:47:49.02162+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26177	2026-09-30 11:47:52.41724+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26182	2026-09-30 11:47:55.285701+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26187	2026-09-30 11:48:00.636647+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26192	2026-09-30 11:48:07.323241+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26197	2026-09-30 11:48:13.518754+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26202	2026-09-30 11:48:18.637481+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26207	2026-09-30 11:48:23.843259+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26212	2026-09-30 11:48:28.835342+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26217	2026-09-30 11:48:59.902732+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26222	2026-09-30 11:49:23.526739+00	9	57	task_attempt	{"task_id": 3, "mission_id": 2}
+26227	2026-09-30 11:50:01.835285+00	9	57	task_attempt	{"task_id": 3, "mission_id": 2}
+26233	2026-09-30 11:50:51.99561+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26238	2026-09-30 11:51:38.688128+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26243	2026-09-30 11:52:15.495483+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26523	2026-09-30 21:04:17.004317+00	28	15	task_started	{"task_id": 14, "mission_id": 0}
+23946	2026-09-24 12:31:40.617297+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23957	2026-09-24 12:47:38.384963+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23963	2026-09-24 12:54:27.521345+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23968	2026-09-24 12:55:05.885913+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25103	2026-09-27 18:44:50.021449+00	49	16	task_started	{"task_id": 16, "mission_id": 0}
+25106	2026-09-27 18:49:20.94469+00	15	72	task_started	{"task_id": 18, "mission_id": 1}
+25109	2026-09-27 18:50:29.068578+00	49	16	task_submitted	{"task_id": 16, "is_correct": true, "mission_id": 0}
+25115	2026-09-27 18:52:32.954832+00	15	72	task_attempt	{"task_id": 18, "mission_id": 1}
+25120	2026-09-27 18:53:42.661647+00	15	72	task_attempt	{"task_id": 18, "mission_id": 1}
+25125	2026-09-27 18:54:11.831249+00	49	17	purchase_clue	{"task_id": 17, "clue_type": 2, "mission_id": 0}
+25126	2026-09-27 18:54:42.100717+00	15	72	purchase_clue	{"task_id": 18, "clue_type": 1, "mission_id": 1}
+25132	2026-09-27 18:57:31.052326+00	49	18	task_started	{"task_id": 18, "mission_id": 0}
+25137	2026-09-27 18:59:23.869216+00	15	46	task_started	{"task_id": 19, "mission_id": 1}
+25140	2026-09-27 19:00:50.858327+00	15	46	task_attempt	{"task_id": 19, "mission_id": 1}
+25144	2026-09-27 19:03:37.428832+00	49	19	task_attempt	{"task_id": 19, "mission_id": 0}
+25149	2026-09-27 19:04:41.249923+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25390	2026-09-28 13:56:05.530476+00	15	37	task_started	{"task_id": 1, "mission_id": 1}
+25391	2026-09-28 13:58:50.085634+00	15	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25393	2026-09-28 13:59:48.783823+00	15	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25395	2026-09-28 13:59:56.442258+00	15	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25397	2026-09-28 14:05:11.087017+00	15	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25399	2026-09-28 14:06:44.706703+00	15	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25400	2026-09-28 14:07:09.683359+00	15	63	task_started	{"task_id": 2, "mission_id": 1}
+25401	2026-09-28 14:07:10.994015+00	15	38	task_started	{"task_id": 3, "mission_id": 1}
+25403	2026-09-28 14:09:21.812294+00	15	39	task_started	{"task_id": 4, "mission_id": 1}
+25406	2026-09-28 14:10:48.816345+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+26038	2026-09-30 11:21:49.206765+00	9	52	task_attempt	{"task_id": 24, "mission_id": 1}
+26524	2026-09-30 21:04:19.456012+00	28	14	task_attempt	{"task_id": 13, "mission_id": 0}
+26535	2026-09-30 21:04:51.38412+00	28	3	task_submitted	{"task_id": 15, "is_correct": true, "mission_id": 0}
+26538	2026-09-30 21:05:11.238866+00	28	16	task_attempt	{"task_id": 16, "mission_id": 0}
+23947	2026-09-24 12:31:50.818312+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23949	2026-09-24 12:38:41.710907+00	4	23	task_started	{"task_id": 23, "mission_id": 0}
+23953	2026-09-24 12:44:44.003677+00	71	39	purchase_clue	{"task_id": 4, "clue_type": 1, "mission_id": 1}
+23958	2026-09-24 12:47:38.595377+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23961	2026-09-24 12:49:36.043103+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23964	2026-09-24 12:54:34.626848+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23966	2026-09-24 12:55:05.580194+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23969	2026-09-24 12:55:22.401118+00	71	39	task_attempt	{"task_id": 4, "mission_id": 1}
+23971	2026-09-24 14:46:49.772607+00	17	37	task_started	{"task_id": 1, "mission_id": 1}
+23972	2026-09-24 14:56:11.67088+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23973	2026-09-24 14:57:37.357178+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23974	2026-09-24 14:57:40.658155+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23975	2026-09-24 14:57:47.001896+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23976	2026-09-24 14:58:08.925943+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23977	2026-09-24 14:58:27.904284+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23978	2026-09-24 15:00:29.438687+00	17	37	purchase_clue	{"task_id": 1, "clue_type": 1, "mission_id": 1}
+23979	2026-09-24 15:05:37.65592+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23980	2026-09-24 15:05:58.638223+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23981	2026-09-24 15:06:00.801108+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23982	2026-09-24 15:06:03.281504+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23983	2026-09-24 15:08:43.213394+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23984	2026-09-24 15:08:55.952936+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23985	2026-09-24 15:09:06.287388+00	17	37	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 1}
+23986	2026-09-24 15:10:38.727633+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23987	2026-09-24 15:11:42.031634+00	17	37	task_attempt	{"task_id": 1, "mission_id": 1}
+23988	2026-09-24 15:11:44.439541+00	17	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+23989	2026-09-24 15:13:13.722642+00	17	63	task_started	{"task_id": 2, "mission_id": 1}
+23990	2026-09-24 15:19:20.439705+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+23991	2026-09-24 15:19:31.364022+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+23992	2026-09-24 15:23:37.248498+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+23993	2026-09-24 15:23:59.575151+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+23994	2026-09-24 15:24:29.976065+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+23995	2026-09-24 15:24:43.048305+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+23996	2026-09-24 15:25:41.748364+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+23997	2026-09-24 15:25:50.720744+00	17	63	purchase_clue	{"task_id": 2, "clue_type": 1, "mission_id": 1}
+23998	2026-09-24 15:25:52.103882+00	17	63	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 1}
+23999	2026-09-24 15:26:11.355484+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24000	2026-09-24 15:27:13.72703+00	65	37	task_started	{"task_id": 1, "mission_id": 1}
+24001	2026-09-24 15:29:35.582875+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24002	2026-09-24 15:30:09.302755+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24003	2026-09-24 15:31:34.531082+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24004	2026-09-24 15:33:56.22695+00	17	63	task_started	{"task_id": 2, "mission_id": 1}
+24005	2026-09-24 15:34:04.110791+00	17	55	task_started	{"task_id": 1, "mission_id": 2}
+24006	2026-09-24 15:34:11.406861+00	17	78	task_started	{"task_id": 2, "mission_id": 2}
+24007	2026-09-24 15:34:18.765956+00	17	63	task_started	{"task_id": 2, "mission_id": 1}
+24008	2026-09-24 15:34:56.488294+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24009	2026-09-24 15:34:58.828879+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24010	2026-09-24 15:34:59.48416+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24011	2026-09-24 15:35:07.866543+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24012	2026-09-24 15:41:25.33918+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24013	2026-09-24 15:41:37.415002+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24014	2026-09-24 15:41:43.355324+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24015	2026-09-24 15:42:43.728334+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24016	2026-09-24 15:42:46.776153+00	17	63	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 1}
+24017	2026-09-24 15:44:24.423411+00	17	38	task_started	{"task_id": 3, "mission_id": 1}
+24018	2026-09-24 15:46:50.371216+00	17	39	task_started	{"task_id": 4, "mission_id": 1}
+24019	2026-09-24 15:59:36.149834+00	17	39	task_attempt	{"task_id": 4, "mission_id": 1}
+24020	2026-09-24 16:00:36.161097+00	17	39	task_attempt	{"task_id": 4, "mission_id": 1}
+24021	2026-09-24 16:00:50.691565+00	17	39	task_attempt	{"task_id": 4, "mission_id": 1}
+24022	2026-09-24 16:01:09.929843+00	17	39	task_attempt	{"task_id": 4, "mission_id": 1}
+24023	2026-09-24 16:01:53.937387+00	17	39	task_attempt	{"task_id": 4, "mission_id": 1}
+24024	2026-09-24 16:05:12.300318+00	17	39	task_attempt	{"task_id": 4, "mission_id": 1}
+24025	2026-09-24 16:06:04.653483+00	17	39	task_attempt	{"task_id": 4, "mission_id": 1}
+24026	2026-09-24 16:07:36.521067+00	17	39	task_attempt	{"task_id": 4, "mission_id": 1}
+24027	2026-09-24 16:09:08.669034+00	17	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25111	2026-09-27 18:50:33.539738+00	49	16	task_submitted	{"task_id": 16, "is_correct": true, "mission_id": 0}
+25114	2026-09-27 18:52:28.680138+00	15	72	task_attempt	{"task_id": 18, "mission_id": 1}
+25119	2026-09-27 18:53:33.788811+00	15	72	task_attempt	{"task_id": 18, "mission_id": 1}
+25392	2026-09-28 13:59:47.309609+00	15	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25394	2026-09-28 13:59:55.226674+00	15	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25396	2026-09-28 14:05:05.962683+00	15	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25398	2026-09-28 14:05:12.69575+00	15	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+25402	2026-09-28 14:09:12.661776+00	15	5	task_started	{"task_id": 4, "mission_id": 0}
+25404	2026-09-28 14:09:24.991155+00	15	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25405	2026-09-28 14:10:39.221024+00	15	43	task_started	{"task_id": 16, "mission_id": 1}
+25407	2026-09-28 14:14:00.253478+00	49	25	task_started	{"task_id": 25, "mission_id": 0}
+25408	2026-09-28 14:16:14.456029+00	49	26	task_started	{"task_id": 26, "mission_id": 0}
+26039	2026-09-30 11:22:14.282131+00	9	52	task_started	{"task_id": 24, "mission_id": 1}
+26041	2026-09-30 11:27:07.8117+00	9	52	task_started	{"task_id": 24, "mission_id": 1}
+26045	2026-09-30 11:38:31.33855+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26048	2026-09-30 11:39:18.458504+00	9	78	task_started	{"task_id": 2, "mission_id": 2}
+26053	2026-09-30 11:39:28.817997+00	9	59	task_started	{"task_id": 7, "mission_id": 2}
+26059	2026-09-30 11:39:38.453713+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26068	2026-09-30 11:41:09.94659+00	9	62	task_started	{"task_id": 12, "mission_id": 2}
+26072	2026-09-30 11:41:24.568196+00	9	58	task_started	{"task_id": 4, "mission_id": 2}
+26075	2026-09-30 11:41:25.655816+00	9	59	task_started	{"task_id": 7, "mission_id": 2}
+26083	2026-09-30 11:42:18.985366+00	9	58	task_attempt	{"task_id": 4, "mission_id": 2}
+26087	2026-09-30 11:43:58.338663+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26089	2026-09-30 11:44:17.908871+00	9	55	task_started	{"task_id": 1, "mission_id": 2}
+26093	2026-09-30 11:44:57.136573+00	9	55	task_attempt	{"task_id": 1, "mission_id": 2}
+26095	2026-09-30 11:45:06.316071+00	9	78	task_started	{"task_id": 2, "mission_id": 2}
+26099	2026-09-30 11:45:27.31414+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26104	2026-09-30 11:45:55.819604+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26108	2026-09-30 11:46:21.75725+00	9	78	purchase_clue	{"task_id": 2, "clue_type": 1, "mission_id": 2}
+26113	2026-09-30 11:46:47.216105+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26118	2026-09-30 11:46:53.593626+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26123	2026-09-30 11:46:58.975222+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26128	2026-09-30 11:47:05.1481+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26133	2026-09-30 11:47:09.74523+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26138	2026-09-30 11:47:15.06156+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26143	2026-09-30 11:47:21.305383+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26148	2026-09-30 11:47:27.195122+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26153	2026-09-30 11:47:33.216599+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26158	2026-09-30 11:47:38.927855+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26163	2026-09-30 11:47:42.76213+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26168	2026-09-30 11:47:45.652006+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26173	2026-09-30 11:47:50.237894+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26178	2026-09-30 11:47:52.417737+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26183	2026-09-30 11:47:56.537731+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26188	2026-09-30 11:48:01.803259+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26193	2026-09-30 11:48:08.501343+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26198	2026-09-30 11:48:13.675085+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26203	2026-09-30 11:48:19.940005+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26208	2026-09-30 11:48:24.365088+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26213	2026-09-30 11:48:29.811459+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26218	2026-09-30 11:49:08.061567+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26221	2026-09-30 11:49:23.526022+00	9	57	task_attempt	{"task_id": 3, "mission_id": 2}
+26226	2026-09-30 11:49:49.347467+00	9	57	task_attempt	{"task_id": 3, "mission_id": 2}
+26229	2026-09-30 11:50:21.022316+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26232	2026-09-30 11:50:29.489029+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26237	2026-09-30 11:51:26.403456+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26242	2026-09-30 11:52:14.533623+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26525	2026-09-30 21:04:30.283779+00	28	15	task_attempt	{"task_id": 14, "mission_id": 0}
+26528	2026-09-30 21:04:31.530798+00	28	15	task_submitted	{"task_id": 14, "is_correct": true, "mission_id": 0}
+26530	2026-09-30 21:04:35.327581+00	28	3	task_started	{"task_id": 15, "mission_id": 0}
+26533	2026-09-30 21:04:51.044357+00	28	3	task_submitted	{"task_id": 15, "is_correct": true, "mission_id": 0}
+24028	2026-09-24 16:11:08.319638+00	17	39	task_attempt	{"task_id": 4, "mission_id": 1}
+24030	2026-09-24 16:15:22.414582+00	17	39	task_attempt	{"task_id": 4, "mission_id": 1}
+24033	2026-09-24 16:19:54.595229+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+25127	2026-09-27 18:55:32.272375+00	49	17	task_attempt	{"task_id": 17, "mission_id": 0}
+25130	2026-09-27 18:56:18.47138+00	49	17	task_submitted	{"task_id": 17, "is_correct": true, "mission_id": 0}
+25133	2026-09-27 18:58:19.565965+00	49	18	task_attempt	{"task_id": 18, "mission_id": 0}
+25141	2026-09-27 19:01:00.214491+00	15	46	task_attempt	{"task_id": 19, "mission_id": 1}
+25152	2026-09-27 19:06:16.28603+00	15	46	task_submitted	{"task_id": 19, "is_correct": true, "mission_id": 1}
+25155	2026-09-27 19:06:36.903783+00	15	46	task_submitted	{"task_id": 19, "is_correct": true, "mission_id": 1}
+25409	2026-09-28 15:04:01.566132+00	49	24	task_started	{"task_id": 24, "mission_id": 0}
+25410	2026-09-28 15:05:00.267078+00	49	26	task_started	{"task_id": 26, "mission_id": 0}
+25412	2026-09-28 15:05:36.25436+00	49	27	task_started	{"task_id": 27, "mission_id": 0}
+25415	2026-09-28 15:15:43.593948+00	49	26	task_attempt	{"task_id": 26, "mission_id": 0}
+25417	2026-09-28 15:16:04.091818+00	49	26	task_attempt	{"task_id": 26, "mission_id": 0}
+26043	2026-09-30 11:36:45.234038+00	62	63	task_started	{"task_id": 2, "mission_id": 1}
+26051	2026-09-30 11:39:25.378328+00	9	81	task_started	{"task_id": 5, "mission_id": 2}
+26056	2026-09-30 11:39:35.554112+00	9	61	task_started	{"task_id": 10, "mission_id": 2}
+26060	2026-09-30 11:39:39.623846+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26065	2026-09-30 11:39:59.378638+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26073	2026-09-30 11:41:24.780442+00	9	81	task_started	{"task_id": 5, "mission_id": 2}
+26076	2026-09-30 11:41:26.095432+00	9	60	task_started	{"task_id": 8, "mission_id": 2}
+26079	2026-09-30 11:41:27.346048+00	9	83	task_started	{"task_id": 11, "mission_id": 2}
+26081	2026-09-30 11:42:16.383464+00	9	58	task_started	{"task_id": 4, "mission_id": 2}
+26085	2026-09-30 11:43:32.828167+00	9	58	purchase_clue	{"task_id": 4, "clue_type": 2, "mission_id": 2}
+26088	2026-09-30 11:43:59.415389+00	9	58	task_submitted	{"task_id": 4, "is_correct": true, "mission_id": 2}
+26091	2026-09-30 11:44:31.945212+00	9	55	task_attempt	{"task_id": 1, "mission_id": 2}
+26094	2026-09-30 11:44:58.140039+00	9	55	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 2}
+26102	2026-09-30 11:45:42.063564+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26107	2026-09-30 11:46:09.833525+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26111	2026-09-30 11:46:44.300621+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26116	2026-09-30 11:46:50.857005+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26121	2026-09-30 11:46:56.875389+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26126	2026-09-30 11:47:02.570482+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26131	2026-09-30 11:47:07.455475+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26136	2026-09-30 11:47:12.865566+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26141	2026-09-30 11:47:19.035646+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26146	2026-09-30 11:47:25.023911+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26151	2026-09-30 11:47:30.79165+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26156	2026-09-30 11:47:36.888463+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26161	2026-09-30 11:47:41.228099+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26166	2026-09-30 11:47:44.298191+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26171	2026-09-30 11:47:49.021169+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26176	2026-09-30 11:47:51.32586+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26181	2026-09-30 11:47:55.285178+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26186	2026-09-30 11:47:59.61588+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26191	2026-09-30 11:48:05.968408+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26196	2026-09-30 11:48:12.603481+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26201	2026-09-30 11:48:17.518335+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26206	2026-09-30 11:48:23.086595+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26211	2026-09-30 11:48:27.772525+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26216	2026-09-30 11:48:55.683491+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26220	2026-09-30 11:49:22.476465+00	9	57	task_started	{"task_id": 3, "mission_id": 2}
+26225	2026-09-30 11:49:48.466604+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26228	2026-09-30 11:50:10.993454+00	9	57	task_submitted	{"task_id": 3, "is_correct": true, "mission_id": 2}
+26231	2026-09-30 11:50:27.628156+00	9	81	purchase_clue	{"task_id": 5, "clue_type": 2, "mission_id": 2}
+26236	2026-09-30 11:51:25.328437+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26241	2026-09-30 11:52:13.005794+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26526	2026-09-30 21:04:30.409092+00	28	15	task_attempt	{"task_id": 14, "mission_id": 0}
+26531	2026-09-30 21:04:49.94026+00	28	3	task_attempt	{"task_id": 15, "mission_id": 0}
+26536	2026-09-30 21:04:52.631239+00	28	16	task_started	{"task_id": 16, "mission_id": 0}
+24029	2026-09-24 16:11:43.188143+00	17	39	purchase_clue	{"task_id": 4, "clue_type": 2, "mission_id": 1}
+24031	2026-09-24 16:15:35.93603+00	17	39	task_attempt	{"task_id": 4, "mission_id": 1}
+24032	2026-09-24 16:17:56.998133+00	17	40	task_started	{"task_id": 5, "mission_id": 1}
+24034	2026-09-24 16:20:02.787625+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24035	2026-09-24 16:25:11.733648+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24037	2026-09-24 16:28:42.049546+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24040	2026-09-24 16:29:59.592808+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24042	2026-09-24 16:31:20.447078+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24045	2026-09-24 16:34:48.436804+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+25129	2026-09-27 18:56:16.073836+00	49	17	task_attempt	{"task_id": 17, "mission_id": 0}
+25131	2026-09-27 18:57:29.968623+00	49	17	task_submitted	{"task_id": 17, "is_correct": true, "mission_id": 0}
+25134	2026-09-27 18:58:22.21306+00	49	18	purchase_clue	{"task_id": 18, "clue_type": 1, "mission_id": 0}
+25136	2026-09-27 18:59:22.690739+00	49	18	task_submitted	{"task_id": 18, "is_correct": true, "mission_id": 0}
+25145	2026-09-27 19:03:48.331781+00	49	19	task_attempt	{"task_id": 19, "mission_id": 0}
+25151	2026-09-27 19:06:13.40186+00	15	46	task_attempt	{"task_id": 19, "mission_id": 1}
+25411	2026-09-28 15:05:08.601841+00	49	25	task_started	{"task_id": 25, "mission_id": 0}
+25413	2026-09-28 15:05:41.628205+00	49	26	task_started	{"task_id": 26, "mission_id": 0}
+25414	2026-09-28 15:15:12.274688+00	49	26	purchase_clue	{"task_id": 26, "clue_type": 1, "mission_id": 0}
+25416	2026-09-28 15:15:56.285714+00	49	26	task_attempt	{"task_id": 26, "mission_id": 0}
+26044	2026-09-30 11:37:25.7189+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26050	2026-09-30 11:39:23.858291+00	9	58	task_started	{"task_id": 4, "mission_id": 2}
+26055	2026-09-30 11:39:32.586333+00	9	82	task_started	{"task_id": 9, "mission_id": 2}
+26058	2026-09-30 11:39:36.706351+00	9	83	task_started	{"task_id": 11, "mission_id": 2}
+26062	2026-09-30 11:39:40.113278+00	9	62	task_started	{"task_id": 12, "mission_id": 2}
+26064	2026-09-30 11:39:57.398665+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26069	2026-09-30 11:41:22.569458+00	9	55	task_started	{"task_id": 1, "mission_id": 2}
+26077	2026-09-30 11:41:26.534988+00	9	82	task_started	{"task_id": 9, "mission_id": 2}
+26090	2026-09-30 11:44:18.635558+00	9	55	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 2}
+26097	2026-09-30 11:45:10.053931+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26101	2026-09-30 11:45:41.147009+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26106	2026-09-30 11:46:08.545801+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26110	2026-09-30 11:46:43.051808+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26115	2026-09-30 11:46:49.826245+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26120	2026-09-30 11:46:55.87139+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26125	2026-09-30 11:47:01.473847+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26130	2026-09-30 11:47:07.238532+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26135	2026-09-30 11:47:11.903589+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26140	2026-09-30 11:47:17.295532+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26145	2026-09-30 11:47:23.468735+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26150	2026-09-30 11:47:29.663663+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26155	2026-09-30 11:47:36.625766+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26160	2026-09-30 11:47:40.069101+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26165	2026-09-30 11:47:44.297628+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26169	2026-09-30 11:47:47.615934+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26174	2026-09-30 11:47:50.238523+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26179	2026-09-30 11:47:54.126052+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26184	2026-09-30 11:47:57.535489+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26189	2026-09-30 11:48:02.818349+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26194	2026-09-30 11:48:10.371486+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26199	2026-09-30 11:48:15.115326+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26204	2026-09-30 11:48:21.019502+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26209	2026-09-30 11:48:25.455431+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26214	2026-09-30 11:48:31.048426+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26219	2026-09-30 11:49:20.378758+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26223	2026-09-30 11:49:24.875572+00	9	57	task_attempt	{"task_id": 3, "mission_id": 2}
+26230	2026-09-30 11:50:27.016494+00	9	81	task_started	{"task_id": 5, "mission_id": 2}
+26234	2026-09-30 11:51:04.095828+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26239	2026-09-30 11:51:49.155525+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26244	2026-09-30 11:52:28.187782+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26527	2026-09-30 21:04:30.598171+00	28	15	task_attempt	{"task_id": 14, "mission_id": 0}
+26529	2026-09-30 21:04:31.72081+00	28	15	task_submitted	{"task_id": 14, "is_correct": true, "mission_id": 0}
+26532	2026-09-30 21:04:50.137023+00	28	3	task_attempt	{"task_id": 15, "mission_id": 0}
+26534	2026-09-30 21:04:51.189401+00	28	3	task_submitted	{"task_id": 15, "is_correct": true, "mission_id": 0}
+24036	2026-09-24 16:28:34.553463+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24038	2026-09-24 16:29:28.912941+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24039	2026-09-24 16:29:35.322964+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24041	2026-09-24 16:31:09.147366+00	22	37	task_started	{"task_id": 1, "mission_id": 1}
+24043	2026-09-24 16:31:59.670251+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24044	2026-09-24 16:32:20.847318+00	22	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24046	2026-09-24 16:35:05.437197+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24047	2026-09-24 16:35:37.884179+00	17	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24048	2026-09-24 16:35:44.816623+00	17	40	task_submitted	{"task_id": 5, "is_correct": true, "mission_id": 1}
+24049	2026-09-24 16:35:51.679508+00	22	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24050	2026-09-24 16:36:36.349352+00	22	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24051	2026-09-24 16:36:52.136623+00	22	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24052	2026-09-24 16:37:17.716154+00	22	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24053	2026-09-24 16:38:58.962942+00	22	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24054	2026-09-24 16:39:10.371372+00	22	37	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 1}
+24055	2026-09-24 16:39:25.29094+00	22	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24056	2026-09-24 16:40:14.571506+00	22	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24057	2026-09-24 16:40:23.525569+00	22	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24058	2026-09-24 16:41:23.160707+00	22	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24059	2026-09-24 16:41:24.795925+00	22	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+24060	2026-09-24 16:41:26.52119+00	22	63	task_started	{"task_id": 2, "mission_id": 1}
+24061	2026-09-24 16:43:04.911903+00	22	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24062	2026-09-24 16:43:13.861969+00	22	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24063	2026-09-24 16:43:39.978467+00	22	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24064	2026-09-24 17:31:30.799781+00	46	1	task_started	{"task_id": 1, "mission_id": 0}
+24065	2026-09-24 19:00:07.296958+00	65	37	task_started	{"task_id": 1, "mission_id": 1}
+24066	2026-09-24 19:08:34.247526+00	65	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+24067	2026-09-24 19:08:59.008762+00	65	63	task_started	{"task_id": 2, "mission_id": 1}
+24068	2026-09-24 19:09:52.097443+00	65	38	task_started	{"task_id": 3, "mission_id": 1}
+24069	2026-09-24 19:11:47.288667+00	65	39	task_started	{"task_id": 4, "mission_id": 1}
+24070	2026-09-24 19:12:08.898664+00	65	64	task_started	{"task_id": 6, "mission_id": 1}
+24071	2026-09-24 19:14:53.180957+00	65	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24072	2026-09-24 19:14:55.654316+00	65	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24073	2026-09-24 19:15:07.805013+00	65	53	task_started	{"task_id": 26, "mission_id": 1}
+24074	2026-09-24 19:15:14.753212+00	65	53	task_started	{"task_id": 26, "mission_id": 1}
+24075	2026-09-24 19:15:20.223215+00	65	67	task_started	{"task_id": 10, "mission_id": 1}
+24076	2026-09-24 19:16:27.085855+00	65	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24077	2026-09-24 19:16:27.119609+00	65	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24078	2026-09-24 19:17:38.929206+00	65	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24079	2026-09-24 19:17:40.037592+00	65	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24080	2026-09-24 19:17:41.64995+00	65	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24081	2026-09-24 19:17:41.920226+00	65	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24082	2026-09-24 19:18:29.101601+00	65	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24083	2026-09-24 19:18:29.105941+00	65	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24084	2026-09-24 19:18:29.162728+00	65	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24085	2026-09-24 19:18:42.430271+00	65	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24086	2026-09-24 19:18:49.62959+00	65	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24087	2026-09-24 19:18:53.694537+00	65	67	purchase_clue	{"task_id": 10, "clue_type": 2, "mission_id": 1}
+24088	2026-09-24 19:19:09.162919+00	65	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24089	2026-09-24 19:19:10.97401+00	65	67	task_submitted	{"task_id": 10, "is_correct": true, "mission_id": 1}
+24090	2026-09-24 19:19:30.880777+00	65	69	task_started	{"task_id": 11, "mission_id": 1}
+24091	2026-09-24 19:20:32.084959+00	65	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24092	2026-09-24 19:21:10.262801+00	65	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24093	2026-09-24 19:21:55.139669+00	65	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24094	2026-09-24 19:21:55.755536+00	65	69	task_submitted	{"task_id": 11, "is_correct": true, "mission_id": 1}
+24095	2026-09-24 19:22:38.463221+00	65	76	task_started	{"task_id": 12, "mission_id": 1}
+24096	2026-09-24 19:23:07.005066+00	65	70	task_started	{"task_id": 13, "mission_id": 1}
+24097	2026-09-24 19:27:09.149582+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24098	2026-09-24 19:27:49.593681+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24099	2026-09-24 19:28:04.263882+00	65	70	task_started	{"task_id": 13, "mission_id": 1}
+24100	2026-09-24 19:28:32.779796+00	65	54	task_started	{"task_id": 14, "mission_id": 1}
+24101	2026-09-24 19:28:35.824227+00	65	71	task_started	{"task_id": 15, "mission_id": 1}
+24102	2026-09-24 19:30:46.07221+00	65	71	task_attempt	{"task_id": 15, "mission_id": 1}
+24103	2026-09-24 19:31:53.988723+00	65	71	task_attempt	{"task_id": 15, "mission_id": 1}
+24104	2026-09-24 19:31:59.716552+00	65	71	task_attempt	{"task_id": 15, "mission_id": 1}
+24106	2026-09-24 19:32:23.426478+00	65	70	task_started	{"task_id": 13, "mission_id": 1}
+24109	2026-09-24 19:33:03.971848+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24114	2026-09-24 19:34:11.943204+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+25135	2026-09-27 18:58:31.678012+00	49	18	task_attempt	{"task_id": 18, "mission_id": 0}
+25139	2026-09-27 18:59:54.865667+00	49	19	purchase_clue	{"task_id": 19, "clue_type": 2, "mission_id": 0}
+25143	2026-09-27 19:02:04.079882+00	49	19	purchase_clue	{"task_id": 19, "clue_type": 1, "mission_id": 0}
+25146	2026-09-27 19:04:17.201852+00	49	19	task_attempt	{"task_id": 19, "mission_id": 0}
+25148	2026-09-27 19:04:20.429226+00	49	20	task_started	{"task_id": 20, "mission_id": 0}
+25154	2026-09-27 19:06:32.354624+00	15	46	task_submitted	{"task_id": 19, "is_correct": true, "mission_id": 1}
+25418	2026-09-28 15:16:07.47306+00	49	26	task_attempt	{"task_id": 26, "mission_id": 0}
+25419	2026-09-28 15:16:10.507742+00	49	26	purchase_clue	{"task_id": 26, "clue_type": 2, "mission_id": 0}
+26046	2026-09-30 11:38:57.750109+00	9	55	task_started	{"task_id": 1, "mission_id": 2}
+26049	2026-09-30 11:39:20.810712+00	9	57	task_started	{"task_id": 3, "mission_id": 2}
+26054	2026-09-30 11:39:31.6103+00	9	60	task_started	{"task_id": 8, "mission_id": 2}
+26057	2026-09-30 11:39:36.018876+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26061	2026-09-30 11:39:39.743584+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26067	2026-09-30 11:41:09.9455+00	9	58	task_started	{"task_id": 4, "mission_id": 2}
+26070	2026-09-30 11:41:22.93569+00	9	78	task_started	{"task_id": 2, "mission_id": 2}
+26080	2026-09-30 11:41:27.988574+00	9	62	task_started	{"task_id": 12, "mission_id": 2}
+26084	2026-09-30 11:43:24.218461+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26096	2026-09-30 11:45:07.066187+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26100	2026-09-30 11:45:40.137458+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26105	2026-09-30 11:45:56.908078+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26109	2026-09-30 11:46:41.815446+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26114	2026-09-30 11:46:48.664267+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26119	2026-09-30 11:46:54.875414+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26124	2026-09-30 11:47:00.055242+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26129	2026-09-30 11:47:06.331612+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26134	2026-09-30 11:47:10.906489+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26139	2026-09-30 11:47:16.181403+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26144	2026-09-30 11:47:22.50042+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26149	2026-09-30 11:47:28.578874+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26154	2026-09-30 11:47:34.744877+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26159	2026-09-30 11:47:40.06862+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26164	2026-09-30 11:47:42.762815+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26170	2026-09-30 11:47:47.615402+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26175	2026-09-30 11:47:51.323989+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26180	2026-09-30 11:47:54.126428+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26185	2026-09-30 11:47:58.635482+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26190	2026-09-30 11:48:03.995527+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26195	2026-09-30 11:48:11.521296+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26200	2026-09-30 11:48:16.453295+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26205	2026-09-30 11:48:21.964442+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26210	2026-09-30 11:48:26.525543+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26215	2026-09-30 11:48:43.3967+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26224	2026-09-30 11:49:37.284227+00	9	57	task_attempt	{"task_id": 3, "mission_id": 2}
+26235	2026-09-30 11:51:16.33951+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26240	2026-09-30 11:51:58.445126+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26245	2026-09-30 11:52:42.156419+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26537	2026-09-30 21:05:11.061187+00	28	16	task_attempt	{"task_id": 16, "mission_id": 0}
+24105	2026-09-24 19:32:02.453346+00	65	71	purchase_clue	{"task_id": 15, "clue_type": 2, "mission_id": 1}
+24111	2026-09-24 19:33:50.128371+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24116	2026-09-24 19:34:18.211446+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+25147	2026-09-27 19:04:18.497237+00	49	19	task_submitted	{"task_id": 19, "is_correct": true, "mission_id": 0}
+25150	2026-09-27 19:04:57.736057+00	49	20	purchase_clue	{"task_id": 20, "clue_type": 1, "mission_id": 0}
+25153	2026-09-27 19:06:30.754009+00	15	46	task_attempt	{"task_id": 19, "mission_id": 1}
+25420	2026-09-28 15:17:58.696427+00	49	26	task_attempt	{"task_id": 26, "mission_id": 0}
+25423	2026-09-28 15:19:27.657259+00	49	27	task_started	{"task_id": 27, "mission_id": 0}
+25424	2026-09-28 15:20:00.075851+00	49	27	purchase_clue	{"task_id": 27, "clue_type": 1, "mission_id": 0}
+25427	2026-09-28 15:26:40.397706+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25429	2026-09-28 15:27:11.706302+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25431	2026-09-28 15:29:24.731885+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25433	2026-09-28 15:30:56.308902+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25435	2026-09-28 15:31:11.581864+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25437	2026-09-28 15:31:12.750818+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25439	2026-09-28 15:31:13.116991+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25441	2026-09-28 15:31:13.741118+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25443	2026-09-28 15:31:17.895713+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25445	2026-09-28 15:31:39.928715+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25447	2026-09-28 15:31:40.307287+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25448	2026-09-28 15:31:42.995761+00	49	27	task_started	{"task_id": 27, "mission_id": 0}
+25450	2026-09-28 15:31:54.653531+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25452	2026-09-28 15:32:06.81526+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25454	2026-09-28 15:32:29.048759+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25455	2026-09-28 15:32:33.938705+00	49	27	task_submitted	{"task_id": 27, "is_correct": true, "mission_id": 0}
+25457	2026-09-28 15:32:42.961567+00	49	27	task_started	{"task_id": 27, "mission_id": 0}
+25459	2026-09-28 15:32:53.281095+00	49	28	task_started	{"task_id": 28, "mission_id": 0}
+25462	2026-09-28 15:38:53.140276+00	49	28	task_attempt	{"task_id": 28, "mission_id": 0}
+25465	2026-09-28 15:39:21.63741+00	49	28	task_attempt	{"task_id": 28, "mission_id": 0}
+26246	2026-09-30 11:53:13.558548+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26251	2026-09-30 11:53:49.979641+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26256	2026-09-30 11:53:52.878678+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26261	2026-09-30 11:53:53.854704+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26266	2026-09-30 11:54:28.964156+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26271	2026-09-30 11:55:17.788409+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26274	2026-09-30 11:56:24.7338+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26277	2026-09-30 11:56:31.283732+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26281	2026-09-30 11:56:55.903611+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26285	2026-09-30 11:58:20.534023+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26301	2026-09-30 12:03:00.458777+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26307	2026-09-30 12:04:33.050987+00	9	80	task_attempt	{"task_id": 6, "mission_id": 2}
+26312	2026-09-30 12:04:43.71342+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26317	2026-09-30 12:07:17.119088+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26322	2026-09-30 12:09:00.785197+00	9	80	task_attempt	{"task_id": 6, "mission_id": 2}
+26324	2026-09-30 12:09:36.688094+00	9	59	task_started	{"task_id": 7, "mission_id": 2}
+26328	2026-09-30 12:10:07.671347+00	9	59	task_attempt	{"task_id": 7, "mission_id": 2}
+26333	2026-09-30 12:10:43.870321+00	9	59	task_attempt	{"task_id": 7, "mission_id": 2}
+26336	2026-09-30 12:11:46.368347+00	9	59	task_submitted	{"task_id": 7, "is_correct": true, "mission_id": 2}
+26339	2026-09-30 12:12:20.375492+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26344	2026-09-30 12:13:36.99753+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26349	2026-09-30 12:13:53.341105+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26353	2026-09-30 12:14:30.490218+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26358	2026-09-30 12:15:02.156635+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26363	2026-09-30 12:15:29.419+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26367	2026-09-30 12:16:44.985017+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26370	2026-09-30 12:17:09.56533+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26373	2026-09-30 12:17:50.181588+00	9	82	purchase_clue	{"task_id": 9, "clue_type": 2, "mission_id": 2}
+26378	2026-09-30 12:18:20.261519+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26389	2026-09-30 12:21:15.116653+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26398	2026-09-30 12:22:33.541164+00	9	83	task_submitted	{"task_id": 11, "is_correct": true, "mission_id": 2}
+26401	2026-09-30 12:23:22.570287+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26406	2026-09-30 12:24:11.226063+00	9	62	task_attempt	{"task_id": 12, "mission_id": 2}
+26409	2026-09-30 12:26:25.779452+00	53	63	purchase_clue	{"task_id": 2, "clue_type": 1, "mission_id": 1}
+26412	2026-09-30 12:31:10.384228+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24107	2026-09-24 19:32:29.532894+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24110	2026-09-24 19:33:50.115104+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24115	2026-09-24 19:34:12.379454+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+25156	2026-09-27 19:06:47.738236+00	15	46	task_submitted	{"task_id": 19, "is_correct": true, "mission_id": 1}
+25160	2026-09-27 19:09:45.190774+00	15	48	task_attempt	{"task_id": 20, "mission_id": 1}
+25163	2026-09-27 19:10:43.786538+00	15	73	task_started	{"task_id": 21, "mission_id": 1}
+25168	2026-09-27 19:11:22.666636+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25173	2026-09-27 19:13:41.523756+00	15	73	task_attempt	{"task_id": 21, "mission_id": 1}
+25177	2026-09-27 19:15:06.27812+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25182	2026-09-27 19:16:10.223123+00	15	73	task_attempt	{"task_id": 21, "mission_id": 1}
+25189	2026-09-27 19:19:33.476962+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25201	2026-09-27 19:23:36.465153+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25208	2026-09-27 19:27:24.396863+00	15	52	task_attempt	{"task_id": 24, "mission_id": 1}
+25210	2026-09-27 19:27:34.607409+00	15	52	purchase_clue	{"task_id": 24, "clue_type": 1, "mission_id": 1}
+25212	2026-09-27 19:30:51.605902+00	15	52	purchase_clue	{"task_id": 24, "clue_type": 2, "mission_id": 1}
+25215	2026-09-27 19:36:25.353664+00	15	74	task_attempt	{"task_id": 25, "mission_id": 1}
+25217	2026-09-27 19:36:58.89117+00	15	74	purchase_clue	{"task_id": 25, "clue_type": 1, "mission_id": 1}
+25421	2026-09-28 15:18:49.026141+00	49	26	task_attempt	{"task_id": 26, "mission_id": 0}
+26247	2026-09-30 11:53:15.998251+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26252	2026-09-30 11:53:51.105498+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26257	2026-09-30 11:53:53.075695+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26262	2026-09-30 11:53:54.083174+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26267	2026-09-30 11:54:41.304589+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26278	2026-09-30 11:56:54.207327+00	9	81	task_started	{"task_id": 5, "mission_id": 2}
+26282	2026-09-30 11:57:29.263555+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26287	2026-09-30 11:58:28.228688+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26292	2026-09-30 11:59:45.773814+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26295	2026-09-30 12:01:17.425962+00	9	81	task_submitted	{"task_id": 5, "is_correct": true, "mission_id": 2}
+26298	2026-09-30 12:02:23.480802+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26309	2026-09-30 12:04:37.768498+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26314	2026-09-30 12:05:14.666867+00	9	80	task_attempt	{"task_id": 6, "mission_id": 2}
+26319	2026-09-30 12:08:29.89098+00	9	80	task_attempt	{"task_id": 6, "mission_id": 2}
+26330	2026-09-30 12:10:21.486419+00	9	59	task_attempt	{"task_id": 7, "mission_id": 2}
+26335	2026-09-30 12:11:45.146699+00	9	59	task_attempt	{"task_id": 7, "mission_id": 2}
+26337	2026-09-30 12:11:55.720251+00	9	60	task_started	{"task_id": 8, "mission_id": 2}
+26341	2026-09-30 12:12:35.456789+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26346	2026-09-30 12:13:39.056151+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26351	2026-09-30 12:14:12.410113+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26355	2026-09-30 12:14:32.652975+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26360	2026-09-30 12:15:04.843115+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26365	2026-09-30 12:15:55.909998+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26375	2026-09-30 12:18:19.255186+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26380	2026-09-30 12:18:45.992584+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26383	2026-09-30 12:19:26.123284+00	9	82	task_submitted	{"task_id": 9, "is_correct": true, "mission_id": 2}
+26386	2026-09-30 12:20:28.474196+00	9	61	task_attempt	{"task_id": 10, "mission_id": 2}
+26391	2026-09-30 12:21:21.754465+00	9	61	task_attempt	{"task_id": 10, "mission_id": 2}
+26394	2026-09-30 12:21:33.721824+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26539	2026-09-30 21:05:11.378827+00	28	16	task_attempt	{"task_id": 16, "mission_id": 0}
+24108	2026-09-24 19:32:31.968941+00	65	70	purchase_clue	{"task_id": 13, "clue_type": 2, "mission_id": 1}
+24112	2026-09-24 19:33:50.112477+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24113	2026-09-24 19:34:08.598481+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24117	2026-09-24 19:34:19.434731+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24118	2026-09-24 19:34:27.966166+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24119	2026-09-24 19:35:21.147688+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24120	2026-09-24 19:35:21.511902+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24121	2026-09-24 19:35:27.6154+00	65	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24122	2026-09-24 19:35:39.028869+00	65	70	task_submitted	{"task_id": 13, "is_correct": true, "mission_id": 1}
+24123	2026-09-24 19:35:55.2017+00	65	71	task_started	{"task_id": 15, "mission_id": 1}
+24124	2026-09-24 19:36:15.801781+00	65	71	task_attempt	{"task_id": 15, "mission_id": 1}
+24125	2026-09-24 19:37:13.072799+00	65	71	task_attempt	{"task_id": 15, "mission_id": 1}
+24126	2026-09-24 19:37:13.491721+00	65	71	task_attempt	{"task_id": 15, "mission_id": 1}
+24127	2026-09-24 19:37:29.29813+00	65	41	task_started	{"task_id": 9, "mission_id": 1}
+24128	2026-09-24 19:37:56.576808+00	65	41	purchase_clue	{"task_id": 9, "clue_type": 2, "mission_id": 1}
+24129	2026-09-24 19:38:00.675027+00	65	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24130	2026-09-24 19:39:06.040368+00	65	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24131	2026-09-24 19:39:49.467263+00	65	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24132	2026-09-24 19:39:55.629323+00	65	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24133	2026-09-24 19:40:47.047119+00	65	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24134	2026-09-24 19:40:54.775268+00	65	77	task_started	{"task_id": 8, "mission_id": 1}
+24135	2026-09-24 19:41:07.71615+00	65	77	task_started	{"task_id": 8, "mission_id": 1}
+24136	2026-09-24 19:47:12.183901+00	65	77	purchase_clue	{"task_id": 8, "clue_type": 2, "mission_id": 1}
+24137	2026-09-24 19:47:14.045398+00	65	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24138	2026-09-24 19:51:24.039323+00	65	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24139	2026-09-24 19:51:40.372375+00	34	63	task_started	{"task_id": 2, "mission_id": 1}
+24140	2026-09-24 19:51:50.264653+00	65	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24141	2026-09-24 19:51:54.741208+00	65	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24142	2026-09-24 19:54:48.65204+00	65	74	task_started	{"task_id": 25, "mission_id": 1}
+24143	2026-09-24 19:54:51.319399+00	65	48	task_started	{"task_id": 20, "mission_id": 1}
+24144	2026-09-24 19:54:54.847699+00	65	72	task_started	{"task_id": 18, "mission_id": 1}
+24145	2026-09-24 19:56:38.149706+00	65	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24146	2026-09-24 19:56:41.283127+00	65	72	purchase_clue	{"task_id": 18, "clue_type": 2, "mission_id": 1}
+24147	2026-09-24 19:57:06.025818+00	65	53	task_started	{"task_id": 26, "mission_id": 1}
+24148	2026-09-24 19:57:11.125283+00	65	74	task_started	{"task_id": 25, "mission_id": 1}
+24149	2026-09-24 19:57:37.625387+00	65	74	task_attempt	{"task_id": 25, "mission_id": 1}
+24150	2026-09-24 19:57:41.358915+00	65	74	task_attempt	{"task_id": 25, "mission_id": 1}
+24151	2026-09-24 19:57:44.107161+00	65	74	purchase_clue	{"task_id": 25, "clue_type": 2, "mission_id": 1}
+24152	2026-09-24 19:59:15.093024+00	65	44	task_started	{"task_id": 17, "mission_id": 1}
+24153	2026-09-24 19:59:39.065454+00	65	44	purchase_clue	{"task_id": 17, "clue_type": 2, "mission_id": 1}
+24154	2026-09-24 19:59:42.884993+00	65	44	task_attempt	{"task_id": 17, "mission_id": 1}
+24155	2026-09-25 13:28:16.84875+00	6	1	task_started	{"task_id": 1, "mission_id": 0}
+24156	2026-09-25 17:15:12.890848+00	71	38	task_started	{"task_id": 3, "mission_id": 1}
+24157	2026-09-25 17:17:51.46336+00	71	38	task_attempt	{"task_id": 3, "mission_id": 1}
+24158	2026-09-25 17:18:26.409416+00	71	38	task_attempt	{"task_id": 3, "mission_id": 1}
+24159	2026-09-25 17:20:26.118058+00	71	25	task_started	{"task_id": 25, "mission_id": 0}
+24160	2026-09-25 17:20:35.270863+00	71	38	task_started	{"task_id": 3, "mission_id": 1}
+24161	2026-09-25 17:21:38.977724+00	71	38	task_attempt	{"task_id": 3, "mission_id": 1}
+24162	2026-09-25 17:23:24.425186+00	71	38	task_attempt	{"task_id": 3, "mission_id": 1}
+24163	2026-09-25 17:23:41.963527+00	71	38	task_attempt	{"task_id": 3, "mission_id": 1}
+24164	2026-09-25 17:23:49.70739+00	71	38	task_started	{"task_id": 3, "mission_id": 1}
+24165	2026-09-25 17:23:59.463714+00	71	38	task_started	{"task_id": 3, "mission_id": 1}
+24166	2026-09-25 17:24:10.04349+00	71	39	task_started	{"task_id": 4, "mission_id": 1}
+24167	2026-09-25 17:24:21.934086+00	71	25	task_started	{"task_id": 25, "mission_id": 0}
+24168	2026-09-25 17:24:30.140009+00	71	37	task_started	{"task_id": 1, "mission_id": 1}
+24169	2026-09-25 17:24:40.170101+00	71	40	task_started	{"task_id": 5, "mission_id": 1}
+24170	2026-09-25 17:24:56.047589+00	71	40	task_started	{"task_id": 5, "mission_id": 1}
+24171	2026-09-25 20:30:43.000214+00	17	64	task_started	{"task_id": 6, "mission_id": 1}
+24172	2026-09-25 20:31:33.413654+00	17	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24173	2026-09-25 20:31:35.926457+00	17	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24174	2026-09-25 20:31:37.098483+00	17	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24175	2026-09-25 20:33:08.0828+00	17	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24176	2026-09-25 20:33:50.130993+00	17	64	purchase_clue	{"task_id": 6, "clue_type": 2, "mission_id": 1}
+24177	2026-09-25 20:35:10.925862+00	17	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24178	2026-09-25 20:36:35.206607+00	17	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24185	2026-09-25 20:41:54.830795+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24190	2026-09-25 21:06:55.214774+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+25157	2026-09-27 19:07:36.34075+00	15	48	task_started	{"task_id": 20, "mission_id": 1}
+25164	2026-09-27 19:10:46.488057+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25169	2026-09-27 19:12:37.350129+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25178	2026-09-27 19:15:23.717931+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25183	2026-09-27 19:16:34.499104+00	15	73	task_attempt	{"task_id": 21, "mission_id": 1}
+25190	2026-09-27 19:19:46.714309+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25197	2026-09-27 19:22:25.358946+00	15	51	task_started	{"task_id": 23, "mission_id": 1}
+25422	2026-09-28 15:19:23.537282+00	49	26	task_started	{"task_id": 26, "mission_id": 0}
+25425	2026-09-28 15:23:56.134512+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25426	2026-09-28 15:24:02.568182+00	49	27	purchase_clue	{"task_id": 27, "clue_type": 2, "mission_id": 0}
+25428	2026-09-28 15:27:01.891448+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+26248	2026-09-30 11:53:27.458213+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26253	2026-09-30 11:53:51.894419+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26258	2026-09-30 11:53:53.262853+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26263	2026-09-30 11:54:04.365618+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26268	2026-09-30 11:54:54.149836+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26540	2026-09-30 21:05:20.132053+00	28	16	task_started	{"task_id": 16, "mission_id": 0}
+26541	2026-09-30 21:05:24.887128+00	28	16	task_attempt	{"task_id": 16, "mission_id": 0}
+24179	2026-09-25 20:36:47.104679+00	17	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24182	2026-09-25 20:38:43.761848+00	17	64	task_submitted	{"task_id": 6, "is_correct": true, "mission_id": 1}
+24186	2026-09-25 20:44:12.985087+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24191	2026-09-25 21:07:57.430272+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+25158	2026-09-27 19:09:32.001161+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25161	2026-09-27 19:09:59.097827+00	15	48	task_submitted	{"task_id": 20, "is_correct": true, "mission_id": 1}
+25165	2026-09-27 19:10:50.859469+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25170	2026-09-27 19:12:59.365323+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25174	2026-09-27 19:13:59.6397+00	49	20	purchase_clue	{"task_id": 20, "clue_type": 2, "mission_id": 0}
+25179	2026-09-27 19:15:38.510414+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25184	2026-09-27 19:17:12.348757+00	15	73	task_attempt	{"task_id": 21, "mission_id": 1}
+25187	2026-09-27 19:17:43.165895+00	15	73	task_submitted	{"task_id": 21, "is_correct": true, "mission_id": 1}
+25191	2026-09-27 19:20:21.372918+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25194	2026-09-27 19:21:22.087309+00	15	50	task_submitted	{"task_id": 22, "is_correct": true, "mission_id": 1}
+25198	2026-09-27 19:23:11.848306+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25203	2026-09-27 19:25:01.008484+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25219	2026-09-27 19:39:42.571378+00	15	74	task_attempt	{"task_id": 25, "mission_id": 1}
+25221	2026-09-27 19:40:43.899481+00	15	74	purchase_clue	{"task_id": 25, "clue_type": 2, "mission_id": 1}
+25226	2026-09-27 19:41:18.50103+00	15	74	task_attempt	{"task_id": 25, "mission_id": 1}
+25228	2026-09-27 19:42:03.307898+00	15	53	task_started	{"task_id": 26, "mission_id": 1}
+25232	2026-09-27 19:47:33.466405+00	15	53	task_attempt	{"task_id": 26, "mission_id": 1}
+25430	2026-09-28 15:27:48.986412+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25432	2026-09-28 15:30:36.845333+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25434	2026-09-28 15:31:07.860813+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25436	2026-09-28 15:31:12.547086+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25438	2026-09-28 15:31:12.922947+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25440	2026-09-28 15:31:13.290897+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25442	2026-09-28 15:31:13.890747+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25444	2026-09-28 15:31:39.714383+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25446	2026-09-28 15:31:40.120574+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25449	2026-09-28 15:31:46.439413+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25451	2026-09-28 15:31:54.790133+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25453	2026-09-28 15:32:18.770793+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25456	2026-09-28 15:32:37.82452+00	49	27	task_attempt	{"task_id": 27, "mission_id": 0}
+25458	2026-09-28 15:32:48.437442+00	49	28	task_started	{"task_id": 28, "mission_id": 0}
+25460	2026-09-28 15:35:56.001787+00	49	28	task_attempt	{"task_id": 28, "mission_id": 0}
+25461	2026-09-28 15:36:47.91759+00	49	28	purchase_clue	{"task_id": 28, "clue_type": 2, "mission_id": 0}
+25463	2026-09-28 15:39:06.761276+00	49	28	task_attempt	{"task_id": 28, "mission_id": 0}
+25464	2026-09-28 15:39:21.452882+00	49	28	task_attempt	{"task_id": 28, "mission_id": 0}
+25466	2026-09-28 15:39:29.899976+00	49	28	task_attempt	{"task_id": 28, "mission_id": 0}
+25468	2026-09-28 15:39:46.976343+00	49	28	task_submitted	{"task_id": 28, "is_correct": true, "mission_id": 0}
+25469	2026-09-28 15:39:51.976771+00	49	28	purchase_clue	{"task_id": 28, "clue_type": 1, "mission_id": 0}
+25470	2026-09-28 15:39:54.823479+00	49	29	task_started	{"task_id": 29, "mission_id": 0}
+25471	2026-09-28 15:40:43.320688+00	49	29	task_started	{"task_id": 29, "mission_id": 0}
+25473	2026-09-28 15:42:17.462008+00	49	30	task_attempt	{"task_id": 30, "mission_id": 0}
+25476	2026-09-28 15:45:32.682451+00	49	30	task_attempt	{"task_id": 30, "mission_id": 0}
+25482	2026-09-28 15:48:12.177581+00	49	31	task_started	{"task_id": 31, "mission_id": 0}
+25484	2026-09-28 16:00:20.574286+00	49	31	task_submitted	{"task_id": 31, "is_correct": true, "mission_id": 0}
+25488	2026-09-28 16:13:43.680944+00	49	29	task_started	{"task_id": 29, "mission_id": 0}
+25489	2026-09-28 16:13:51.143914+00	49	26	task_started	{"task_id": 26, "mission_id": 0}
+25490	2026-09-28 16:14:46.502451+00	49	25	task_started	{"task_id": 25, "mission_id": 0}
+25492	2026-09-28 16:15:01.100067+00	49	24	task_started	{"task_id": 24, "mission_id": 0}
+25494	2026-09-28 16:15:34.984024+00	49	26	task_started	{"task_id": 26, "mission_id": 0}
+26249	2026-09-30 11:53:29.434161+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26254	2026-09-30 11:53:51.960667+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26259	2026-09-30 11:53:53.47225+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26264	2026-09-30 11:54:16.596815+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26269	2026-09-30 11:55:06.758353+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26272	2026-09-30 11:55:59.213986+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26276	2026-09-30 11:56:25.584456+00	9	81	task_started	{"task_id": 5, "mission_id": 2}
+26280	2026-09-30 11:56:55.723362+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26284	2026-09-30 11:58:12.308462+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26289	2026-09-30 11:58:46.223802+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26291	2026-09-30 11:59:21.733574+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24180	2026-09-25 20:37:03.825753+00	17	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24187	2026-09-25 20:51:44.15097+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24192	2026-09-25 21:10:00.977831+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+25159	2026-09-27 19:09:33.369002+00	15	48	task_attempt	{"task_id": 20, "mission_id": 1}
+25162	2026-09-27 19:10:14.539194+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25166	2026-09-27 19:10:57.526801+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25171	2026-09-27 19:12:59.911152+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25175	2026-09-27 19:14:19.831198+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25180	2026-09-27 19:15:40.791779+00	15	73	task_attempt	{"task_id": 21, "mission_id": 1}
+25185	2026-09-27 19:17:16.955603+00	15	73	task_attempt	{"task_id": 21, "mission_id": 1}
+25192	2026-09-27 19:21:14.289754+00	15	50	task_attempt	{"task_id": 22, "mission_id": 1}
+25195	2026-09-27 19:21:44.338741+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25199	2026-09-27 19:23:26.093111+00	15	51	task_attempt	{"task_id": 23, "mission_id": 1}
+25204	2026-09-27 19:25:07.420294+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25206	2026-09-27 19:27:13.858628+00	15	52	task_attempt	{"task_id": 24, "mission_id": 1}
+25467	2026-09-28 15:39:45.242317+00	49	28	task_attempt	{"task_id": 28, "mission_id": 0}
+25472	2026-09-28 15:40:56.064165+00	49	30	task_started	{"task_id": 30, "mission_id": 0}
+25474	2026-09-28 15:42:25.268285+00	49	30	task_attempt	{"task_id": 30, "mission_id": 0}
+25475	2026-09-28 15:42:49.169713+00	49	30	purchase_clue	{"task_id": 30, "clue_type": 2, "mission_id": 0}
+25477	2026-09-28 15:45:35.066076+00	49	30	task_submitted	{"task_id": 30, "is_correct": true, "mission_id": 0}
+25478	2026-09-28 15:45:38.805438+00	49	31	task_started	{"task_id": 31, "mission_id": 0}
+25479	2026-09-28 15:46:33.839396+00	49	31	purchase_clue	{"task_id": 31, "clue_type": 1, "mission_id": 0}
+25480	2026-09-28 15:46:37.206294+00	49	31	purchase_clue	{"task_id": 31, "clue_type": 2, "mission_id": 0}
+25481	2026-09-28 15:46:48.396618+00	49	34	task_started	{"task_id": 32, "mission_id": 0}
+25483	2026-09-28 16:00:12.232767+00	49	31	task_attempt	{"task_id": 31, "mission_id": 0}
+25485	2026-09-28 16:03:26.743278+00	49	31	task_attempt	{"task_id": 31, "mission_id": 0}
+25486	2026-09-28 16:13:32.869385+00	49	31	task_submitted	{"task_id": 31, "is_correct": true, "mission_id": 0}
+25487	2026-09-28 16:13:34.708805+00	49	34	task_started	{"task_id": 32, "mission_id": 0}
+25491	2026-09-28 16:14:55.049174+00	49	26	task_started	{"task_id": 26, "mission_id": 0}
+25493	2026-09-28 16:15:10.771463+00	49	25	task_started	{"task_id": 25, "mission_id": 0}
+25495	2026-09-28 16:16:04.340685+00	49	26	task_attempt	{"task_id": 26, "mission_id": 0}
+25496	2026-09-28 16:17:01.559568+00	49	26	task_attempt	{"task_id": 26, "mission_id": 0}
+25498	2026-09-28 16:18:01.108338+00	49	29	task_started	{"task_id": 29, "mission_id": 0}
+25499	2026-09-28 16:18:14.625006+00	49	34	task_started	{"task_id": 32, "mission_id": 0}
+25502	2026-09-28 16:31:29.078005+00	49	34	task_attempt	{"task_id": 32, "mission_id": 0}
+25503	2026-09-28 16:31:45.36098+00	49	34	purchase_clue	{"task_id": 32, "clue_type": 1, "mission_id": 0}
+25505	2026-09-28 16:33:52.970893+00	49	34	task_attempt	{"task_id": 32, "mission_id": 0}
+25507	2026-09-28 16:34:44.032012+00	49	34	task_attempt	{"task_id": 32, "mission_id": 0}
+25509	2026-09-28 16:35:08.281134+00	49	34	task_submitted	{"task_id": 32, "is_correct": true, "mission_id": 0}
+25512	2026-09-28 16:38:19.060933+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25514	2026-09-28 16:39:00.319049+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+26250	2026-09-30 11:53:39.513862+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26255	2026-09-30 11:53:52.704808+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26260	2026-09-30 11:53:53.671815+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26265	2026-09-30 11:54:20.318898+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26270	2026-09-30 11:55:16.26878+00	9	81	task_attempt	{"task_id": 5, "mission_id": 2}
+26273	2026-09-30 11:56:13.043632+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26279	2026-09-30 11:56:54.25383+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26283	2026-09-30 11:58:11.083929+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26288	2026-09-30 11:58:44.926114+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26290	2026-09-30 11:59:00.028735+00	62	63	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 1}
+26293	2026-09-30 11:59:51.813653+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26296	2026-09-30 12:02:18.90268+00	9	78	task_started	{"task_id": 2, "mission_id": 2}
+26299	2026-09-30 12:02:42.4748+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26305	2026-09-30 12:04:00.778442+00	9	80	purchase_clue	{"task_id": 6, "clue_type": 2, "mission_id": 2}
+26310	2026-09-30 12:04:38.807185+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26315	2026-09-30 12:05:49.358671+00	9	80	task_attempt	{"task_id": 6, "mission_id": 2}
+26320	2026-09-30 12:08:41.944998+00	9	80	task_attempt	{"task_id": 6, "mission_id": 2}
+26323	2026-09-30 12:09:21.304706+00	9	80	task_submitted	{"task_id": 6, "is_correct": true, "mission_id": 2}
+26326	2026-09-30 12:09:46.069289+00	9	59	purchase_clue	{"task_id": 7, "clue_type": 2, "mission_id": 2}
+26331	2026-09-30 12:10:41.149333+00	9	59	task_attempt	{"task_id": 7, "mission_id": 2}
+26342	2026-09-30 12:12:41.098836+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26347	2026-09-30 12:13:40.274871+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26352	2026-09-30 12:14:13.788273+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+24181	2026-09-25 20:38:40.303924+00	17	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24183	2026-09-25 20:39:03.763526+00	17	75	task_started	{"task_id": 7, "mission_id": 1}
+24188	2026-09-25 20:56:12.821575+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+25167	2026-09-27 19:11:22.28563+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25172	2026-09-27 19:13:37.436394+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25176	2026-09-27 19:15:04.064216+00	15	73	task_attempt	{"task_id": 21, "mission_id": 1}
+25181	2026-09-27 19:16:08.067835+00	15	73	task_attempt	{"task_id": 21, "mission_id": 1}
+25186	2026-09-27 19:17:41.265537+00	15	73	task_attempt	{"task_id": 21, "mission_id": 1}
+25188	2026-09-27 19:18:09.075623+00	15	50	task_started	{"task_id": 22, "mission_id": 1}
+25193	2026-09-27 19:21:18.864695+00	15	50	task_attempt	{"task_id": 22, "mission_id": 1}
+25196	2026-09-27 19:21:59.521676+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25200	2026-09-27 19:23:28.353696+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25207	2026-09-27 19:27:22.269734+00	15	52	task_attempt	{"task_id": 24, "mission_id": 1}
+25214	2026-09-27 19:33:30.776902+00	15	74	task_started	{"task_id": 25, "mission_id": 1}
+25497	2026-09-28 16:17:22.633824+00	49	26	task_attempt	{"task_id": 26, "mission_id": 0}
+25500	2026-09-28 16:18:42.608061+00	49	34	task_attempt	{"task_id": 32, "mission_id": 0}
+25501	2026-09-28 16:31:18.837101+00	49	34	purchase_clue	{"task_id": 32, "clue_type": 2, "mission_id": 0}
+25504	2026-09-28 16:33:41.255652+00	49	34	task_attempt	{"task_id": 32, "mission_id": 0}
+25506	2026-09-28 16:34:29.973522+00	49	34	task_attempt	{"task_id": 32, "mission_id": 0}
+25508	2026-09-28 16:35:05.936866+00	49	34	task_attempt	{"task_id": 32, "mission_id": 0}
+25510	2026-09-28 16:35:16.507197+00	49	29	task_started	{"task_id": 29, "mission_id": 0}
+25511	2026-09-28 16:35:26.693766+00	49	29	purchase_clue	{"task_id": 29, "clue_type": 2, "mission_id": 0}
+25513	2026-09-28 16:38:30.904082+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25515	2026-09-28 16:40:30.1617+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+26275	2026-09-30 11:56:25.263131+00	9	58	task_started	{"task_id": 4, "mission_id": 2}
+26286	2026-09-30 11:58:27.587448+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26542	2026-09-30 21:05:25.127969+00	28	16	task_attempt	{"task_id": 16, "mission_id": 0}
+24184	2026-09-25 20:41:44.630158+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24189	2026-09-25 21:05:33.8225+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24193	2026-09-25 21:25:44.156806+00	17	75	purchase_clue	{"task_id": 7, "clue_type": 1, "mission_id": 1}
+24194	2026-09-25 21:28:29.200575+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24195	2026-09-25 21:29:33.340505+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24196	2026-09-25 21:29:41.392753+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24197	2026-09-25 21:30:26.612099+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24198	2026-09-25 21:31:29.177713+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24199	2026-09-25 21:32:12.240254+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24200	2026-09-25 21:33:59.889668+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24201	2026-09-25 21:36:20.157993+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24202	2026-09-25 21:36:30.115554+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24203	2026-09-25 21:36:39.656283+00	17	75	purchase_clue	{"task_id": 7, "clue_type": 2, "mission_id": 1}
+24204	2026-09-25 21:46:55.95632+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24205	2026-09-25 21:47:02.141215+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24206	2026-09-25 21:50:37.872278+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24207	2026-09-25 21:53:04.69+00	17	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24208	2026-09-25 21:55:02.34371+00	17	41	task_started	{"task_id": 9, "mission_id": 1}
+24209	2026-09-25 21:55:17.765316+00	17	77	task_started	{"task_id": 8, "mission_id": 1}
+24210	2026-09-25 21:56:18.536549+00	17	77	purchase_clue	{"task_id": 8, "clue_type": 2, "mission_id": 1}
+24211	2026-09-25 21:58:13.062262+00	17	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24212	2026-09-25 21:58:18.345906+00	17	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24213	2026-09-25 22:01:25.669332+00	17	41	task_started	{"task_id": 9, "mission_id": 1}
+24214	2026-09-25 22:02:18.310156+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24215	2026-09-25 22:02:47.174655+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24216	2026-09-25 22:07:49.963022+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24217	2026-09-25 22:08:24.362089+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24218	2026-09-25 22:10:42.873776+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24219	2026-09-25 22:10:49.958408+00	17	41	purchase_clue	{"task_id": 9, "clue_type": 2, "mission_id": 1}
+24220	2026-09-25 22:11:31.093734+00	17	41	purchase_clue	{"task_id": 9, "clue_type": 1, "mission_id": 1}
+24221	2026-09-25 22:12:28.071967+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24222	2026-09-25 22:12:39.102648+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24223	2026-09-25 22:13:02.238594+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24224	2026-09-25 22:14:53.956319+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24225	2026-09-25 22:16:15.9724+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24226	2026-09-25 22:16:18.52261+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24227	2026-09-25 22:16:23.314451+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24228	2026-09-25 22:16:44.314828+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24229	2026-09-25 22:16:49.24136+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24230	2026-09-25 22:16:50.924952+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24231	2026-09-25 22:17:09.054558+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24232	2026-09-25 22:17:19.823925+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24233	2026-09-25 22:19:20.614509+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24234	2026-09-25 22:19:22.993162+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24235	2026-09-25 22:19:31.77141+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24236	2026-09-25 22:19:33.352834+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24237	2026-09-25 22:19:51.319725+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24238	2026-09-25 22:19:56.427822+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24239	2026-09-25 22:20:00.120191+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24240	2026-09-25 22:21:16.183169+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24241	2026-09-25 22:22:05.473544+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24242	2026-09-25 22:22:22.144504+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24243	2026-09-25 22:22:24.764757+00	17	41	task_submitted	{"task_id": 9, "is_correct": true, "mission_id": 1}
+24244	2026-09-25 22:22:50.731267+00	17	67	task_started	{"task_id": 10, "mission_id": 1}
+24245	2026-09-25 22:23:54.709899+00	17	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24246	2026-09-25 22:24:07.458255+00	17	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24247	2026-09-25 22:24:08.995326+00	17	67	task_submitted	{"task_id": 10, "is_correct": true, "mission_id": 1}
+24248	2026-09-25 22:24:24.034532+00	17	69	task_started	{"task_id": 11, "mission_id": 1}
+24249	2026-09-25 22:25:24.512245+00	17	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24250	2026-09-25 22:29:32.303968+00	17	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24251	2026-09-25 22:29:38.763479+00	17	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24252	2026-09-25 22:29:46.001486+00	17	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24253	2026-09-25 22:29:50.813664+00	17	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24254	2026-09-25 22:31:49.927363+00	17	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24255	2026-09-25 22:31:53.807125+00	17	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24260	2026-09-25 22:33:42.768411+00	17	69	task_submitted	{"task_id": 11, "is_correct": true, "mission_id": 1}
+25202	2026-09-27 19:24:50.447389+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25205	2026-09-27 19:25:22.010865+00	15	52	task_started	{"task_id": 24, "mission_id": 1}
+25209	2026-09-27 19:27:29.396441+00	15	52	task_attempt	{"task_id": 24, "mission_id": 1}
+25211	2026-09-27 19:30:44.503055+00	15	52	task_attempt	{"task_id": 24, "mission_id": 1}
+25213	2026-09-27 19:30:56.011543+00	15	52	task_attempt	{"task_id": 24, "mission_id": 1}
+25216	2026-09-27 19:36:34.981234+00	15	74	task_attempt	{"task_id": 25, "mission_id": 1}
+25218	2026-09-27 19:39:27.355692+00	15	74	task_attempt	{"task_id": 25, "mission_id": 1}
+25225	2026-09-27 19:41:11.670696+00	15	74	task_attempt	{"task_id": 25, "mission_id": 1}
+25231	2026-09-27 19:47:29.949257+00	15	53	task_attempt	{"task_id": 26, "mission_id": 1}
+25237	2026-09-27 19:53:26.045256+00	49	20	task_started	{"task_id": 20, "mission_id": 0}
+25242	2026-09-27 19:57:13.521237+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25247	2026-09-27 19:59:30.670965+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25252	2026-09-27 20:00:38.575472+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25258	2026-09-27 20:01:22.074387+00	49	21	purchase_clue	{"task_id": 21, "clue_type": 1, "mission_id": 0}
+25266	2026-09-27 20:04:55.871677+00	49	21	task_attempt	{"task_id": 21, "mission_id": 0}
+25269	2026-09-27 20:05:26.723522+00	49	21	task_submitted	{"task_id": 21, "is_correct": true, "mission_id": 0}
+25272	2026-09-27 20:13:26.599459+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25278	2026-09-27 20:15:52.206121+00	49	22	task_submitted	{"task_id": 22, "is_correct": true, "mission_id": 0}
+25282	2026-09-27 20:16:35.525603+00	49	22	task_submitted	{"task_id": 22, "is_correct": true, "mission_id": 0}
+25286	2026-09-27 20:17:23.01575+00	49	22	task_submitted	{"task_id": 22, "is_correct": false, "mission_id": 0}
+25290	2026-09-27 20:17:44.074704+00	49	23	task_started	{"task_id": 23, "mission_id": 0}
+25292	2026-09-27 20:18:20.002566+00	49	23	purchase_clue	{"task_id": 23, "clue_type": 2, "mission_id": 0}
+25297	2026-09-27 20:20:21.124226+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25516	2026-09-28 16:40:38.881851+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25518	2026-09-28 16:40:53.280272+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25520	2026-09-28 16:41:26.172173+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25522	2026-09-28 16:42:46.099596+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+26294	2026-09-30 12:00:21.653461+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26300	2026-09-30 12:02:59.450046+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26303	2026-09-30 12:03:17.073687+00	9	78	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 2}
+26306	2026-09-30 12:04:23.749212+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26311	2026-09-30 12:04:39.793784+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26316	2026-09-30 12:06:27.649478+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26321	2026-09-30 12:08:59.850825+00	9	80	task_attempt	{"task_id": 6, "mission_id": 2}
+26327	2026-09-30 12:10:06.535604+00	9	59	task_attempt	{"task_id": 7, "mission_id": 2}
+26332	2026-09-30 12:10:42.475369+00	9	59	task_attempt	{"task_id": 7, "mission_id": 2}
+26338	2026-09-30 12:11:55.860137+00	9	60	purchase_clue	{"task_id": 8, "clue_type": 2, "mission_id": 2}
+26343	2026-09-30 12:13:05.877536+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26348	2026-09-30 12:13:52.390219+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26357	2026-09-30 12:15:00.763187+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26362	2026-09-30 12:15:18.377769+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26369	2026-09-30 12:16:59.967133+00	9	60	task_submitted	{"task_id": 8, "is_correct": true, "mission_id": 2}
+26377	2026-09-30 12:18:20.129174+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26382	2026-09-30 12:19:18.04281+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26384	2026-09-30 12:19:43.551547+00	9	61	task_started	{"task_id": 10, "mission_id": 2}
+26388	2026-09-30 12:21:02.594421+00	9	61	task_attempt	{"task_id": 10, "mission_id": 2}
+26395	2026-09-30 12:21:50.333344+00	9	83	task_started	{"task_id": 11, "mission_id": 2}
+26400	2026-09-30 12:22:43.745615+00	9	62	purchase_clue	{"task_id": 12, "clue_type": 2, "mission_id": 2}
+26405	2026-09-30 12:23:59.66781+00	9	62	task_attempt	{"task_id": 12, "mission_id": 2}
+26543	2026-09-30 21:05:27.536413+00	28	3	task_started	{"task_id": 15, "mission_id": 0}
+24256	2026-09-25 22:31:58.402884+00	17	69	purchase_clue	{"task_id": 11, "clue_type": 2, "mission_id": 1}
+24259	2026-09-25 22:33:30.257194+00	17	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24261	2026-09-25 22:34:01.864667+00	17	76	task_started	{"task_id": 12, "mission_id": 1}
+25220	2026-09-27 19:40:11.693951+00	15	74	task_attempt	{"task_id": 25, "mission_id": 1}
+25222	2026-09-27 19:40:45.310215+00	15	74	task_attempt	{"task_id": 25, "mission_id": 1}
+25233	2026-09-27 19:47:40.65018+00	15	53	task_attempt	{"task_id": 26, "mission_id": 1}
+25236	2026-09-27 19:48:22.826143+00	15	53	task_submitted	{"task_id": 26, "is_correct": true, "mission_id": 1}
+25239	2026-09-27 19:56:50.735895+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25241	2026-09-27 19:57:09.993317+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25244	2026-09-27 19:57:32.137095+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25249	2026-09-27 20:00:00.375044+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25254	2026-09-27 20:00:38.873575+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25260	2026-09-27 20:02:50.677225+00	49	21	task_attempt	{"task_id": 21, "mission_id": 0}
+25263	2026-09-27 20:04:08.478724+00	49	21	task_attempt	{"task_id": 21, "mission_id": 0}
+25268	2026-09-27 20:05:22.572318+00	49	21	task_attempt	{"task_id": 21, "mission_id": 0}
+25270	2026-09-27 20:05:29.247538+00	49	22	task_started	{"task_id": 22, "mission_id": 0}
+25274	2026-09-27 20:14:23.175074+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25277	2026-09-27 20:15:49.707259+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25280	2026-09-27 20:16:32.440067+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25284	2026-09-27 20:17:20.706135+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25288	2026-09-27 20:17:40.625845+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25294	2026-09-27 20:19:10.241487+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25299	2026-09-27 20:25:59.826939+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25304	2026-09-27 20:26:28.29315+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25309	2026-09-27 20:27:44.413614+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25313	2026-09-27 20:28:15.243301+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25317	2026-09-27 20:29:58.714+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25318	2026-09-27 20:30:19.474057+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25324	2026-09-27 20:32:20.026889+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25325	2026-09-27 20:32:25.799779+00	49	23	task_submitted	{"task_id": 23, "is_correct": true, "mission_id": 0}
+25328	2026-09-27 20:33:48.474336+00	49	24	purchase_clue	{"task_id": 24, "clue_type": 2, "mission_id": 0}
+25517	2026-09-28 16:40:51.404788+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25519	2026-09-28 16:41:18.651966+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25521	2026-09-28 16:42:46.096569+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25523	2026-09-28 16:42:48.610901+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+26297	2026-09-30 12:02:22.2571+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26302	2026-09-30 12:03:16.041592+00	9	78	task_attempt	{"task_id": 2, "mission_id": 2}
+26304	2026-09-30 12:03:48.092493+00	9	80	task_started	{"task_id": 6, "mission_id": 2}
+26308	2026-09-30 12:04:34.267689+00	9	80	task_attempt	{"task_id": 6, "mission_id": 2}
+26313	2026-09-30 12:05:01.910719+00	9	80	task_attempt	{"task_id": 6, "mission_id": 2}
+26318	2026-09-30 12:08:02.043521+00	9	80	task_attempt	{"task_id": 6, "mission_id": 2}
+26325	2026-09-30 12:09:36.972283+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26329	2026-09-30 12:10:20.065604+00	9	59	task_attempt	{"task_id": 7, "mission_id": 2}
+26334	2026-09-30 12:11:13.079045+00	9	59	task_attempt	{"task_id": 7, "mission_id": 2}
+26340	2026-09-30 12:12:21.568616+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26345	2026-09-30 12:13:38.050449+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26350	2026-09-30 12:14:11.146765+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26354	2026-09-30 12:14:31.541549+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26359	2026-09-30 12:15:03.742899+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26364	2026-09-30 12:15:34.8659+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26368	2026-09-30 12:16:46.929319+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26371	2026-09-30 12:17:10.444276+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26374	2026-09-30 12:18:06.360009+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26379	2026-09-30 12:18:20.501222+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26385	2026-09-30 12:19:44.306708+00	9	61	purchase_clue	{"task_id": 10, "clue_type": 2, "mission_id": 2}
+26390	2026-09-30 12:21:20.654301+00	9	61	task_attempt	{"task_id": 10, "mission_id": 2}
+26393	2026-09-30 12:21:24.987914+00	9	61	task_submitted	{"task_id": 10, "is_correct": true, "mission_id": 2}
+26396	2026-09-30 12:21:51.088671+00	9	83	purchase_clue	{"task_id": 11, "clue_type": 2, "mission_id": 2}
+26402	2026-09-30 12:23:29.617611+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26410	2026-09-30 12:30:49.803787+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26419	2026-09-30 12:35:27.329685+00	47	38	purchase_clue	{"task_id": 3, "clue_type": 2, "mission_id": 1}
+26544	2026-09-30 21:05:28.988344+00	28	16	task_started	{"task_id": 16, "mission_id": 0}
+24257	2026-09-25 22:32:27.965529+00	17	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24258	2026-09-25 22:33:24.639934+00	17	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24262	2026-09-25 23:07:10.620144+00	17	76	purchase_clue	{"task_id": 12, "clue_type": 2, "mission_id": 1}
+24263	2026-09-25 23:14:36.534097+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24264	2026-09-25 23:15:24.130174+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24265	2026-09-25 23:16:09.283832+00	17	76	purchase_clue	{"task_id": 12, "clue_type": 1, "mission_id": 1}
+24266	2026-09-25 23:23:14.044592+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24267	2026-09-25 23:24:00.083986+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24268	2026-09-25 23:25:01.945085+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24269	2026-09-25 23:25:20.4427+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24270	2026-09-25 23:26:04.697108+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24271	2026-09-25 23:27:39.405104+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24272	2026-09-25 23:29:03.957379+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24273	2026-09-25 23:29:55.904983+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24274	2026-09-25 23:30:17.048881+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24275	2026-09-25 23:30:18.324844+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24276	2026-09-25 23:31:54.223218+00	17	76	task_attempt	{"task_id": 12, "mission_id": 1}
+24277	2026-09-25 23:31:57.001997+00	17	76	task_submitted	{"task_id": 12, "is_correct": true, "mission_id": 1}
+24278	2026-09-25 23:32:23.769332+00	17	70	task_started	{"task_id": 13, "mission_id": 1}
+24279	2026-09-25 23:32:46.952199+00	17	70	purchase_clue	{"task_id": 13, "clue_type": 2, "mission_id": 1}
+24280	2026-09-25 23:34:29.155614+00	17	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24281	2026-09-25 23:34:35.355702+00	17	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24282	2026-09-25 23:34:37.313655+00	17	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24283	2026-09-25 23:34:40.094169+00	17	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24284	2026-09-25 23:34:44.579836+00	17	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24285	2026-09-25 23:34:57.292056+00	17	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24286	2026-09-25 23:35:38.071161+00	17	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24287	2026-09-25 23:35:40.336786+00	17	70	task_submitted	{"task_id": 13, "is_correct": true, "mission_id": 1}
+24288	2026-09-25 23:36:00.024892+00	17	54	task_started	{"task_id": 14, "mission_id": 1}
+24289	2026-09-25 23:39:03.789243+00	17	54	task_attempt	{"task_id": 14, "mission_id": 1}
+24290	2026-09-25 23:39:23.010896+00	17	54	task_attempt	{"task_id": 14, "mission_id": 1}
+24291	2026-09-25 23:44:54.929498+00	17	54	task_attempt	{"task_id": 14, "mission_id": 1}
+24292	2026-09-25 23:45:34.279483+00	17	54	task_attempt	{"task_id": 14, "mission_id": 1}
+24293	2026-09-25 23:48:46.355835+00	17	54	task_attempt	{"task_id": 14, "mission_id": 1}
+24294	2026-09-25 23:49:03.039005+00	17	54	task_attempt	{"task_id": 14, "mission_id": 1}
+24295	2026-09-25 23:49:07.294564+00	17	54	task_attempt	{"task_id": 14, "mission_id": 1}
+24296	2026-09-25 23:49:11.613216+00	17	54	purchase_clue	{"task_id": 14, "clue_type": 2, "mission_id": 1}
+24297	2026-09-25 23:51:13.494104+00	17	71	task_started	{"task_id": 15, "mission_id": 1}
+24298	2026-09-25 23:59:37.987242+00	17	71	task_attempt	{"task_id": 15, "mission_id": 1}
+24299	2026-09-25 23:59:49.103631+00	17	71	task_attempt	{"task_id": 15, "mission_id": 1}
+24300	2026-09-26 00:00:16.574143+00	17	71	task_attempt	{"task_id": 15, "mission_id": 1}
+24301	2026-09-26 00:00:38.887037+00	17	71	task_attempt	{"task_id": 15, "mission_id": 1}
+24302	2026-09-26 00:01:04.209496+00	17	71	task_attempt	{"task_id": 15, "mission_id": 1}
+24303	2026-09-26 00:02:04.051041+00	17	71	task_attempt	{"task_id": 15, "mission_id": 1}
+24304	2026-09-26 00:02:07.705673+00	17	71	task_submitted	{"task_id": 15, "is_correct": true, "mission_id": 1}
+24305	2026-09-26 00:03:10.785638+00	17	43	task_started	{"task_id": 16, "mission_id": 1}
+24306	2026-09-26 00:11:37.054547+00	17	43	purchase_clue	{"task_id": 16, "clue_type": 2, "mission_id": 1}
+24307	2026-09-26 00:16:56.185093+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24308	2026-09-26 00:20:53.461619+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24309	2026-09-26 00:21:09.985542+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24310	2026-09-26 00:21:11.321366+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24311	2026-09-26 00:21:16.538344+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24312	2026-09-26 00:21:24.133369+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24313	2026-09-26 00:22:38.234062+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24314	2026-09-26 00:22:55.878498+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24315	2026-09-26 00:22:57.624033+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24316	2026-09-26 00:23:06.541021+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24317	2026-09-26 00:23:13.100793+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24318	2026-09-26 00:28:35.188793+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24319	2026-09-26 00:28:38.111308+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24320	2026-09-26 00:28:41.351843+00	17	43	task_attempt	{"task_id": 16, "mission_id": 1}
+24321	2026-09-26 00:30:27.94933+00	17	44	task_started	{"task_id": 17, "mission_id": 1}
+24322	2026-09-26 00:32:31.381348+00	17	72	task_started	{"task_id": 18, "mission_id": 1}
+24323	2026-09-26 00:33:56.459645+00	17	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24324	2026-09-26 00:34:02.690114+00	17	72	purchase_clue	{"task_id": 18, "clue_type": 2, "mission_id": 1}
+24330	2026-09-26 00:40:49.999278+00	17	46	task_attempt	{"task_id": 19, "mission_id": 1}
+24332	2026-09-26 00:41:44.490325+00	17	48	task_started	{"task_id": 20, "mission_id": 1}
+24347	2026-09-26 01:07:16.576456+00	17	50	task_attempt	{"task_id": 22, "mission_id": 1}
+24350	2026-09-26 01:10:02.457051+00	17	50	task_submitted	{"task_id": 22, "is_correct": true, "mission_id": 1}
+24355	2026-09-26 01:18:36.100589+00	17	52	task_attempt	{"task_id": 24, "mission_id": 1}
+24362	2026-09-26 01:26:52.579663+00	17	53	purchase_clue	{"task_id": 26, "clue_type": 1, "mission_id": 1}
+25223	2026-09-27 19:40:58.91591+00	15	74	task_attempt	{"task_id": 25, "mission_id": 1}
+25229	2026-09-27 19:43:25.069042+00	15	53	purchase_clue	{"task_id": 26, "clue_type": 1, "mission_id": 1}
+25234	2026-09-27 19:47:44.991743+00	15	53	task_attempt	{"task_id": 26, "mission_id": 1}
+25245	2026-09-27 19:58:35.346109+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25250	2026-09-27 20:00:17.327118+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25255	2026-09-27 20:01:09.382203+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25257	2026-09-27 20:01:13.538601+00	49	21	task_started	{"task_id": 21, "mission_id": 0}
+25264	2026-09-27 20:04:36.761801+00	49	21	task_attempt	{"task_id": 21, "mission_id": 0}
+25275	2026-09-27 20:14:46.740668+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25281	2026-09-27 20:16:34.059027+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25285	2026-09-27 20:17:22.108452+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25291	2026-09-27 20:18:18.351751+00	49	23	purchase_clue	{"task_id": 23, "clue_type": 1, "mission_id": 0}
+25295	2026-09-27 20:19:46.447548+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25300	2026-09-27 20:26:22.949899+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25305	2026-09-27 20:26:28.426488+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25310	2026-09-27 20:27:49.289706+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25314	2026-09-27 20:28:44.869979+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25319	2026-09-27 20:30:33.230265+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25524	2026-09-28 16:42:53.742239+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25526	2026-09-28 16:43:13.204171+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+26356	2026-09-30 12:14:59.562363+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26361	2026-09-30 12:15:05.853051+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26366	2026-09-30 12:16:18.929463+00	9	60	task_attempt	{"task_id": 8, "mission_id": 2}
+26372	2026-09-30 12:17:27.346599+00	9	82	task_started	{"task_id": 9, "mission_id": 2}
+26376	2026-09-30 12:18:19.953153+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26381	2026-09-30 12:19:03.484889+00	9	82	task_attempt	{"task_id": 9, "mission_id": 2}
+26387	2026-09-30 12:20:49.023175+00	9	61	task_attempt	{"task_id": 10, "mission_id": 2}
+26392	2026-09-30 12:21:23.178672+00	9	61	task_attempt	{"task_id": 10, "mission_id": 2}
+26404	2026-09-30 12:23:55.919172+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26407	2026-09-30 12:24:12.96999+00	9	62	task_submitted	{"task_id": 12, "is_correct": true, "mission_id": 2}
+26408	2026-09-30 12:26:07.796844+00	53	63	task_started	{"task_id": 2, "mission_id": 1}
+26413	2026-09-30 12:31:19.740275+00	9	37	task_started	{"task_id": 1, "mission_id": 1}
+26417	2026-09-30 12:32:26.091938+00	47	63	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 1}
+26545	2026-09-30 21:05:34.850806+00	28	17	task_started	{"task_id": 17, "mission_id": 0}
+26554	2026-09-30 21:06:36.037532+00	28	18	task_attempt	{"task_id": 18, "mission_id": 0}
+26559	2026-09-30 21:07:13.565231+00	28	18	task_attempt	{"task_id": 18, "mission_id": 0}
+24325	2026-09-26 00:34:05.201635+00	17	72	task_attempt	{"task_id": 18, "mission_id": 1}
+25224	2026-09-27 19:41:07.104778+00	15	74	task_attempt	{"task_id": 25, "mission_id": 1}
+25227	2026-09-27 19:41:20.153777+00	15	74	task_submitted	{"task_id": 25, "is_correct": true, "mission_id": 1}
+25230	2026-09-27 19:46:00.251772+00	15	53	task_attempt	{"task_id": 26, "mission_id": 1}
+25235	2026-09-27 19:48:10.504986+00	15	53	task_attempt	{"task_id": 26, "mission_id": 1}
+25240	2026-09-27 19:57:04.213208+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25525	2026-09-28 16:43:09.648984+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+26397	2026-09-30 12:22:20.771744+00	9	83	task_attempt	{"task_id": 11, "mission_id": 2}
+26399	2026-09-30 12:22:43.217672+00	9	62	task_started	{"task_id": 12, "mission_id": 2}
+26403	2026-09-30 12:23:47.710681+00	9	62	task_attempt	{"task_id": 12, "mission_id": 2}
+26411	2026-09-30 12:30:57.708616+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26415	2026-09-30 12:31:40.359009+00	62	63	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 1}
+26418	2026-09-30 12:34:04.062633+00	47	38	task_started	{"task_id": 3, "mission_id": 1}
+26546	2026-09-30 21:05:49.140489+00	28	17	task_attempt	{"task_id": 17, "mission_id": 0}
+26551	2026-09-30 21:06:12.861762+00	28	18	task_attempt	{"task_id": 18, "mission_id": 0}
+26556	2026-09-30 21:06:36.497666+00	28	18	task_attempt	{"task_id": 18, "mission_id": 0}
+24326	2026-09-26 00:36:08.990524+00	17	46	task_started	{"task_id": 19, "mission_id": 1}
+24327	2026-09-26 00:36:59.289577+00	17	46	purchase_clue	{"task_id": 19, "clue_type": 1, "mission_id": 1}
+24328	2026-09-26 00:37:02.081201+00	17	46	purchase_clue	{"task_id": 19, "clue_type": 2, "mission_id": 1}
+24329	2026-09-26 00:40:20.675648+00	17	46	task_attempt	{"task_id": 19, "mission_id": 1}
+24331	2026-09-26 00:40:52.443934+00	17	46	task_submitted	{"task_id": 19, "is_correct": true, "mission_id": 1}
+24333	2026-09-26 00:42:08.066141+00	17	48	task_attempt	{"task_id": 20, "mission_id": 1}
+24334	2026-09-26 00:46:36.89331+00	17	48	purchase_clue	{"task_id": 20, "clue_type": 2, "mission_id": 1}
+24335	2026-09-26 00:46:41.482749+00	17	48	purchase_clue	{"task_id": 20, "clue_type": 1, "mission_id": 1}
+24336	2026-09-26 00:47:12.806794+00	17	48	task_attempt	{"task_id": 20, "mission_id": 1}
+24337	2026-09-26 00:50:34.565747+00	17	48	task_attempt	{"task_id": 20, "mission_id": 1}
+24338	2026-09-26 00:50:36.51594+00	17	48	task_submitted	{"task_id": 20, "is_correct": true, "mission_id": 1}
+24339	2026-09-26 01:03:27.378533+00	17	48	task_attempt	{"task_id": 20, "mission_id": 1}
+24340	2026-09-26 01:03:52.350889+00	17	48	task_attempt	{"task_id": 20, "mission_id": 1}
+24341	2026-09-26 01:04:19.754877+00	17	48	task_attempt	{"task_id": 20, "mission_id": 1}
+24342	2026-09-26 01:04:22.890445+00	17	48	task_submitted	{"task_id": 20, "is_correct": true, "mission_id": 1}
+24343	2026-09-26 01:04:44.04848+00	17	73	task_started	{"task_id": 21, "mission_id": 1}
+24344	2026-09-26 01:06:35.965044+00	17	73	task_attempt	{"task_id": 21, "mission_id": 1}
+24345	2026-09-26 01:06:39.02724+00	17	73	task_submitted	{"task_id": 21, "is_correct": true, "mission_id": 1}
+24346	2026-09-26 01:06:54.021046+00	17	50	task_started	{"task_id": 22, "mission_id": 1}
+24348	2026-09-26 01:09:38.561259+00	17	50	task_attempt	{"task_id": 22, "mission_id": 1}
+24349	2026-09-26 01:09:58.97503+00	17	50	task_attempt	{"task_id": 22, "mission_id": 1}
+24351	2026-09-26 01:10:25.16519+00	17	51	task_started	{"task_id": 23, "mission_id": 1}
+24352	2026-09-26 01:13:14.029354+00	17	51	purchase_clue	{"task_id": 23, "clue_type": 2, "mission_id": 1}
+24353	2026-09-26 01:13:56.728933+00	17	52	task_started	{"task_id": 24, "mission_id": 1}
+24354	2026-09-26 01:14:14.394717+00	17	52	purchase_clue	{"task_id": 24, "clue_type": 2, "mission_id": 1}
+24356	2026-09-26 01:18:46.789118+00	17	52	task_attempt	{"task_id": 24, "mission_id": 1}
+24357	2026-09-26 01:18:51.185667+00	17	52	task_attempt	{"task_id": 24, "mission_id": 1}
+24358	2026-09-26 01:22:36.663115+00	17	74	task_started	{"task_id": 25, "mission_id": 1}
+24359	2026-09-26 01:25:34.002668+00	17	74	task_attempt	{"task_id": 25, "mission_id": 1}
+24360	2026-09-26 01:25:48.035267+00	17	74	task_submitted	{"task_id": 25, "is_correct": true, "mission_id": 1}
+24361	2026-09-26 01:26:06.005899+00	17	53	task_started	{"task_id": 26, "mission_id": 1}
+24363	2026-09-26 01:26:57.195328+00	17	53	purchase_clue	{"task_id": 26, "clue_type": 2, "mission_id": 1}
+24364	2026-09-26 01:30:55.579773+00	17	53	task_attempt	{"task_id": 26, "mission_id": 1}
+24365	2026-09-26 01:30:58.746505+00	17	53	task_submitted	{"task_id": 26, "is_correct": true, "mission_id": 1}
+24366	2026-09-26 01:31:09.812084+00	17	55	task_started	{"task_id": 1, "mission_id": 2}
+24367	2026-09-26 06:07:25.374885+00	35	20	task_started	{"task_id": 20, "mission_id": 0}
+24368	2026-09-26 06:07:35.618331+00	35	20	purchase_clue	{"task_id": 20, "clue_type": 2, "mission_id": 0}
+24369	2026-09-26 06:09:43.320021+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24370	2026-09-26 06:09:56.329356+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24371	2026-09-26 06:10:08.799905+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24372	2026-09-26 06:10:34.820364+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24373	2026-09-26 06:11:07.040011+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24374	2026-09-26 06:11:24.18033+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24375	2026-09-26 06:11:27.302656+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24376	2026-09-26 06:11:47.369634+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24377	2026-09-26 06:12:58.089062+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24378	2026-09-26 06:15:59.296757+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24379	2026-09-26 06:16:14.888465+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24380	2026-09-26 06:22:49.760514+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24381	2026-09-26 06:24:17.268925+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24382	2026-09-26 06:26:16.808409+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24383	2026-09-26 06:26:33.632827+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24384	2026-09-26 06:26:51.818712+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24385	2026-09-26 06:27:03.791318+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24386	2026-09-26 06:27:30.475829+00	35	20	task_attempt	{"task_id": 20, "mission_id": 0}
+24387	2026-09-26 06:27:32.348256+00	35	20	task_submitted	{"task_id": 20, "is_correct": true, "mission_id": 0}
+24388	2026-09-26 06:28:02.800688+00	35	21	task_started	{"task_id": 21, "mission_id": 0}
+24389	2026-09-26 06:28:10.069476+00	35	23	task_started	{"task_id": 23, "mission_id": 0}
+24390	2026-09-26 06:33:25.393939+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24391	2026-09-26 06:34:18.893541+00	35	23	purchase_clue	{"task_id": 23, "clue_type": 2, "mission_id": 0}
+24392	2026-09-26 06:34:58.351091+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24393	2026-09-26 06:37:20.2297+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24394	2026-09-26 06:37:53.278174+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24395	2026-09-26 06:38:01.589236+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24400	2026-09-26 06:39:55.897999+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24405	2026-09-26 06:41:30.791063+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24409	2026-09-26 06:42:08.480015+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24411	2026-09-26 06:43:31.473314+00	35	24	task_started	{"task_id": 24, "mission_id": 0}
+24415	2026-09-26 06:49:47.519666+00	35	24	task_attempt	{"task_id": 24, "mission_id": 0}
+24419	2026-09-26 07:02:32.368681+00	35	25	task_started	{"task_id": 25, "mission_id": 0}
+25238	2026-09-27 19:56:02.385805+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25527	2026-09-28 16:43:19.901462+00	49	29	purchase_clue	{"task_id": 29, "clue_type": 1, "mission_id": 0}
+25528	2026-09-28 16:43:21.466722+00	19	63	task_started	{"task_id": 2, "mission_id": 1}
+26414	2026-09-30 12:31:37.869865+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26547	2026-09-30 21:05:49.361554+00	28	17	task_attempt	{"task_id": 17, "mission_id": 0}
+26549	2026-09-30 21:05:50.391801+00	28	17	task_submitted	{"task_id": 17, "is_correct": true, "mission_id": 0}
+26553	2026-09-30 21:06:13.048718+00	28	18	task_attempt	{"task_id": 18, "mission_id": 0}
+26558	2026-09-30 21:06:36.836434+00	28	18	task_attempt	{"task_id": 18, "mission_id": 0}
+24396	2026-09-26 06:39:21.650817+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24401	2026-09-26 06:40:40.88825+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24406	2026-09-26 06:41:30.866912+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24414	2026-09-26 06:47:08.121542+00	35	24	task_attempt	{"task_id": 24, "mission_id": 0}
+24420	2026-09-26 07:02:41.963389+00	35	26	task_started	{"task_id": 26, "mission_id": 0}
+25243	2026-09-27 19:57:13.578157+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25248	2026-09-27 19:59:59.462518+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25253	2026-09-27 20:00:38.727276+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25256	2026-09-27 20:01:11.035044+00	49	20	task_submitted	{"task_id": 20, "is_correct": true, "mission_id": 0}
+25259	2026-09-27 20:02:38.557094+00	49	21	task_attempt	{"task_id": 21, "mission_id": 0}
+25262	2026-09-27 20:04:00.139461+00	49	21	task_attempt	{"task_id": 21, "mission_id": 0}
+25267	2026-09-27 20:04:57.6051+00	49	21	task_attempt	{"task_id": 21, "mission_id": 0}
+25273	2026-09-27 20:14:21.233229+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25529	2026-09-28 16:43:41.659155+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25531	2026-09-28 16:43:56.553311+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25533	2026-09-28 16:45:26.087341+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25535	2026-09-28 16:45:31.117756+00	49	29	task_submitted	{"task_id": 29, "is_correct": true, "mission_id": 0}
+25537	2026-09-28 16:46:09.198366+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25539	2026-09-28 16:46:37.70613+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25541	2026-09-28 16:46:57.39545+00	49	25	task_started	{"task_id": 25, "mission_id": 0}
+25542	2026-09-28 16:47:33.980582+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25544	2026-09-28 16:48:06.718093+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25546	2026-09-28 16:48:57.538498+00	49	5	task_started	{"task_id": 4, "mission_id": 0}
+25548	2026-09-28 16:49:21.815141+00	49	25	task_started	{"task_id": 25, "mission_id": 0}
+25549	2026-09-28 16:49:30.926581+00	49	37	task_started	{"task_id": 1, "mission_id": 1}
+25550	2026-09-28 16:49:41.274491+00	49	55	task_started	{"task_id": 1, "mission_id": 2}
+25552	2026-09-28 16:50:38.876562+00	49	59	task_started	{"task_id": 7, "mission_id": 2}
+25553	2026-09-28 16:50:42.441228+00	49	55	task_started	{"task_id": 1, "mission_id": 2}
+25554	2026-09-28 16:50:50.580522+00	49	5	task_started	{"task_id": 4, "mission_id": 0}
+25555	2026-09-28 16:53:09.601004+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25557	2026-09-28 16:53:30.122693+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25559	2026-09-28 16:56:13.700051+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25561	2026-09-28 16:57:44.16505+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25563	2026-09-28 16:59:17.334164+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26416	2026-09-30 12:32:22.87379+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26548	2026-09-30 21:05:50.180678+00	28	17	task_submitted	{"task_id": 17, "is_correct": true, "mission_id": 0}
+26552	2026-09-30 21:06:12.846312+00	28	18	task_attempt	{"task_id": 18, "mission_id": 0}
+26557	2026-09-30 21:06:36.666108+00	28	18	task_attempt	{"task_id": 18, "mission_id": 0}
+24397	2026-09-26 06:39:30.309908+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24402	2026-09-26 06:40:41.54441+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24407	2026-09-26 06:41:47.730838+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24416	2026-09-26 06:51:46.620286+00	35	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25246	2026-09-27 19:59:01.584217+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25251	2026-09-27 20:00:37.600285+00	49	20	task_attempt	{"task_id": 20, "mission_id": 0}
+25261	2026-09-27 20:02:58.818929+00	49	21	purchase_clue	{"task_id": 21, "clue_type": 2, "mission_id": 0}
+25265	2026-09-27 20:04:47.765869+00	49	21	task_attempt	{"task_id": 21, "mission_id": 0}
+25271	2026-09-27 20:10:12.95362+00	49	22	purchase_clue	{"task_id": 22, "clue_type": 2, "mission_id": 0}
+25276	2026-09-27 20:15:32.115279+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25289	2026-09-27 20:17:42.362176+00	49	22	task_submitted	{"task_id": 22, "is_correct": true, "mission_id": 0}
+25296	2026-09-27 20:20:07.840711+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25301	2026-09-27 20:26:27.618137+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25306	2026-09-27 20:26:39.063003+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25315	2026-09-27 20:28:47.965454+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25530	2026-09-28 16:43:50.145436+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25532	2026-09-28 16:44:19.035698+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25534	2026-09-28 16:45:28.827779+00	49	29	task_attempt	{"task_id": 29, "mission_id": 0}
+25536	2026-09-28 16:45:54.348217+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25538	2026-09-28 16:46:34.699091+00	49	26	task_started	{"task_id": 26, "mission_id": 0}
+25540	2026-09-28 16:46:45.392607+00	49	26	task_started	{"task_id": 26, "mission_id": 0}
+25543	2026-09-28 16:47:41.576612+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25545	2026-09-28 16:48:19.432997+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25547	2026-09-28 16:49:15.684917+00	49	14	task_started	{"task_id": 13, "mission_id": 0}
+25551	2026-09-28 16:49:53.782325+00	49	82	task_started	{"task_id": 9, "mission_id": 2}
+25556	2026-09-28 16:53:14.53089+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25558	2026-09-28 16:53:36.263761+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25560	2026-09-28 16:57:06.657549+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25562	2026-09-28 16:59:03.758538+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26420	2026-09-30 15:58:10.709351+00	18	37	task_started	{"task_id": 1, "mission_id": 1}
+26425	2026-09-30 16:05:14.459847+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26432	2026-09-30 16:10:13.875134+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26436	2026-09-30 16:12:19.539537+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26441	2026-09-30 16:12:38.383062+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26448	2026-09-30 16:44:32.562097+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26453	2026-09-30 16:55:31.532278+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26455	2026-09-30 16:56:09.2798+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26550	2026-09-30 21:05:51.473886+00	28	18	task_started	{"task_id": 18, "mission_id": 0}
+26555	2026-09-30 21:06:36.328815+00	28	18	task_attempt	{"task_id": 18, "mission_id": 0}
+24398	2026-09-26 06:39:42.353245+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24403	2026-09-26 06:40:59.358811+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24410	2026-09-26 06:42:16.004648+00	35	23	task_submitted	{"task_id": 23, "is_correct": true, "mission_id": 0}
+24412	2026-09-26 06:44:18.158525+00	35	24	task_attempt	{"task_id": 24, "mission_id": 0}
+24417	2026-09-26 06:51:48.010339+00	35	24	task_attempt	{"task_id": 24, "mission_id": 0}
+24421	2026-09-26 07:02:48.360498+00	35	27	task_started	{"task_id": 27, "mission_id": 0}
+25279	2026-09-27 20:16:14.434987+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25283	2026-09-27 20:17:10.909662+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25287	2026-09-27 20:17:32.765819+00	49	22	task_attempt	{"task_id": 22, "mission_id": 0}
+25293	2026-09-27 20:18:55.030458+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25298	2026-09-27 20:23:29.397518+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25303	2026-09-27 20:26:28.145835+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25308	2026-09-27 20:27:40.017799+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25312	2026-09-27 20:27:58.64929+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25564	2026-09-28 16:59:23.743852+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25566	2026-09-28 17:00:51.888254+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25567	2026-09-28 17:01:02.148159+00	19	63	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 1}
+25569	2026-09-28 17:01:49.127165+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25571	2026-09-28 17:02:30.711685+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25573	2026-09-28 17:11:17.422254+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25575	2026-09-28 17:12:30.155347+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25577	2026-09-28 17:13:28.038347+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25579	2026-09-28 17:13:37.662825+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25581	2026-09-28 17:13:59.311787+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25583	2026-09-28 17:17:05.972483+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25585	2026-09-28 17:17:53.263233+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25587	2026-09-28 17:28:47.593407+00	19	38	task_started	{"task_id": 3, "mission_id": 1}
+25589	2026-09-28 17:30:19.293652+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25593	2026-09-28 17:48:51.998884+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25595	2026-09-28 17:54:40.256305+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25596	2026-09-28 17:55:11.251251+00	19	38	purchase_clue	{"task_id": 3, "clue_type": 2, "mission_id": 1}
+25598	2026-09-28 17:59:17.954662+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26421	2026-09-30 15:59:44.829699+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26560	2026-09-30 21:07:17.441123+00	28	18	task_attempt	{"task_id": 18, "mission_id": 0}
+24399	2026-09-26 06:39:42.505258+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24404	2026-09-26 06:41:08.620249+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24408	2026-09-26 06:42:03.19169+00	35	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24413	2026-09-26 06:46:44.744819+00	35	24	task_attempt	{"task_id": 24, "mission_id": 0}
+24418	2026-09-26 06:53:01.951014+00	35	24	task_attempt	{"task_id": 24, "mission_id": 0}
+24422	2026-09-26 08:08:38.867167+00	71	25	task_started	{"task_id": 25, "mission_id": 0}
+24423	2026-09-26 08:08:57.874562+00	71	72	task_started	{"task_id": 18, "mission_id": 1}
+24424	2026-09-26 08:09:22.474007+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24425	2026-09-26 08:10:09.203533+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24426	2026-09-26 08:10:31.073592+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24427	2026-09-26 08:11:18.616074+00	37	63	task_started	{"task_id": 2, "mission_id": 1}
+24428	2026-09-26 08:12:07.890127+00	37	55	task_started	{"task_id": 1, "mission_id": 2}
+24429	2026-09-26 08:12:55.786515+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24430	2026-09-26 08:14:07.514475+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24431	2026-09-26 08:14:07.930756+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24432	2026-09-26 08:14:08.154673+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24433	2026-09-26 08:14:08.395018+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24434	2026-09-26 08:14:19.236951+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24435	2026-09-26 08:14:19.682508+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24436	2026-09-26 08:14:19.954568+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24437	2026-09-26 08:14:20.426599+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24438	2026-09-26 08:14:20.674276+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24439	2026-09-26 08:14:24.50989+00	71	72	purchase_clue	{"task_id": 18, "clue_type": 1, "mission_id": 1}
+24440	2026-09-26 08:20:07.018449+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24441	2026-09-26 08:20:07.154772+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24442	2026-09-26 08:20:07.89009+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24443	2026-09-26 08:20:38.562885+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24444	2026-09-26 08:20:39.363554+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24445	2026-09-26 08:20:39.777611+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24446	2026-09-26 08:20:43.130509+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24447	2026-09-26 08:20:53.794888+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24448	2026-09-26 08:20:58.025514+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24449	2026-09-26 08:22:19.322388+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24450	2026-09-26 08:22:19.75459+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24451	2026-09-26 08:22:20.241601+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24452	2026-09-26 08:22:20.522749+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24453	2026-09-26 08:22:21.249515+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24454	2026-09-26 08:22:45.754329+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24455	2026-09-26 08:22:46.690499+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24456	2026-09-26 08:22:46.939239+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24457	2026-09-26 08:22:47.185484+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24458	2026-09-26 08:22:47.426614+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24459	2026-09-26 08:22:48.937471+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24460	2026-09-26 08:22:53.810593+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24461	2026-09-26 08:23:31.490637+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24462	2026-09-26 08:24:19.202008+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24463	2026-09-26 08:24:42.986812+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24464	2026-09-26 08:24:51.314996+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24465	2026-09-26 08:25:07.218841+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24466	2026-09-26 08:26:11.354611+00	71	72	task_attempt	{"task_id": 18, "mission_id": 1}
+24467	2026-09-26 08:26:46.06645+00	71	40	task_started	{"task_id": 5, "mission_id": 1}
+24468	2026-09-26 08:27:17.794055+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24469	2026-09-26 08:27:38.37781+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24470	2026-09-26 08:28:28.785736+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24471	2026-09-26 08:29:15.321452+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24472	2026-09-26 08:29:30.217935+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24473	2026-09-26 08:29:54.146031+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24474	2026-09-26 08:30:26.68297+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24475	2026-09-26 08:31:05.266239+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24476	2026-09-26 08:31:34.914465+00	71	40	purchase_clue	{"task_id": 5, "clue_type": 2, "mission_id": 1}
+24477	2026-09-26 08:31:56.002228+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24478	2026-09-26 08:32:47.41339+00	71	40	purchase_clue	{"task_id": 5, "clue_type": 1, "mission_id": 1}
+24479	2026-09-26 08:36:01.97995+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24480	2026-09-26 08:36:10.539309+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24481	2026-09-26 08:36:12.273337+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24482	2026-09-26 08:36:12.777644+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24487	2026-09-26 08:37:14.970703+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24491	2026-09-26 08:46:10.972622+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24496	2026-09-26 08:48:13.250964+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24501	2026-09-26 08:48:13.914575+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24506	2026-09-26 08:52:29.41988+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24509	2026-09-26 08:53:49.467051+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+25302	2026-09-27 20:26:28.022875+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25307	2026-09-27 20:27:29.708514+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25311	2026-09-27 20:27:58.488338+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25316	2026-09-27 20:28:56.45179+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25321	2026-09-27 20:30:33.497599+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25565	2026-09-28 17:00:44.029209+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26422	2026-09-30 16:03:02.673158+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26561	2026-09-30 21:08:07.73202+00	28	18	task_started	{"task_id": 18, "mission_id": 0}
+24483	2026-09-26 08:36:33.842201+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24492	2026-09-26 08:47:24.980126+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24497	2026-09-26 08:48:13.322804+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24502	2026-09-26 08:51:16.530926+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24507	2026-09-26 08:52:37.299864+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24510	2026-09-26 08:54:00.099132+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+25320	2026-09-27 20:30:33.37834+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25326	2026-09-27 20:32:56.37498+00	49	24	task_started	{"task_id": 24, "mission_id": 0}
+25329	2026-09-27 20:34:19.724613+00	49	24	purchase_clue	{"task_id": 24, "clue_type": 1, "mission_id": 0}
+25568	2026-09-28 17:01:41.972648+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25570	2026-09-28 17:02:01.113496+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25572	2026-09-28 17:03:00.806948+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25574	2026-09-28 17:11:41.513607+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25576	2026-09-28 17:12:57.377154+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25578	2026-09-28 17:13:32.433585+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25580	2026-09-28 17:13:45.125909+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25582	2026-09-28 17:14:00.496165+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25584	2026-09-28 17:17:48.234849+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25586	2026-09-28 17:18:05.739407+00	19	63	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 1}
+25588	2026-09-28 17:30:18.878531+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25590	2026-09-28 17:30:45.6228+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25591	2026-09-28 17:46:41.542915+00	19	38	purchase_clue	{"task_id": 3, "clue_type": 1, "mission_id": 1}
+25592	2026-09-28 17:48:51.998327+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25594	2026-09-28 17:54:19.30352+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25597	2026-09-28 17:58:47.341011+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25599	2026-09-28 17:59:19.795324+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25601	2026-09-28 17:59:23.154945+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26423	2026-09-30 16:03:23.363344+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26562	2026-09-30 21:08:13.547544+00	28	17	task_started	{"task_id": 17, "mission_id": 0}
+26565	2026-09-30 21:08:36.007196+00	28	19	task_submitted	{"task_id": 19, "is_correct": true, "mission_id": 0}
+24484	2026-09-26 08:36:56.30568+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24493	2026-09-26 08:48:10.754906+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24498	2026-09-26 08:48:13.498971+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24503	2026-09-26 08:51:37.571243+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24508	2026-09-26 08:53:42.338898+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24512	2026-09-26 08:54:15.243229+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24514	2026-09-26 08:54:43.121954+00	71	64	purchase_clue	{"task_id": 6, "clue_type": 2, "mission_id": 1}
+24519	2026-09-26 08:58:02.291367+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+25322	2026-09-27 20:30:34.091981+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25323	2026-09-27 20:31:52.651626+00	49	23	task_attempt	{"task_id": 23, "mission_id": 0}
+25331	2026-09-27 20:35:27.787071+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25600	2026-09-28 17:59:20.431388+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25602	2026-09-28 18:40:27.971618+00	5	37	task_started	{"task_id": 1, "mission_id": 1}
+25603	2026-09-28 18:42:32.643837+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25605	2026-09-28 18:43:25.338326+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25607	2026-09-28 18:44:33.15279+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25609	2026-09-28 18:45:13.818026+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25611	2026-09-28 18:51:06.187741+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25613	2026-09-28 18:51:06.905162+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25615	2026-09-28 18:51:20.456127+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25617	2026-09-28 18:54:30.925831+00	5	4	task_started	{"task_id": 3, "mission_id": 0}
+26424	2026-09-30 16:05:06.603912+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26563	2026-09-30 21:08:18.774843+00	28	19	task_started	{"task_id": 19, "mission_id": 0}
+26567	2026-09-30 21:08:43.579006+00	28	6	task_started	{"task_id": 5, "mission_id": 0}
+24485	2026-09-26 08:36:58.089896+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24488	2026-09-26 08:37:23.313097+00	71	40	task_submitted	{"task_id": 5, "is_correct": true, "mission_id": 1}
+24489	2026-09-26 08:43:55.882026+00	71	64	task_started	{"task_id": 6, "mission_id": 1}
+24494	2026-09-26 08:48:12.338654+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24499	2026-09-26 08:48:13.675741+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24504	2026-09-26 08:51:48.299887+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+25327	2026-09-27 20:33:35.995899+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25330	2026-09-27 20:35:10.826329+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25604	2026-09-28 18:43:24.090343+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25606	2026-09-28 18:43:25.513767+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25608	2026-09-28 18:44:39.916416+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25610	2026-09-28 18:50:36.941018+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25612	2026-09-28 18:51:06.746688+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25614	2026-09-28 18:51:07.042615+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25616	2026-09-28 18:51:22.258339+00	5	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+25619	2026-09-28 19:06:26.620357+00	5	4	task_attempt	{"task_id": 3, "mission_id": 0}
+25621	2026-09-28 19:07:05.591549+00	5	4	task_attempt	{"task_id": 3, "mission_id": 0}
+25623	2026-09-28 19:07:49.504331+00	5	37	task_started	{"task_id": 1, "mission_id": 1}
+25625	2026-09-28 19:11:59.845291+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25626	2026-09-28 19:12:01.567009+00	5	37	task_submitted	{"task_id": 1, "is_correct": false, "mission_id": 1}
+25629	2026-09-28 19:13:01.714822+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25631	2026-09-28 19:14:29.807508+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25634	2026-09-28 19:14:52.964439+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25635	2026-09-28 19:14:53.748727+00	5	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+25636	2026-09-28 19:14:53.971402+00	5	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+25637	2026-09-28 19:14:55.798839+00	5	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+26426	2026-09-30 16:06:11.832166+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26428	2026-09-30 16:09:03.974925+00	18	37	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 1}
+26433	2026-09-30 16:10:14.979018+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26437	2026-09-30 16:12:20.376841+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26442	2026-09-30 16:14:55.995429+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26444	2026-09-30 16:21:28.966408+00	18	63	task_started	{"task_id": 2, "mission_id": 1}
+26449	2026-09-30 16:45:47.802759+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26456	2026-09-30 16:56:48.69478+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26461	2026-09-30 17:03:50.953856+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26564	2026-09-30 21:08:34.961278+00	28	19	task_attempt	{"task_id": 19, "mission_id": 0}
+26566	2026-09-30 21:08:37.400607+00	28	20	task_started	{"task_id": 20, "mission_id": 0}
+26568	2026-09-30 21:08:54.931742+00	28	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24486	2026-09-26 08:37:06.634272+00	71	40	task_attempt	{"task_id": 5, "mission_id": 1}
+24490	2026-09-26 08:45:56.507719+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24495	2026-09-26 08:48:12.834692+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24500	2026-09-26 08:48:13.67671+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24505	2026-09-26 08:52:16.667565+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24511	2026-09-26 08:54:09.396909+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24513	2026-09-26 08:54:24.20669+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24515	2026-09-26 08:54:51.459468+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24516	2026-09-26 08:55:23.44397+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24517	2026-09-26 08:55:36.270195+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24518	2026-09-26 08:55:56.140191+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24520	2026-09-26 08:59:19.65131+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24521	2026-09-26 08:59:26.419958+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24522	2026-09-26 08:59:34.643066+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24523	2026-09-26 08:59:43.33187+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24524	2026-09-26 09:00:00.644922+00	71	64	task_attempt	{"task_id": 6, "mission_id": 1}
+24525	2026-09-26 09:00:22.812905+00	71	64	task_started	{"task_id": 6, "mission_id": 1}
+24526	2026-09-26 09:00:26.146562+00	71	64	task_submitted	{"task_id": 6, "is_correct": true, "mission_id": 1}
+24527	2026-09-26 09:02:47.123049+00	71	75	task_started	{"task_id": 7, "mission_id": 1}
+24528	2026-09-26 09:04:10.323164+00	71	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24529	2026-09-26 09:06:36.731548+00	71	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24530	2026-09-26 09:06:40.146991+00	71	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24531	2026-09-26 09:06:56.571601+00	71	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24532	2026-09-26 09:43:58.73001+00	71	75	task_started	{"task_id": 7, "mission_id": 1}
+24533	2026-09-26 09:44:00.760844+00	71	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24534	2026-09-26 09:49:38.478305+00	71	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24535	2026-09-26 09:50:25.706213+00	71	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24536	2026-09-26 09:53:04.328753+00	42	37	task_started	{"task_id": 1, "mission_id": 1}
+24537	2026-09-26 09:54:03.45834+00	71	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24538	2026-09-26 09:55:00.447678+00	71	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24539	2026-09-26 09:55:08.031625+00	71	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24540	2026-09-26 09:55:08.321369+00	71	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24541	2026-09-26 09:55:40.961112+00	71	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24542	2026-09-26 09:56:18.650189+00	71	77	task_started	{"task_id": 8, "mission_id": 1}
+24543	2026-09-26 09:57:37.560112+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24544	2026-09-26 09:58:15.387153+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24545	2026-09-26 09:58:31.87557+00	42	37	purchase_clue	{"task_id": 1, "clue_type": 1, "mission_id": 1}
+24546	2026-09-26 09:59:13.137617+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24547	2026-09-26 09:59:26.735494+00	42	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24548	2026-09-26 09:59:42.025245+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24549	2026-09-26 10:00:35.385287+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24550	2026-09-26 10:01:14.490311+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24551	2026-09-26 10:01:27.795519+00	71	77	purchase_clue	{"task_id": 8, "clue_type": 2, "mission_id": 1}
+24552	2026-09-26 10:01:36.321971+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24553	2026-09-26 10:02:00.113125+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24554	2026-09-26 10:02:18.913384+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24555	2026-09-26 10:03:52.70793+00	42	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24556	2026-09-26 10:04:04.623216+00	42	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24557	2026-09-26 10:04:05.461055+00	42	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24558	2026-09-26 10:04:46.399196+00	42	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24559	2026-09-26 10:05:07.098152+00	42	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24560	2026-09-26 10:05:24.446254+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24561	2026-09-26 10:05:26.671539+00	42	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24562	2026-09-26 10:05:38.499183+00	42	37	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 1}
+24563	2026-09-26 10:05:41.196185+00	42	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24564	2026-09-26 10:06:22.837831+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24565	2026-09-26 10:07:49.898092+00	71	77	purchase_clue	{"task_id": 8, "clue_type": 1, "mission_id": 1}
+24566	2026-09-26 10:08:11.944333+00	42	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24567	2026-09-26 10:08:19.44828+00	42	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24568	2026-09-26 10:08:58.965009+00	42	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24569	2026-09-26 10:09:18.854282+00	42	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24570	2026-09-26 10:09:21.657386+00	42	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+24571	2026-09-26 10:09:51.462505+00	42	63	task_started	{"task_id": 2, "mission_id": 1}
+24572	2026-09-26 10:11:05.38975+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24573	2026-09-26 10:11:30.657115+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+25332	2026-09-27 20:35:43.309532+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25338	2026-09-27 20:39:04.083907+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25618	2026-09-28 19:05:45.833571+00	5	4	task_attempt	{"task_id": 3, "mission_id": 0}
+25620	2026-09-28 19:06:51.095679+00	5	4	task_attempt	{"task_id": 3, "mission_id": 0}
+25622	2026-09-28 19:07:21.892835+00	5	4	task_attempt	{"task_id": 3, "mission_id": 0}
+25624	2026-09-28 19:10:22.218597+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25627	2026-09-28 19:12:14.759793+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25628	2026-09-28 19:12:15.588947+00	5	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+25630	2026-09-28 19:13:38.970406+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25632	2026-09-28 19:14:43.350959+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25633	2026-09-28 19:14:44.835492+00	5	37	task_submitted	{"task_id": 1, "is_correct": false, "mission_id": 1}
+26427	2026-09-30 16:06:35.495446+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26429	2026-09-30 16:09:45.478695+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26434	2026-09-30 16:11:17.498804+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26438	2026-09-30 16:12:36.19623+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26445	2026-09-30 16:25:56.150272+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26450	2026-09-30 16:52:37.747178+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26569	2026-09-30 21:09:00.935903+00	28	20	task_started	{"task_id": 20, "mission_id": 0}
+26573	2026-09-30 21:11:38.859409+00	28	21	task_submitted	{"task_id": 21, "is_correct": true, "mission_id": 0}
+26576	2026-09-30 21:11:57.892519+00	28	22	task_attempt	{"task_id": 22, "mission_id": 0}
+24574	2026-09-26 10:11:35.030119+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+25333	2026-09-27 20:36:21.751028+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25638	2026-09-28 20:25:47.547909+00	6	4	task_started	{"task_id": 3, "mission_id": 0}
+25639	2026-09-28 20:25:56.857273+00	6	1	task_started	{"task_id": 1, "mission_id": 0}
+26430	2026-09-30 16:09:53.869676+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26439	2026-09-30 16:12:37.327631+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26446	2026-09-30 16:41:03.605037+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26451	2026-09-30 16:53:06.042547+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26458	2026-09-30 17:00:38.861223+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26463	2026-09-30 17:08:12.541794+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26570	2026-09-30 21:09:20.817713+00	28	20	task_attempt	{"task_id": 20, "mission_id": 0}
+26572	2026-09-30 21:11:37.991101+00	28	21	task_attempt	{"task_id": 21, "mission_id": 0}
+26574	2026-09-30 21:11:39.133613+00	28	21	task_submitted	{"task_id": 21, "is_correct": true, "mission_id": 0}
+24575	2026-09-26 10:11:47.027675+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24576	2026-09-26 10:12:04.44612+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24577	2026-09-26 10:12:05.798848+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24578	2026-09-26 10:12:07.341765+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24579	2026-09-26 10:12:12.933482+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24580	2026-09-26 10:12:20.093494+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24581	2026-09-26 10:12:23.00702+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24582	2026-09-26 10:15:49.542088+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24583	2026-09-26 10:15:57.726857+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24584	2026-09-26 10:19:47.703345+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24585	2026-09-26 10:21:42.414437+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24586	2026-09-26 10:25:55.654047+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24587	2026-09-26 10:26:20.733959+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24588	2026-09-26 10:26:22.220031+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24589	2026-09-26 10:26:39.144317+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24590	2026-09-26 10:26:42.603495+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24591	2026-09-26 10:26:43.539052+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24592	2026-09-26 10:27:24.619051+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24593	2026-09-26 10:28:08.400269+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24594	2026-09-26 10:28:13.37613+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24595	2026-09-26 10:28:57.263276+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24596	2026-09-26 10:29:00.776085+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24597	2026-09-26 10:29:32.327374+00	42	63	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 1}
+24598	2026-09-26 10:29:54.823643+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24599	2026-09-26 10:30:04.475919+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24600	2026-09-26 10:30:27.307602+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24601	2026-09-26 10:30:33.539998+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24602	2026-09-26 10:30:35.201058+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24603	2026-09-26 10:30:51.675676+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24604	2026-09-26 10:31:30.678633+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24605	2026-09-26 10:31:44.344408+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24606	2026-09-26 10:32:16.273083+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24607	2026-09-26 10:32:33.669112+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24608	2026-09-26 10:32:49.195802+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24609	2026-09-26 10:32:57.851942+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24610	2026-09-26 10:32:59.044636+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24611	2026-09-26 10:32:59.830157+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24612	2026-09-26 10:32:59.988212+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24613	2026-09-26 10:33:00.284006+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24614	2026-09-26 10:33:00.476724+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24615	2026-09-26 10:33:00.628005+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24616	2026-09-26 10:33:00.780398+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24617	2026-09-26 10:33:00.948842+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24618	2026-09-26 10:33:01.108072+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24619	2026-09-26 10:33:25.111803+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24620	2026-09-26 10:33:52.020963+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24621	2026-09-26 10:33:52.875844+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24622	2026-09-26 10:34:11.358646+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24623	2026-09-26 10:34:14.101561+00	42	63	purchase_clue	{"task_id": 2, "clue_type": 1, "mission_id": 1}
+24624	2026-09-26 10:34:43.672694+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24625	2026-09-26 10:35:08.117277+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24626	2026-09-26 10:35:09.004595+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24627	2026-09-26 10:35:09.164125+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24628	2026-09-26 10:35:52.413035+00	71	77	task_started	{"task_id": 8, "mission_id": 1}
+24629	2026-09-26 10:35:58.418487+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24630	2026-09-26 10:36:00.892972+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24631	2026-09-26 10:36:12.376687+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24632	2026-09-26 10:36:14.445345+00	71	77	task_started	{"task_id": 8, "mission_id": 1}
+24633	2026-09-26 10:36:49.868192+00	71	77	task_started	{"task_id": 8, "mission_id": 1}
+24634	2026-09-26 10:36:53.544044+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24635	2026-09-26 10:37:11.181682+00	71	77	task_started	{"task_id": 8, "mission_id": 1}
+24636	2026-09-26 10:37:34.097608+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24637	2026-09-26 10:38:32.573462+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24638	2026-09-26 10:38:37.509672+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24639	2026-09-26 10:42:33.32299+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24640	2026-09-26 10:43:00.589166+00	71	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24643	2026-09-26 10:44:02.641682+00	71	55	task_started	{"task_id": 1, "mission_id": 2}
+24647	2026-09-26 10:50:01.386276+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24652	2026-09-26 10:53:04.375866+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24657	2026-09-26 10:57:32.429308+00	71	38	task_started	{"task_id": 3, "mission_id": 1}
+25334	2026-09-27 20:36:54.045262+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25341	2026-09-27 20:39:46.057668+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25344	2026-09-27 20:41:08.430296+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25348	2026-09-27 20:42:46.566419+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25354	2026-09-27 20:47:12.733906+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25361	2026-09-27 20:51:33.65591+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25366	2026-09-27 21:03:32.81761+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25371	2026-09-27 21:08:20.834804+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25640	2026-09-29 07:49:33.337963+00	13	37	task_started	{"task_id": 1, "mission_id": 1}
+25642	2026-09-29 07:54:07.466401+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25644	2026-09-29 07:54:23.869187+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25646	2026-09-29 07:54:43.822114+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25648	2026-09-29 07:54:49.810229+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25650	2026-09-29 07:55:09.148286+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25652	2026-09-29 07:55:09.734504+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25654	2026-09-29 07:55:56.552753+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25656	2026-09-29 07:57:19.909617+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25658	2026-09-29 07:57:25.600793+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25660	2026-09-29 07:57:54.803129+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25662	2026-09-29 07:58:05.33887+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25664	2026-09-29 07:58:29.895521+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25665	2026-09-29 07:59:19.333482+00	13	63	task_started	{"task_id": 2, "mission_id": 1}
+25666	2026-09-29 07:59:58.590038+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25668	2026-09-29 08:02:17.739447+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25670	2026-09-29 08:04:52.259184+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25672	2026-09-29 08:06:42.751461+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25674	2026-09-29 08:07:18.350123+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25676	2026-09-29 08:08:06.617544+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25678	2026-09-29 08:08:22.349511+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25680	2026-09-29 08:08:47.987077+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25682	2026-09-29 08:10:18.743569+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25684	2026-09-29 08:10:46.719541+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26431	2026-09-30 16:09:55.454139+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26435	2026-09-30 16:11:52.372666+00	18	37	purchase_clue	{"task_id": 1, "clue_type": 1, "mission_id": 1}
+26440	2026-09-30 16:12:38.151447+00	18	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26443	2026-09-30 16:14:59.666668+00	18	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+26447	2026-09-30 16:42:11.254275+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26452	2026-09-30 16:55:02.057077+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26454	2026-09-30 16:56:02.905333+00	18	63	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 1}
+26459	2026-09-30 17:01:16.883219+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26464	2026-09-30 17:08:13.363689+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26571	2026-09-30 21:11:25.724582+00	28	21	task_started	{"task_id": 21, "mission_id": 0}
+24641	2026-09-26 10:43:01.218119+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24648	2026-09-26 10:51:19.296289+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24653	2026-09-26 10:53:25.36693+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24655	2026-09-26 10:53:54.480273+00	42	38	task_started	{"task_id": 3, "mission_id": 1}
+25335	2026-09-27 20:37:48.533781+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25641	2026-09-29 07:52:59.999574+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25643	2026-09-29 07:54:17.943527+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25645	2026-09-29 07:54:39.180527+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25647	2026-09-29 07:54:44.408922+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25649	2026-09-29 07:54:50.234456+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25651	2026-09-29 07:55:09.551137+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25653	2026-09-29 07:55:13.889174+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25655	2026-09-29 07:57:04.240487+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25657	2026-09-29 07:57:20.355791+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25659	2026-09-29 07:57:54.288644+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25661	2026-09-29 07:58:04.538886+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25663	2026-09-29 07:58:25.209653+00	13	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25667	2026-09-29 07:59:58.904407+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25669	2026-09-29 08:03:01.65916+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25671	2026-09-29 08:05:21.416258+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25673	2026-09-29 08:06:55.161672+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25675	2026-09-29 08:07:24.251884+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25677	2026-09-29 08:08:07.226196+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25679	2026-09-29 08:08:22.802489+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25681	2026-09-29 08:09:17.851836+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25683	2026-09-29 08:10:43.181914+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25685	2026-09-29 08:10:55.172541+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25687	2026-09-29 08:11:25.315149+00	13	63	task_started	{"task_id": 2, "mission_id": 1}
+25688	2026-09-29 08:11:57.874244+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26457	2026-09-30 16:57:38.751268+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26462	2026-09-30 17:05:01.258585+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26467	2026-09-30 17:11:22.07959+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26472	2026-09-30 17:18:53.829956+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26477	2026-09-30 17:19:46.3796+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26482	2026-09-30 17:26:32.214314+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26485	2026-09-30 17:28:51.978356+00	18	63	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 1}
+26575	2026-09-30 21:11:39.856408+00	28	22	task_started	{"task_id": 22, "mission_id": 0}
+24642	2026-09-26 10:43:06.419068+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24644	2026-09-26 10:46:18.112088+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24649	2026-09-26 10:51:32.735659+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24659	2026-09-26 10:59:02.547185+00	42	40	task_started	{"task_id": 5, "mission_id": 1}
+25336	2026-09-27 20:38:58.006439+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25337	2026-09-27 20:39:03.023756+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25686	2026-09-29 08:11:22.142596+00	13	63	task_started	{"task_id": 2, "mission_id": 1}
+25689	2026-09-29 08:12:20.065065+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25690	2026-09-29 08:12:45.177727+00	13	63	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 1}
+25692	2026-09-29 08:13:20.566189+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25694	2026-09-29 08:13:21.562164+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25696	2026-09-29 08:15:15.70588+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25698	2026-09-29 08:16:39.303139+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25700	2026-09-29 08:29:27.569342+00	13	63	task_started	{"task_id": 2, "mission_id": 1}
+26460	2026-09-30 17:01:17.610329+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26465	2026-09-30 17:09:01.145191+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26470	2026-09-30 17:14:14.439307+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26475	2026-09-30 17:19:35.635448+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26480	2026-09-30 17:24:53.711509+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26577	2026-09-30 21:12:04.202146+00	28	23	task_started	{"task_id": 23, "mission_id": 0}
+24645	2026-09-26 10:47:13.079096+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24650	2026-09-26 10:51:44.615314+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24656	2026-09-26 10:56:56.809095+00	42	38	purchase_clue	{"task_id": 3, "clue_type": 1, "mission_id": 1}
+25339	2026-09-27 20:39:12.477024+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25340	2026-09-27 20:39:16.724141+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25343	2026-09-27 20:40:54.686886+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25346	2026-09-27 20:42:18.607753+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25691	2026-09-29 08:13:16.984134+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25693	2026-09-29 08:13:21.398861+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25695	2026-09-29 08:13:28.195091+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25697	2026-09-29 08:15:31.869503+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25699	2026-09-29 08:16:42.477169+00	13	63	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 1}
+25701	2026-09-29 08:29:37.178096+00	13	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26466	2026-09-30 17:09:07.359123+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26471	2026-09-30 17:16:26.177646+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26476	2026-09-30 17:19:45.906692+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26481	2026-09-30 17:25:46.946778+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26578	2026-09-30 21:12:36.146934+00	28	23	task_attempt	{"task_id": 23, "mission_id": 0}
+24646	2026-09-26 10:49:00.471021+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24651	2026-09-26 10:52:42.558322+00	42	63	task_attempt	{"task_id": 2, "mission_id": 1}
+24654	2026-09-26 10:53:44.234787+00	42	63	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 1}
+24658	2026-09-26 10:57:56.353993+00	42	39	task_started	{"task_id": 4, "mission_id": 1}
+24661	2026-09-26 11:06:48.620228+00	71	38	task_started	{"task_id": 3, "mission_id": 1}
+24662	2026-09-26 12:07:11.985449+00	19	37	task_started	{"task_id": 1, "mission_id": 1}
+24663	2026-09-26 12:08:26.181306+00	19	37	task_started	{"task_id": 1, "mission_id": 1}
+24664	2026-09-26 12:11:49.373801+00	19	37	task_started	{"task_id": 1, "mission_id": 1}
+24665	2026-09-26 12:17:13.443945+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24666	2026-09-26 12:17:27.613777+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24667	2026-09-26 12:17:30.652505+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24668	2026-09-26 12:20:38.043935+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24669	2026-09-26 12:21:27.392762+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24670	2026-09-26 12:21:34.406256+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24671	2026-09-26 12:21:57.137982+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24672	2026-09-26 12:22:10.783599+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24673	2026-09-26 12:22:38.19756+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24674	2026-09-26 12:22:52.828985+00	19	37	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 1}
+24675	2026-09-26 15:17:45.672044+00	49	6	task_started	{"task_id": 5, "mission_id": 0}
+24676	2026-09-26 15:19:40.22483+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24677	2026-09-26 15:22:31.627371+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24678	2026-09-26 15:26:02.481827+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24679	2026-09-26 15:26:11.565307+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24680	2026-09-26 15:31:31.281729+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24681	2026-09-26 15:31:51.498346+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24682	2026-09-26 15:34:00.116726+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24683	2026-09-26 15:36:38.180342+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24684	2026-09-26 15:36:44.048723+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24685	2026-09-26 15:37:31.381975+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24686	2026-09-26 15:37:53.347566+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24687	2026-09-26 15:38:14.591701+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24688	2026-09-26 15:38:19.264779+00	49	6	task_started	{"task_id": 5, "mission_id": 0}
+24689	2026-09-26 15:38:26.20306+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24690	2026-09-26 15:39:26.354039+00	49	6	task_started	{"task_id": 5, "mission_id": 0}
+24691	2026-09-26 15:39:28.237624+00	49	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24692	2026-09-26 15:39:44.353416+00	49	7	task_started	{"task_id": 6, "mission_id": 0}
+24693	2026-09-26 15:46:40.964835+00	49	7	task_attempt	{"task_id": 6, "mission_id": 0}
+24694	2026-09-26 15:46:54.517719+00	49	7	task_attempt	{"task_id": 6, "mission_id": 0}
+24695	2026-09-26 15:47:09.534961+00	49	7	task_attempt	{"task_id": 6, "mission_id": 0}
+24696	2026-09-26 15:47:16.268946+00	49	7	task_submitted	{"task_id": 6, "is_correct": true, "mission_id": 0}
+24697	2026-09-26 15:47:18.806618+00	49	8	task_started	{"task_id": 7, "mission_id": 0}
+24698	2026-09-26 15:47:25.002322+00	49	7	task_started	{"task_id": 6, "mission_id": 0}
+24699	2026-09-26 15:49:37.067073+00	49	8	task_started	{"task_id": 7, "mission_id": 0}
+24700	2026-09-26 15:52:08.88783+00	49	8	task_attempt	{"task_id": 7, "mission_id": 0}
+24701	2026-09-26 15:52:34.180679+00	49	8	task_attempt	{"task_id": 7, "mission_id": 0}
+24702	2026-09-26 15:52:36.154856+00	49	8	task_submitted	{"task_id": 7, "is_correct": true, "mission_id": 0}
+24703	2026-09-26 15:53:49.884182+00	49	8	task_attempt	{"task_id": 7, "mission_id": 0}
+24704	2026-09-26 15:53:53.823648+00	49	8	task_attempt	{"task_id": 7, "mission_id": 0}
+24705	2026-09-26 15:53:56.425911+00	49	8	task_attempt	{"task_id": 7, "mission_id": 0}
+24706	2026-09-26 15:53:56.809251+00	49	8	task_attempt	{"task_id": 7, "mission_id": 0}
+24707	2026-09-26 15:53:59.74115+00	49	8	task_attempt	{"task_id": 7, "mission_id": 0}
+24708	2026-09-26 15:54:09.447019+00	49	8	task_attempt	{"task_id": 7, "mission_id": 0}
+24709	2026-09-26 15:54:56.218448+00	49	8	task_attempt	{"task_id": 7, "mission_id": 0}
+24710	2026-09-26 15:54:58.900088+00	49	9	task_started	{"task_id": 8, "mission_id": 0}
+24711	2026-09-26 15:56:01.104943+00	49	9	task_attempt	{"task_id": 8, "mission_id": 0}
+24712	2026-09-26 15:56:27.167192+00	49	9	task_attempt	{"task_id": 8, "mission_id": 0}
+24713	2026-09-26 15:56:29.125528+00	49	9	task_attempt	{"task_id": 8, "mission_id": 0}
+24714	2026-09-26 15:56:32.306883+00	49	9	task_attempt	{"task_id": 8, "mission_id": 0}
+24715	2026-09-26 15:56:46.968749+00	49	9	task_attempt	{"task_id": 8, "mission_id": 0}
+24716	2026-09-26 15:57:04.029763+00	49	9	task_attempt	{"task_id": 8, "mission_id": 0}
+24717	2026-09-26 15:57:07.39716+00	49	9	task_submitted	{"task_id": 8, "is_correct": true, "mission_id": 0}
+24718	2026-09-26 15:57:08.856258+00	49	10	task_started	{"task_id": 9, "mission_id": 0}
+24719	2026-09-26 15:58:34.901287+00	49	10	task_attempt	{"task_id": 9, "mission_id": 0}
+24720	2026-09-26 15:58:45.713574+00	49	10	task_submitted	{"task_id": 9, "is_correct": true, "mission_id": 0}
+24721	2026-09-26 15:59:43.529228+00	49	11	task_started	{"task_id": 10, "mission_id": 0}
+24722	2026-09-26 16:01:58.967028+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24727	2026-09-26 16:04:14.007824+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24732	2026-09-26 16:06:31.637149+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24733	2026-09-26 16:06:36.90193+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24735	2026-09-26 16:06:42.533598+00	49	11	purchase_clue	{"task_id": 10, "clue_type": 1, "mission_id": 0}
+24738	2026-09-26 16:07:11.268314+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24741	2026-09-26 16:07:28.983755+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24744	2026-09-26 16:07:46.935668+00	49	12	task_started	{"task_id": 11, "mission_id": 0}
+25342	2026-09-27 20:40:19.873577+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25702	2026-09-29 11:18:22.969826+00	4	23	task_started	{"task_id": 23, "mission_id": 0}
+26468	2026-09-30 17:11:33.474494+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26473	2026-09-30 17:19:30.545778+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26478	2026-09-30 17:19:46.610605+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26483	2026-09-30 17:27:29.549038+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26579	2026-09-30 21:12:44.419677+00	28	24	task_started	{"task_id": 24, "mission_id": 0}
+24723	2026-09-26 16:02:37.298338+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24728	2026-09-26 16:04:16.675814+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24736	2026-09-26 16:06:54.569789+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24739	2026-09-26 16:07:14.37269+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24742	2026-09-26 16:07:42.817067+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24745	2026-09-26 16:09:13.01252+00	49	12	task_attempt	{"task_id": 11, "mission_id": 0}
+24747	2026-09-26 16:09:22.532162+00	49	13	task_started	{"task_id": 12, "mission_id": 0}
+25345	2026-09-27 20:42:13.122189+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25703	2026-09-29 11:26:21.273346+00	4	23	task_attempt	{"task_id": 23, "mission_id": 0}
+26469	2026-09-30 17:11:57.65417+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26474	2026-09-30 17:19:31.56458+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26479	2026-09-30 17:21:40.822087+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26484	2026-09-30 17:28:35.792231+00	18	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26486	2026-09-30 17:33:27.293147+00	18	38	task_started	{"task_id": 3, "mission_id": 1}
+26580	2026-09-30 21:13:07.657898+00	28	24	task_attempt	{"task_id": 24, "mission_id": 0}
+24724	2026-09-26 16:02:45.166481+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24729	2026-09-26 16:04:18.904681+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+25347	2026-09-27 20:42:43.225997+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25704	2026-09-29 17:56:49.146028+00	13	63	task_started	{"task_id": 2, "mission_id": 1}
+26487	2026-09-30 20:21:38.399254+00	18	38	task_started	{"task_id": 3, "mission_id": 1}
+26491	2026-09-30 20:36:24.013202+00	18	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26494	2026-09-30 20:38:06.543041+00	18	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26501	2026-09-30 21:01:08.518306+00	28	4	task_attempt	{"task_id": 3, "mission_id": 0}
+26503	2026-09-30 21:01:34.585336+00	28	4	task_submitted	{"task_id": 3, "is_correct": true, "mission_id": 0}
+26581	2026-09-30 21:13:17.925585+00	28	24	task_attempt	{"task_id": 24, "mission_id": 0}
+24725	2026-09-26 16:04:09.024072+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24730	2026-09-26 16:04:28.035309+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24734	2026-09-26 16:06:39.902364+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+25349	2026-09-27 20:42:49.129784+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25352	2026-09-27 20:46:46.589929+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25359	2026-09-27 20:48:55.102687+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25364	2026-09-27 21:02:52.323325+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25369	2026-09-27 21:07:52.269266+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25374	2026-09-27 21:10:12.433217+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25377	2026-09-27 21:11:49.155773+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25380	2026-09-27 21:15:38.110544+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25383	2026-09-27 21:17:46.491149+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25386	2026-09-27 21:19:02.418984+00	49	26	task_started	{"task_id": 26, "mission_id": 0}
+25387	2026-09-27 21:19:22.680593+00	49	26	task_started	{"task_id": 26, "mission_id": 0}
+25705	2026-09-30 09:45:26.00367+00	33	37	task_started	{"task_id": 1, "mission_id": 1}
+25706	2026-09-30 10:12:33.70621+00	47	37	task_started	{"task_id": 1, "mission_id": 1}
+25707	2026-09-30 10:14:45.026009+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25708	2026-09-30 10:18:17.232547+00	62	37	task_started	{"task_id": 1, "mission_id": 1}
+25710	2026-09-30 10:20:07.208751+00	62	37	task_started	{"task_id": 1, "mission_id": 1}
+25712	2026-09-30 10:21:44.034717+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25714	2026-09-30 10:26:30.615282+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25716	2026-09-30 10:28:05.245751+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25718	2026-09-30 10:29:07.193415+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25720	2026-09-30 10:31:44.314491+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25722	2026-09-30 10:32:44.508975+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25724	2026-09-30 10:33:34.53395+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25726	2026-09-30 10:33:52.314347+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25728	2026-09-30 10:35:11.699467+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25730	2026-09-30 10:35:22.231034+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25732	2026-09-30 10:35:55.35899+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26488	2026-09-30 20:28:35.288977+00	18	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26495	2026-09-30 20:39:04.722821+00	18	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26498	2026-09-30 20:56:05.283681+00	28	4	task_started	{"task_id": 3, "mission_id": 0}
+26582	2026-09-30 21:13:22.968586+00	28	24	task_attempt	{"task_id": 24, "mission_id": 0}
+24726	2026-09-26 16:04:12.005021+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24731	2026-09-26 16:05:40.257286+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24737	2026-09-26 16:07:00.056518+00	49	11	task_attempt	{"task_id": 10, "mission_id": 0}
+24740	2026-09-26 16:07:15.694045+00	49	11	task_submitted	{"task_id": 10, "is_correct": true, "mission_id": 0}
+24743	2026-09-26 16:07:44.213513+00	49	11	task_submitted	{"task_id": 10, "is_correct": true, "mission_id": 0}
+24746	2026-09-26 16:09:15.733339+00	49	12	task_submitted	{"task_id": 11, "is_correct": true, "mission_id": 0}
+24748	2026-09-26 18:02:57.322851+00	49	13	task_started	{"task_id": 12, "mission_id": 0}
+24749	2026-09-26 18:15:05.998588+00	49	13	task_attempt	{"task_id": 12, "mission_id": 0}
+24750	2026-09-26 18:15:38.060646+00	49	13	task_attempt	{"task_id": 12, "mission_id": 0}
+24751	2026-09-26 18:16:11.729359+00	49	13	purchase_clue	{"task_id": 12, "clue_type": 1, "mission_id": 0}
+24752	2026-09-26 18:21:59.445157+00	49	13	task_attempt	{"task_id": 12, "mission_id": 0}
+24753	2026-09-26 18:24:21.911979+00	49	13	task_started	{"task_id": 12, "mission_id": 0}
+24754	2026-09-26 18:24:26.73472+00	49	13	task_started	{"task_id": 12, "mission_id": 0}
+24755	2026-09-26 18:25:59.393908+00	49	14	task_started	{"task_id": 13, "mission_id": 0}
+24756	2026-09-26 18:35:59.184125+00	49	14	purchase_clue	{"task_id": 13, "clue_type": 1, "mission_id": 0}
+24757	2026-09-26 18:37:00.669827+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24758	2026-09-26 18:37:16.865076+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24759	2026-09-26 18:37:28.139077+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24760	2026-09-26 18:37:45.046871+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24761	2026-09-26 18:37:48.452575+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24762	2026-09-26 18:37:57.183512+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24763	2026-09-26 18:37:58.064023+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24764	2026-09-26 18:38:32.12382+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24765	2026-09-26 18:38:32.380372+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24766	2026-09-26 18:38:53.809981+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24767	2026-09-26 18:39:02.168171+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24768	2026-09-26 18:40:41.811938+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24769	2026-09-26 18:40:53.231051+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24770	2026-09-26 18:41:57.671031+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24771	2026-09-26 18:42:09.389692+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24772	2026-09-26 18:42:17.468742+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24773	2026-09-26 18:42:50.046549+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24774	2026-09-26 18:43:52.035062+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24775	2026-09-26 18:44:02.945959+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24776	2026-09-26 18:44:10.957365+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24777	2026-09-26 18:44:11.07281+00	49	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24778	2026-09-26 18:44:48.694968+00	49	15	task_started	{"task_id": 14, "mission_id": 0}
+24779	2026-09-26 18:45:00.443126+00	49	14	task_started	{"task_id": 13, "mission_id": 0}
+24780	2026-09-26 18:45:05.265634+00	49	15	task_started	{"task_id": 14, "mission_id": 0}
+24781	2026-09-26 18:45:33.454602+00	49	15	task_attempt	{"task_id": 14, "mission_id": 0}
+24782	2026-09-26 18:45:54.354804+00	49	15	task_attempt	{"task_id": 14, "mission_id": 0}
+24783	2026-09-26 18:46:23.687008+00	49	15	purchase_clue	{"task_id": 14, "clue_type": 1, "mission_id": 0}
+24784	2026-09-26 18:47:49.558672+00	49	15	task_attempt	{"task_id": 14, "mission_id": 0}
+24785	2026-09-26 18:48:11.203838+00	49	15	task_attempt	{"task_id": 14, "mission_id": 0}
+24786	2026-09-26 18:48:20.608168+00	49	15	task_attempt	{"task_id": 14, "mission_id": 0}
+24787	2026-09-26 18:48:23.092555+00	49	15	task_submitted	{"task_id": 14, "is_correct": true, "mission_id": 0}
+24788	2026-09-26 18:48:25.295204+00	49	3	task_started	{"task_id": 15, "mission_id": 0}
+24789	2026-09-26 18:48:41.190484+00	49	15	task_started	{"task_id": 14, "mission_id": 0}
+24790	2026-09-26 18:49:15.192813+00	49	3	task_started	{"task_id": 15, "mission_id": 0}
+24791	2026-09-26 18:56:58.579356+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24792	2026-09-26 18:57:32.139317+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24793	2026-09-26 18:57:42.033953+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24794	2026-09-26 18:57:49.767694+00	49	3	purchase_clue	{"task_id": 15, "clue_type": 1, "mission_id": 0}
+24795	2026-09-26 18:58:11.297794+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24796	2026-09-26 18:58:16.022035+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24797	2026-09-26 18:58:27.251297+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24798	2026-09-26 18:58:30.942094+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24799	2026-09-26 18:58:40.86659+00	49	3	task_started	{"task_id": 15, "mission_id": 0}
+24800	2026-09-26 18:58:49.308369+00	49	3	purchase_clue	{"task_id": 15, "clue_type": 2, "mission_id": 0}
+24801	2026-09-26 18:59:21.995182+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24802	2026-09-26 18:59:58.684742+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24803	2026-09-26 19:00:25.151464+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24804	2026-09-26 19:00:50.299412+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24805	2026-09-26 19:01:17.584775+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24806	2026-09-26 19:02:09.256361+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24807	2026-09-26 19:02:20.382511+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+25350	2026-09-27 20:45:34.55514+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25353	2026-09-27 20:47:08.979333+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25711	2026-09-30 10:21:01.273582+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25713	2026-09-30 10:25:42.166043+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25715	2026-09-30 10:27:52.073351+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25717	2026-09-30 10:28:49.78612+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25719	2026-09-30 10:29:16.3038+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25721	2026-09-30 10:32:13.559102+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25723	2026-09-30 10:33:15.759066+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25725	2026-09-30 10:33:48.690912+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25727	2026-09-30 10:34:02.898645+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25729	2026-09-30 10:35:17.683869+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25731	2026-09-30 10:35:35.359146+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25733	2026-09-30 10:36:05.198618+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25735	2026-09-30 10:36:54.204677+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25736	2026-09-30 10:37:34.993845+00	47	37	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 1}
+25738	2026-09-30 10:38:13.915347+00	62	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+25740	2026-09-30 10:38:58.066197+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26489	2026-09-30 20:29:55.817962+00	18	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26496	2026-09-30 20:42:12.971205+00	18	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26499	2026-09-30 21:01:01.530771+00	28	4	task_attempt	{"task_id": 3, "mission_id": 0}
+26502	2026-09-30 21:01:33.040926+00	28	4	task_attempt	{"task_id": 3, "mission_id": 0}
+26583	2026-09-30 21:13:28.854593+00	28	24	task_attempt	{"task_id": 24, "mission_id": 0}
+26585	2026-09-30 21:13:49.560647+00	28	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24808	2026-09-26 19:02:31.068673+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24809	2026-09-26 19:02:47.36257+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24810	2026-09-26 19:03:18.664023+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24811	2026-09-26 19:03:37.134276+00	49	3	task_started	{"task_id": 15, "mission_id": 0}
+24812	2026-09-26 19:03:38.571784+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24813	2026-09-26 19:03:57.391584+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24814	2026-09-26 19:04:59.578911+00	49	3	task_started	{"task_id": 15, "mission_id": 0}
+24815	2026-09-26 19:05:13.778696+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24816	2026-09-26 19:05:21.906116+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24817	2026-09-26 19:05:22.17811+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24818	2026-09-26 19:07:04.392579+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24819	2026-09-26 19:07:34.178383+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24820	2026-09-26 19:07:45.795811+00	49	3	task_attempt	{"task_id": 15, "mission_id": 0}
+24821	2026-09-26 19:07:47.228045+00	49	3	task_submitted	{"task_id": 15, "is_correct": true, "mission_id": 0}
+24822	2026-09-26 19:07:50.951871+00	49	16	task_started	{"task_id": 16, "mission_id": 0}
+24823	2026-09-27 08:57:34.461687+00	6	1	task_started	{"task_id": 1, "mission_id": 0}
+24824	2026-09-27 09:53:55.327011+00	71	41	task_started	{"task_id": 9, "mission_id": 1}
+24825	2026-09-27 09:55:02.075077+00	6	2	task_started	{"task_id": 2, "mission_id": 0}
+24826	2026-09-27 09:59:24.082745+00	71	70	task_started	{"task_id": 13, "mission_id": 1}
+24827	2026-09-27 09:59:44.762901+00	71	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24828	2026-09-27 10:03:16.250705+00	71	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24829	2026-09-27 10:04:54.133373+00	71	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24830	2026-09-27 10:05:09.381092+00	71	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24831	2026-09-27 10:05:27.368956+00	71	70	task_attempt	{"task_id": 13, "mission_id": 1}
+24832	2026-09-27 10:05:32.637567+00	71	70	task_submitted	{"task_id": 13, "is_correct": true, "mission_id": 1}
+24833	2026-09-27 10:06:09.148272+00	71	54	task_started	{"task_id": 14, "mission_id": 1}
+24834	2026-09-27 10:07:20.417009+00	71	69	task_started	{"task_id": 11, "mission_id": 1}
+24835	2026-09-27 10:07:51.867101+00	71	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24836	2026-09-27 10:15:35.375902+00	6	1	task_started	{"task_id": 1, "mission_id": 0}
+24837	2026-09-27 10:20:32.345955+00	6	1	task_attempt	{"task_id": 1, "mission_id": 0}
+24838	2026-09-27 10:21:14.205013+00	6	1	task_attempt	{"task_id": 1, "mission_id": 0}
+24839	2026-09-27 10:27:33.563876+00	6	1	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 0}
+24840	2026-09-27 10:27:41.263046+00	6	2	task_started	{"task_id": 2, "mission_id": 0}
+24841	2026-09-27 10:29:32.015221+00	6	2	task_attempt	{"task_id": 2, "mission_id": 0}
+24842	2026-09-27 14:24:42.470529+00	19	37	task_started	{"task_id": 1, "mission_id": 1}
+24843	2026-09-27 14:24:46.843063+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24844	2026-09-27 14:25:08.461022+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24845	2026-09-27 14:26:19.99051+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24846	2026-09-27 14:26:29.434689+00	19	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24847	2026-09-27 14:27:53.724658+00	19	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+24848	2026-09-27 14:31:17.059213+00	19	63	task_started	{"task_id": 2, "mission_id": 1}
+24849	2026-09-27 14:32:05.41757+00	6	2	task_attempt	{"task_id": 2, "mission_id": 0}
+24850	2026-09-27 14:34:36.361723+00	6	2	task_attempt	{"task_id": 2, "mission_id": 0}
+24851	2026-09-27 14:35:26.043208+00	6	2	task_attempt	{"task_id": 2, "mission_id": 0}
+24852	2026-09-27 14:35:35.818209+00	6	2	task_attempt	{"task_id": 2, "mission_id": 0}
+24853	2026-09-27 14:35:39.916164+00	6	2	task_attempt	{"task_id": 2, "mission_id": 0}
+24854	2026-09-27 14:35:45.842162+00	6	2	task_attempt	{"task_id": 2, "mission_id": 0}
+24855	2026-09-27 14:36:47.641162+00	6	2	task_started	{"task_id": 2, "mission_id": 0}
+24856	2026-09-27 14:36:50.841312+00	6	2	task_attempt	{"task_id": 2, "mission_id": 0}
+24857	2026-09-27 14:37:01.272591+00	6	2	task_attempt	{"task_id": 2, "mission_id": 0}
+24858	2026-09-27 14:37:52.116467+00	6	2	task_started	{"task_id": 2, "mission_id": 0}
+24859	2026-09-27 14:38:00.191207+00	6	2	task_attempt	{"task_id": 2, "mission_id": 0}
+24860	2026-09-27 14:38:01.627917+00	6	2	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 0}
+24861	2026-09-27 14:38:07.075392+00	6	4	task_started	{"task_id": 3, "mission_id": 0}
+24862	2026-09-27 14:38:17.95319+00	6	4	task_started	{"task_id": 3, "mission_id": 0}
+24863	2026-09-27 14:42:55.961853+00	5	37	task_started	{"task_id": 1, "mission_id": 1}
+24864	2026-09-27 14:43:23.615904+00	5	37	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 1}
+24865	2026-09-27 14:44:43.240942+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24866	2026-09-27 14:45:01.432843+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24867	2026-09-27 14:45:38.268161+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24868	2026-09-27 14:45:38.732984+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24869	2026-09-27 14:46:13.397759+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24870	2026-09-27 14:46:13.539572+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24871	2026-09-27 14:48:35.702148+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24872	2026-09-27 14:49:12.85264+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24873	2026-09-27 14:49:15.568888+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24877	2026-09-27 14:51:15.504892+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24885	2026-09-27 15:10:21.960751+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24892	2026-09-27 15:13:39.365766+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24897	2026-09-27 15:14:24.088646+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24902	2026-09-27 15:16:21.620827+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24907	2026-09-27 15:18:51.81997+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24912	2026-09-27 15:20:29.126406+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24914	2026-09-27 15:22:05.200743+00	15	77	task_started	{"task_id": 8, "mission_id": 1}
+24918	2026-09-27 15:24:58.644855+00	15	77	purchase_clue	{"task_id": 8, "clue_type": 1, "mission_id": 1}
+24923	2026-09-27 15:31:32.210293+00	15	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24928	2026-09-27 15:34:01.930585+00	15	41	task_started	{"task_id": 9, "mission_id": 1}
+25351	2026-09-27 20:45:45.161295+00	49	24	task_attempt	{"task_id": 24, "mission_id": 0}
+25734	2026-09-30 10:36:53.37241+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25737	2026-09-30 10:38:02.158542+00	62	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25739	2026-09-30 10:38:27.794072+00	47	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25741	2026-09-30 10:39:03.968812+00	47	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+25742	2026-09-30 10:42:21.240413+00	47	63	task_started	{"task_id": 2, "mission_id": 1}
+25743	2026-09-30 10:43:05.13297+00	47	63	task_started	{"task_id": 2, "mission_id": 1}
+26490	2026-09-30 20:31:03.444553+00	18	38	purchase_clue	{"task_id": 3, "clue_type": 2, "mission_id": 1}
+26493	2026-09-30 20:37:47.926262+00	18	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26500	2026-09-30 21:01:06.96774+00	28	4	task_attempt	{"task_id": 3, "mission_id": 0}
+26505	2026-09-30 21:02:11.450913+00	28	6	task_attempt	{"task_id": 5, "mission_id": 0}
+26506	2026-09-30 21:02:17.364962+00	28	6	task_attempt	{"task_id": 5, "mission_id": 0}
+26584	2026-09-30 21:13:34.280178+00	28	37	task_started	{"task_id": 1, "mission_id": 1}
+24874	2026-09-27 14:49:45.95314+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24878	2026-09-27 14:51:32.365864+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24882	2026-09-27 14:56:46.217188+00	15	75	task_started	{"task_id": 7, "mission_id": 1}
+24886	2026-09-27 15:10:33.194567+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24888	2026-09-27 15:12:24.005559+00	15	75	purchase_clue	{"task_id": 7, "clue_type": 2, "mission_id": 1}
+24893	2026-09-27 15:13:50.512524+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24898	2026-09-27 15:15:56.528596+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24903	2026-09-27 15:16:52.00402+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24908	2026-09-27 15:18:56.564205+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24915	2026-09-27 15:24:03.236054+00	15	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24919	2026-09-27 15:26:47.497169+00	15	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24926	2026-09-27 15:32:35.183303+00	15	77	purchase_clue	{"task_id": 8, "clue_type": 2, "mission_id": 1}
+25355	2026-09-27 20:47:20.223588+00	49	25	task_started	{"task_id": 25, "mission_id": 0}
+25357	2026-09-27 20:48:01.531148+00	49	25	purchase_clue	{"task_id": 25, "clue_type": 1, "mission_id": 0}
+25362	2026-09-27 21:02:34.957106+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25367	2026-09-27 21:03:32.819371+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25372	2026-09-27 21:09:59.882201+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25375	2026-09-27 21:10:22.145064+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25378	2026-09-27 21:11:52.655538+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25744	2026-09-30 10:46:01.395481+00	62	63	task_started	{"task_id": 2, "mission_id": 1}
+26492	2026-09-30 20:36:27.197362+00	18	38	task_started	{"task_id": 3, "mission_id": 1}
+26497	2026-09-30 20:46:38.928288+00	18	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26504	2026-09-30 21:01:36.88355+00	28	6	task_started	{"task_id": 5, "mission_id": 0}
+26586	2026-09-30 21:16:29.238191+00	28	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24875	2026-09-27 14:50:02.748238+00	5	37	purchase_clue	{"task_id": 1, "clue_type": 1, "mission_id": 1}
+24880	2026-09-27 14:51:54.11823+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25356	2026-09-27 20:47:46.566763+00	49	25	purchase_clue	{"task_id": 25, "clue_type": 2, "mission_id": 0}
+25360	2026-09-27 20:50:45.587638+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25365	2026-09-27 21:03:12.560462+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25370	2026-09-27 21:08:11.767169+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25381	2026-09-27 21:17:12.20697+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25384	2026-09-27 21:18:45.143975+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25745	2026-09-30 10:47:53.952131+00	9	37	task_started	{"task_id": 1, "mission_id": 1}
+25746	2026-09-30 10:48:41.030772+00	9	63	task_started	{"task_id": 2, "mission_id": 1}
+25748	2026-09-30 10:48:41.470138+00	9	39	task_started	{"task_id": 4, "mission_id": 1}
+25750	2026-09-30 10:48:42.023791+00	9	64	task_started	{"task_id": 6, "mission_id": 1}
+25763	2026-09-30 10:48:44.957002+00	9	46	task_started	{"task_id": 19, "mission_id": 1}
+25768	2026-09-30 10:48:45.790276+00	9	52	task_started	{"task_id": 24, "mission_id": 1}
+25769	2026-09-30 10:48:46.04964+00	9	74	task_started	{"task_id": 25, "mission_id": 1}
+25770	2026-09-30 10:48:46.330619+00	9	53	task_started	{"task_id": 26, "mission_id": 1}
+25773	2026-09-30 10:48:59.553075+00	9	38	task_started	{"task_id": 3, "mission_id": 1}
+25775	2026-09-30 10:49:00.559226+00	9	40	task_started	{"task_id": 5, "mission_id": 1}
+25777	2026-09-30 10:49:01.892674+00	9	75	task_started	{"task_id": 7, "mission_id": 1}
+25778	2026-09-30 10:49:02.150669+00	9	77	task_started	{"task_id": 8, "mission_id": 1}
+25780	2026-09-30 10:49:03.200418+00	9	67	task_started	{"task_id": 10, "mission_id": 1}
+25781	2026-09-30 10:49:03.791543+00	9	69	task_started	{"task_id": 11, "mission_id": 1}
+25782	2026-09-30 10:49:04.211686+00	9	76	task_started	{"task_id": 12, "mission_id": 1}
+25786	2026-09-30 10:49:06.311925+00	9	43	task_started	{"task_id": 16, "mission_id": 1}
+25788	2026-09-30 10:49:07.425157+00	9	72	task_started	{"task_id": 18, "mission_id": 1}
+25792	2026-09-30 10:49:09.470151+00	9	50	task_started	{"task_id": 22, "mission_id": 1}
+25793	2026-09-30 10:49:09.902899+00	9	51	task_started	{"task_id": 23, "mission_id": 1}
+25794	2026-09-30 10:49:10.404916+00	9	52	task_started	{"task_id": 24, "mission_id": 1}
+25797	2026-09-30 10:49:18.391407+00	9	37	task_started	{"task_id": 1, "mission_id": 1}
+25798	2026-09-30 10:49:18.949867+00	9	63	task_started	{"task_id": 2, "mission_id": 1}
+25802	2026-09-30 10:49:21.030537+00	9	64	task_started	{"task_id": 6, "mission_id": 1}
+25805	2026-09-30 10:49:22.569635+00	9	41	task_started	{"task_id": 9, "mission_id": 1}
+25812	2026-09-30 10:49:26.545339+00	9	43	task_started	{"task_id": 16, "mission_id": 1}
+25814	2026-09-30 10:49:27.236933+00	9	72	task_started	{"task_id": 18, "mission_id": 1}
+25816	2026-09-30 10:49:28.270616+00	9	48	task_started	{"task_id": 20, "mission_id": 1}
+25819	2026-09-30 10:49:29.806729+00	9	51	task_started	{"task_id": 23, "mission_id": 1}
+25820	2026-09-30 10:49:30.717848+00	9	52	task_started	{"task_id": 24, "mission_id": 1}
+25821	2026-09-30 10:49:30.968099+00	9	74	task_started	{"task_id": 25, "mission_id": 1}
+25824	2026-09-30 10:50:30.260865+00	9	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25826	2026-09-30 10:50:53.161822+00	9	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25828	2026-09-30 10:51:07.685641+00	9	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25830	2026-09-30 10:51:24.641921+00	9	63	task_started	{"task_id": 2, "mission_id": 1}
+25834	2026-09-30 10:52:44.501427+00	9	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25838	2026-09-30 10:53:25.113481+00	9	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25840	2026-09-30 10:53:46.375944+00	9	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25842	2026-09-30 10:53:54.092857+00	9	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25844	2026-09-30 10:54:03.187004+00	9	39	task_started	{"task_id": 4, "mission_id": 1}
+25845	2026-09-30 10:54:04.116067+00	9	39	purchase_clue	{"task_id": 4, "clue_type": 2, "mission_id": 1}
+25847	2026-09-30 10:54:22.475682+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25849	2026-09-30 10:54:43.653273+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25851	2026-09-30 10:54:55.792536+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25853	2026-09-30 10:54:58.576506+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25855	2026-09-30 10:55:08.433619+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25857	2026-09-30 10:55:29.775227+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25859	2026-09-30 10:55:44.397177+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25861	2026-09-30 10:55:46.616408+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25863	2026-09-30 10:55:59.136167+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25865	2026-09-30 10:56:12.699792+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25867	2026-09-30 10:56:22.233922+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25869	2026-09-30 10:56:27.696561+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25871	2026-09-30 10:56:45.933064+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25873	2026-09-30 10:56:57.225598+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25875	2026-09-30 10:56:59.416259+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25877	2026-09-30 10:57:08.657642+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25879	2026-09-30 10:57:16.386471+00	9	40	task_started	{"task_id": 5, "mission_id": 1}
+24876	2026-09-27 14:51:08.885463+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24881	2026-09-27 14:52:00.878111+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24884	2026-09-27 15:04:49.943805+00	15	75	purchase_clue	{"task_id": 7, "clue_type": 1, "mission_id": 1}
+24887	2026-09-27 15:12:21.519307+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24891	2026-09-27 15:13:17.242775+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24896	2026-09-27 15:14:18.377116+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24901	2026-09-27 15:16:16.494054+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24906	2026-09-27 15:18:37.689946+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24911	2026-09-27 15:20:14.896554+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24922	2026-09-27 15:30:59.391228+00	15	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24925	2026-09-27 15:32:31.48775+00	15	77	task_attempt	{"task_id": 8, "mission_id": 1}
+25358	2026-09-27 20:48:23.011713+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25363	2026-09-27 21:02:50.360686+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25368	2026-09-27 21:07:23.917727+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25373	2026-09-27 21:10:02.515557+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25376	2026-09-27 21:11:45.297347+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25379	2026-09-27 21:14:57.526607+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25747	2026-09-30 10:48:41.304143+00	9	38	task_started	{"task_id": 3, "mission_id": 1}
+25749	2026-09-30 10:48:41.785042+00	9	40	task_started	{"task_id": 5, "mission_id": 1}
+25751	2026-09-30 10:48:42.146026+00	9	75	task_started	{"task_id": 7, "mission_id": 1}
+25752	2026-09-30 10:48:42.353498+00	9	77	task_started	{"task_id": 8, "mission_id": 1}
+25753	2026-09-30 10:48:42.630172+00	9	41	task_started	{"task_id": 9, "mission_id": 1}
+25754	2026-09-30 10:48:42.801384+00	9	67	task_started	{"task_id": 10, "mission_id": 1}
+25755	2026-09-30 10:48:42.999579+00	9	69	task_started	{"task_id": 11, "mission_id": 1}
+25756	2026-09-30 10:48:43.190256+00	9	76	task_started	{"task_id": 12, "mission_id": 1}
+25757	2026-09-30 10:48:43.406217+00	9	70	task_started	{"task_id": 13, "mission_id": 1}
+25758	2026-09-30 10:48:43.686257+00	9	54	task_started	{"task_id": 14, "mission_id": 1}
+25759	2026-09-30 10:48:43.806364+00	9	71	task_started	{"task_id": 15, "mission_id": 1}
+25760	2026-09-30 10:48:44.070646+00	9	43	task_started	{"task_id": 16, "mission_id": 1}
+25761	2026-09-30 10:48:44.249314+00	9	44	task_started	{"task_id": 17, "mission_id": 1}
+25762	2026-09-30 10:48:44.407292+00	9	72	task_started	{"task_id": 18, "mission_id": 1}
+25764	2026-09-30 10:48:45.026478+00	9	48	task_started	{"task_id": 20, "mission_id": 1}
+25765	2026-09-30 10:48:45.201739+00	9	73	task_started	{"task_id": 21, "mission_id": 1}
+25766	2026-09-30 10:48:45.5283+00	9	50	task_started	{"task_id": 22, "mission_id": 1}
+25767	2026-09-30 10:48:45.672978+00	9	51	task_started	{"task_id": 23, "mission_id": 1}
+25771	2026-09-30 10:48:58.475424+00	9	37	task_started	{"task_id": 1, "mission_id": 1}
+25772	2026-09-30 10:48:59.030535+00	9	63	task_started	{"task_id": 2, "mission_id": 1}
+25774	2026-09-30 10:49:00.102881+00	9	39	task_started	{"task_id": 4, "mission_id": 1}
+25776	2026-09-30 10:49:01.103024+00	9	64	task_started	{"task_id": 6, "mission_id": 1}
+25779	2026-09-30 10:49:02.67925+00	9	41	task_started	{"task_id": 9, "mission_id": 1}
+25783	2026-09-30 10:49:04.750802+00	9	70	task_started	{"task_id": 13, "mission_id": 1}
+25784	2026-09-30 10:49:05.248412+00	9	54	task_started	{"task_id": 14, "mission_id": 1}
+25785	2026-09-30 10:49:05.83047+00	9	71	task_started	{"task_id": 15, "mission_id": 1}
+25787	2026-09-30 10:49:06.832859+00	9	44	task_started	{"task_id": 17, "mission_id": 1}
+25789	2026-09-30 10:49:07.884129+00	9	46	task_started	{"task_id": 19, "mission_id": 1}
+25790	2026-09-30 10:49:08.511554+00	9	48	task_started	{"task_id": 20, "mission_id": 1}
+25791	2026-09-30 10:49:08.912465+00	9	73	task_started	{"task_id": 21, "mission_id": 1}
+25795	2026-09-30 10:49:10.996679+00	9	74	task_started	{"task_id": 25, "mission_id": 1}
+25796	2026-09-30 10:49:11.560011+00	9	53	task_started	{"task_id": 26, "mission_id": 1}
+25799	2026-09-30 10:49:19.44032+00	9	38	task_started	{"task_id": 3, "mission_id": 1}
+25800	2026-09-30 10:49:20.168026+00	9	39	task_started	{"task_id": 4, "mission_id": 1}
+25801	2026-09-30 10:49:20.557296+00	9	40	task_started	{"task_id": 5, "mission_id": 1}
+25803	2026-09-30 10:49:21.676151+00	9	75	task_started	{"task_id": 7, "mission_id": 1}
+25804	2026-09-30 10:49:22.305402+00	9	77	task_started	{"task_id": 8, "mission_id": 1}
+25806	2026-09-30 10:49:23.143756+00	9	67	task_started	{"task_id": 10, "mission_id": 1}
+25807	2026-09-30 10:49:23.596649+00	9	69	task_started	{"task_id": 11, "mission_id": 1}
+25808	2026-09-30 10:49:24.35677+00	9	76	task_started	{"task_id": 12, "mission_id": 1}
+25809	2026-09-30 10:49:24.794593+00	9	70	task_started	{"task_id": 13, "mission_id": 1}
+25810	2026-09-30 10:49:25.24515+00	9	54	task_started	{"task_id": 14, "mission_id": 1}
+25811	2026-09-30 10:49:25.671686+00	9	71	task_started	{"task_id": 15, "mission_id": 1}
+25813	2026-09-30 10:49:26.720197+00	9	44	task_started	{"task_id": 17, "mission_id": 1}
+25815	2026-09-30 10:49:28.183254+00	9	46	task_started	{"task_id": 19, "mission_id": 1}
+25817	2026-09-30 10:49:28.846557+00	9	73	task_started	{"task_id": 21, "mission_id": 1}
+25818	2026-09-30 10:49:29.312396+00	9	50	task_started	{"task_id": 22, "mission_id": 1}
+25822	2026-09-30 10:49:31.435771+00	9	53	task_started	{"task_id": 26, "mission_id": 1}
+24879	2026-09-27 14:51:49.775699+00	5	37	task_attempt	{"task_id": 1, "mission_id": 1}
+24883	2026-09-27 15:01:52.497551+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24889	2026-09-27 15:12:40.613745+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24890	2026-09-27 15:13:12.985916+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24894	2026-09-27 15:13:57.974707+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24895	2026-09-27 15:14:02.026104+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24899	2026-09-27 15:15:59.304885+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24900	2026-09-27 15:16:05.467651+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24904	2026-09-27 15:17:03.794998+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24905	2026-09-27 15:17:18.515893+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24909	2026-09-27 15:18:58.293106+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24910	2026-09-27 15:19:05.426377+00	15	75	task_attempt	{"task_id": 7, "mission_id": 1}
+24913	2026-09-27 15:20:30.914958+00	15	75	task_submitted	{"task_id": 7, "is_correct": true, "mission_id": 1}
+24916	2026-09-27 15:24:24.432237+00	15	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24917	2026-09-27 15:24:32.283162+00	15	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24920	2026-09-27 15:27:48.024209+00	15	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24921	2026-09-27 15:28:00.680804+00	15	77	task_attempt	{"task_id": 8, "mission_id": 1}
+24924	2026-09-27 15:31:57.175799+00	6	4	task_attempt	{"task_id": 3, "mission_id": 0}
+24927	2026-09-27 15:33:48.591871+00	6	4	task_attempt	{"task_id": 3, "mission_id": 0}
+24929	2026-09-27 15:34:58.920246+00	15	41	purchase_clue	{"task_id": 9, "clue_type": 1, "mission_id": 1}
+24930	2026-09-27 15:41:13.542137+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24931	2026-09-27 15:41:26.975021+00	15	41	purchase_clue	{"task_id": 9, "clue_type": 2, "mission_id": 1}
+24932	2026-09-27 15:46:42.350107+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24933	2026-09-27 15:46:59.683136+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24934	2026-09-27 15:47:49.263261+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24935	2026-09-27 15:48:08.871397+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24936	2026-09-27 15:48:31.50657+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24937	2026-09-27 15:48:45.428556+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24938	2026-09-27 15:59:06.059061+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24939	2026-09-27 15:59:06.214293+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24940	2026-09-27 15:59:06.354675+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24941	2026-09-27 15:59:06.564573+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24942	2026-09-27 15:59:26.198432+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24943	2026-09-27 15:59:35.633251+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24944	2026-09-27 15:59:38.145674+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24945	2026-09-27 15:59:42.174306+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24946	2026-09-27 15:59:50.813311+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24947	2026-09-27 16:00:05.098337+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24948	2026-09-27 16:00:21.558609+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24949	2026-09-27 16:00:35.980663+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24950	2026-09-27 16:00:51.121293+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24951	2026-09-27 16:00:53.999826+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24952	2026-09-27 16:01:49.764389+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24953	2026-09-27 16:03:58.31066+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24954	2026-09-27 16:05:47.387318+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24955	2026-09-27 16:06:04.019644+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24956	2026-09-27 16:06:22.165961+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24957	2026-09-27 16:06:26.747776+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24958	2026-09-27 16:07:09.056054+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24959	2026-09-27 16:07:45.814153+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24960	2026-09-27 16:11:40.157774+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24961	2026-09-27 16:11:41.786474+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24962	2026-09-27 16:16:50.49305+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24963	2026-09-27 16:17:08.411158+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24964	2026-09-27 16:19:29.95915+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24965	2026-09-27 16:19:43.84582+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24966	2026-09-27 16:22:34.806746+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24967	2026-09-27 16:23:00.974048+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24968	2026-09-27 16:23:08.149207+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24969	2026-09-27 16:23:54.691506+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24970	2026-09-27 16:24:07.100963+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24971	2026-09-27 16:25:44.23118+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24972	2026-09-27 16:28:21.023228+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24973	2026-09-27 16:28:21.160494+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24974	2026-09-27 16:28:28.004025+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24975	2026-09-27 16:28:29.93062+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24980	2026-09-27 16:29:08.28715+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+25382	2026-09-27 21:17:16.9821+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25385	2026-09-27 21:18:52.767604+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
+25823	2026-09-30 10:50:21.030525+00	9	37	task_started	{"task_id": 1, "mission_id": 1}
+25825	2026-09-30 10:50:41.141536+00	9	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25827	2026-09-30 10:50:58.913743+00	9	37	task_attempt	{"task_id": 1, "mission_id": 1}
+25829	2026-09-30 10:51:14.744234+00	9	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+25831	2026-09-30 10:51:25.413347+00	9	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26507	2026-09-30 21:02:21.514568+00	28	6	task_started	{"task_id": 5, "mission_id": 0}
+24976	2026-09-27 16:28:35.347769+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+25832	2026-09-30 10:51:59.596451+00	9	63	task_started	{"task_id": 2, "mission_id": 1}
+25833	2026-09-30 10:52:31.282813+00	9	63	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 1}
+25835	2026-09-30 10:53:03.952357+00	9	63	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 1}
+25836	2026-09-30 10:53:14.30472+00	9	38	task_started	{"task_id": 3, "mission_id": 1}
+25837	2026-09-30 10:53:14.647268+00	9	38	purchase_clue	{"task_id": 3, "clue_type": 2, "mission_id": 1}
+25839	2026-09-30 10:53:34.951283+00	9	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25841	2026-09-30 10:53:47.553593+00	9	38	task_attempt	{"task_id": 3, "mission_id": 1}
+25843	2026-09-30 10:53:55.940935+00	9	38	task_submitted	{"task_id": 3, "is_correct": true, "mission_id": 1}
+25846	2026-09-30 10:54:17.233036+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25848	2026-09-30 10:54:30.145221+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25850	2026-09-30 10:54:54.547235+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25852	2026-09-30 10:54:57.065605+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25854	2026-09-30 10:55:05.132874+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25856	2026-09-30 10:55:21.373887+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25858	2026-09-30 10:55:43.256637+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25860	2026-09-30 10:55:45.496614+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25862	2026-09-30 10:55:58.136251+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25864	2026-09-30 10:56:11.629354+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25866	2026-09-30 10:56:13.65866+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25868	2026-09-30 10:56:26.096676+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25870	2026-09-30 10:56:41.616649+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25872	2026-09-30 10:56:55.054512+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25874	2026-09-30 10:56:58.429461+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25876	2026-09-30 10:57:00.436337+00	9	39	task_attempt	{"task_id": 4, "mission_id": 1}
+25878	2026-09-30 10:57:09.801756+00	9	39	task_submitted	{"task_id": 4, "is_correct": true, "mission_id": 1}
+25881	2026-09-30 10:57:26.897526+00	9	40	task_attempt	{"task_id": 5, "mission_id": 1}
+25883	2026-09-30 10:57:38.686445+00	9	40	task_submitted	{"task_id": 5, "is_correct": true, "mission_id": 1}
+25885	2026-09-30 10:57:47.920362+00	9	64	purchase_clue	{"task_id": 6, "clue_type": 2, "mission_id": 1}
+25887	2026-09-30 10:58:11.351103+00	9	64	task_submitted	{"task_id": 6, "is_correct": true, "mission_id": 1}
+25888	2026-09-30 10:58:17.433722+00	9	75	task_started	{"task_id": 7, "mission_id": 1}
+25889	2026-09-30 10:58:17.956732+00	9	75	purchase_clue	{"task_id": 7, "clue_type": 2, "mission_id": 1}
+25891	2026-09-30 10:58:41.016212+00	9	75	task_attempt	{"task_id": 7, "mission_id": 1}
+25893	2026-09-30 10:59:11.882389+00	9	75	task_submitted	{"task_id": 7, "is_correct": true, "mission_id": 1}
+25894	2026-09-30 10:59:19.960347+00	9	77	task_started	{"task_id": 8, "mission_id": 1}
+25897	2026-09-30 10:59:50.093294+00	9	77	task_attempt	{"task_id": 8, "mission_id": 1}
+25899	2026-09-30 10:59:57.558443+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25901	2026-09-30 11:00:05.006495+00	9	77	task_attempt	{"task_id": 8, "mission_id": 1}
+25903	2026-09-30 11:00:12.920216+00	9	77	task_attempt	{"task_id": 8, "mission_id": 1}
+25904	2026-09-30 11:00:32.817449+00	9	77	task_started	{"task_id": 8, "mission_id": 1}
+25907	2026-09-30 11:01:11.293304+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25911	2026-09-30 11:01:36.372963+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25913	2026-09-30 11:01:48.952583+00	9	41	task_attempt	{"task_id": 9, "mission_id": 1}
+25915	2026-09-30 11:01:54.685352+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25917	2026-09-30 11:02:08.493442+00	9	41	task_attempt	{"task_id": 9, "mission_id": 1}
+26508	2026-09-30 21:02:26.289321+00	28	6	task_attempt	{"task_id": 5, "mission_id": 0}
+24977	2026-09-27 16:28:40.129047+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+25880	2026-09-30 10:57:17.187767+00	9	40	purchase_clue	{"task_id": 5, "clue_type": 2, "mission_id": 1}
+25882	2026-09-30 10:57:36.549979+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25884	2026-09-30 10:57:46.737523+00	9	64	task_started	{"task_id": 6, "mission_id": 1}
+25886	2026-09-30 10:58:00.611513+00	9	64	task_attempt	{"task_id": 6, "mission_id": 1}
+25890	2026-09-30 10:58:29.987741+00	9	75	task_attempt	{"task_id": 7, "mission_id": 1}
+25892	2026-09-30 10:58:59.372793+00	9	75	task_attempt	{"task_id": 7, "mission_id": 1}
+25895	2026-09-30 10:59:20.472289+00	9	77	task_attempt	{"task_id": 8, "mission_id": 1}
+26509	2026-09-30 21:02:31.139675+00	28	13	task_started	{"task_id": 12, "mission_id": 0}
+24978	2026-09-27 16:29:01.088806+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+25896	2026-09-30 10:59:39.787515+00	9	77	purchase_clue	{"task_id": 8, "clue_type": 2, "mission_id": 1}
+25898	2026-09-30 10:59:51.352661+00	9	77	task_attempt	{"task_id": 8, "mission_id": 1}
+25900	2026-09-30 11:00:03.648505+00	9	77	task_attempt	{"task_id": 8, "mission_id": 1}
+25902	2026-09-30 11:00:06.116283+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25905	2026-09-30 11:00:33.824883+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25906	2026-09-30 11:00:56.81131+00	9	77	task_attempt	{"task_id": 8, "mission_id": 1}
+25908	2026-09-30 11:01:13.916031+00	9	77	task_submitted	{"task_id": 8, "is_correct": true, "mission_id": 1}
+25909	2026-09-30 11:01:27.360319+00	9	41	task_started	{"task_id": 9, "mission_id": 1}
+25910	2026-09-30 11:01:28.377633+00	9	41	purchase_clue	{"task_id": 9, "clue_type": 2, "mission_id": 1}
+25912	2026-09-30 11:01:39.861423+00	9	41	task_attempt	{"task_id": 9, "mission_id": 1}
+25914	2026-09-30 11:01:50.00056+00	9	41	task_attempt	{"task_id": 9, "mission_id": 1}
+25916	2026-09-30 11:02:00.11222+00	9	41	task_attempt	{"task_id": 9, "mission_id": 1}
+25920	2026-09-30 11:03:02.680926+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25922	2026-09-30 11:03:32.845295+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25924	2026-09-30 11:03:45.273794+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25925	2026-09-30 11:03:55.558499+00	9	41	task_attempt	{"task_id": 9, "mission_id": 1}
+25928	2026-09-30 11:04:31.068617+00	9	67	task_attempt	{"task_id": 10, "mission_id": 1}
+25930	2026-09-30 11:04:50.679084+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25931	2026-09-30 11:04:53.973674+00	9	69	task_started	{"task_id": 11, "mission_id": 1}
+25933	2026-09-30 11:05:01.971269+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25937	2026-09-30 11:05:33.948295+00	9	76	task_attempt	{"task_id": 12, "mission_id": 1}
+25939	2026-09-30 11:05:53.554801+00	9	76	task_attempt	{"task_id": 12, "mission_id": 1}
+25942	2026-09-30 11:06:10.592898+00	9	70	task_attempt	{"task_id": 13, "mission_id": 1}
+25944	2026-09-30 11:06:29.688399+00	9	70	task_submitted	{"task_id": 13, "is_correct": true, "mission_id": 1}
+25946	2026-09-30 11:06:39.255516+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25947	2026-09-30 11:06:43.226298+00	9	54	task_started	{"task_id": 14, "mission_id": 1}
+25949	2026-09-30 11:06:49.896108+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25951	2026-09-30 11:07:02.666448+00	9	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25955	2026-09-30 11:07:41.619043+00	9	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25957	2026-09-30 11:07:50.921591+00	9	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25959	2026-09-30 11:08:05.512527+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25961	2026-09-30 11:08:12.549399+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25963	2026-09-30 11:08:36.073321+00	9	43	task_started	{"task_id": 16, "mission_id": 1}
+25964	2026-09-30 11:08:36.827332+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25966	2026-09-30 11:08:37.875323+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25968	2026-09-30 11:09:05.320759+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25970	2026-09-30 11:09:14.500637+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25972	2026-09-30 11:09:30.535306+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25974	2026-09-30 11:09:43.707564+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25976	2026-09-30 11:10:11.557971+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25977	2026-09-30 11:10:53.920358+00	9	43	purchase_clue	{"task_id": 16, "clue_type": 2, "mission_id": 1}
+25979	2026-09-30 11:11:09.073447+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25981	2026-09-30 11:11:39.220237+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25983	2026-09-30 11:11:52.770611+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25985	2026-09-30 11:12:02.323032+00	9	43	task_submitted	{"task_id": 16, "is_correct": true, "mission_id": 1}
+26510	2026-09-30 21:02:57.451186+00	28	13	task_attempt	{"task_id": 12, "mission_id": 0}
+26511	2026-09-30 21:03:01.163157+00	28	13	task_started	{"task_id": 12, "mission_id": 0}
+26513	2026-09-30 21:03:12.679471+00	28	13	task_attempt	{"task_id": 12, "mission_id": 0}
+26519	2026-09-30 21:04:04.154863+00	28	14	task_attempt	{"task_id": 13, "mission_id": 0}
+24979	2026-09-27 16:29:04.670547+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24981	2026-09-27 16:29:36.522514+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24982	2026-09-27 16:30:12.020721+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24983	2026-09-27 16:32:28.377679+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24984	2026-09-27 16:32:33.871158+00	15	41	task_attempt	{"task_id": 9, "mission_id": 1}
+24985	2026-09-27 16:34:47.925665+00	15	67	task_started	{"task_id": 10, "mission_id": 1}
+24986	2026-09-27 16:37:23.507543+00	15	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24987	2026-09-27 16:37:36.368768+00	15	67	task_attempt	{"task_id": 10, "mission_id": 1}
+24988	2026-09-27 16:37:51.527133+00	15	67	purchase_clue	{"task_id": 10, "clue_type": 2, "mission_id": 1}
+24989	2026-09-27 16:37:53.797961+00	15	67	task_submitted	{"task_id": 10, "is_correct": true, "mission_id": 1}
+24990	2026-09-27 16:38:37.886208+00	15	69	task_started	{"task_id": 11, "mission_id": 1}
+24991	2026-09-27 16:47:32.103258+00	15	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24992	2026-09-27 16:48:25.265235+00	15	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24993	2026-09-27 16:49:08.005391+00	15	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24994	2026-09-27 16:49:27.198008+00	15	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24995	2026-09-27 16:49:30.335399+00	15	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24996	2026-09-27 16:49:34.013801+00	15	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24997	2026-09-27 16:50:10.507699+00	15	69	purchase_clue	{"task_id": 11, "clue_type": 2, "mission_id": 1}
+24998	2026-09-27 16:50:38.927797+00	15	69	task_attempt	{"task_id": 11, "mission_id": 1}
+24999	2026-09-27 16:50:45.76478+00	15	69	task_submitted	{"task_id": 11, "is_correct": true, "mission_id": 1}
+25000	2026-09-27 16:51:27.994004+00	15	76	task_started	{"task_id": 12, "mission_id": 1}
+25001	2026-09-27 16:51:46.468154+00	15	76	task_started	{"task_id": 12, "mission_id": 1}
+25002	2026-09-27 16:55:15.476222+00	15	76	task_attempt	{"task_id": 12, "mission_id": 1}
+25003	2026-09-27 16:55:23.508633+00	15	76	purchase_clue	{"task_id": 12, "clue_type": 1, "mission_id": 1}
+25004	2026-09-27 16:55:32.572294+00	15	76	purchase_clue	{"task_id": 12, "clue_type": 2, "mission_id": 1}
+25005	2026-09-27 16:59:31.080328+00	15	76	task_attempt	{"task_id": 12, "mission_id": 1}
+25006	2026-09-27 16:59:34.390718+00	15	76	task_attempt	{"task_id": 12, "mission_id": 1}
+25007	2026-09-27 17:02:18.449781+00	15	76	task_attempt	{"task_id": 12, "mission_id": 1}
+25008	2026-09-27 17:05:22.432997+00	15	76	task_attempt	{"task_id": 12, "mission_id": 1}
+25009	2026-09-27 17:07:32.914474+00	15	76	task_attempt	{"task_id": 12, "mission_id": 1}
+25010	2026-09-27 17:08:47.622309+00	15	76	task_attempt	{"task_id": 12, "mission_id": 1}
+25011	2026-09-27 17:08:51.130985+00	15	76	task_attempt	{"task_id": 12, "mission_id": 1}
+25012	2026-09-27 17:08:53.230819+00	15	76	task_submitted	{"task_id": 12, "is_correct": true, "mission_id": 1}
+25013	2026-09-27 17:11:25.95166+00	15	70	task_started	{"task_id": 13, "mission_id": 1}
+25014	2026-09-27 17:13:45.641844+00	15	70	task_attempt	{"task_id": 13, "mission_id": 1}
+25015	2026-09-27 17:16:48.335833+00	15	70	task_attempt	{"task_id": 13, "mission_id": 1}
+25016	2026-09-27 17:16:59.842792+00	15	70	purchase_clue	{"task_id": 13, "clue_type": 2, "mission_id": 1}
+25017	2026-09-27 17:17:05.388443+00	15	70	task_attempt	{"task_id": 13, "mission_id": 1}
+25018	2026-09-27 17:17:09.607349+00	15	70	task_submitted	{"task_id": 13, "is_correct": true, "mission_id": 1}
+25019	2026-09-27 17:17:34.758975+00	15	54	task_started	{"task_id": 14, "mission_id": 1}
+25020	2026-09-27 17:21:42.136678+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25021	2026-09-27 17:22:19.684798+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25022	2026-09-27 17:22:31.420513+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25023	2026-09-27 17:22:46.284846+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25024	2026-09-27 17:22:53.96115+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25025	2026-09-27 17:24:57.579574+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25026	2026-09-27 17:25:16.206531+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25027	2026-09-27 17:25:34.820447+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25028	2026-09-27 17:25:38.029798+00	15	54	purchase_clue	{"task_id": 14, "clue_type": 1, "mission_id": 1}
+25029	2026-09-27 17:26:36.513061+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25030	2026-09-27 17:26:55.370968+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25031	2026-09-27 17:26:56.840394+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25032	2026-09-27 17:27:35.481059+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25033	2026-09-27 17:27:41.236899+00	15	54	purchase_clue	{"task_id": 14, "clue_type": 2, "mission_id": 1}
+25034	2026-09-27 17:28:20.964629+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25035	2026-09-27 17:29:36.011817+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25036	2026-09-27 17:30:55.670004+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25037	2026-09-27 17:31:11.385728+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25038	2026-09-27 17:34:33.915767+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25039	2026-09-27 17:34:42.171617+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25040	2026-09-27 17:34:49.435122+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25041	2026-09-27 17:34:58.715941+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25042	2026-09-27 17:35:23.410514+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25043	2026-09-27 17:35:30.864772+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25044	2026-09-27 17:35:55.930998+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25049	2026-09-27 17:41:45.083381+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25056	2026-09-27 17:47:42.352204+00	15	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25060	2026-09-27 17:49:38.997446+00	15	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25069	2026-09-27 18:02:51.405624+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25073	2026-09-27 18:07:19.334695+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25918	2026-09-30 11:02:28.07892+00	9	41	task_started	{"task_id": 9, "mission_id": 1}
+25919	2026-09-30 11:02:59.098598+00	9	41	purchase_clue	{"task_id": 9, "clue_type": 1, "mission_id": 1}
+25921	2026-09-30 11:03:15.659844+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25923	2026-09-30 11:03:38.264596+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25926	2026-09-30 11:04:17.31243+00	9	41	task_submitted	{"task_id": 9, "is_correct": true, "mission_id": 1}
+25927	2026-09-30 11:04:31.022133+00	9	67	task_started	{"task_id": 10, "mission_id": 1}
+25929	2026-09-30 11:04:40.082797+00	9	67	task_submitted	{"task_id": 10, "is_correct": true, "mission_id": 1}
+25932	2026-09-30 11:04:54.718413+00	9	69	task_attempt	{"task_id": 11, "mission_id": 1}
+25934	2026-09-30 11:05:05.327979+00	9	69	task_submitted	{"task_id": 11, "is_correct": true, "mission_id": 1}
+25935	2026-09-30 11:05:14.958448+00	9	76	task_started	{"task_id": 12, "mission_id": 1}
+25936	2026-09-30 11:05:15.466463+00	9	76	purchase_clue	{"task_id": 12, "clue_type": 2, "mission_id": 1}
+25938	2026-09-30 11:05:50.711371+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25940	2026-09-30 11:05:56.552122+00	9	76	task_submitted	{"task_id": 12, "is_correct": true, "mission_id": 1}
+25941	2026-09-30 11:06:10.48417+00	9	70	task_started	{"task_id": 13, "mission_id": 1}
+25943	2026-09-30 11:06:24.070357+00	9	70	task_attempt	{"task_id": 13, "mission_id": 1}
+25945	2026-09-30 11:06:29.795072+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25948	2026-09-30 11:06:43.241462+00	9	54	purchase_clue	{"task_id": 14, "clue_type": 2, "mission_id": 1}
+25950	2026-09-30 11:06:51.849571+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25952	2026-09-30 11:07:14.717573+00	9	54	task_submitted	{"task_id": 14, "is_correct": true, "mission_id": 1}
+25953	2026-09-30 11:07:31.899124+00	9	71	task_started	{"task_id": 15, "mission_id": 1}
+25954	2026-09-30 11:07:32.308544+00	9	71	purchase_clue	{"task_id": 15, "clue_type": 2, "mission_id": 1}
+25956	2026-09-30 11:07:42.713607+00	9	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25958	2026-09-30 11:07:52.113485+00	9	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25960	2026-09-30 11:08:11.409144+00	9	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25962	2026-09-30 11:08:23.78274+00	9	71	task_submitted	{"task_id": 15, "is_correct": true, "mission_id": 1}
+25965	2026-09-30 11:08:37.052169+00	47	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25967	2026-09-30 11:08:46.431648+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25969	2026-09-30 11:09:06.231392+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25971	2026-09-30 11:09:16.775539+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
+25973	2026-09-30 11:09:42.646619+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25975	2026-09-30 11:10:01.601419+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25978	2026-09-30 11:10:56.289042+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25980	2026-09-30 11:11:21.060506+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25982	2026-09-30 11:11:40.381561+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25984	2026-09-30 11:12:00.942771+00	9	43	task_attempt	{"task_id": 16, "mission_id": 1}
+26512	2026-09-30 21:03:12.468793+00	28	13	task_attempt	{"task_id": 12, "mission_id": 0}
+26515	2026-09-30 21:03:21.627564+00	28	13	purchase_clue	{"task_id": 12, "clue_type": 1, "mission_id": 0}
+26518	2026-09-30 21:04:03.993219+00	28	14	task_attempt	{"task_id": 13, "mission_id": 0}
+25045	2026-09-27 17:40:14.101479+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25050	2026-09-27 17:41:54.037289+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25053	2026-09-27 17:42:26.276384+00	15	54	task_submitted	{"task_id": 14, "is_correct": true, "mission_id": 1}
+25057	2026-09-27 17:48:00.04118+00	15	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25061	2026-09-27 17:49:43.148533+00	15	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25063	2026-09-27 17:51:26.944845+00	15	71	purchase_clue	{"task_id": 15, "clue_type": 2, "mission_id": 1}
+25066	2026-09-27 17:54:42.428478+00	15	71	task_submitted	{"task_id": 15, "is_correct": true, "mission_id": 1}
+25074	2026-09-27 18:07:20.056133+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25077	2026-09-27 18:07:57.462371+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25081	2026-09-27 18:09:42.907649+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25086	2026-09-27 18:13:48.830477+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25986	2026-09-30 11:12:12.185354+00	9	44	task_started	{"task_id": 17, "mission_id": 1}
+25989	2026-09-30 11:12:47.711611+00	9	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25991	2026-09-30 11:12:58.206847+00	9	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25993	2026-09-30 11:13:10.155448+00	9	44	task_submitted	{"task_id": 17, "is_correct": true, "mission_id": 1}
+25994	2026-09-30 11:13:17.758284+00	9	72	task_started	{"task_id": 18, "mission_id": 1}
+25996	2026-09-30 11:13:25.055472+00	9	72	task_submitted	{"task_id": 18, "is_correct": true, "mission_id": 1}
+25997	2026-09-30 11:13:32.612087+00	9	46	task_started	{"task_id": 19, "mission_id": 1}
+25999	2026-09-30 11:13:38.564498+00	9	46	task_submitted	{"task_id": 19, "is_correct": true, "mission_id": 1}
+26000	2026-09-30 11:13:45.398035+00	9	48	task_started	{"task_id": 20, "mission_id": 1}
+26001	2026-09-30 11:13:45.638489+00	9	48	purchase_clue	{"task_id": 20, "clue_type": 2, "mission_id": 1}
+26003	2026-09-30 11:14:11.786168+00	9	48	task_submitted	{"task_id": 20, "is_correct": true, "mission_id": 1}
+26004	2026-09-30 11:14:18.894545+00	9	73	task_started	{"task_id": 21, "mission_id": 1}
+26006	2026-09-30 11:14:20.732352+00	9	73	task_attempt	{"task_id": 21, "mission_id": 1}
+26009	2026-09-30 11:14:44.958139+00	9	50	task_attempt	{"task_id": 22, "mission_id": 1}
+26013	2026-09-30 11:15:07.571007+00	9	51	task_attempt	{"task_id": 23, "mission_id": 1}
+26017	2026-09-30 11:15:34.099352+00	9	52	task_attempt	{"task_id": 24, "mission_id": 1}
+26514	2026-09-30 21:03:18.959014+00	28	13	purchase_clue	{"task_id": 12, "clue_type": 2, "mission_id": 0}
+26516	2026-09-30 21:03:48.277145+00	28	14	task_started	{"task_id": 13, "mission_id": 0}
+25046	2026-09-27 17:40:48.307923+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25047	2026-09-27 17:41:08.074975+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25051	2026-09-27 17:42:08.922554+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25052	2026-09-27 17:42:19.879282+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25054	2026-09-27 17:44:39.550931+00	15	71	task_started	{"task_id": 15, "mission_id": 1}
+25058	2026-09-27 17:48:24.86269+00	15	71	purchase_clue	{"task_id": 15, "clue_type": 1, "mission_id": 1}
+25064	2026-09-27 17:53:52.957041+00	15	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25070	2026-09-27 18:04:45.8803+00	15	43	purchase_clue	{"task_id": 16, "clue_type": 1, "mission_id": 1}
+25075	2026-09-27 18:07:42.225813+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25082	2026-09-27 18:10:44.957007+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25087	2026-09-27 18:14:05.03305+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25090	2026-09-27 18:20:27.460205+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25096	2026-09-27 18:24:36.166017+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25987	2026-09-30 11:12:13.002839+00	9	44	task_attempt	{"task_id": 17, "mission_id": 1}
+26517	2026-09-30 21:04:03.867614+00	28	14	task_attempt	{"task_id": 13, "mission_id": 0}
+25048	2026-09-27 17:41:40.780615+00	15	54	task_attempt	{"task_id": 14, "mission_id": 1}
+25055	2026-09-27 17:47:33.896327+00	15	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25059	2026-09-27 17:49:30.380783+00	15	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25062	2026-09-27 17:51:10.65144+00	15	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25065	2026-09-27 17:54:28.309946+00	15	71	task_attempt	{"task_id": 15, "mission_id": 1}
+25067	2026-09-27 17:57:43.859584+00	15	43	task_started	{"task_id": 16, "mission_id": 1}
+25068	2026-09-27 18:02:44.900199+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25071	2026-09-27 18:07:09.748552+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25072	2026-09-27 18:07:13.715025+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25076	2026-09-27 18:07:50.421662+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25078	2026-09-27 18:08:03.857412+00	15	43	purchase_clue	{"task_id": 16, "clue_type": 2, "mission_id": 1}
+25079	2026-09-27 18:08:24.222383+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25080	2026-09-27 18:08:29.676501+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25083	2026-09-27 18:10:53.59278+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25084	2026-09-27 18:13:25.935297+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25085	2026-09-27 18:13:31.56673+00	15	43	task_attempt	{"task_id": 16, "mission_id": 1}
+25088	2026-09-27 18:18:16.244756+00	15	44	task_started	{"task_id": 17, "mission_id": 1}
+25089	2026-09-27 18:20:13.007804+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25091	2026-09-27 18:23:26.826334+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25092	2026-09-27 18:23:32.279839+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25093	2026-09-27 18:23:34.108365+00	15	44	purchase_clue	{"task_id": 17, "clue_type": 2, "mission_id": 1}
+25094	2026-09-27 18:23:46.122058+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25095	2026-09-27 18:24:19.9965+00	15	44	purchase_clue	{"task_id": 17, "clue_type": 1, "mission_id": 1}
+25097	2026-09-27 18:28:34.396821+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25098	2026-09-27 18:30:11.180143+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25099	2026-09-27 18:35:25.635398+00	15	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25988	2026-09-30 11:12:37.943725+00	9	44	purchase_clue	{"task_id": 17, "clue_type": 2, "mission_id": 1}
+25990	2026-09-30 11:12:49.115946+00	9	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25992	2026-09-30 11:13:09.18953+00	9	44	task_attempt	{"task_id": 17, "mission_id": 1}
+25995	2026-09-30 11:13:19.000702+00	9	72	task_attempt	{"task_id": 18, "mission_id": 1}
+25998	2026-09-30 11:13:33.219525+00	9	46	task_attempt	{"task_id": 19, "mission_id": 1}
+26002	2026-09-30 11:13:54.841068+00	9	48	task_attempt	{"task_id": 20, "mission_id": 1}
+26005	2026-09-30 11:14:19.419859+00	9	73	task_attempt	{"task_id": 21, "mission_id": 1}
+26007	2026-09-30 11:14:37.894191+00	9	73	task_submitted	{"task_id": 21, "is_correct": true, "mission_id": 1}
+26008	2026-09-30 11:14:44.238521+00	9	50	task_started	{"task_id": 22, "mission_id": 1}
+26010	2026-09-30 11:14:50.617232+00	9	50	task_submitted	{"task_id": 22, "is_correct": true, "mission_id": 1}
+26011	2026-09-30 11:14:56.620498+00	9	51	task_started	{"task_id": 23, "mission_id": 1}
+26012	2026-09-30 11:14:57.154469+00	9	51	purchase_clue	{"task_id": 23, "clue_type": 2, "mission_id": 1}
+26014	2026-09-30 11:15:19.795981+00	9	51	task_submitted	{"task_id": 23, "is_correct": true, "mission_id": 1}
+26015	2026-09-30 11:15:25.579389+00	9	52	task_started	{"task_id": 24, "mission_id": 1}
+26016	2026-09-30 11:15:26.645226+00	9	52	purchase_clue	{"task_id": 24, "clue_type": 2, "mission_id": 1}
+26018	2026-09-30 11:16:04.547313+00	9	52	task_started	{"task_id": 24, "mission_id": 1}
+26021	2026-09-30 11:17:42.933192+00	9	52	task_attempt	{"task_id": 24, "mission_id": 1}
+26023	2026-09-30 11:18:21.131343+00	9	52	task_attempt	{"task_id": 24, "mission_id": 1}
+26025	2026-09-30 11:18:38.440963+00	9	52	task_started	{"task_id": 24, "mission_id": 1}
+26026	2026-09-30 11:18:54.092508+00	9	51	task_started	{"task_id": 23, "mission_id": 1}
+26029	2026-09-30 11:19:16.019366+00	9	74	task_attempt	{"task_id": 25, "mission_id": 1}
+26032	2026-09-30 11:19:35.331758+00	9	53	task_attempt	{"task_id": 26, "mission_id": 1}
+26035	2026-09-30 11:19:50.939323+00	9	52	task_attempt	{"task_id": 24, "mission_id": 1}
+26520	2026-09-30 21:04:08.768588+00	28	14	task_attempt	{"task_id": 13, "mission_id": 0}
+26587	2026-10-01 06:04:14.573765+00	26	37	task_started	{"task_id": 1, "mission_id": 1}
+26588	2026-10-01 06:05:34.163687+00	25	37	task_started	{"task_id": 1, "mission_id": 1}
+26589	2026-10-01 06:05:34.366437+00	26	37	task_started	{"task_id": 1, "mission_id": 1}
+26590	2026-10-01 06:11:03.658259+00	5	63	task_started	{"task_id": 2, "mission_id": 1}
+26591	2026-10-01 06:15:15.548781+00	5	27	task_started	{"task_id": 27, "mission_id": 0}
+26592	2026-10-01 06:18:01.982922+00	5	34	task_started	{"task_id": 32, "mission_id": 0}
+26593	2026-10-01 06:18:34.313546+00	5	34	task_attempt	{"task_id": 32, "mission_id": 0}
+26594	2026-10-01 06:18:50.544083+00	26	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26595	2026-10-01 06:18:57.007247+00	26	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+26596	2026-10-01 06:18:58.820618+00	25	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26597	2026-10-01 06:19:04.117054+00	5	63	task_started	{"task_id": 2, "mission_id": 1}
+26598	2026-10-01 06:21:46.450039+00	25	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26599	2026-10-01 06:22:51.421243+00	25	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26600	2026-10-01 06:23:50.123431+00	25	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26601	2026-10-01 06:24:05.040548+00	25	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26602	2026-10-01 06:24:11.08477+00	25	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+26603	2026-10-01 06:24:18.5731+00	25	63	task_started	{"task_id": 2, "mission_id": 1}
+26604	2026-10-01 06:24:45.826707+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26605	2026-10-01 06:24:46.228393+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26606	2026-10-01 06:24:48.043457+00	26	63	task_started	{"task_id": 2, "mission_id": 1}
+26607	2026-10-01 06:25:24.245388+00	5	63	purchase_clue	{"task_id": 2, "clue_type": 1, "mission_id": 1}
+26608	2026-10-01 06:26:26.458836+00	5	63	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 1}
+26609	2026-10-01 06:28:28.685173+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26610	2026-10-01 06:30:35.387181+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26611	2026-10-01 06:30:52.539396+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26612	2026-10-01 06:31:25.723061+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26613	2026-10-01 06:31:25.819518+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26614	2026-10-01 06:31:25.819952+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26615	2026-10-01 06:31:26.250562+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26616	2026-10-01 06:31:52.57077+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26617	2026-10-01 06:32:49.552452+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26618	2026-10-01 06:33:03.380764+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26619	2026-10-01 06:33:04.169105+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26620	2026-10-01 06:33:04.367245+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26621	2026-10-01 06:33:04.83165+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26622	2026-10-01 06:33:31.095906+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26623	2026-10-01 06:33:34.600398+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26624	2026-10-01 06:33:41.616026+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26625	2026-10-01 06:33:42.39483+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26626	2026-10-01 06:33:42.560688+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26627	2026-10-01 06:33:42.800294+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26628	2026-10-01 06:33:54.743779+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26629	2026-10-01 06:33:55.257305+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26630	2026-10-01 06:33:55.39914+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26631	2026-10-01 06:34:05.472701+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26632	2026-10-01 06:34:19.951944+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26633	2026-10-01 06:34:20.589919+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26634	2026-10-01 06:34:44.814568+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26635	2026-10-01 06:34:54.3253+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26636	2026-10-01 06:34:54.533157+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26637	2026-10-01 06:34:54.728413+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26638	2026-10-01 06:35:13.335168+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26639	2026-10-01 06:35:45.741183+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26640	2026-10-01 06:35:56.648033+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26641	2026-10-01 06:36:01.768882+00	5	63	task_started	{"task_id": 2, "mission_id": 1}
+26642	2026-10-01 06:36:07.695112+00	32	37	task_started	{"task_id": 1, "mission_id": 1}
+26643	2026-10-01 06:36:08.813784+00	5	63	task_started	{"task_id": 2, "mission_id": 1}
+26644	2026-10-01 06:37:38.568907+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26645	2026-10-01 06:37:48.431402+00	32	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26646	2026-10-01 06:37:51.772321+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26647	2026-10-01 06:38:36.367621+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26648	2026-10-01 06:39:16.941173+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26649	2026-10-01 06:39:16.942162+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26650	2026-10-01 06:39:17.475781+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26651	2026-10-01 06:39:17.669526+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26652	2026-10-01 06:39:35.624016+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26657	2026-10-01 06:39:37.742457+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26662	2026-10-01 06:39:40.030077+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26667	2026-10-01 06:39:42.33348+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26672	2026-10-01 06:39:44.96501+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26677	2026-10-01 06:41:10.046468+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26684	2026-10-01 06:44:52.606283+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26689	2026-10-01 06:46:28.014197+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26691	2026-10-01 06:47:09.116997+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26653	2026-10-01 06:39:36.533102+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26658	2026-10-01 06:39:38.512914+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26663	2026-10-01 06:39:41.69342+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26668	2026-10-01 06:39:42.469117+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26673	2026-10-01 06:39:45.207074+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26678	2026-10-01 06:41:42.23678+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26679	2026-10-01 06:42:29.175716+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26685	2026-10-01 06:45:08.693968+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26690	2026-10-01 06:46:28.38221+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26692	2026-10-01 06:47:40.597306+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26693	2026-10-01 07:01:56.332919+00	16	77	task_started	{"task_id": 8, "mission_id": 1}
+26654	2026-10-01 06:39:36.729964+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26659	2026-10-01 06:39:39.564991+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26664	2026-10-01 06:39:41.848622+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26669	2026-10-01 06:39:42.652896+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26674	2026-10-01 06:39:50.616755+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26681	2026-10-01 06:43:15.429074+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26687	2026-10-01 06:46:07.559241+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26655	2026-10-01 06:39:37.327626+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26660	2026-10-01 06:39:39.687179+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26665	2026-10-01 06:39:41.990447+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26670	2026-10-01 06:39:42.877489+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26675	2026-10-01 06:39:57.005931+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26656	2026-10-01 06:39:37.525053+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26661	2026-10-01 06:39:39.847087+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26666	2026-10-01 06:39:42.133916+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26671	2026-10-01 06:39:44.809714+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26676	2026-10-01 06:40:26.695495+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26680	2026-10-01 06:43:05.796066+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26682	2026-10-01 06:44:31.284185+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26683	2026-10-01 06:44:46.566213+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26686	2026-10-01 06:45:42.709722+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26688	2026-10-01 06:46:27.380939+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26694	2026-10-01 07:02:59.845087+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26695	2026-10-01 07:03:23.338811+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26696	2026-10-01 07:03:36.252952+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26697	2026-10-01 07:03:37.258699+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26698	2026-10-01 07:03:37.514773+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26699	2026-10-01 07:04:51.884335+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26700	2026-10-01 07:06:10.670356+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26701	2026-10-01 07:06:28.673311+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26702	2026-10-01 07:06:30.468677+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26703	2026-10-01 07:06:31.778726+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26704	2026-10-01 07:08:01.884809+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26705	2026-10-01 07:08:12.468907+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26706	2026-10-01 07:08:13.475779+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26707	2026-10-01 07:08:57.658085+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26708	2026-10-01 07:09:23.002751+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26709	2026-10-01 07:10:24.711591+00	25	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26710	2026-10-01 07:10:27.410965+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26711	2026-10-01 07:10:38.00731+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26712	2026-10-01 07:10:44.904559+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26713	2026-10-01 07:10:53.557734+00	25	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26714	2026-10-01 07:10:54.240551+00	26	63	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 1}
+26715	2026-10-01 07:11:56.587795+00	25	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26716	2026-10-01 07:12:02.393058+00	25	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26717	2026-10-01 07:12:10.392384+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26718	2026-10-01 07:12:14.289826+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26719	2026-10-01 07:12:14.865784+00	25	63	task_started	{"task_id": 2, "mission_id": 1}
+26720	2026-10-01 07:12:18.36762+00	25	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26721	2026-10-01 07:12:26.83308+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26722	2026-10-01 07:12:31.948356+00	25	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26723	2026-10-01 07:12:35.24412+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26724	2026-10-01 07:12:35.3409+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26725	2026-10-01 07:12:39.492434+00	25	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26726	2026-10-01 07:13:44.214976+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26727	2026-10-01 07:14:14.112435+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26728	2026-10-01 07:14:16.864355+00	5	63	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 1}
+26729	2026-10-01 07:17:25.310066+00	26	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26730	2026-10-01 07:19:03.328091+00	26	38	task_started	{"task_id": 3, "mission_id": 1}
+26731	2026-10-01 07:19:16.306333+00	25	38	task_started	{"task_id": 3, "mission_id": 1}
+26732	2026-10-01 07:24:52.133282+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26733	2026-10-01 07:25:07.998525+00	5	38	task_started	{"task_id": 3, "mission_id": 1}
+26734	2026-10-01 07:30:55.946171+00	22	63	task_started	{"task_id": 2, "mission_id": 1}
+26735	2026-10-01 07:43:20.906865+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26736	2026-10-01 07:44:06.126614+00	5	38	purchase_clue	{"task_id": 3, "clue_type": 2, "mission_id": 1}
+26737	2026-10-01 07:46:04.580144+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26738	2026-10-01 07:46:27.211061+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26739	2026-10-01 07:46:49.170894+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26740	2026-10-01 08:08:00.89381+00	35	24	task_started	{"task_id": 24, "mission_id": 0}
+26741	2026-10-01 08:27:53.273848+00	35	24	task_attempt	{"task_id": 24, "mission_id": 0}
+26742	2026-10-01 08:30:31.587706+00	26	24	task_started	{"task_id": 24, "mission_id": 0}
+26743	2026-10-01 08:32:18.610687+00	35	24	task_attempt	{"task_id": 24, "mission_id": 0}
+26744	2026-10-01 08:39:05.986114+00	26	24	task_attempt	{"task_id": 24, "mission_id": 0}
+26745	2026-10-01 08:39:18.773215+00	26	24	task_attempt	{"task_id": 24, "mission_id": 0}
+26746	2026-10-01 08:40:01.362449+00	26	24	task_attempt	{"task_id": 24, "mission_id": 0}
+26747	2026-10-01 09:57:59.874304+00	13	39	task_started	{"task_id": 4, "mission_id": 1}
+26748	2026-10-01 09:58:01.994817+00	13	39	task_started	{"task_id": 4, "mission_id": 1}
+26749	2026-10-01 10:17:53.402889+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26754	2026-10-01 10:25:54.934342+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26756	2026-10-01 10:26:04.907632+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26758	2026-10-01 10:26:26.057626+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26750	2026-10-01 10:18:07.862717+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26751	2026-10-01 10:19:03.038312+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26755	2026-10-01 10:25:57.943107+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26759	2026-10-01 10:28:20.677295+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26760	2026-10-01 10:31:25.933224+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26752	2026-10-01 10:19:07.96996+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26753	2026-10-01 10:19:17.003289+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26757	2026-10-01 10:26:19.257968+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26761	2026-10-01 10:31:45.313515+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26762	2026-10-01 10:31:45.877825+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26763	2026-10-01 10:32:14.176536+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26764	2026-10-01 10:32:36.478048+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26765	2026-10-01 10:32:47.772914+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26766	2026-10-01 10:32:48.497588+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26767	2026-10-01 10:33:43.193279+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26768	2026-10-01 10:34:02.35761+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26769	2026-10-01 10:34:21.3055+00	33	37	task_started	{"task_id": 1, "mission_id": 1}
+26770	2026-10-01 10:34:33.262421+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26771	2026-10-01 10:34:47.822263+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26772	2026-10-01 10:37:15.902453+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26773	2026-10-01 10:37:16.57278+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26774	2026-10-01 10:39:08.902795+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26775	2026-10-01 10:40:06.447825+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26776	2026-10-01 10:40:06.467753+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26777	2026-10-01 10:40:06.475033+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26778	2026-10-01 10:40:06.857239+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26779	2026-10-01 10:40:13.39319+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26780	2026-10-01 10:41:17.668023+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26781	2026-10-01 10:41:19.567674+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26782	2026-10-01 10:46:03.443207+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26783	2026-10-01 10:46:04.103311+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26784	2026-10-01 10:47:01.192984+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26785	2026-10-01 10:47:07.253281+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26786	2026-10-01 10:47:09.942531+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26787	2026-10-01 10:47:14.048059+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26788	2026-10-01 10:47:26.602957+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26789	2026-10-01 10:47:30.467658+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26790	2026-10-01 10:47:33.93761+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26791	2026-10-01 10:47:34.588189+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26792	2026-10-01 10:47:37.357504+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26793	2026-10-01 10:47:37.68466+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26794	2026-10-01 10:47:40.072593+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26795	2026-10-01 10:47:40.187103+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26796	2026-10-01 10:47:40.302342+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26797	2026-10-01 10:47:40.467502+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26798	2026-10-01 10:47:43.322419+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26799	2026-10-01 10:47:43.477899+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26800	2026-10-01 10:47:43.657459+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26801	2026-10-01 10:48:51.627508+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26802	2026-10-01 10:50:55.735393+00	13	39	purchase_clue	{"task_id": 4, "clue_type": 2, "mission_id": 1}
+26803	2026-10-01 10:51:46.738121+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26804	2026-10-01 10:51:49.162724+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26805	2026-10-01 10:51:50.537801+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26806	2026-10-01 10:51:54.028238+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26807	2026-10-01 10:51:56.714136+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26808	2026-10-01 10:52:16.117781+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26809	2026-10-01 10:55:50.177997+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26810	2026-10-01 10:56:01.5682+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26811	2026-10-01 10:57:39.273426+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26812	2026-10-01 10:57:44.563233+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26813	2026-10-01 10:57:44.606757+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26814	2026-10-01 10:57:47.037229+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26815	2026-10-01 10:57:47.577723+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26816	2026-10-01 10:57:53.272538+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26817	2026-10-01 10:57:53.537444+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26818	2026-10-01 10:57:54.202505+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26819	2026-10-01 10:57:54.552284+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26820	2026-10-01 10:58:00.107988+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26821	2026-10-01 10:58:00.642995+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26822	2026-10-01 10:58:32.822802+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26823	2026-10-01 10:58:54.834139+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26828	2026-10-01 10:59:01.787764+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26824	2026-10-01 10:58:55.267895+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26829	2026-10-01 10:59:26.072563+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26825	2026-10-01 10:58:57.783137+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26830	2026-10-01 10:59:26.512394+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26826	2026-10-01 10:58:58.272712+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26831	2026-10-01 10:59:44.377181+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26827	2026-10-01 10:59:01.349247+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26832	2026-10-01 11:00:56.682541+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26833	2026-10-01 11:01:39.357423+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26834	2026-10-01 11:01:44.767767+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26835	2026-10-01 11:01:48.718032+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26836	2026-10-01 11:02:04.167476+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26837	2026-10-01 11:02:04.758573+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26838	2026-10-01 11:02:04.877077+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26839	2026-10-01 11:02:05.022715+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26840	2026-10-01 11:02:26.452676+00	13	39	task_started	{"task_id": 4, "mission_id": 1}
+26841	2026-10-01 11:03:31.367985+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26842	2026-10-01 11:03:50.708482+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26843	2026-10-01 11:04:33.427477+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26844	2026-10-01 11:05:36.197832+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26845	2026-10-01 11:24:27.226261+00	5	63	task_started	{"task_id": 2, "mission_id": 1}
+26846	2026-10-01 11:25:18.872916+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26847	2026-10-01 11:25:18.873466+00	5	63	task_attempt	{"task_id": 2, "mission_id": 1}
+26848	2026-10-01 11:26:43.818696+00	5	38	task_started	{"task_id": 3, "mission_id": 1}
+26849	2026-10-01 11:30:46.539072+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26850	2026-10-01 11:31:14.899868+00	13	39	task_started	{"task_id": 4, "mission_id": 1}
+26851	2026-10-01 11:31:28.234275+00	5	38	purchase_clue	{"task_id": 3, "clue_type": 1, "mission_id": 1}
+26852	2026-10-01 11:31:51.919954+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26853	2026-10-01 11:32:29.738038+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26854	2026-10-01 11:32:30.969104+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26855	2026-10-01 11:32:31.08405+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26856	2026-10-01 11:32:31.242166+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26857	2026-10-01 11:32:31.466091+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26858	2026-10-01 11:33:06.857575+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26859	2026-10-01 11:33:08.363044+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26860	2026-10-01 11:33:09.042605+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26861	2026-10-01 11:33:09.197928+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26862	2026-10-01 11:33:22.94327+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26863	2026-10-01 11:35:20.950406+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26864	2026-10-01 11:36:05.583268+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26865	2026-10-01 11:36:07.140982+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26866	2026-10-01 11:36:53.433335+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26867	2026-10-01 11:36:56.387829+00	13	39	task_started	{"task_id": 4, "mission_id": 1}
+26868	2026-10-01 11:36:59.797423+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26869	2026-10-01 11:37:19.5292+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26870	2026-10-01 11:38:02.280239+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26871	2026-10-01 11:38:38.056411+00	13	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26872	2026-10-01 11:38:52.207993+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26873	2026-10-01 11:40:29.328562+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26874	2026-10-01 11:40:38.207936+00	13	39	task_started	{"task_id": 4, "mission_id": 1}
+26875	2026-10-01 11:43:24.321325+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26876	2026-10-01 11:43:36.560584+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26877	2026-10-01 11:43:37.88989+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26878	2026-10-01 11:43:38.193584+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26879	2026-10-01 11:43:38.417847+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26880	2026-10-01 11:44:03.425292+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26881	2026-10-01 11:44:03.749967+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26882	2026-10-01 11:44:03.968012+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26883	2026-10-01 11:44:25.192714+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26884	2026-10-01 11:44:31.270808+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26885	2026-10-01 11:44:36.649534+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26886	2026-10-01 11:44:59.766791+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26887	2026-10-01 11:45:00.646215+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26888	2026-10-01 11:45:00.77616+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26889	2026-10-01 11:45:01.278709+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26890	2026-10-01 11:45:01.369316+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26891	2026-10-01 11:45:14.440086+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26892	2026-10-01 11:46:00.024428+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26893	2026-10-01 11:46:55.051268+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26894	2026-10-01 11:47:24.582105+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26895	2026-10-01 11:47:45.945251+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26896	2026-10-01 11:48:07.872095+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26901	2026-10-01 11:50:33.296903+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26906	2026-10-01 11:53:32.422257+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26897	2026-10-01 11:48:24.025945+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26902	2026-10-01 11:50:42.263945+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26898	2026-10-01 11:48:53.032506+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26903	2026-10-01 11:52:44.192754+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26899	2026-10-01 11:49:08.616984+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26904	2026-10-01 11:52:58.390991+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26900	2026-10-01 11:49:47.743817+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26905	2026-10-01 11:53:11.88105+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26907	2026-10-01 11:54:53.70651+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26908	2026-10-01 11:55:40.810107+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26909	2026-10-01 11:55:47.542723+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26910	2026-10-01 11:57:13.066496+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26911	2026-10-01 12:01:26.654893+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26912	2026-10-01 12:03:59.204402+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26913	2026-10-01 12:04:09.916767+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26914	2026-10-01 12:04:39.111882+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26915	2026-10-01 12:05:36.472124+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26916	2026-10-01 12:06:29.413657+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26917	2026-10-01 12:06:53.016701+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26918	2026-10-01 12:07:03.114615+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26919	2026-10-01 12:07:09.145571+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26920	2026-10-01 12:07:48.942523+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26921	2026-10-01 12:07:54.57684+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26922	2026-10-01 12:10:06.354648+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26923	2026-10-01 12:10:29.249941+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26924	2026-10-01 12:10:39.810576+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26925	2026-10-01 12:10:46.659623+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26926	2026-10-01 12:10:47.593744+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26927	2026-10-01 12:10:55.489055+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26928	2026-10-01 12:10:56.168071+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26929	2026-10-01 12:11:10.10557+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26930	2026-10-01 12:11:30.631709+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26931	2026-10-01 12:11:46.503935+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26932	2026-10-01 12:20:09.595826+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26933	2026-10-01 12:21:17.801622+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26934	2026-10-01 12:22:08.531289+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26935	2026-10-01 12:22:47.970392+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26936	2026-10-01 12:22:48.240806+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26937	2026-10-01 12:22:53.393894+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26938	2026-10-01 12:23:06.096308+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26939	2026-10-01 12:23:12.654113+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26940	2026-10-01 12:23:13.527911+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26941	2026-10-01 12:23:22.488468+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26942	2026-10-01 12:23:23.288442+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26943	2026-10-01 12:23:23.496137+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26944	2026-10-01 12:23:23.713927+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26945	2026-10-01 12:23:54.144118+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26946	2026-10-01 12:24:01.688346+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26947	2026-10-01 12:24:07.497434+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26948	2026-10-01 12:24:13.330167+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26949	2026-10-01 12:24:14.538318+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26950	2026-10-01 12:24:15.800513+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26951	2026-10-01 12:25:53.499307+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26952	2026-10-01 12:26:41.319978+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26953	2026-10-01 12:26:52.818207+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26954	2026-10-01 12:26:57.751924+00	5	38	task_attempt	{"task_id": 3, "mission_id": 1}
+26955	2026-10-01 12:43:21.601993+00	5	39	task_started	{"task_id": 4, "mission_id": 1}
+26956	2026-10-01 12:45:41.400204+00	5	39	purchase_clue	{"task_id": 4, "clue_type": 1, "mission_id": 1}
+26957	2026-10-01 12:45:47.527443+00	5	39	purchase_clue	{"task_id": 4, "clue_type": 2, "mission_id": 1}
+26958	2026-10-01 12:48:59.400435+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26959	2026-10-01 12:49:08.104245+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26960	2026-10-01 12:49:22.968346+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26961	2026-10-01 12:50:00.312021+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26962	2026-10-01 12:50:49.544789+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26963	2026-10-01 12:52:00.760398+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26964	2026-10-01 12:52:28.348283+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26965	2026-10-01 12:52:47.952357+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26966	2026-10-01 12:53:05.078739+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26967	2026-10-01 12:53:13.223956+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26968	2026-10-01 13:00:14.676729+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26969	2026-10-01 13:01:39.558612+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26970	2026-10-01 13:01:39.56081+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26975	2026-10-01 13:03:13.251591+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26980	2026-10-01 13:07:30.645172+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26985	2026-10-01 13:09:48.149206+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26971	2026-10-01 13:01:39.973272+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26976	2026-10-01 13:03:14.580117+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26981	2026-10-01 13:08:17.188864+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26986	2026-10-01 13:09:56.196154+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26972	2026-10-01 13:01:40.228105+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26977	2026-10-01 13:03:41.012994+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26973	2026-10-01 13:02:45.700604+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26978	2026-10-01 13:04:37.940183+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26983	2026-10-01 13:09:35.156787+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26988	2026-10-01 13:10:08.164202+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26974	2026-10-01 13:03:08.300509+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26979	2026-10-01 13:07:21.697852+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26982	2026-10-01 13:08:36.702353+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26984	2026-10-01 13:09:40.875927+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26987	2026-10-01 13:10:06.326467+00	5	39	task_attempt	{"task_id": 4, "mission_id": 1}
+26989	2026-10-01 20:34:59.365677+00	76	1	task_started	{"task_id": 1, "mission_id": 0}
+26990	2026-10-02 12:01:25.23875+00	51	37	task_started	{"task_id": 1, "mission_id": 1}
+26991	2026-10-02 12:11:07.980283+00	51	37	task_started	{"task_id": 1, "mission_id": 1}
+26992	2026-10-02 12:11:16.678631+00	51	37	task_started	{"task_id": 1, "mission_id": 1}
+26994	2026-10-04 10:05:16.754545+00	70	37	task_started	{"task_id": 1, "mission_id": 1}
+26995	2026-10-04 10:37:01.975208+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26996	2026-10-04 10:37:18.106578+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26997	2026-10-04 10:37:47.830792+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26998	2026-10-04 10:37:55.04592+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+26999	2026-10-04 10:37:55.518427+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27000	2026-10-04 10:37:55.9803+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27001	2026-10-04 10:37:56.175229+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27002	2026-10-04 10:37:56.366612+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27003	2026-10-04 10:50:53.110973+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27004	2026-10-04 10:50:54.039094+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27005	2026-10-04 10:50:54.686054+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27006	2026-10-04 10:50:54.852812+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27007	2026-10-04 10:50:55.012828+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27008	2026-10-04 10:50:55.18906+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27009	2026-10-04 10:51:08.60029+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27010	2026-10-04 10:51:26.3862+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27011	2026-10-04 10:52:42.606455+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27012	2026-10-04 10:53:29.069701+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27013	2026-10-04 10:53:29.839165+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27014	2026-10-04 11:00:01.379356+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27015	2026-10-04 11:01:08.650442+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27016	2026-10-04 11:03:32.270804+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27017	2026-10-04 11:03:46.133312+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27018	2026-10-04 11:03:53.269842+00	70	37	purchase_clue	{"task_id": 1, "clue_type": 1, "mission_id": 1}
+27019	2026-10-04 11:03:55.708843+00	70	37	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 1}
+27020	2026-10-04 11:04:05.362677+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27021	2026-10-04 11:04:13.47918+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27022	2026-10-04 11:20:16.973045+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27023	2026-10-04 11:26:11.097841+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27024	2026-10-04 11:26:11.690662+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27025	2026-10-04 11:26:11.872647+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27026	2026-10-04 11:26:19.007076+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27027	2026-10-04 11:26:19.289055+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27028	2026-10-04 11:26:19.472994+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27029	2026-10-04 11:26:54.070708+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27030	2026-10-04 11:27:12.714291+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27031	2026-10-04 11:27:23.083873+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27032	2026-10-04 11:30:31.781033+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27033	2026-10-04 11:30:32.189766+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27034	2026-10-04 11:30:32.380739+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27035	2026-10-04 11:30:44.109416+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27036	2026-10-04 11:30:48.434881+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27037	2026-10-04 11:31:05.41687+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27038	2026-10-04 11:31:34.759321+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27039	2026-10-04 11:31:45.011626+00	70	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27040	2026-10-04 11:31:46.999751+00	70	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+27041	2026-10-04 11:32:47.900002+00	70	63	task_started	{"task_id": 2, "mission_id": 1}
+27042	2026-10-04 16:38:45.479455+00	48	37	task_started	{"task_id": 1, "mission_id": 1}
+27043	2026-10-04 16:40:50.282307+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27044	2026-10-04 16:40:59.878734+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27045	2026-10-04 16:41:09.674468+00	48	37	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 1}
+27046	2026-10-04 16:41:47.291194+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27047	2026-10-04 16:41:48.575385+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27048	2026-10-04 16:41:52.891393+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27049	2026-10-04 16:41:53.674581+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27050	2026-10-04 16:42:00.782814+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27052	2026-10-04 16:42:01.599908+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27054	2026-10-04 16:42:46.748404+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27056	2026-10-04 16:43:35.672623+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27058	2026-10-04 16:45:57.515869+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27060	2026-10-04 16:46:41.444746+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27062	2026-10-04 16:47:15.674592+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27064	2026-10-04 16:48:12.842389+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27066	2026-10-04 16:48:28.062153+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27068	2026-10-04 16:48:39.255176+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27070	2026-10-04 16:49:43.886043+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27072	2026-10-04 16:50:31.771707+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27074	2026-10-04 16:51:16.895499+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27076	2026-10-04 16:52:14.549053+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27078	2026-10-04 16:53:18.923351+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27080	2026-10-04 16:55:15.016882+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27082	2026-10-04 16:55:43.190726+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27083	2026-10-04 16:55:48.064904+00	48	37	task_started	{"task_id": 1, "mission_id": 1}
+27085	2026-10-04 16:55:56.289391+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27087	2026-10-04 16:56:09.469557+00	48	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+27051	2026-10-04 16:42:01.434814+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27053	2026-10-04 16:42:01.768261+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27055	2026-10-04 16:43:10.84363+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27057	2026-10-04 16:45:54.897657+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27059	2026-10-04 16:46:10.524144+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27061	2026-10-04 16:46:44.951418+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27063	2026-10-04 16:48:11.638661+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27065	2026-10-04 16:48:19.312518+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27067	2026-10-04 16:48:34.680208+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27069	2026-10-04 16:48:43.490295+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27071	2026-10-04 16:49:52.849575+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27073	2026-10-04 16:50:48.690283+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27075	2026-10-04 16:51:53.649809+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27077	2026-10-04 16:52:33.252225+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27079	2026-10-04 16:54:46.959428+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27081	2026-10-04 16:55:18.659133+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27084	2026-10-04 16:55:54.680536+00	48	37	task_started	{"task_id": 1, "mission_id": 1}
+27086	2026-10-04 16:56:02.662707+00	48	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27088	2026-10-04 16:56:18.319045+00	48	63	task_started	{"task_id": 2, "mission_id": 1}
+27089	2026-10-04 16:56:43.416784+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27090	2026-10-04 16:57:20.373435+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27091	2026-10-04 16:57:26.606504+00	48	63	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 1}
+27092	2026-10-04 16:58:24.311971+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27093	2026-10-04 16:58:25.711934+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27094	2026-10-04 16:58:25.846826+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27095	2026-10-04 16:58:58.625132+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27096	2026-10-04 17:00:02.351594+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27097	2026-10-04 17:01:30.221893+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27098	2026-10-04 17:01:31.147174+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27099	2026-10-04 17:01:31.375154+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27100	2026-10-04 17:01:31.719402+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27101	2026-10-04 17:01:32.031982+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27102	2026-10-04 17:01:42.032628+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27103	2026-10-04 17:01:47.802361+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27104	2026-10-04 17:02:16.131565+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27105	2026-10-04 17:02:18.285017+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27106	2026-10-04 17:03:53.642799+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27107	2026-10-04 17:03:55.832252+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27108	2026-10-04 17:04:32.487783+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27109	2026-10-04 17:05:00.359743+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27110	2026-10-04 17:05:07.481493+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27111	2026-10-04 17:05:22.90623+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27112	2026-10-04 17:05:48.43661+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27113	2026-10-04 17:06:20.187728+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27114	2026-10-04 17:07:14.919912+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27115	2026-10-04 17:09:59.946777+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27116	2026-10-04 17:10:41.984219+00	48	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27117	2026-10-04 17:10:49.856908+00	48	63	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 1}
+27118	2026-10-04 17:11:45.792216+00	48	38	task_started	{"task_id": 3, "mission_id": 1}
+27119	2026-10-04 17:12:57.304339+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27120	2026-10-04 17:13:09.704046+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27121	2026-10-04 17:13:19.963922+00	48	38	purchase_clue	{"task_id": 3, "clue_type": 2, "mission_id": 1}
+27122	2026-10-04 17:14:29.868584+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27123	2026-10-04 17:15:17.443023+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27124	2026-10-04 17:16:05.724193+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27125	2026-10-04 17:16:28.499421+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27126	2026-10-04 17:16:45.657766+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27127	2026-10-04 17:16:59.260216+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27128	2026-10-04 17:17:39.012126+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27129	2026-10-04 17:18:37.736974+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27130	2026-10-04 17:19:51.000033+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27131	2026-10-04 17:20:04.537101+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27132	2026-10-04 17:20:27.990875+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27133	2026-10-04 17:20:53.276178+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27134	2026-10-04 17:21:18.139972+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27135	2026-10-04 17:21:37.621594+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27137	2026-10-04 17:22:39.279325+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27139	2026-10-04 17:23:44.043166+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27141	2026-10-04 17:24:33.891496+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27143	2026-10-04 17:26:22.354583+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27145	2026-10-04 17:28:08.152486+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27147	2026-10-04 17:28:14.464443+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27149	2026-10-04 17:30:08.055437+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27150	2026-10-04 17:30:44.598714+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27136	2026-10-04 17:22:04.804675+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27138	2026-10-04 17:23:09.813571+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27140	2026-10-04 17:24:13.693611+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27142	2026-10-04 17:25:51.185826+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27144	2026-10-04 17:27:06.322526+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27146	2026-10-04 17:28:09.202652+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27148	2026-10-04 17:29:07.844573+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27151	2026-10-04 17:30:51.399133+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27152	2026-10-04 17:31:46.262217+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27153	2026-10-04 17:31:47.889317+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27154	2026-10-04 17:31:48.074044+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27155	2026-10-04 17:31:48.240856+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27156	2026-10-04 17:31:48.444438+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27157	2026-10-04 17:32:16.654498+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27158	2026-10-04 17:32:18.256308+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27159	2026-10-04 17:33:02.448802+00	48	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27160	2026-10-04 17:33:34.30166+00	48	38	task_submitted	{"task_id": 3, "is_correct": true, "mission_id": 1}
+27161	2026-10-04 17:34:12.036665+00	48	39	task_started	{"task_id": 4, "mission_id": 1}
+27162	2026-10-04 17:34:39.877021+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27163	2026-10-04 17:34:48.275676+00	48	39	purchase_clue	{"task_id": 4, "clue_type": 2, "mission_id": 1}
+27164	2026-10-04 17:35:48.572676+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27165	2026-10-04 17:36:18.339183+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27166	2026-10-04 17:37:48.021931+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27167	2026-10-04 17:38:33.583956+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27168	2026-10-04 17:38:56.132625+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27169	2026-10-04 17:39:20.639954+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27170	2026-10-04 17:39:58.276852+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27171	2026-10-04 17:40:18.500799+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27172	2026-10-04 17:40:22.69963+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27173	2026-10-04 17:40:37.268249+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27174	2026-10-04 17:40:41.715042+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27175	2026-10-04 17:42:22.681755+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27176	2026-10-04 17:42:24.019878+00	48	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27177	2026-10-04 17:42:36.853437+00	48	39	task_submitted	{"task_id": 4, "is_correct": true, "mission_id": 1}
+27178	2026-10-04 17:43:14.264871+00	48	40	task_started	{"task_id": 5, "mission_id": 1}
+27179	2026-10-04 17:43:38.997385+00	48	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27180	2026-10-04 17:43:42.24713+00	48	40	purchase_clue	{"task_id": 5, "clue_type": 2, "mission_id": 1}
+27181	2026-10-04 17:44:09.35224+00	48	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27182	2026-10-04 17:44:10.442864+00	48	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27183	2026-10-04 17:44:17.819234+00	48	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27184	2026-10-04 17:44:17.818767+00	48	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27185	2026-10-04 17:44:33.360288+00	48	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27186	2026-10-04 17:44:38.702496+00	48	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27187	2026-10-04 17:44:40.012294+00	48	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27188	2026-10-04 17:44:52.737239+00	48	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27189	2026-10-04 17:44:57.950567+00	48	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27190	2026-10-04 17:45:32.526953+00	48	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27191	2026-10-04 17:45:54.408892+00	48	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27192	2026-10-04 17:46:05.6038+00	48	40	task_submitted	{"task_id": 5, "is_correct": true, "mission_id": 1}
+27193	2026-10-05 09:39:17.365287+00	33	37	task_started	{"task_id": 1, "mission_id": 1}
+27194	2026-10-05 09:44:00.398393+00	33	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27195	2026-10-05 09:49:16.178241+00	33	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27196	2026-10-05 09:49:31.575869+00	33	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27197	2026-10-05 09:49:32.27317+00	33	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27198	2026-10-05 09:49:46.033835+00	33	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27199	2026-10-05 09:49:47.085885+00	33	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27200	2026-10-05 09:50:35.707239+00	33	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27201	2026-10-05 09:50:45.967284+00	33	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27202	2026-10-05 09:50:51.792168+00	33	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27203	2026-10-05 09:50:59.466978+00	33	37	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 1}
+27204	2026-10-05 09:51:10.390109+00	33	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27205	2026-10-05 09:51:21.868419+00	33	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27206	2026-10-05 09:51:23.807983+00	33	37	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 1}
+27207	2026-10-05 09:51:25.654829+00	33	63	task_started	{"task_id": 2, "mission_id": 1}
+27208	2026-10-05 09:51:29.246595+00	33	37	task_started	{"task_id": 1, "mission_id": 1}
+27211	2026-10-05 09:54:37.360516+00	33	63	task_started	{"task_id": 2, "mission_id": 1}
+27213	2026-10-05 10:00:29.237633+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27215	2026-10-05 10:00:56.433663+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27217	2026-10-05 10:02:21.574148+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27219	2026-10-05 10:02:35.203972+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27221	2026-10-05 10:04:07.730924+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27223	2026-10-05 10:05:30.502829+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27225	2026-10-05 10:06:08.486559+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27209	2026-10-05 09:51:42.089093+00	33	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27210	2026-10-05 09:52:27.941865+00	33	63	task_started	{"task_id": 2, "mission_id": 1}
+27212	2026-10-05 09:59:28.848477+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27214	2026-10-05 10:00:55.79995+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27216	2026-10-05 10:02:14.186628+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27218	2026-10-05 10:02:22.363172+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27220	2026-10-05 10:02:49.154287+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27222	2026-10-05 10:04:23.65054+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27224	2026-10-05 10:05:54.944601+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27226	2026-10-05 10:06:16.853016+00	33	63	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 1}
+27227	2026-10-05 10:06:26.603691+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27228	2026-10-05 10:08:38.127262+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27229	2026-10-05 10:11:02.764031+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27230	2026-10-05 10:11:08.384141+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27231	2026-10-05 10:11:09.787856+00	33	63	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 1}
+27232	2026-10-05 10:11:11.506667+00	33	38	task_started	{"task_id": 3, "mission_id": 1}
+27233	2026-10-05 10:11:18.03928+00	33	63	task_started	{"task_id": 2, "mission_id": 1}
+27234	2026-10-05 10:11:25.730128+00	33	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27235	2026-10-05 10:11:42.731661+00	33	38	task_started	{"task_id": 3, "mission_id": 1}
+27236	2026-10-05 10:12:54.912723+00	33	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27237	2026-10-05 10:13:27.396305+00	33	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27238	2026-10-05 10:13:29.23306+00	33	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27239	2026-10-05 10:14:39.999478+00	33	38	purchase_clue	{"task_id": 3, "clue_type": 2, "mission_id": 1}
+27240	2026-10-05 10:15:00.090573+00	33	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27241	2026-10-05 10:15:00.847746+00	33	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27242	2026-10-05 10:15:04.042244+00	33	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27243	2026-10-05 10:15:04.401248+00	33	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27244	2026-10-05 10:15:41.233401+00	33	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27245	2026-10-05 11:02:46.440107+00	4	23	task_started	{"task_id": 23, "mission_id": 0}
+27246	2026-10-05 14:44:53.352097+00	19	38	task_started	{"task_id": 3, "mission_id": 1}
+27247	2026-10-05 14:45:01.649037+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27248	2026-10-05 14:49:05.311996+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27249	2026-10-05 14:49:06.526329+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27250	2026-10-05 14:49:09.384338+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27251	2026-10-05 14:49:09.613053+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27252	2026-10-05 14:49:09.960485+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27253	2026-10-05 14:49:10.133965+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27254	2026-10-05 14:49:10.351717+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27255	2026-10-05 14:49:21.606272+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27256	2026-10-05 14:49:52.12561+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27257	2026-10-05 14:50:02.760614+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27258	2026-10-05 14:50:43.59525+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27259	2026-10-05 14:50:57.937113+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27260	2026-10-05 14:51:08.858313+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27261	2026-10-05 14:54:37.946058+00	49	1	task_started	{"task_id": 1, "mission_id": 0}
+27262	2026-10-05 14:56:17.15306+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27263	2026-10-05 14:56:30.166042+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27264	2026-10-05 14:58:00.688494+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27265	2026-10-05 14:58:01.131975+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27266	2026-10-05 14:58:01.584621+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27267	2026-10-05 14:58:30.273297+00	49	1	task_attempt	{"task_id": 1, "mission_id": 0}
+27268	2026-10-05 14:58:33.567723+00	49	1	task_submitted	{"task_id": 1, "is_correct": true, "mission_id": 0}
+27269	2026-10-05 15:00:33.158251+00	49	2	task_started	{"task_id": 2, "mission_id": 0}
+27270	2026-10-05 15:01:08.382787+00	49	2	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 0}
+27271	2026-10-05 15:01:36.893114+00	49	2	task_attempt	{"task_id": 2, "mission_id": 0}
+27272	2026-10-05 15:01:39.298049+00	49	2	task_submitted	{"task_id": 2, "is_correct": true, "mission_id": 0}
+27273	2026-10-05 15:02:04.490277+00	49	4	task_started	{"task_id": 3, "mission_id": 0}
+27274	2026-10-05 15:02:57.642886+00	49	4	purchase_clue	{"task_id": 3, "clue_type": 2, "mission_id": 0}
+27275	2026-10-05 15:03:10.417777+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27276	2026-10-05 15:03:17.230167+00	49	4	purchase_clue	{"task_id": 3, "clue_type": 1, "mission_id": 0}
+27277	2026-10-05 15:03:19.140694+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27278	2026-10-05 15:03:36.149507+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27279	2026-10-05 15:04:30.225973+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27280	2026-10-05 15:05:36.318053+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27281	2026-10-05 15:06:57.96623+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27283	2026-10-05 15:07:26.829841+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27285	2026-10-05 15:11:41.311099+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27287	2026-10-05 15:12:30.753256+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27289	2026-10-05 15:13:07.117911+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27291	2026-10-05 15:14:03.087025+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27293	2026-10-05 15:14:03.487158+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27282	2026-10-05 15:07:04.62115+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27284	2026-10-05 15:09:54.42467+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27286	2026-10-05 15:12:11.393062+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27288	2026-10-05 15:13:06.593546+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27290	2026-10-05 15:13:07.346151+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27292	2026-10-05 15:14:03.259687+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27294	2026-10-05 15:15:07.949492+00	19	38	task_started	{"task_id": 3, "mission_id": 1}
+27295	2026-10-05 15:15:11.856848+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27296	2026-10-05 15:16:55.381496+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27297	2026-10-05 15:19:31.544076+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27298	2026-10-05 15:19:32.848941+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27299	2026-10-05 15:19:33.09835+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27300	2026-10-05 15:19:33.325462+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27301	2026-10-05 15:19:49.256085+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27302	2026-10-05 15:20:11.171148+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27303	2026-10-05 15:20:34.09987+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27304	2026-10-05 15:20:34.753418+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27305	2026-10-05 15:20:34.936071+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27306	2026-10-05 15:20:35.166283+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27307	2026-10-05 15:20:43.397783+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27308	2026-10-05 15:20:58.234327+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27309	2026-10-05 15:21:26.440912+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27310	2026-10-05 15:21:27.620928+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27311	2026-10-05 15:21:27.756536+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27312	2026-10-05 15:21:27.86293+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27313	2026-10-05 15:21:28.077698+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27314	2026-10-05 15:21:35.498512+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27315	2026-10-05 15:21:52.086375+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27316	2026-10-05 15:21:52.504802+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27317	2026-10-05 15:21:52.678418+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27318	2026-10-05 15:21:52.899534+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27319	2026-10-05 15:22:15.962752+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27320	2026-10-05 15:22:45.312365+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27321	2026-10-05 15:22:45.986169+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27322	2026-10-05 15:22:46.209496+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27323	2026-10-05 15:24:25.295287+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27324	2026-10-05 15:25:33.738506+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27325	2026-10-05 15:25:44.678688+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27326	2026-10-05 15:26:02.577884+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27327	2026-10-05 15:26:15.382846+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27328	2026-10-05 15:26:26.341962+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27329	2026-10-05 15:26:45.846119+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27330	2026-10-05 15:27:02.054847+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27331	2026-10-05 15:27:39.651975+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27332	2026-10-05 15:29:31.723793+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27333	2026-10-05 15:29:50.523891+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27334	2026-10-05 15:29:52.349321+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27335	2026-10-05 15:29:52.989165+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27336	2026-10-05 15:29:53.164095+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27337	2026-10-05 15:29:53.384573+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27338	2026-10-05 15:30:00.203287+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27339	2026-10-05 15:30:05.981307+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27340	2026-10-05 15:30:13.410556+00	19	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27341	2026-10-05 17:14:08.114031+00	19	39	task_started	{"task_id": 4, "mission_id": 1}
+27342	2026-10-06 08:12:10.307108+00	69	37	task_started	{"task_id": 1, "mission_id": 1}
+27343	2026-10-07 13:29:50.906002+00	16	77	task_started	{"task_id": 8, "mission_id": 1}
+27344	2026-10-07 13:31:09.413749+00	15	55	task_started	{"task_id": 1, "mission_id": 2}
+27345	2026-10-07 13:33:40.869154+00	15	55	task_started	{"task_id": 1, "mission_id": 2}
+27346	2026-10-07 13:35:36.790214+00	16	39	task_started	{"task_id": 4, "mission_id": 1}
+27347	2026-10-07 13:35:54.669343+00	16	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27348	2026-10-07 13:35:55.092467+00	16	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27349	2026-10-07 13:35:58.72453+00	16	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27350	2026-10-07 13:35:59.892691+00	16	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27351	2026-10-07 13:36:10.166088+00	16	39	task_started	{"task_id": 4, "mission_id": 1}
+27352	2026-10-07 13:36:40.813967+00	16	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27353	2026-10-07 13:37:45.3089+00	16	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27356	2026-10-07 13:40:51.772589+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27358	2026-10-07 13:41:18.643225+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27359	2026-10-07 13:41:26.752911+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27361	2026-10-07 13:41:40.728027+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27363	2026-10-07 13:42:12.289364+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27365	2026-10-07 13:42:29.493639+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27367	2026-10-07 13:42:43.672259+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27369	2026-10-07 13:47:25.436728+00	16	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27371	2026-10-07 13:47:40.278438+00	16	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27373	2026-10-07 13:48:38.861559+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27375	2026-10-07 13:49:03.548922+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27376	2026-10-07 13:49:17.92967+00	15	55	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 2}
+27379	2026-10-07 13:50:50.861889+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27381	2026-10-07 13:50:57.404919+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27383	2026-10-07 13:53:21.602502+00	17	63	task_started	{"task_id": 2, "mission_id": 1}
+27384	2026-10-07 13:53:51.081053+00	16	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27386	2026-10-07 13:54:21.243367+00	16	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27388	2026-10-07 13:54:44.454461+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27390	2026-10-07 13:55:04.696395+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27392	2026-10-07 13:55:38.776014+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27394	2026-10-07 13:56:19.384009+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27396	2026-10-07 13:56:40.390973+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27398	2026-10-07 13:57:11.331035+00	16	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27400	2026-10-07 13:58:24.127286+00	16	67	task_started	{"task_id": 10, "mission_id": 1}
+27402	2026-10-07 13:59:05.910261+00	17	63	task_started	{"task_id": 2, "mission_id": 1}
+27404	2026-10-07 13:59:38.909894+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27406	2026-10-07 13:59:51.955884+00	16	67	task_attempt	{"task_id": 10, "mission_id": 1}
+27408	2026-10-07 14:00:07.483646+00	16	67	task_attempt	{"task_id": 10, "mission_id": 1}
+27411	2026-10-07 14:01:49.577685+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27413	2026-10-07 14:04:24.742201+00	16	69	task_started	{"task_id": 11, "mission_id": 1}
+27414	2026-10-07 14:04:58.542703+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27416	2026-10-07 14:08:52.746458+00	15	78	task_attempt	{"task_id": 2, "mission_id": 2}
+27418	2026-10-07 14:09:39.298602+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27421	2026-10-07 14:12:09.444844+00	17	55	task_started	{"task_id": 1, "mission_id": 2}
+27423	2026-10-07 14:17:17.083376+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27425	2026-10-07 14:17:54.035671+00	15	57	task_started	{"task_id": 3, "mission_id": 2}
+27427	2026-10-07 14:18:08.474996+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27354	2026-10-07 13:38:02.806149+00	16	39	task_attempt	{"task_id": 4, "mission_id": 1}
+27355	2026-10-07 13:40:27.188586+00	16	41	task_started	{"task_id": 9, "mission_id": 1}
+27357	2026-10-07 13:41:06.867988+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27360	2026-10-07 13:41:26.753551+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27362	2026-10-07 13:41:49.589188+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27364	2026-10-07 13:42:23.813377+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27366	2026-10-07 13:42:42.256524+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27368	2026-10-07 13:45:17.21211+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27370	2026-10-07 13:47:31.906344+00	16	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27372	2026-10-07 13:47:49.583611+00	16	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27374	2026-10-07 13:48:53.274014+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27377	2026-10-07 13:49:22.756815+00	16	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27378	2026-10-07 13:50:20.230349+00	15	55	purchase_clue	{"task_id": 1, "clue_type": 1, "mission_id": 2}
+27380	2026-10-07 13:50:55.228968+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27382	2026-10-07 13:51:32.957038+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27385	2026-10-07 13:54:19.428667+00	16	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27387	2026-10-07 13:54:30.082476+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27389	2026-10-07 13:54:45.131789+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27391	2026-10-07 13:55:06.525431+00	16	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27393	2026-10-07 13:55:58.176084+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27395	2026-10-07 13:56:36.228969+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27397	2026-10-07 13:57:10.392515+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27399	2026-10-07 13:57:17.589885+00	16	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27401	2026-10-07 13:59:00.283173+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27403	2026-10-07 13:59:10.120329+00	17	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27405	2026-10-07 13:59:43.251602+00	15	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27407	2026-10-07 14:00:05.853043+00	17	41	task_started	{"task_id": 9, "mission_id": 1}
+27409	2026-10-07 14:00:16.870288+00	17	41	task_attempt	{"task_id": 9, "mission_id": 1}
+27410	2026-10-07 14:01:07.205496+00	15	78	task_started	{"task_id": 2, "mission_id": 2}
+27412	2026-10-07 14:04:21.184809+00	16	67	task_submitted	{"task_id": 10, "is_correct": true, "mission_id": 1}
+27415	2026-10-07 14:08:49.844918+00	15	78	task_attempt	{"task_id": 2, "mission_id": 2}
+27417	2026-10-07 14:09:31.987042+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27419	2026-10-07 14:09:49.354737+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27420	2026-10-07 14:10:49.563047+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27422	2026-10-07 14:17:09.586471+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27424	2026-10-07 14:17:24.226525+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27426	2026-10-07 14:17:56.682241+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27428	2026-10-07 14:19:28.77003+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27429	2026-10-07 14:19:30.002026+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27430	2026-10-07 14:19:30.20206+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27431	2026-10-07 14:19:30.338095+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27432	2026-10-07 14:19:30.529929+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27433	2026-10-07 14:19:30.706017+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27434	2026-10-07 14:19:30.914002+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27435	2026-10-07 14:19:56.242562+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27436	2026-10-07 14:20:40.506382+00	16	69	task_attempt	{"task_id": 11, "mission_id": 1}
+27437	2026-10-07 14:20:42.41044+00	16	69	task_submitted	{"task_id": 11, "is_correct": true, "mission_id": 1}
+27438	2026-10-07 14:20:47.594176+00	16	76	task_started	{"task_id": 12, "mission_id": 1}
+27439	2026-10-07 14:24:54.585322+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27440	2026-10-07 14:25:10.147046+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27441	2026-10-07 14:25:20.315973+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27442	2026-10-07 14:25:27.106455+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27443	2026-10-07 14:26:05.253377+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27444	2026-10-07 14:29:28.14973+00	15	57	task_attempt	{"task_id": 3, "mission_id": 2}
+27445	2026-10-07 14:30:17.859765+00	15	57	task_attempt	{"task_id": 3, "mission_id": 2}
+27446	2026-10-07 14:30:31.989644+00	15	57	task_attempt	{"task_id": 3, "mission_id": 2}
+27447	2026-10-07 14:30:40.357733+00	15	57	task_attempt	{"task_id": 3, "mission_id": 2}
+27448	2026-10-07 14:30:48.605483+00	15	57	task_attempt	{"task_id": 3, "mission_id": 2}
+27449	2026-10-07 14:30:59.110279+00	15	57	task_attempt	{"task_id": 3, "mission_id": 2}
+27450	2026-10-07 14:31:00.341481+00	15	57	task_attempt	{"task_id": 3, "mission_id": 2}
+27451	2026-10-07 14:31:04.996858+00	15	57	task_attempt	{"task_id": 3, "mission_id": 2}
+27452	2026-10-07 14:32:42.32263+00	15	57	purchase_clue	{"task_id": 3, "clue_type": 2, "mission_id": 2}
+27453	2026-10-07 14:32:52.050429+00	16	76	task_attempt	{"task_id": 12, "mission_id": 1}
+27454	2026-10-07 14:33:14.273654+00	15	57	purchase_clue	{"task_id": 3, "clue_type": 1, "mission_id": 2}
+27455	2026-10-07 14:33:48.046027+00	15	57	task_attempt	{"task_id": 3, "mission_id": 2}
+27456	2026-10-07 14:34:51.793264+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27458	2026-10-07 14:35:00.60145+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27460	2026-10-07 14:35:01.173465+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27462	2026-10-07 14:35:37.253976+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27464	2026-10-07 14:36:50.799985+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27466	2026-10-07 14:37:14.87351+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27467	2026-10-07 14:37:17.605479+00	17	55	task_started	{"task_id": 1, "mission_id": 2}
+27469	2026-10-07 14:37:28.900404+00	15	57	task_attempt	{"task_id": 3, "mission_id": 2}
+27471	2026-10-07 14:37:53.438494+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27473	2026-10-07 14:38:10.045805+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27475	2026-10-07 14:38:43.42463+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27477	2026-10-07 14:39:05.949232+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27478	2026-10-07 14:39:16.454456+00	17	55	purchase_clue	{"task_id": 1, "clue_type": 2, "mission_id": 2}
+27480	2026-10-07 14:41:09.6993+00	17	70	task_started	{"task_id": 13, "mission_id": 1}
+27481	2026-10-07 14:41:29.906253+00	17	54	task_started	{"task_id": 14, "mission_id": 1}
+27484	2026-10-07 14:49:37.746913+00	15	58	task_attempt	{"task_id": 4, "mission_id": 2}
+27486	2026-10-07 14:54:40.940067+00	15	58	task_attempt	{"task_id": 4, "mission_id": 2}
+27457	2026-10-07 14:34:54.375281+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27459	2026-10-07 14:35:00.976932+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27461	2026-10-07 14:35:34.387082+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27463	2026-10-07 14:35:54.217151+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27465	2026-10-07 14:37:07.565367+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27468	2026-10-07 14:37:20.168737+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27470	2026-10-07 14:37:47.580036+00	15	57	task_attempt	{"task_id": 3, "mission_id": 2}
+27472	2026-10-07 14:37:55.317441+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27474	2026-10-07 14:38:11.89191+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27476	2026-10-07 14:38:55.514377+00	17	55	task_attempt	{"task_id": 1, "mission_id": 2}
+27479	2026-10-07 14:39:47.967073+00	15	58	task_started	{"task_id": 4, "mission_id": 2}
+27482	2026-10-07 14:44:18.265512+00	17	54	task_attempt	{"task_id": 14, "mission_id": 1}
+27483	2026-10-07 14:44:57.914512+00	17	54	task_attempt	{"task_id": 14, "mission_id": 1}
+27485	2026-10-07 14:53:39.113538+00	15	58	task_submitted	{"task_id": 4, "is_correct": true, "mission_id": 2}
+27487	2026-10-07 14:55:39.523678+00	15	81	task_started	{"task_id": 5, "mission_id": 2}
+27488	2026-10-07 14:58:05.259666+00	15	80	task_started	{"task_id": 6, "mission_id": 2}
+27489	2026-10-07 14:59:43.235242+00	15	59	task_started	{"task_id": 7, "mission_id": 2}
+27490	2026-10-07 15:09:29.642533+00	15	59	purchase_clue	{"task_id": 7, "clue_type": 1, "mission_id": 2}
+27491	2026-10-07 15:16:53.486234+00	15	59	task_attempt	{"task_id": 7, "mission_id": 2}
+27492	2026-10-07 15:17:31.153337+00	15	59	task_attempt	{"task_id": 7, "mission_id": 2}
+27493	2026-10-07 15:17:33.901807+00	15	59	purchase_clue	{"task_id": 7, "clue_type": 2, "mission_id": 2}
+27494	2026-10-07 15:21:01.125281+00	15	60	task_started	{"task_id": 8, "mission_id": 2}
+27495	2026-10-07 15:24:33.801134+00	15	82	task_started	{"task_id": 9, "mission_id": 2}
+27496	2026-10-07 15:33:37.03819+00	15	82	purchase_clue	{"task_id": 9, "clue_type": 1, "mission_id": 2}
+27497	2026-10-07 15:35:12.467543+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27498	2026-10-07 15:35:22.746849+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27499	2026-10-07 15:35:42.467831+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27500	2026-10-07 15:35:47.812473+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27501	2026-10-07 15:36:02.971556+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27502	2026-10-07 15:39:16.706809+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27503	2026-10-07 15:39:16.994351+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27504	2026-10-07 15:40:05.900842+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27505	2026-10-07 15:40:27.149307+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27506	2026-10-07 15:40:48.856795+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27507	2026-10-07 15:40:50.330498+00	15	82	purchase_clue	{"task_id": 9, "clue_type": 2, "mission_id": 2}
+27508	2026-10-07 15:42:12.514992+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27509	2026-10-07 15:52:11.063085+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27510	2026-10-07 15:54:14.443573+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27511	2026-10-07 16:04:54.806513+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27512	2026-10-07 16:07:51.514176+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27513	2026-10-07 16:08:18.034644+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27514	2026-10-07 16:09:33.281976+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27515	2026-10-07 16:09:48.117556+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27516	2026-10-07 16:11:25.849557+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27517	2026-10-07 16:12:56.487526+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27518	2026-10-07 16:15:41.316406+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27519	2026-10-07 16:17:17.260972+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27520	2026-10-07 16:17:49.700335+00	15	61	task_started	{"task_id": 10, "mission_id": 2}
+27521	2026-10-07 16:18:54.076758+00	15	83	task_started	{"task_id": 11, "mission_id": 2}
+27522	2026-10-07 16:19:33.056332+00	15	62	task_started	{"task_id": 12, "mission_id": 2}
+27523	2026-10-07 16:21:37.375804+00	15	82	task_started	{"task_id": 9, "mission_id": 2}
+27524	2026-10-07 16:21:55.916848+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27525	2026-10-07 16:22:24.644824+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27526	2026-10-07 16:25:07.96937+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27527	2026-10-07 16:25:26.12071+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27528	2026-10-07 16:25:38.345057+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27529	2026-10-07 16:26:01.804802+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27530	2026-10-07 16:26:14.076285+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27531	2026-10-07 16:26:20.387644+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27532	2026-10-07 16:26:20.71604+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27533	2026-10-07 16:26:26.001033+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27534	2026-10-07 16:26:32.715684+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27535	2026-10-07 17:53:30.135733+00	15	82	task_started	{"task_id": 9, "mission_id": 2}
+27536	2026-10-07 18:37:45.807932+00	4	62	task_started	{"task_id": 12, "mission_id": 2}
+27537	2026-10-07 21:16:49.410549+00	48	64	task_started	{"task_id": 6, "mission_id": 1}
+27538	2026-10-07 21:17:43.507728+00	48	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27539	2026-10-07 21:17:56.658706+00	48	64	purchase_clue	{"task_id": 6, "clue_type": 2, "mission_id": 1}
+27540	2026-10-07 21:18:45.036103+00	48	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27541	2026-10-07 21:18:59.032172+00	48	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27542	2026-10-07 21:19:22.772297+00	48	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27543	2026-10-07 21:20:23.570996+00	48	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27544	2026-10-07 21:20:25.13031+00	48	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27545	2026-10-07 21:20:25.354795+00	48	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27546	2026-10-07 21:20:40.26411+00	48	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27547	2026-10-07 21:21:07.446223+00	48	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27548	2026-10-07 21:21:16.069172+00	48	64	task_submitted	{"task_id": 6, "is_correct": true, "mission_id": 1}
+27549	2026-10-07 21:21:41.914174+00	48	75	task_started	{"task_id": 7, "mission_id": 1}
+27550	2026-10-07 21:22:33.728633+00	48	75	task_attempt	{"task_id": 7, "mission_id": 1}
+27551	2026-10-07 21:22:38.675915+00	48	75	purchase_clue	{"task_id": 7, "clue_type": 2, "mission_id": 1}
+27552	2026-10-07 21:23:53.003245+00	48	75	task_attempt	{"task_id": 7, "mission_id": 1}
+27553	2026-10-07 21:24:21.52919+00	48	75	task_submitted	{"task_id": 7, "is_correct": true, "mission_id": 1}
+27554	2026-10-07 21:24:46.862037+00	48	77	task_started	{"task_id": 8, "mission_id": 1}
+27555	2026-10-07 21:25:13.535559+00	48	77	task_attempt	{"task_id": 8, "mission_id": 1}
+27556	2026-10-07 21:25:18.453816+00	48	77	purchase_clue	{"task_id": 8, "clue_type": 2, "mission_id": 1}
+27557	2026-10-07 21:25:45.340521+00	48	77	task_attempt	{"task_id": 8, "mission_id": 1}
+27558	2026-10-07 21:27:15.087117+00	48	77	task_attempt	{"task_id": 8, "mission_id": 1}
+27559	2026-10-07 21:27:16.119199+00	48	77	task_attempt	{"task_id": 8, "mission_id": 1}
+27560	2026-10-07 21:27:26.126977+00	48	77	task_attempt	{"task_id": 8, "mission_id": 1}
+27561	2026-10-07 21:28:09.306904+00	48	77	task_attempt	{"task_id": 8, "mission_id": 1}
+27562	2026-10-07 21:28:49.498096+00	48	77	task_attempt	{"task_id": 8, "mission_id": 1}
+27563	2026-10-07 21:29:03.770074+00	48	77	task_submitted	{"task_id": 8, "is_correct": true, "mission_id": 1}
+27564	2026-10-07 21:29:31.923344+00	48	41	task_started	{"task_id": 9, "mission_id": 1}
+27565	2026-10-07 21:59:11.761487+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27566	2026-10-07 22:01:50.53462+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27567	2026-10-07 22:01:53.690883+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27568	2026-10-07 22:02:50.863+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27569	2026-10-07 22:03:13.810002+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27570	2026-10-07 22:04:03.514288+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27571	2026-10-07 22:04:26.578565+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27572	2026-10-07 22:07:03.490097+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27573	2026-10-07 22:08:21.177625+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27574	2026-10-07 22:08:26.049681+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27575	2026-10-07 22:08:44.281647+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27576	2026-10-07 22:08:53.890648+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27577	2026-10-07 22:09:21.196071+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27578	2026-10-07 22:11:29.730618+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27579	2026-10-07 22:11:49.263602+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27580	2026-10-07 22:12:14.512353+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27581	2026-10-07 22:13:27.30352+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27582	2026-10-07 22:13:48.004197+00	15	82	task_submitted	{"task_id": 9, "is_correct": true, "mission_id": 2}
+27583	2026-10-07 22:23:16.050334+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27584	2026-10-07 22:55:10.61992+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27585	2026-10-07 22:55:45.929034+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+27586	2026-10-08 02:02:25.53997+00	4	62	task_started	{"task_id": 12, "mission_id": 2}
+27587	2026-10-08 06:09:08.068983+00	25	38	task_started	{"task_id": 3, "mission_id": 1}
+27588	2026-10-08 06:10:33.203012+00	25	38	task_started	{"task_id": 3, "mission_id": 1}
+27589	2026-10-08 06:23:04.074491+00	13	40	task_started	{"task_id": 5, "mission_id": 1}
+27590	2026-10-08 06:26:35.596224+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27591	2026-10-08 06:28:51.497014+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27592	2026-10-08 06:29:37.128238+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27593	2026-10-08 06:29:55.008139+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27594	2026-10-08 06:30:38.842873+00	25	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27595	2026-10-08 06:30:40.447833+00	25	38	purchase_clue	{"task_id": 3, "clue_type": 2, "mission_id": 1}
+27596	2026-10-08 06:30:55.470369+00	25	38	task_started	{"task_id": 3, "mission_id": 1}
+27597	2026-10-08 06:31:55.929613+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27598	2026-10-08 06:32:00.164819+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27599	2026-10-08 06:32:00.878708+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27600	2026-10-08 06:32:01.749776+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27601	2026-10-08 06:32:01.946588+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27602	2026-10-08 06:32:10.618555+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27603	2026-10-08 06:32:11.11138+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27604	2026-10-08 06:32:11.292544+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27605	2026-10-08 06:32:22.728638+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27606	2026-10-08 06:32:23.521373+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27607	2026-10-08 06:32:24.197278+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27608	2026-10-08 06:32:27.647337+00	25	38	task_started	{"task_id": 3, "mission_id": 1}
+27609	2026-10-08 06:32:35.548738+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27610	2026-10-08 06:32:39.916049+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27611	2026-10-08 06:32:40.251196+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27612	2026-10-08 06:33:20.729207+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27613	2026-10-08 06:33:36.199451+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27614	2026-10-08 06:34:38.866623+00	13	40	task_started	{"task_id": 5, "mission_id": 1}
+27615	2026-10-08 06:35:38.443107+00	13	40	task_attempt	{"task_id": 5, "mission_id": 1}
+27616	2026-10-08 06:36:25.021432+00	13	40	purchase_clue	{"task_id": 5, "clue_type": 1, "mission_id": 1}
+27617	2026-10-08 06:36:55.890993+00	13	64	task_started	{"task_id": 6, "mission_id": 1}
+27618	2026-10-08 06:38:22.812688+00	16	76	task_started	{"task_id": 12, "mission_id": 1}
+27619	2026-10-08 06:38:32.940174+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27620	2026-10-08 06:38:33.77617+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27621	2026-10-08 06:38:35.775308+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27622	2026-10-08 06:38:43.420279+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27623	2026-10-08 06:38:44.208754+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27624	2026-10-08 06:38:46.725027+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27625	2026-10-08 06:38:47.123772+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27626	2026-10-08 06:40:50.40334+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27627	2026-10-08 06:41:27.285316+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27628	2026-10-08 06:41:28.066555+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27629	2026-10-08 06:41:28.218501+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27630	2026-10-08 06:42:52.079232+00	25	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27631	2026-10-08 06:43:26.122079+00	25	38	task_started	{"task_id": 3, "mission_id": 1}
+27632	2026-10-08 06:43:31.640988+00	25	38	purchase_clue	{"task_id": 3, "clue_type": 1, "mission_id": 1}
+27633	2026-10-08 06:43:38.189977+00	25	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27634	2026-10-08 06:43:53.71293+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27635	2026-10-08 06:43:54.665258+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27636	2026-10-08 06:43:55.295413+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27637	2026-10-08 06:44:26.035674+00	25	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27638	2026-10-08 06:44:36.332128+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27639	2026-10-08 06:45:33.411083+00	25	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27640	2026-10-08 06:45:44.635673+00	13	64	task_attempt	{"task_id": 6, "mission_id": 1}
+27641	2026-10-08 06:45:44.826891+00	25	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27642	2026-10-08 06:46:34.484499+00	13	75	task_started	{"task_id": 7, "mission_id": 1}
+27643	2026-10-08 06:58:53.752792+00	25	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27644	2026-10-08 07:02:27.781334+00	25	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27645	2026-10-08 07:05:05.940329+00	25	38	task_attempt	{"task_id": 3, "mission_id": 1}
+27646	2026-10-08 07:05:48.141498+00	24	19	task_started	{"task_id": 19, "mission_id": 0}
+27647	2026-10-08 07:06:16.694579+00	25	39	task_started	{"task_id": 4, "mission_id": 1}
+27648	2026-10-08 07:44:34.367213+00	24	19	task_attempt	{"task_id": 19, "mission_id": 0}
+27649	2026-10-08 07:50:19.412354+00	24	19	task_attempt	{"task_id": 19, "mission_id": 0}
+27650	2026-10-08 07:51:33.771909+00	24	19	task_attempt	{"task_id": 19, "mission_id": 0}
+27651	2026-10-08 07:51:55.528447+00	24	19	task_attempt	{"task_id": 19, "mission_id": 0}
+27653	2026-10-08 07:52:04.599493+00	24	20	task_started	{"task_id": 20, "mission_id": 0}
+27657	2026-10-08 08:00:00.082773+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27652	2026-10-08 07:52:00.490479+00	24	19	task_submitted	{"task_id": 19, "is_correct": true, "mission_id": 0}
+27655	2026-10-08 07:54:20.937487+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27654	2026-10-08 07:54:07.737077+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27656	2026-10-08 07:58:02.593053+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27658	2026-10-08 08:00:14.762808+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27659	2026-10-08 08:00:31.387803+00	25	39	task_started	{"task_id": 4, "mission_id": 1}
+27660	2026-10-08 08:01:13.512819+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27661	2026-10-08 08:01:39.389609+00	24	20	purchase_clue	{"task_id": 20, "clue_type": 1, "mission_id": 0}
+27662	2026-10-08 08:01:42.643579+00	24	20	purchase_clue	{"task_id": 20, "clue_type": 2, "mission_id": 0}
+27663	2026-10-08 08:02:10.346004+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27664	2026-10-08 08:03:01.09369+00	25	39	task_started	{"task_id": 4, "mission_id": 1}
+27665	2026-10-08 08:03:07.300825+00	25	40	task_started	{"task_id": 5, "mission_id": 1}
+27666	2026-10-08 08:10:24.194427+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27667	2026-10-08 08:11:26.386634+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27668	2026-10-08 08:12:35.912971+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27669	2026-10-08 08:12:43.523655+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27670	2026-10-08 08:13:46.274624+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27671	2026-10-08 08:14:19.015801+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27672	2026-10-08 08:16:49.412639+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27673	2026-10-08 08:16:59.341893+00	24	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27674	2026-10-08 08:22:27.352248+00	24	17	task_started	{"task_id": 17, "mission_id": 0}
+27675	2026-10-08 08:22:33.196253+00	24	17	task_started	{"task_id": 17, "mission_id": 0}
+27676	2026-10-08 08:23:00.374345+00	24	4	task_started	{"task_id": 3, "mission_id": 0}
+27677	2026-10-08 08:23:31.241752+00	24	4	task_started	{"task_id": 3, "mission_id": 0}
+27678	2026-10-08 08:23:56.954145+00	24	4	task_started	{"task_id": 3, "mission_id": 0}
+27679	2026-10-08 08:27:01.489472+00	24	4	task_attempt	{"task_id": 3, "mission_id": 0}
+27680	2026-10-08 08:27:07.228221+00	24	4	task_submitted	{"task_id": 3, "is_correct": true, "mission_id": 0}
+27681	2026-10-08 08:27:26.636017+00	24	21	task_started	{"task_id": 21, "mission_id": 0}
+27682	2026-10-08 08:28:29.796063+00	24	21	task_started	{"task_id": 21, "mission_id": 0}
+27683	2026-10-08 08:29:53.085003+00	24	21	task_attempt	{"task_id": 21, "mission_id": 0}
+27684	2026-10-08 08:30:03.240261+00	24	21	task_submitted	{"task_id": 21, "is_correct": true, "mission_id": 0}
+27685	2026-10-08 08:30:07.463686+00	24	22	task_started	{"task_id": 22, "mission_id": 0}
+27686	2026-10-08 08:31:17.295825+00	70	63	task_started	{"task_id": 2, "mission_id": 1}
+27687	2026-10-08 08:34:08.420562+00	16	76	task_attempt	{"task_id": 12, "mission_id": 1}
+27688	2026-10-08 08:35:26.552884+00	16	70	task_started	{"task_id": 13, "mission_id": 1}
+27689	2026-10-08 08:37:27.476666+00	16	70	task_attempt	{"task_id": 13, "mission_id": 1}
+27690	2026-10-08 08:37:34.766583+00	16	70	task_attempt	{"task_id": 13, "mission_id": 1}
+27691	2026-10-08 08:37:37.679788+00	16	70	task_submitted	{"task_id": 13, "is_correct": true, "mission_id": 1}
+27692	2026-10-08 08:37:41.181902+00	16	54	task_started	{"task_id": 14, "mission_id": 1}
+27693	2026-10-08 08:39:24.550647+00	24	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27694	2026-10-08 08:39:46.999185+00	24	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27695	2026-10-08 08:40:33.883871+00	24	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27696	2026-10-08 08:40:38.999024+00	24	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27697	2026-10-08 08:40:45.839363+00	24	22	purchase_clue	{"task_id": 22, "clue_type": 2, "mission_id": 0}
+27698	2026-10-08 08:41:12.591806+00	24	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27699	2026-10-08 08:41:18.27858+00	24	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27700	2026-10-08 08:42:10.932966+00	24	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27701	2026-10-08 08:42:47.702426+00	24	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27702	2026-10-08 08:42:49.626783+00	24	22	task_submitted	{"task_id": 22, "is_correct": true, "mission_id": 0}
+27703	2026-10-08 08:42:55.022494+00	24	23	task_started	{"task_id": 23, "mission_id": 0}
+27704	2026-10-08 08:44:14.784488+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27705	2026-10-08 08:44:19.712834+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27706	2026-10-08 08:45:05.103107+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27707	2026-10-08 08:45:10.607797+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27708	2026-10-08 08:45:18.418761+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27709	2026-10-08 08:45:27.98893+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27710	2026-10-08 08:45:38.029779+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27711	2026-10-08 08:45:43.505019+00	24	23	purchase_clue	{"task_id": 23, "clue_type": 2, "mission_id": 0}
+27712	2026-10-08 08:46:26.727081+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27713	2026-10-08 08:46:40.532778+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27714	2026-10-08 08:46:45.129583+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27715	2026-10-08 08:47:05.370893+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27716	2026-10-08 08:47:05.847639+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27717	2026-10-08 08:47:07.435844+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27718	2026-10-08 08:47:09.634642+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27719	2026-10-08 08:47:12.00032+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27720	2026-10-08 08:47:34.007641+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27721	2026-10-08 08:47:37.786057+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27725	2026-10-08 08:48:05.400254+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27729	2026-10-08 08:48:05.767015+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27733	2026-10-08 08:48:06.224565+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27735	2026-10-08 08:48:09.411112+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27737	2026-10-08 08:48:22.407301+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27741	2026-10-08 08:48:35.606086+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27745	2026-10-08 08:49:35.431777+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27748	2026-10-08 08:51:59.240987+00	16	54	task_attempt	{"task_id": 14, "mission_id": 1}
+27751	2026-10-08 08:55:26.05279+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27722	2026-10-08 08:48:03.497634+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27726	2026-10-08 08:48:05.432508+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27730	2026-10-08 08:48:05.788554+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27734	2026-10-08 08:48:06.538825+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27738	2026-10-08 08:48:33.632864+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27742	2026-10-08 08:48:35.670137+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27746	2026-10-08 08:49:36.207596+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27749	2026-10-08 08:55:25.768356+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27753	2026-10-08 08:55:26.082736+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27723	2026-10-08 08:48:04.567488+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27724	2026-10-08 08:48:05.052529+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27727	2026-10-08 08:48:05.564631+00	24	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27728	2026-10-08 08:48:05.565608+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27731	2026-10-08 08:48:05.939042+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27732	2026-10-08 08:48:06.064868+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27736	2026-10-08 08:48:18.12531+00	24	23	task_submitted	{"task_id": 23, "is_correct": true, "mission_id": 0}
+27739	2026-10-08 08:48:34.259691+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27740	2026-10-08 08:48:35.160007+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27743	2026-10-08 08:48:36.141056+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27744	2026-10-08 08:48:36.27584+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27747	2026-10-08 08:51:22.668819+00	70	63	purchase_clue	{"task_id": 2, "clue_type": 2, "mission_id": 1}
+27750	2026-10-08 08:55:25.791729+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27752	2026-10-08 08:55:26.053387+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27754	2026-10-08 08:55:26.247538+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27755	2026-10-08 08:58:53.487992+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27756	2026-10-08 08:58:53.736223+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27757	2026-10-08 08:58:54.108614+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27758	2026-10-08 08:58:54.140814+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27759	2026-10-08 08:59:49.561058+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27760	2026-10-08 09:00:58.656037+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27761	2026-10-08 09:01:07.858879+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27762	2026-10-08 09:01:29.44968+00	16	54	task_attempt	{"task_id": 14, "mission_id": 1}
+27763	2026-10-08 09:01:46.163662+00	16	54	task_attempt	{"task_id": 14, "mission_id": 1}
+27764	2026-10-08 09:02:33.763356+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27765	2026-10-08 09:02:40.206632+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27766	2026-10-08 09:02:58.795218+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27767	2026-10-08 09:02:59.496566+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27768	2026-10-08 09:03:01.277174+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27769	2026-10-08 09:03:02.126102+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27770	2026-10-08 09:04:49.188673+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27771	2026-10-08 09:04:49.407104+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27772	2026-10-08 09:05:16.845506+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27773	2026-10-08 09:05:17.746937+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27774	2026-10-08 09:05:17.769869+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27775	2026-10-08 09:05:17.814597+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27776	2026-10-08 09:05:18.272884+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27777	2026-10-08 09:06:58.454972+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27778	2026-10-08 09:06:58.985536+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27779	2026-10-08 09:06:59.166071+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27780	2026-10-08 09:06:59.34719+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27781	2026-10-08 09:06:59.516557+00	70	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27782	2026-10-08 09:09:55.382891+00	16	54	task_attempt	{"task_id": 14, "mission_id": 1}
+27783	2026-10-08 09:11:49.159475+00	16	54	task_attempt	{"task_id": 14, "mission_id": 1}
+27784	2026-10-08 09:11:55.300877+00	16	54	task_attempt	{"task_id": 14, "mission_id": 1}
+27785	2026-10-08 09:12:32.953284+00	16	54	task_attempt	{"task_id": 14, "mission_id": 1}
+27786	2026-10-08 09:12:47.86808+00	16	54	task_attempt	{"task_id": 14, "mission_id": 1}
+27787	2026-10-08 09:13:02.590004+00	16	54	task_attempt	{"task_id": 14, "mission_id": 1}
+27788	2026-10-08 09:13:21.20938+00	16	54	task_attempt	{"task_id": 14, "mission_id": 1}
+27789	2026-10-08 09:13:22.711027+00	16	54	task_submitted	{"task_id": 14, "is_correct": true, "mission_id": 1}
+27790	2026-10-08 09:13:41.341254+00	16	71	task_started	{"task_id": 15, "mission_id": 1}
+27791	2026-10-08 09:18:57.928496+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27792	2026-10-08 09:19:05.918994+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27793	2026-10-08 09:20:05.865016+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27794	2026-10-08 09:20:12.264931+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27795	2026-10-08 09:23:22.331551+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27796	2026-10-08 09:23:23.586864+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27797	2026-10-08 09:23:29.757555+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27798	2026-10-08 09:23:43.696397+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27799	2026-10-08 09:24:04.819285+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27800	2026-10-08 09:24:44.191859+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27801	2026-10-08 09:24:46.04945+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27802	2026-10-08 09:24:49.860353+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27803	2026-10-08 09:40:07.749217+00	14	38	task_started	{"task_id": 3, "mission_id": 1}
+27804	2026-10-08 09:41:03.787748+00	14	62	task_started	{"task_id": 12, "mission_id": 2}
+27805	2026-10-08 09:55:36.658281+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27807	2026-10-08 09:55:58.995455+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27806	2026-10-08 09:55:51.803417+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27808	2026-10-08 09:57:24.821016+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27810	2026-10-08 09:58:35.942349+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27813	2026-10-08 10:00:47.98128+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27809	2026-10-08 09:58:25.721595+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27811	2026-10-08 09:58:46.555677+00	16	71	task_started	{"task_id": 15, "mission_id": 1}
+27812	2026-10-08 10:00:38.481978+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27814	2026-10-08 12:53:44.244157+00	16	71	task_started	{"task_id": 15, "mission_id": 1}
+27815	2026-10-08 12:53:46.379111+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27816	2026-10-08 12:53:56.374423+00	16	43	task_started	{"task_id": 16, "mission_id": 1}
+27817	2026-10-08 12:54:13.867899+00	16	43	task_attempt	{"task_id": 16, "mission_id": 1}
+27818	2026-10-08 12:55:16.99561+00	16	43	task_attempt	{"task_id": 16, "mission_id": 1}
+27819	2026-10-08 12:56:19.402876+00	16	43	task_attempt	{"task_id": 16, "mission_id": 1}
+27820	2026-10-08 12:56:25.017536+00	16	43	task_attempt	{"task_id": 16, "mission_id": 1}
+27821	2026-10-08 12:57:13.973858+00	16	43	task_attempt	{"task_id": 16, "mission_id": 1}
+27822	2026-10-09 07:54:52.066987+00	16	71	task_started	{"task_id": 15, "mission_id": 1}
+27823	2026-10-09 07:55:04.30772+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27824	2026-10-09 07:55:12.934819+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27825	2026-10-09 07:55:40.716746+00	16	44	task_started	{"task_id": 17, "mission_id": 1}
+27826	2026-10-09 07:56:22.187387+00	16	44	task_attempt	{"task_id": 17, "mission_id": 1}
+27827	2026-10-09 07:56:26.667855+00	16	44	task_attempt	{"task_id": 17, "mission_id": 1}
+27828	2026-10-09 07:56:41.522805+00	16	44	task_attempt	{"task_id": 17, "mission_id": 1}
+27829	2026-10-09 07:56:57.275127+00	16	44	task_attempt	{"task_id": 17, "mission_id": 1}
+27830	2026-10-09 07:57:59.636072+00	16	44	task_attempt	{"task_id": 17, "mission_id": 1}
+27831	2026-10-09 08:00:14.64965+00	16	72	task_started	{"task_id": 18, "mission_id": 1}
+27832	2026-10-09 08:01:13.848357+00	16	72	task_attempt	{"task_id": 18, "mission_id": 1}
+27833	2026-10-09 08:02:20.521981+00	16	72	task_attempt	{"task_id": 18, "mission_id": 1}
+27834	2026-10-09 08:03:11.232534+00	16	72	task_attempt	{"task_id": 18, "mission_id": 1}
+27835	2026-10-09 08:03:59.552834+00	16	72	task_attempt	{"task_id": 18, "mission_id": 1}
+27836	2026-10-09 08:04:13.49664+00	16	72	task_attempt	{"task_id": 18, "mission_id": 1}
+27837	2026-10-09 08:04:18.986598+00	16	72	task_attempt	{"task_id": 18, "mission_id": 1}
+27838	2026-10-09 08:04:58.770997+00	16	72	task_attempt	{"task_id": 18, "mission_id": 1}
+27839	2026-10-09 08:06:09.444181+00	16	46	task_started	{"task_id": 19, "mission_id": 1}
+27840	2026-10-09 08:06:25.646558+00	16	63	task_started	{"task_id": 2, "mission_id": 1}
+27841	2026-10-09 08:06:30.261127+00	16	37	task_started	{"task_id": 1, "mission_id": 1}
+27842	2026-10-09 08:06:30.355152+00	16	37	task_started	{"task_id": 1, "mission_id": 1}
+27843	2026-10-09 08:06:45.125865+00	16	41	task_started	{"task_id": 9, "mission_id": 1}
+27844	2026-10-09 08:06:54.941017+00	16	54	task_started	{"task_id": 14, "mission_id": 1}
+27845	2026-10-09 08:07:58.767839+00	16	46	task_attempt	{"task_id": 19, "mission_id": 1}
+27846	2026-10-09 08:08:17.293906+00	16	46	task_attempt	{"task_id": 19, "mission_id": 1}
+27847	2026-10-09 08:09:16.414502+00	16	46	task_attempt	{"task_id": 19, "mission_id": 1}
+27848	2026-10-09 08:09:32.598631+00	16	46	task_attempt	{"task_id": 19, "mission_id": 1}
+27849	2026-10-09 08:09:35.631994+00	16	46	task_submitted	{"task_id": 19, "is_correct": true, "mission_id": 1}
+27850	2026-10-09 08:13:03.358608+00	16	48	task_started	{"task_id": 20, "mission_id": 1}
+27851	2026-10-09 08:13:38.313187+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27852	2026-10-09 10:21:21.015963+00	16	48	task_started	{"task_id": 20, "mission_id": 1}
+27853	2026-10-09 14:05:27.935951+00	39	37	task_started	{"task_id": 1, "mission_id": 1}
+27854	2026-10-10 12:15:55.139304+00	16	71	task_started	{"task_id": 15, "mission_id": 1}
+27855	2026-10-10 12:15:58.565269+00	16	71	task_attempt	{"task_id": 15, "mission_id": 1}
+27856	2026-10-10 12:16:17.926075+00	16	71	task_submitted	{"task_id": 15, "is_correct": true, "mission_id": 1}
+27857	2026-10-10 12:17:43.301862+00	16	43	task_started	{"task_id": 16, "mission_id": 1}
+27858	2026-10-11 08:46:09.957518+00	16	43	task_started	{"task_id": 16, "mission_id": 1}
+27859	2026-10-11 08:51:17.793636+00	16	43	task_attempt	{"task_id": 16, "mission_id": 1}
+27860	2026-10-11 08:54:13.080324+00	16	48	task_started	{"task_id": 20, "mission_id": 1}
+27861	2026-10-11 08:56:50.288932+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27862	2026-10-11 08:57:21.198547+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27863	2026-10-11 08:58:56.77458+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27864	2026-10-11 08:58:56.796954+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27865	2026-10-11 08:59:21.84615+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27866	2026-10-11 08:59:30.733023+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27867	2026-10-11 09:00:33.053219+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27868	2026-10-11 09:00:38.473217+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27869	2026-10-11 09:00:48.000927+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27870	2026-10-11 09:00:53.572829+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27871	2026-10-11 09:03:24.444266+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27872	2026-10-11 09:04:38.745191+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27873	2026-10-11 09:05:07.23285+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27874	2026-10-11 09:06:34.443849+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27875	2026-10-11 09:06:35.975738+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27876	2026-10-11 09:06:37.657498+00	16	48	task_submitted	{"task_id": 20, "is_correct": true, "mission_id": 1}
+27878	2026-10-11 09:07:35.602014+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27881	2026-10-11 09:10:25.702173+00	16	73	task_attempt	{"task_id": 21, "mission_id": 1}
+27883	2026-10-11 09:12:17.049692+00	16	73	task_attempt	{"task_id": 21, "mission_id": 1}
+27885	2026-10-11 09:12:20.073735+00	16	73	task_submitted	{"task_id": 21, "is_correct": true, "mission_id": 1}
+27886	2026-10-11 09:12:27.091147+00	16	50	task_started	{"task_id": 22, "mission_id": 1}
+27887	2026-10-11 09:16:05.173806+00	16	50	task_attempt	{"task_id": 22, "mission_id": 1}
+27889	2026-10-11 09:17:48.991944+00	16	50	task_attempt	{"task_id": 22, "mission_id": 1}
+27891	2026-10-11 09:17:55.899566+00	16	51	task_started	{"task_id": 23, "mission_id": 1}
+27892	2026-10-11 09:21:29.151635+00	16	52	task_started	{"task_id": 24, "mission_id": 1}
+27877	2026-10-11 09:07:22.862784+00	16	48	task_attempt	{"task_id": 20, "mission_id": 1}
+27879	2026-10-11 09:07:40.476839+00	16	73	task_started	{"task_id": 21, "mission_id": 1}
+27880	2026-10-11 09:10:12.80532+00	16	73	task_attempt	{"task_id": 21, "mission_id": 1}
+27882	2026-10-11 09:11:27.241878+00	16	73	task_attempt	{"task_id": 21, "mission_id": 1}
+27884	2026-10-11 09:12:18.512188+00	16	73	task_attempt	{"task_id": 21, "mission_id": 1}
+27888	2026-10-11 09:16:28.3658+00	16	50	task_attempt	{"task_id": 22, "mission_id": 1}
+27890	2026-10-11 09:17:51.801905+00	16	50	task_submitted	{"task_id": 22, "is_correct": true, "mission_id": 1}
+27893	2026-10-11 09:22:21.591791+00	16	52	task_attempt	{"task_id": 24, "mission_id": 1}
+27894	2026-10-11 09:22:37.632128+00	16	52	task_attempt	{"task_id": 24, "mission_id": 1}
+27895	2026-10-11 09:25:00.60264+00	16	74	task_started	{"task_id": 25, "mission_id": 1}
+27896	2026-10-11 09:27:16.159269+00	16	74	task_attempt	{"task_id": 25, "mission_id": 1}
+27897	2026-10-11 09:27:24.495368+00	16	74	task_attempt	{"task_id": 25, "mission_id": 1}
+27898	2026-10-11 09:27:49.079527+00	16	74	task_attempt	{"task_id": 25, "mission_id": 1}
+27899	2026-10-11 09:28:01.790982+00	16	74	task_attempt	{"task_id": 25, "mission_id": 1}
+27900	2026-10-11 09:28:53.826747+00	16	74	task_attempt	{"task_id": 25, "mission_id": 1}
+27901	2026-10-11 09:32:14.186954+00	16	74	task_attempt	{"task_id": 25, "mission_id": 1}
+27902	2026-10-11 09:32:18.051296+00	16	74	task_submitted	{"task_id": 25, "is_correct": true, "mission_id": 1}
+27903	2026-10-11 09:32:44.253528+00	16	53	task_started	{"task_id": 26, "mission_id": 1}
+27904	2026-10-11 09:33:26.245664+00	16	57	task_started	{"task_id": 3, "mission_id": 2}
+27905	2026-10-11 09:35:01.969628+00	16	53	task_attempt	{"task_id": 26, "mission_id": 1}
+27906	2026-10-11 09:35:31.889764+00	16	53	task_attempt	{"task_id": 26, "mission_id": 1}
+27907	2026-10-11 09:36:02.733547+00	16	53	task_attempt	{"task_id": 26, "mission_id": 1}
+27908	2026-10-11 09:36:24.732746+00	16	53	task_attempt	{"task_id": 26, "mission_id": 1}
+27909	2026-10-11 09:36:39.046763+00	16	53	task_attempt	{"task_id": 26, "mission_id": 1}
+27910	2026-10-11 09:36:44.954165+00	16	53	task_submitted	{"task_id": 26, "is_correct": true, "mission_id": 1}
+27911	2026-10-11 09:38:43.451267+00	16	81	task_started	{"task_id": 5, "mission_id": 2}
+27913	2026-10-11 11:37:04.384125+00	64	20	task_started	{"task_id": 20, "mission_id": 0}
+27914	2026-10-11 11:39:08.149503+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27915	2026-10-11 11:40:14.7123+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27916	2026-10-11 11:40:15.974438+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27917	2026-10-11 11:40:16.460186+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27918	2026-10-11 11:40:17.486976+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27919	2026-10-11 11:40:17.676975+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27920	2026-10-11 11:40:17.848533+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27921	2026-10-11 11:40:17.991532+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27922	2026-10-11 11:40:18.175516+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27923	2026-10-11 11:41:05.763262+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27924	2026-10-11 11:41:06.150861+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27925	2026-10-11 11:41:06.319451+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27926	2026-10-11 11:41:08.281754+00	64	20	task_started	{"task_id": 20, "mission_id": 0}
+27927	2026-10-11 11:41:11.220577+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27928	2026-10-11 11:42:33.524502+00	64	20	task_started	{"task_id": 20, "mission_id": 0}
+27929	2026-10-11 11:42:35.301171+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27930	2026-10-11 11:42:46.995626+00	64	20	task_started	{"task_id": 20, "mission_id": 0}
+27931	2026-10-11 11:42:50.965683+00	64	20	task_attempt	{"task_id": 20, "mission_id": 0}
+27932	2026-10-11 11:42:57.789277+00	64	21	task_started	{"task_id": 21, "mission_id": 0}
+27933	2026-10-11 11:44:16.867822+00	64	21	task_attempt	{"task_id": 21, "mission_id": 0}
+27934	2026-10-11 11:44:22.614392+00	64	21	task_attempt	{"task_id": 21, "mission_id": 0}
+27935	2026-10-11 11:44:27.36048+00	64	21	task_started	{"task_id": 21, "mission_id": 0}
+27936	2026-10-11 11:44:37.244362+00	64	21	task_attempt	{"task_id": 21, "mission_id": 0}
+27937	2026-10-11 11:44:40.417993+00	64	21	purchase_clue	{"task_id": 21, "clue_type": 2, "mission_id": 0}
+27938	2026-10-11 11:44:54.992222+00	64	22	task_started	{"task_id": 22, "mission_id": 0}
+27939	2026-10-11 11:45:15.36897+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27940	2026-10-11 11:46:19.10722+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27941	2026-10-11 11:46:26.177953+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27942	2026-10-11 11:46:31.475733+00	64	22	purchase_clue	{"task_id": 22, "clue_type": 2, "mission_id": 0}
+27943	2026-10-11 11:46:48.894919+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27944	2026-10-11 11:46:52.585836+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27945	2026-10-11 11:47:35.652695+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27946	2026-10-11 11:47:36.170156+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27947	2026-10-11 11:47:38.602481+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27948	2026-10-11 11:47:38.79074+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27949	2026-10-11 11:47:39.024727+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27950	2026-10-11 11:47:43.703914+00	64	22	task_started	{"task_id": 22, "mission_id": 0}
+27951	2026-10-11 11:47:45.939968+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27952	2026-10-11 11:47:58.758416+00	64	22	task_started	{"task_id": 22, "mission_id": 0}
+27954	2026-10-11 11:48:27.479756+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27956	2026-10-11 11:48:31.275187+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27958	2026-10-11 11:49:24.440464+00	64	22	task_submitted	{"task_id": 22, "is_correct": true, "mission_id": 0}
+27959	2026-10-11 11:49:31.517366+00	64	23	task_started	{"task_id": 23, "mission_id": 0}
+27963	2026-10-11 11:51:07.861531+00	64	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27964	2026-10-11 11:51:40.657435+00	64	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27953	2026-10-11 11:48:19.687693+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27955	2026-10-11 11:48:27.842511+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27957	2026-10-11 11:49:22.518204+00	64	22	task_attempt	{"task_id": 22, "mission_id": 0}
+27960	2026-10-11 11:50:01.143839+00	64	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27961	2026-10-11 11:50:35.386553+00	64	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27962	2026-10-11 11:50:50.431574+00	64	23	task_attempt	{"task_id": 23, "mission_id": 0}
+27965	2026-10-11 11:53:51.625576+00	64	27	task_started	{"task_id": 27, "mission_id": 0}
+27966	2026-10-11 11:54:13.831844+00	64	27	task_attempt	{"task_id": 27, "mission_id": 0}
+27967	2026-10-11 11:55:01.771308+00	64	27	task_attempt	{"task_id": 27, "mission_id": 0}
+27968	2026-10-11 11:55:03.124591+00	64	27	task_submitted	{"task_id": 27, "is_correct": true, "mission_id": 0}
+27969	2026-10-11 11:55:04.869034+00	64	28	task_started	{"task_id": 28, "mission_id": 0}
+27970	2026-10-11 11:55:19.609219+00	64	28	task_attempt	{"task_id": 28, "mission_id": 0}
+27971	2026-10-11 11:55:26.962306+00	64	28	task_started	{"task_id": 28, "mission_id": 0}
+27972	2026-10-11 11:55:37.655134+00	64	28	task_attempt	{"task_id": 28, "mission_id": 0}
+27973	2026-10-11 11:55:43.492701+00	64	28	purchase_clue	{"task_id": 28, "clue_type": 2, "mission_id": 0}
+27974	2026-10-11 11:55:57.948802+00	64	28	task_attempt	{"task_id": 28, "mission_id": 0}
+27975	2026-10-11 11:56:03.427151+00	64	28	task_started	{"task_id": 28, "mission_id": 0}
+27976	2026-10-11 11:56:47.938524+00	64	28	task_attempt	{"task_id": 28, "mission_id": 0}
+27977	2026-10-11 11:56:55.868703+00	64	28	task_attempt	{"task_id": 28, "mission_id": 0}
+27978	2026-10-11 11:57:02.364612+00	64	28	task_attempt	{"task_id": 28, "mission_id": 0}
+27979	2026-10-11 11:57:09.485071+00	64	28	task_attempt	{"task_id": 28, "mission_id": 0}
+27980	2026-10-11 11:57:15.724763+00	64	28	task_attempt	{"task_id": 28, "mission_id": 0}
+27981	2026-10-11 11:57:36.598095+00	64	31	task_started	{"task_id": 31, "mission_id": 0}
+27982	2026-10-11 11:59:49.854264+00	64	37	task_started	{"task_id": 1, "mission_id": 1}
+27983	2026-10-11 12:00:16.680945+00	64	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27984	2026-10-11 12:01:17.877005+00	64	37	task_attempt	{"task_id": 1, "mission_id": 1}
+27985	2026-10-11 12:01:24.659332+00	64	63	task_started	{"task_id": 2, "mission_id": 1}
+27986	2026-10-11 12:01:47.272612+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27987	2026-10-11 12:01:53.648796+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27988	2026-10-11 12:02:02.10652+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27989	2026-10-11 12:02:17.493413+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27990	2026-10-11 12:02:18.676808+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27991	2026-10-11 12:02:21.14531+00	64	63	task_started	{"task_id": 2, "mission_id": 1}
+27992	2026-10-11 12:02:23.247671+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27993	2026-10-11 12:02:30.002231+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27994	2026-10-11 12:02:32.501917+00	64	63	task_started	{"task_id": 2, "mission_id": 1}
+27995	2026-10-11 12:02:34.774505+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27996	2026-10-11 12:02:55.995276+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27997	2026-10-11 12:03:00.032395+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27998	2026-10-11 12:03:05.056644+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+27999	2026-10-11 12:03:19.137815+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+28000	2026-10-11 12:03:34.530257+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+28001	2026-10-11 12:03:35.279499+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+28002	2026-10-11 12:03:52.881831+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+28003	2026-10-11 12:03:58.014906+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+28004	2026-10-11 12:04:03.905964+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+28005	2026-10-11 12:04:04.775423+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+28006	2026-10-11 12:04:09.495938+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+28007	2026-10-11 12:04:15.069816+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+28008	2026-10-11 12:04:35.415079+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+28009	2026-10-11 12:04:36.402583+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+28010	2026-10-11 12:04:36.486871+00	64	63	task_attempt	{"task_id": 2, "mission_id": 1}
+28011	2026-10-11 12:04:43.857805+00	64	38	task_started	{"task_id": 3, "mission_id": 1}
+28012	2026-10-11 12:05:03.040344+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28013	2026-10-11 12:05:09.687896+00	64	38	purchase_clue	{"task_id": 3, "clue_type": 2, "mission_id": 1}
+28014	2026-10-11 12:05:20.380385+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28015	2026-10-11 12:05:45.613093+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28016	2026-10-11 12:05:47.072531+00	64	38	task_started	{"task_id": 3, "mission_id": 1}
+28017	2026-10-11 12:05:48.974041+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28018	2026-10-11 12:06:00.387608+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28019	2026-10-11 12:06:00.492514+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28020	2026-10-11 12:06:40.91068+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28021	2026-10-11 12:06:41.780919+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28022	2026-10-11 12:06:41.98649+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28023	2026-10-11 12:06:49.512376+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28024	2026-10-11 12:06:50.102581+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28026	2026-10-11 12:07:58.446174+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28028	2026-10-11 12:08:07.835136+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28025	2026-10-11 12:06:58.646781+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28027	2026-10-11 12:08:07.070096+00	64	38	task_attempt	{"task_id": 3, "mission_id": 1}
+28029	2026-10-12 10:38:45.069266+00	71	64	task_started	{"task_id": 6, "mission_id": 1}
+28030	2026-10-12 18:04:20.742166+00	72	21	task_started	{"task_id": 21, "mission_id": 0}
 \.
 
-
---
--- Data for Name: achievements; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.achievements (achievement_id, category_name, icon, name, description, historical_info, tag, required_count) FROM stdin;
-6	Техническое мастерство	🧩	CTE Специалист	Решить 3 задачи с использованием рекурсивных CTE	Рекурсивные операции, как партизанские сети, требуют глубокого планирования	cte	3
-3	Боевые достижения	🗺	Опытный командир	Решить 20 задач нормальной сложности	Как командующие фронтами, вы учитесь принимать решения под давлением	medium	20
-8	Исторические подвиги	🏆	Блокадный Ленинград	Решить 5 задач на логистику и распределение ресурсов	125 граммов хлеба в день — так жил Ленинград. Ваши расчеты спасают жизни!	supply	5
-5	Техническое мастерство	🔍	Мастер оконных функций	Использовать RANK(), LAG(), и SUM() OVER() в 5 разных задачах	Анализ данных — это современная артиллерия. Точный расчет решает исход битвы!	window	5
-7	Исторические подвиги	🏙	Защитник Сталинграда	Решить все задачи, связанные со Сталинградской битвой	200 дней мужества. Вы защитили город, как это делали герои 1943 года!	stalingrad	5
-1	Боевые достижения	🎖	Первая кровь	Решить первую задачу любого уровня	Первый шаг к победе - самый важный. Так начинался путь многих героев ВОВ	first_any_level	1
-10	Боевые достижения	📈	Стратег Победы	Решить 10 задач, связанных с анализом эффективности военных операций	Великие полководцы, как Жуков и Рокоссовский, строили победы на точных расчётах. Теперь и ваш анализ ведёт к успеху!	efficiency	10
-4	Боевые достижения	🏅	Ветеран SQL-фронта	Решить 15 сложных задач	Сложные миссии требуют мастерства. Вы достойны звания ветерана!	hard	15
-2	Боевые достижения	📜	Стратег-новичок	Решить 10 легких задач	В 1941 году советские солдаты учились воевать в тяжелейших условиях. Ты на верном пути!	easy	10
-9	Исторические подвиги	🚩	Освободитель Берлина	Завершить все миссии финального этапа войны	Знамя Победы над Рейхстагом — ваш код водружает его снова!	final	15
-\.
-
-
---
--- Data for Name: password_hashes; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.password_hashes (user_id, password_hash) FROM stdin;
-1	$2b$12$cnMS3rEBgZVT8tKYwBlOwOmSbp7MHcA32LHD84irB9pYAlo9fcUcK
-2	$2b$12$e6elfqyCGMA9ucTtzjsYU.KZhnFjRFxrj3D/9BBMqrwpyOBgBgSnC
-3	$2b$12$ZZaLXfG9vsCsDeIjqWT6fuC4zl5UcWK668dy8FxiGtVOA4dhDeHWC
-4	$2b$12$ZCdyF41r6Hi4FvPCGXgoau367FPGiBoIfAwPd8d4NiAYMnloS4kDW
-5	$2b$12$5qwtZEoHl3368Pll/Q0NiOXwZfidStzlQ3mxMlIfeHotog2CX0owS
-6	$2b$12$kNhCNUiXsAkiOglvhbV5Ueuliq4KF1G.xedgHwWfsb08kCNyzvnBu
-7	$2b$12$FCitfRhbZWIll/aynrNeF.X/2qdeyQJ5pZeC7U/qDkCPVFVjBjfgy
-8	$2b$12$PkgyI5qWzXoswdlGGrWCh.NcxiEx8zyEspH0Vy.rA0AcLE6r1mATK
-9	$2b$12$2OPTyD3jawUhc.8n6pNJNOeeMDidOMZ7dtYJU/wdEDplkm10SZItG
-10	$2b$12$l2AXW9WgI5hvnsSKVTiawuriRq/avLxWmJmM0kYLbhK2BDbbbl91q
-11	$2b$12$SK6llI73AOqAiM7tgzvTFeLSHsIJSipvPHS.CjslZvJikUCbCUSMG
-12	$2b$12$JVe2tLIbNLt3lmXsmuUaSes0HDswx4EM/tSZ.ONjN6vMye32iZyay
-13	$2b$12$NYFTis8hjWXeqkZjZH8QsebJJZ4Htt6POKT0.2mDXwsOEHyl2Akg2
-14	$2b$12$KocSStb2d8ZV2GoTOF1pMeUJK1ZjEcPYfRh6l0LydR02j/LX1.5le
-15	$2b$12$yr3B29IpMMXAcXBbJbfLBu.cHeqy5r5IQyjLxp2soGv8atGwuqoma
-16	$2b$12$8iOJ/MeLJ03qKEmIkaj5refuUTkijEXCFoSOXIvVr.2.hCJk8SET6
-17	$2b$12$k97uI9eZCDhwwn99oD5XU.G/GAVDi.ikLXX/..E2z/Ds1RSJ2YPi6
-18	$2b$12$1e70ndzl56wCqpkuvqprE.5Q8K4MkLADFF9p9cMN1r.Li1DPrLSia
-19	$2b$12$BPNmsnYie8jNoIZnPusUrOmLLf3JMScAnQS0D/sE0lOBUr3BiuXW2
-20	$2b$12$4s0VEVwzdDMoPLG2Ci/d6uJs7qVeAdMVf1FH1eTCh/NMXZcxAgXrO
-21	$2b$12$BaHZ7wG1uRlRCYcHhuGpfObNhgBf5GY5Cv1Do4mPNx1yLCebIgI7C
-22	$2b$12$dYN.qinxYCxvwACcMcPXWutBg4bgYGpVizTqmbVyMeXa5QDWXhHTS
-23	$2b$12$GfN9aKugktv6CDEjZU4K8.OdW7WMtZpldGe4A1XhFLQ6r4M7lGQHK
-24	$2b$12$k7KZwbCq0QRUqVJep/XdRO58IAexEkxtJmi/VxwKtyle3TY1ly0Ny
-25	$2b$12$.U3gt7Cgt/HLnqBQrJUymOnEJpK6Tj.zVVc1L/p7E2VOT5KLUSI6C
-26	$2b$12$434ZTWFAP3J.8.OygXbYe.mu9X0LoXgboyvK9wl/X.nizTisxrt1S
-27	$2b$12$adXLiKN91GlzfFCvWrilO.k1Khu4AtS2EKgDDljwOFc2tnrAaOY1a
-28	$2b$12$EDBzqEAYdDQy.QwzZl9RZeLfpFn6eBwuPRW/B3ZMNZs.GpHHN44W.
-29	$2b$12$7RYzy35PTmLCl6CQ8oLNiuoScgSOgmXuKbwplt7d2ZxJUDT.Gk0Vu
-30	$2b$12$S24IXgaHm6fzltwoWSy.seznNSbDh1iR9sU9SDa3WxtTMt8s/Y9jC
-31	$2b$12$F6VXjHbowpuJ2WdbsRm9bOFWJZ4tUb6TP1.6OVBoX2UZeDMIdvZae
-32	$2b$12$Yvl/mtIGzBd7goCB.agUk.yThMqVRXOMmzPWkKeAKU9LUNIQScFpu
-33	$2b$12$b9rv0M1ouBM02TT2eQlEMOg1Eh8v4xiTHu2eiHkfMgUYIzvf/axX.
-34	$2b$12$ASKaNCHIeHVQo5W9H8DBhufm2W/2fa22gdVdj.LKZP2nu1Pyj70z.
-35	$2b$12$j8DrdQqCtSWVFG6XoObX8u1URprCIwPn5ISilVMIByzwmQD8k51Ea
-36	$2b$12$nUbBAr9e9L4Q21ZAdH.b9O2Ap0jegjWpNwo3tHGvXjYpRQGq4EVTC
-37	$2b$12$Rbu5o5yNgWRwRbGMawZwlOckWSOTNFgVttVKSaEFuug9EpS/m1rOS
-38	$2b$12$fU1RDJ41vGdj6p1fr1AaRuaWWuUkiCbWWBCJCjorVNQbS0rvh9Bna
-39	$2b$12$qz7D/yFYSZwlGLbQPHgUd.0Yh5gyKeMv3oE9YRMtmz/8vSrYYUOjG
-40	$2b$12$zNR5kgmAd3VbzTgdX3qog.qBFKz5x2I/TbrdIJnMsYXOOzzR4g5IK
-41	$2b$12$Bz0xE1j92kmfFkMOz6kecOx5C1XwEBzyIHH4AGdeO/SphiE9oXH1S
-42	$2b$12$PxNK/ca4gYjVYE4fDL2Jl.XTdrozClad5/HfJYbagTDaFGVmfCe7W
-43	$2b$12$fpkf5ZXssLYZHKGOJcVd8.4pRGefq4upkSR1g2yBdOXxRlpKBXaUi
-44	$2b$12$hWWVagALwEKzVHxthfkth.y0Ef1Dxown2vFAJ22H5e5Ed0L0D2bi.
-45	$2b$12$Xoa.W4w6YFglGhYYGh/DauIXgLMYG62AVNJ1sk67aQOAQULDuNT.u
-46	$2b$12$LLplPZYabI/P2EGqcQMHf.AUqBz6/jd533e6cIZq3xUNe/zh0btkO
-47	$2b$12$VwFkzIeBmA1kTnxwAwHJmelbZQNgaKxN14MOykmXeJOFxVJ2zGjeO
-48	$2b$12$gt7TmM6trtujPCLxiaVvbOfoC6IohhvTl6wrCpA2TuBTPYN6iVHEa
-49	$2b$12$8gtKg1kP2UJHkKonLvNaruQoWYSzxy5hBPQOlqVjBIWueF5OvdIJm
-50	$2b$12$4Ch.ljrCElSXVebPA.Qg6O7ufGd5SeNcqYvIrPFX2D.FxZV1LNkMW
-51	$2b$12$Z19spu0VfWD5oPE.Kj7k7uzuqCbLX5.4ucYn4/LYGDczZ8oNvGX3O
-52	$2b$12$AM0B7DSVVfRlzRcuSPl18exW3rD7MJtFL02ftSV35YbGlc5fjYHNm
-53	$2b$12$CegH44N8pUy/ndUtOmhs.OS5lptTYRZBTtAjqt27pC6msBLjYkZ.y
-55	$2b$12$8pZiGHw2jJQyJ71OhKnMF.DfN5dSXuw2LclrRB/OCeWBHdf.yey8S
-62	$2b$12$MH8Asdey/y3sT9gAqn7b/.1zgWk5.i3u2AiMjgz9vMjaaGSvnQOyC
-63	$2b$12$le9XD/o5qNLz8yUvGLAvnuhP/pfGmgxjsAbU7s2ApV1s/i9nLiXnO
-64	$2b$12$rCre6rmSI.Vei8weSMuvO.CbsQxRhhJYC2VHzGg0ec6tzDAQa2TqC
-65	$2b$12$W0LD5P69paPPFu4Eg.lkN.qYxa/zPyf8J3/j/OK3MQM4fCiomu4H.
-66	$2b$12$yGHwe3Wy4Z6a1TQWVDttPOVCahM8Ngi58IrJXXOyNcTKSE8uznLxG
-67	$2b$12$T.m1DE0GwhpL6XuoEAhzs.BQpK2UAIw2ve3yDoXY29mshw7GKdCr6
-68	$2b$12$vfHWpuci1Wt2ylKHOyJRfuy38tXwFuRIS/QmhP3xLxb4TnZ1dyNsi
-69	$2b$12$58oBekv88XnRmO3NxfGsT.aFePEclLbwikJvpn.fqAS00GBQXfsjW
-70	$2b$12$8eSBNLWzcDo.P0jJNrns/u47vEOYuWz3eAxpUBuIcAgm154kQuyQm
-71	$2b$12$JfdlREZwYLoePuJN7g62c./.JWc8yEzCYsd2aLUkS7YIGPbCGN6ty
-72	$2b$12$n2zdTFoFIAgcnt5Bc0LheuQ7vkTlC4q3ZL1nukpqD.CyT9KPsD06a
-73	$2b$12$cNXv.LZD5g4YQzCFis7JK.ECvSaOc4bSlCdm5KJoZm4946l8Mg1X.
-74	$2b$12$KTnPcf079gfYyMcIjpPlbeweZwzOaGat.aZEPB8DojbGKXw1ZoDd.
-75	$2b$12$x0aHjLk9fPCvIw5ojzEks.WY.kBjDY9fDxNmbmRlbGy.rROIoA5u6
-76	$2b$12$JigEOBJ9ECCXLZvVbaYnZuLlxvXCGIybXezTumu7Ddb4Ok/84j1Om
-77	$2b$12$DBeVhoyzq2azHcBoy8VR5.QSKEjARSGDU4iL3/5K1Xa.QUvB1RM56
-78	$2b$12$902oiIEsDuPv0TgzK.o6uemb51SifCc4UQOHYTKKsgiF/x5bnfcAy
-79	$2b$12$KjIiqW65rQvIZkx/JRVEyeIzkNCME4ieZkHAODCAEO5DMB0nP30cq
-80	$2b$12$jBsfxsNxVO4Ez1h4Md6Mp.vGwSYNXGLF/KaZiaao5EQK3FRR0088m
-\.
-
-
---
--- Data for Name: tasks; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
--- Data for Name: tasks (97 tasks merged from repo)
-INSERT INTO public.tasks VALUES (1, 0, 1, 'Архив личного состава', 'Составьте список всех военнослужащих с указанием их полных имен и годов рождения. Это необходимо для анализа возрастного состава армии и планирования ресурсов', 'Используйте таблицу `soldier`, выбрав два ключевых столбца.', NULL, '{"data": [["Иванов Алексей Петрович", 1923], ["Смирнова Анна Васильевна", 1925], ["Петров Дмитрий Иванович", 1918], ["Козлов Николай Семёнович", 1920], ["Фёдорова Мария Ивановна", 1922], ["Жуков Андрей Григорьевич", 1915], ["Павлов Яков Фёдорович", 1917], ["Зайцева Людмила Михайловна", 1924], ["Громов Михаил Сергеевич", 1919], ["Орлова Вера Павловна", 1921], ["Новиков Александр Иванович", 1924], ["Васнецова Татьяна Дмитриевна", 1923], ["Кузнецов Пётр Васильевич", 1916], ["Белов Алексей Николаевич", 1925], ["Соколова Ольга Ивановна", 1920], ["Морозов Иван Кузьмич", 1914], ["Волкова Елена Сергеевна", 1926], ["Ткаченко Григорий Петрович", 1927], ["Беляев Павел Дмитриевич", 1912], ["Семёнова Валентина Михайловна", 1920], ["Ковалёв Сергей Николаевич", 1925], ["Мельникова Галина Ивановна", 1924], ["Фёдоров Игорь Васильевич", 1913], ["Горбачёв Алексей Дмитриевич", 1926], ["Сидорова Екатерина Петровна", 1921], ["Смирнов Василий Иванович", 1911], ["Крылова Надежда Фёдоровна", 1925], ["Орлов Денис Сергеевич", 1927], ["Жукова Елена Викторовна", 1923], ["Гришин Алексей Петрович", 1918], ["Ткаченко Иван Григорьевич", 1920], ["Воронцова Лидия Павловна", 1924], ["Жуковский Виктор Михайлович", 1915], ["Морозова Анна Сергеевна", 1922], ["Кузнецов Артём Игоревич", 1926], ["Соколовская Надежда Викторовна", 1923], ["Белов Дмитрий Николаевич", 1917], ["Громова Екатерина Ивановна", 1925], ["Фролов Павел Сергеевич", 1928], ["Ковалёва Ольга Дмитриевна", 1921]], "columns": ["full_name", "birth_year"], "row_count": 40}', '{first_any_level,supply,easy}');
-INSERT INTO public.tasks VALUES (2, 0, 2, 'География сражений', 'Определите все боевые операции, проведенные в Сталинграде. Результаты помогут оценить стратегическую значимость этого региона', 'Фильтрация по локации в таблице `battles` с использованием точного значения', NULL, '{"data": [["Сталинградская битва"]], "columns": ["battle_name"], "row_count": 1}', '{stalingrad,easy}');
-INSERT INTO public.tasks VALUES (4, 0, 3, 'Оптимизация численности', 'Найдите количество подразделений, где численность личного состава людей не превышает 500 человек. Вычисленный столбец назовите answer. Это критично для перераспределения сил между частями', 'Используйте вложенный запрос с группировкой и агрегатной функцией для подсчета солдат', NULL, '{"data": [[29]], "columns": ["answer"], "row_count": 1}', '{easy}');
-INSERT INTO public.tasks VALUES (5, 0, 4, 'Хроники войны', 'Выведите список всех сражений с их названиями, датами начала и окончания и местоположениями, отсортированный в хронологическом порядке по дате начала. Это ключ к пониманию этапов войны. Примечание: в результате допустимо дублирование данных.', 'Сортировка по дате в таблице `battle` с указанием направления', NULL, '{"data": [["Оборона Брестской крепости", "1941-06-22", "1941-06-29", "Брест"], ["Оборона Брестской крепости", "1941-06-22", "1941-06-29", "Брест"], ["Оборона Заполярья", "1941-06-29", "1944-10-01", "Мурманск"], ["Смоленское сражение", "1941-07-10", "1941-09-10", "Смоленск"], ["Таллинский переход", "1941-08-27", "1941-08-30", "Балтийское море"], ["Блокада Ленинграда", "1941-09-08", "1944-01-27", "Ленинград"], ["Битва за Москву", "1941-09-30", "1942-04-20", "Москва"], ["Оборона Тулы", "1941-10-24", "1941-12-05", "Тула"], ["Оборона Севастополя", "1941-10-30", "1942-07-04", "Севастополь"], ["Ржевская битва", "1942-01-08", "1943-03-31", "Ржев"], ["Демянская операция", "1942-02-20", "1942-05-20", "Новгородская обл."], ["Харьковская операция", "1942-05-12", "1942-05-28", "Харьков"], ["Битва за Воронеж", "1942-06-28", "1943-01-25", "Воронеж"], ["Сталинградская битва", "1942-07-17", "1943-02-02", "Сталинград"], ["Битва за Кавказ", "1942-07-25", "1943-10-09", "Кавказ"], ["Прорыв блокады Ленинграда", "1943-01-12", "1943-01-30", "Ленинград"], ["Курская битва", "1943-07-05", "1943-08-23", "Курск"], ["Битва за Днепр", "1943-08-26", "1943-12-23", "Днепр"], ["Керченско-Эльтигенская операция", "1943-10-31", "1943-12-11", "Керчь"], ["Корсунь-Шевченковская операция", "1944-01-24", "1944-02-17", "Украина"], ["Операция \"Багратион\"", "1944-06-23", "1944-08-29", "Белоруссия"], ["Битва при Дебрецене", "1944-10-06", "1944-10-29", "Венгрия"], ["Будапештская операция", "1944-10-29", "1945-02-13", "Венгрия"], ["Висло-Одерская операция", "1945-01-12", "1945-02-03", "Польша"], ["Восточно-Прусская операция", "1945-01-13", "1945-04-25", "Кёнигсберг"], ["Балатонская операция", "1945-03-06", "1945-03-15", "Венгрия"], ["Берлинская операция", "1945-04-16", "1945-05-08", "Берлин"], ["Битва за Берлин", "1945-04-16", "1945-05-08", "Берлин"], ["Пражская операция", "1945-05-06", "1945-05-11", "Прага"], ["Маньчжурская операция", "1945-08-09", "1945-09-02", "Маньчжурия"]], "columns": ["battle_name", "start_date", "end_date", "location"], "row_count": 30}', '{easy}');
-INSERT INTO public.tasks VALUES (6, 0, 5, 'Галерея героев', 'Создайте список солдат и наград, которые они получили. Это основа для формирования мемориальных архивов', 'Объединение трех таблиц: `soldier`, `soldier_medal` и `medal` через INNER JOIN', NULL, '{"data": [["Павлов Яков Фёдорович", "Герой Советского Союза"], ["Зайцева Людмила Михайловна", "Медаль \"За отвагу\""], ["Жуков Андрей Григорьевич", "Орден Красной Звезды"], ["Громов Михаил Сергеевич", "Орден Отечественной войны"], ["Орлова Вера Павловна", "Орден Славы"], ["Новиков Александр Иванович", "Орден Красной Звезды"], ["Васнецова Татьяна Дмитриевна", "Медаль \"Партизану Отечественной войны\""], ["Кузнецов Пётр Васильевич", "Герой Советского Союза"], ["Белов Алексей Николаевич", "Медаль \"За оборону Сталинграда\""], ["Соколова Ольга Ивановна", "Медаль \"За оборону Москвы\""], ["Иванов Алексей Петрович", "Медаль \"За отвагу\""], ["Смирнова Анна Васильевна", "Орден Отечественной войны"], ["Петров Дмитрий Иванович", "Медаль \"За взятие Берлина\""]], "columns": ["full_name", "medal_name"], "row_count": 13}', '{easy}');
-INSERT INTO public.tasks VALUES (7, 0, 6, 'Семейная история', 'Выявите всех солдат с фамилией, начинающейся на «Иванов». Возможно, это представители одной семьи', 'Используйте оператор `LIKE` с шаблоном для поиска по началу строки', NULL, '{"data": [["Иванов Алексей Петрович"]], "columns": ["full_name"], "row_count": 1}', '{easy}');
-INSERT INTO public.tasks VALUES (8, 0, 7, 'Элитные подразделения', 'Найдите все воинские части(подразделения), в названии которых встречается слово «гвардейская» (в любом регистре). Такие части часто были элитой армии', 'Регистронезависимый поиск через `ILIKE`', NULL, '{"data": [["1-я гвардейская танковая армия"], ["7-я гвардейская миномётная дивизия"], ["8-я гвардейская армия"]], "columns": ["unit_name"], "row_count": 3}', '{easy}');
-INSERT INTO public.tasks VALUES (9, 0, 8, 'Артиллерийский учет', 'Составьте список снаряжения, в названии которого есть «пушка». Это поможет оценить наличие тяжелого вооружения', 'Используйте POSIX-оператор `~` для поиска по регулярному выражению', 'SELECT item_name FROM equipment WHERE item_name ~ ''пушка'';', '{"data": [["76-мм дивизионная пушка ЗИС-3"]], "columns": ["item_name"], "row_count": 1}', '{easy,supply}');
-INSERT INTO public.tasks VALUES (10, 0, 9, 'Отцовские корни', 'Найдите солдат с отчеством «Петрович» или «Иванович». Данные могут быть полезны для генеалогических исследований', 'Примените POSIX-оператор `|` для выбора одного из двух вариантов', 'SELECT full_name FROM soldier WHERE full_name ~ ''(Петрович|Иванович)$'';', '{"data": [["Иванов Алексей Петрович"], ["Петров Дмитрий Иванович"], ["Новиков Александр Иванович"], ["Ткаченко Григорий Петрович"], ["Смирнов Василий Иванович"], ["Гришин Алексей Петрович"]], "columns": ["full_name"], "row_count": 6}', '{easy}');
-INSERT INTO public.tasks VALUES (11, 0, 10, 'Исключение стрелковых частей', 'Выведите названия подразделений, не относящихся к стрелковым. Это важно для анализа структуры войск', 'Используйте `NOT LIKE` для исключения определенного типа частей', 'SELECT unit_name FROM military_unit WHERE unit_type NOT LIKE ''%танковая%'';', '{"data": [["62-я армия"], ["1-я гвардейская танковая армия"], ["16-я воздушная армия"], ["7-я гвардейская миномётная дивизия"], ["2-я ударная армия"], ["8-я гвардейская армия"], ["3-я воздушная армия"], ["14-я отдельная штрафная рота"], ["1-я морская бригада"], ["Отдельная медико-санитарная рота"], ["88-й отдельный лыжный батальон"], ["101-й полк НКВД"], ["369-й отдельный батальон морской пехоты"], ["1-й чехословацкий отдельный батальон"], ["585-й женский авиаполк"], ["28-я дивизия народного ополчения"], ["Отдельный отряд собак-истребителей танков"], ["37-й гвардейский миномётный полк"], ["Отдельный батальон связи №45"], ["225-й отдельный инженерный батальон"], ["18-я дивизия СС \"Хорст Вессель\""], ["101-й учебный полк"], ["1-й отдельный чехословацкий батальон"], ["46-й гвардейский ночной бомбардировочный полк"], ["101-й инженерно-сапёрный батальон"], ["Отдельный отряд собак-миноискателей"]], "columns": ["unit_name"], "row_count": 26}', '{easy}');
-INSERT INTO public.tasks VALUES (13, 0, 12, 'Тип операции', 'Выявите бои, в названии которых есть слова «освобождение» или «оборона». Это поможет классифицировать сражения по их целям', 'Примените POSIX-оператор `|` для поиска по двум ключевым словам', 'SELECT battle_name FROM battle WHERE battle_name ~ ''(Освобождение|Оборона)'';', '{"data": [["Оборона Брестской крепости"], ["Оборона Севастополя"], ["Оборона Заполярья"], ["Оборона Брестской крепости"], ["Оборона Тулы"]], "columns": ["battle_name"], "row_count": 5}', '{easy}');
-INSERT INTO public.tasks VALUES (12, 0, 11, 'Короткие названия', 'Найдите снаряжение, название которого состоит ровно из 4 символов. Возможно, это кодированные обозначения', 'Используйте `LIKE` с пятью символами `_`', NULL, '{"data": [["Т-34"], ["Ил-2"], ["М-31"], ["ИС-2"], ["ПТРД"]], "columns": ["item_name"], "row_count": 5}', '{easy}');
-INSERT INTO public.tasks VALUES (15, 0, 14, 'Средний возраст победителей', 'Рассчитайте средний возраст солдат на момент окончания войны (1945 год). Назовите столбец average_age. Это ключевой показатель для демографического анализа', 'Используйте арифметические операции с `AVG` и `birth_year`', NULL, '{"data": [[23.875]], "columns": ["average_age"], "row_count": 1}', '{easy}');
-INSERT INTO public.tasks VALUES (41, 1, 9, 'Логистика Сталинградского фронта', 'Рассчитайте объем снаряжения на одного солдата в Сталинграде за период обороны. Это покажет, насколько войска были обеспечены ресурсами', 'Используйте `ROUND` и арифметические операции с группировкой по типам снаряжения', NULL, '{"data": [["артиллерия", 72, "24.00"]], "columns": ["equipment_type", "total", "per_soldier"], "row_count": 1}', '{supply,stalingrad,medium}');
-INSERT INTO public.tasks VALUES (3, 0, 15, 'Логистика вооружений', 'Определите общее количество снаряжения каждого типа. Назовите вычисленное поле "total". Это основа для оценки обеспеченности войск', 'Группировка по типу снаряжения с применением `SUM`', NULL, '{"data": [["авиабомбы", 3200], ["боеприпасы", 310000], ["артиллерия", 24], ["миномёты", 2268], ["противотанковые", 68], ["связь", 15], ["медицина", 1330], ["самолёты", 45], ["инженерное", 850], ["реактивные снаряды", 1500], ["оружие", 1200], ["танки", 100]], "columns": ["equipment_type", "total"], "row_count": 12}', '{window,easy}');
-INSERT INTO public.tasks VALUES (16, 0, 16, 'История формирования', 'Найдите самую раннюю и позднюю даты создания воинских частей. Это отразит этапы развития армии', 'Используйте агрегатные функции `MIN` и `MAX` для дат', NULL, '{"data": [["1939-04-20", "1944-01-10"]], "columns": ["min", "max"], "row_count": 1}', '{easy}');
-INSERT INTO public.tasks VALUES (17, 0, 17, 'Идентификация званий', 'Создайте строку, объединяющую имя солдата и его звание в формате "ФИО (звание)". Назовите получившееся поле soldier_info. Это упростит работу с архивными записями', 'Конкатенация строк с использованием `||`', NULL, '{"data": [["Иванов Алексей Петрович (рядовой)"], ["Смирнова Анна Васильевна (медсестра)"], ["Петров Дмитрий Иванович (сержант)"], ["Козлов Николай Семёнович (лейтенант)"], ["Фёдорова Мария Ивановна (санитар)"], ["Жуков Андрей Григорьевич (капитан)"], ["Павлов Яков Фёдорович (сержант)"], ["Зайцева Людмила Михайловна (снайпер)"], ["Громов Михаил Сергеевич (старшина)"], ["Орлова Вера Павловна (радист)"], ["Новиков Александр Иванович (ефрейтор)"], ["Васнецова Татьяна Дмитриевна (разведчик)"], ["Кузнецов Пётр Васильевич (майор)"], ["Белов Алексей Николаевич (рядовой)"], ["Соколова Ольга Ивановна (хирург)"], ["Морозов Иван Кузьмич (полковник)"], ["Волкова Елена Сергеевна (зенитчик)"], ["Ткаченко Григорий Петрович (рядовой)"], ["Беляев Павел Дмитриевич (подполковник)"], ["Семёнова Валентина Михайловна (связист)"], ["Ковалёв Сергей Николаевич (лейтенант)"], ["Мельникова Галина Ивановна (снайпер)"], ["Фёдоров Игорь Васильевич (полковник)"], ["Горбачёв Алексей Дмитриевич (рядовой)"], ["Сидорова Екатерина Петровна (радист)"], ["Смирнов Василий Иванович (генерал-майор)"], ["Крылова Надежда Фёдоровна (санитар)"], ["Орлов Денис Сергеевич (рядовой)"], ["Жукова Елена Викторовна (радист)"], ["Гришин Алексей Петрович (капитан)"], ["Ткаченко Иван Григорьевич (старший сержант)"], ["Воронцова Лидия Павловна (снайпер)"], ["Жуковский Виктор Михайлович (полковник)"], ["Морозова Анна Сергеевна (радист)"], ["Кузнецов Артём Игоревич (рядовой)"], ["Соколовская Надежда Викторовна (хирург)"], ["Белов Дмитрий Николаевич (капитан)"], ["Громова Екатерина Ивановна (зенитчик)"], ["Фролов Павел Сергеевич (рядовой)"], ["Ковалёва Ольга Дмитриевна (разведчик)"]], "columns": ["soldier_info"], "row_count": 40}', '{easy}');
-INSERT INTO public.tasks VALUES (18, 0, 18, 'География призыва', 'Определите количество уникальных городов, откуда призывались солдаты. Это покажет масштаб мобилизации', 'Используйте `COUNT(DISTINCT ...)` для столбца с городами', NULL, '{"data": [[22]], "columns": ["count"], "row_count": 1}', '{easy}');
-INSERT INTO public.tasks VALUES (19, 0, 19, 'Эффективность подразделений', 'Рассчитайте среднюю боевую эффективность для каждого типа частей. Вычисленное значение назовите avg_efficiency. Результат выведите в алфавитном порядке. Это поможет оценить их вклад в победу', 'Группировка по `unit_type` с функцией `AVG`', NULL, '{"data": [["авиация", 91.175], ["инженерные войска", 89.6], ["лыжные войска", 73.9], ["медицинская", 91.7], ["морская пехота", 85.65], ["общевойсковая", 83.75], ["пехота", 83.0125], ["противник", 88.1], ["реактивная артиллерия", 93.5], ["резерв", 68.3], ["связисты", 85.2], ["спецназ", 86.63333333333334], ["танковые войска", 96.75]], "columns": ["unit_type", "avg_efficiency"], "row_count": 13}', '{easy}');
-INSERT INTO public.tasks VALUES (21, 0, 21, 'Анализ надежности', 'Вычислите дисперсию боевой эффективности для каждого типа частей. Назовите столбец variance и отсортируйте результат по алфавиту. Высокая дисперсия может указывать на нестабильность', 'Используйте `VAR_SAMP` для расчета дисперсии', NULL, '{"data": [["авиация", 27.4625], ["инженерные войска", 0.02], ["лыжные войска", null], ["медицинская", null], ["морская пехота", 21.125], ["общевойсковая", 146.205], ["пехота", 121.09553571428572], ["противник", null], ["реактивная артиллерия", 18.0], ["резерв", null], ["связисты", null], ["спецназ", 68.94333333333333], ["танковые войска", 6.125]], "columns": ["unit_type", "variance"], "row_count": 13}', '{easy}');
-INSERT INTO public.tasks VALUES (67, 1, 10, 'Снаряжение героев', 'Найдите солдат, получивших снаряжение 12 января 1943 года. Это может быть связано с подготовкой к операции «Искра»', 'Примените вложенные запросы и фильтрацию по дате и ID снаряжения', NULL, '{"data": [["Смирнова Анна Васильевна"]], "columns": ["full_name"], "row_count": 1}', '{medium}');
-INSERT INTO public.tasks VALUES (20, 0, 20, 'Статистика потерь', 'Подсчитайте количество солдат по каждому статусу (status). Это основа для анализа людских потерь', 'Группировка по статусу с использованием `CASE` в `COUNT`', NULL, '{"data": [["жив", 16], ["пропал без вести", 7], ["ранен", 8], ["убит", 9]], "columns": ["status", "count"], "row_count": 4}', '{easy}');
-INSERT INTO public.tasks VALUES (22, 0, 22, 'Классификация эффективности', 'Разделите части на три категории: высокая, средняя и низкая эффективность. Столбец с категориями назовите efficiency_category. Это основа для стратегического планирования. Примечание: "Высокая" (КПД ≥ 90), "Средняя" (70 ≤ КПД < 90), "Низкая" (КПД < 70).', 'Примените `CASE` с диапазонами значений `combat_efficiency`', NULL, '{"data": [["316-я стрелковая дивизия", "Средняя"], ["62-я армия", "Высокая"], ["1-я гвардейская танковая армия", "Высокая"], ["150-я стрелковая дивизия", "Высокая"], ["16-я воздушная армия", "Средняя"], ["7-я гвардейская миномётная дивизия", "Высокая"], ["2-я ударная армия", "Средняя"], ["8-я гвардейская армия", "Высокая"], ["3-я воздушная армия", "Средняя"], ["106-я стрелковая дивизия", "Средняя"], ["14-я отдельная штрафная рота", "Низкая"], ["1-я морская бригада", "Средняя"], ["Отдельная медико-санитарная рота", "Высокая"], ["88-й отдельный лыжный батальон", "Средняя"], ["101-й полк НКВД", "Высокая"], ["369-й отдельный батальон морской пехоты", "Средняя"], ["1-й чехословацкий отдельный батальон", "Средняя"], ["585-й женский авиаполк", "Высокая"], ["28-я дивизия народного ополчения", "Низкая"], ["Отдельный отряд собак-истребителей танков", "Средняя"], ["37-й гвардейский миномётный полк", "Высокая"], ["Отдельный батальон связи №45", "Средняя"], ["225-й отдельный инженерный батальон", "Средняя"], ["18-я дивизия СС \"Хорст Вессель\"", "Средняя"], ["101-й учебный полк", "Низкая"], ["64-я стрелковая дивизия", "Высокая"], ["1-й отдельный чехословацкий батальон", "Средняя"], ["46-й гвардейский ночной бомбардировочный полк", "Высокая"], ["101-й инженерно-сапёрный батальон", "Средняя"], ["Отдельный отряд собак-миноискателей", "Средняя"]], "columns": ["unit_name", "efficiency_category"], "row_count": 30}', '{easy}');
-INSERT INTO public.tasks VALUES (69, 1, 11, 'Возрастные категории', 'Посчитайте сколько солдат в каждой возрастной группе на момент начала войны(< 18, 18-25, > 25). Колонку с группой назовите age_group, а с количеством солдат — quantity. Результат отсортируйте по убыванию количества. Это поможет понять, какие возрастные группы преобладали в армии', 'Используйте `CASE` с диапазонами на основе года рождения', NULL, '{"data": [["18-25", 19], ["< 18", 15], ["> 25", 6]], "columns": ["age_group", "quantity"], "row_count": 3}', '{medium}');
-INSERT INTO public.tasks VALUES (27, 0, 27, 'Долгие сражения', 'Найдите бои, длившиеся более 30 дней. Вычисленный столбец назовите duration_days. Результат отсортируйте по убыванию длительности. Такие операции часто становились переломными', 'Рассчитайте разницу между датами начала и окончания с использованием `HAVING`', NULL, '{"data": [["Оборона Заполярья", 1190], ["Блокада Ленинграда", 871], ["Ржевская битва", 447], ["Битва за Кавказ", 441], ["Оборона Севастополя", 247], ["Битва за Воронеж", 211], ["Битва за Москву", 202], ["Сталинградская битва", 200], ["Битва за Днепр", 119], ["Будапештская операция", 107], ["Восточно-Прусская операция", 102], ["Демянская операция", 89], ["Операция \"Багратион\"", 67], ["Смоленское сражение", 62], ["Курская битва", 49], ["Оборона Тулы", 42], ["Керченско-Эльтигенская операция", 41]], "columns": ["battle_name", "duration_days"], "row_count": 17}', '{easy}');
-INSERT INTO public.tasks VALUES (29, 0, 29, 'Молодая кровь', 'Для каждой части определите самого молодого солдата. Выведите название части и год рождения самого молодого солдата. Назовите вычисленный столбец youngest_birth_year, а результат отсортируйте по убыванию годов рождения. Это может указывать на пополнение в критический момент', 'Используйте `MAX` с годом рождения и группировку по частям', NULL, '{"data": [["101-й инженерно-сапёрный батальон", 1928], ["Отдельная медико-санитарная рота", 1927], ["225-й отдельный инженерный батальон", 1927], ["1-я морская бригада", 1926], ["Отдельный отряд собак-миноискателей", 1926], ["28-я дивизия народного ополчения", 1926], ["Отдельный батальон связи №45", 1925], ["369-й отдельный батальон морской пехоты", 1925], ["62-я армия", 1925], ["46-й гвардейский ночной бомбардировочный полк", 1925], ["150-я стрелковая дивизия", 1925], ["1-й чехословацкий отдельный батальон", 1924], ["3-я воздушная армия", 1924], ["1-й отдельный чехословацкий батальон", 1924], ["18-я дивизия СС \"Хорст Вессель\"", 1923], ["64-я стрелковая дивизия", 1923], ["316-я стрелковая дивизия", 1923], ["106-я стрелковая дивизия", 1923], ["8-я гвардейская армия", 1921], ["Отдельный отряд собак-истребителей танков", 1921], ["101-й полк НКВД", 1920], ["16-я воздушная армия", 1920], ["1-я гвардейская танковая армия", 1920], ["2-я ударная армия", 1919], ["101-й учебный полк", 1918], ["14-я отдельная штрафная рота", 1914], ["585-й женский авиаполк", 1913], ["88-й отдельный лыжный батальон", 1912], ["37-й гвардейский миномётный полк", 1911]], "columns": ["unit_name", "youngest_birth_year"], "row_count": 29}', '{easy}');
-INSERT INTO public.tasks VALUES (30, 0, 30, 'Танковые части', 'Найдите подразделения, оснащенные танками. Это важно для анализа бронетанковых сил', 'Используйте подзапрос с `EXISTS` для проверки наличия снаряжения', NULL, '{"data": [["1-я гвардейская танковая армия"], ["8-я гвардейская армия"]], "columns": ["unit_name"], "row_count": 2}', '{easy}');
-INSERT INTO public.tasks VALUES (31, 0, 31, 'Ветераны частей', 'Определите солдат, которые были старше всех в своем подразделении. Возможно, это опытные командиры', 'Примените подзапрос с `ALL` для сравнения возрастов', NULL, '{"data": [["Фёдорова Мария Ивановна"], ["Жуков Андрей Григорьевич"], ["Павлов Яков Фёдорович"], ["Зайцева Людмила Михайловна"], ["Громов Михаил Сергеевич"], ["Орлова Вера Павловна"], ["Новиков Александр Иванович"], ["Васнецова Татьяна Дмитриевна"], ["Кузнецов Пётр Васильевич"], ["Морозов Иван Кузьмич"], ["Волкова Елена Сергеевна"], ["Ткаченко Григорий Петрович"], ["Беляев Павел Дмитриевич"], ["Семёнова Валентина Михайловна"], ["Ковалёв Сергей Николаевич"], ["Мельникова Галина Ивановна"], ["Фёдоров Игорь Васильевич"], ["Горбачёв Алексей Дмитриевич"], ["Сидорова Екатерина Петровна"], ["Смирнов Василий Иванович"], ["Крылова Надежда Фёдоровна"], ["Орлов Денис Сергеевич"], ["Жукова Елена Викторовна"], ["Гришин Алексей Петрович"], ["Ткаченко Иван Григорьевич"], ["Жуковский Виктор Михайлович"], ["Морозова Анна Сергеевна"], ["Белов Дмитрий Николаевич"], ["Ковалёва Ольга Дмитриевна"]], "columns": ["full_name"], "row_count": 29}', '{easy}');
-INSERT INTO public.tasks VALUES (34, 0, 32, 'Неуничтоженные враги', 'Определите вражеские части, которые не были ликвидированы. Отсортируйте результат по убыванию. Это может указывать на сохранившиеся угрозы', 'Используйте `EXCEPT` для исключения уничтоженных частей', NULL, '{"data": [["Эскадра JG54 \"Зелёное сердце\""], ["Люфтваффе: эскадра JG52"]], "columns": ["unit_name"], "row_count": 2}', '{easy}');
-INSERT INTO public.tasks VALUES (37, 1, 1, 'Логистика Сталинградской битвы', 'Определите общее количество боеприпасов, выделенных каждой части в Сталинграде. Выведите уникальный идентификатор части, а вычисленный столбец назовите total_ammo. Это поможет оценить обеспеченность войск в критический период обороны', 'Используйте оконную функцию `SUM` с группировкой по `unit_id` и подзапрос для фильтрации локации', NULL, '{"data": [[2, 50000], [13, 30000], [18, 40000], [21, 50000], [26, 70000]], "columns": ["unit_id", "total_ammo"], "row_count": 5}', '{first_any_level,supply,window,stalingrad,medium}');
-INSERT INTO public.tasks VALUES (63, 1, 2, 'Снабжение перед операцией', 'Для воинских частей, у которых общее количество всего снаряжения на складе превышает 1000 единиц, необходимо вывести название части, а также суммарное количество находящихся в ней боеприпасов ammunition_total и медикаментов medicine_total. Это важно для планирования крупных наступлений', 'Сначала найдите подразделения, где общее количество снаряжения больше 1000, используя GROUP BY и HAVING SUM(quantity). Затем, для этих подразделений, посчитайте суммы по типам, применив условную агрегацию в основном запросе', NULL, '{"data": [["1-я морская бригада", 0, 250], ["3-я воздушная армия", 0, 0], ["316-я стрелковая дивизия", 50000, 0], ["37-й гвардейский миномётный полк", 50000, 0], ["585-й женский авиаполк", 40000, 0], ["62-я армия", 50000, 830], ["64-я стрелковая дивизия", 70000, 0], ["7-я гвардейская миномётная дивизия", 20000, 0], ["Отдельная медико-санитарная рота", 30000, 250]], "columns": ["unit_name", "ammunition_total", "medicine_total"], "row_count": 9}', '{cte,medium}');
-INSERT INTO public.tasks VALUES (38, 1, 3, 'Поиск героев для награждения', 'Выявите 20 солдат, участвовавших в наибольшем количестве сражений, и присвойте им ранги. Вычисленные столбцы назовите battles_participated и hero_rank. Это основа для награждения орденами и медалями', 'Используйте `RANK()` с сортировкой по убыванию количества битв', NULL, '{"data": [["Жуков Андрей Григорьевич", 30, 1], ["Иванов Алексей Петрович", 28, 2], ["Громов Михаил Сергеевич", 23, 3], ["Жуковский Виктор Михайлович", 23, 3], ["Гришин Алексей Петрович", 21, 5], ["Семёнова Валентина Михайловна", 20, 6], ["Соколова Ольга Ивановна", 20, 6], ["Кузнецов Пётр Васильевич", 19, 8], ["Зайцева Людмила Михайловна", 17, 9], ["Орлова Вера Павловна", 17, 9], ["Фёдоров Игорь Васильевич", 16, 11], ["Кузнецов Артём Игоревич", 16, 11], ["Крылова Надежда Фёдоровна", 16, 11], ["Козлов Николай Семёнович", 16, 11], ["Фёдорова Мария Ивановна", 15, 15], ["Смирнов Василий Иванович", 15, 15], ["Соколовская Надежда Викторовна", 15, 15], ["Ковалёва Ольга Дмитриевна", 14, 18], ["Ткаченко Иван Григорьевич", 14, 18], ["Громова Екатерина Ивановна", 13, 20]], "columns": ["full_name", "battles_participated", "hero_rank"], "row_count": 20}', '{window,medium}');
-INSERT INTO public.tasks VALUES (39, 1, 4, 'Анализ эффективности частей', 'Выведите для каждого военного подразделения его исходную и скорректированную боевую эффективность. Корректировка рассчитывается путем уменьшения исходного показателя (combat_efficiency) пропорционально доле безвозвратных потерь (статусы «убит» и «пропал без вести») от общей численности личного состава в данном подразделении. Результат должен содержать: название подразделения, исходную боевую эффективность initial_efficiency, процент потерь loss_percentage, скорректированную боевую эффективность adjusted_efficiency. Это покажет, как потери влияют на боеспособность', 'Сгруппируйте солдат по подразделениям (unit_id). Внутри каждой группы посчитайте общую численность и количество безвозвратных потерь, используя условную агрегацию (CASE). Затем соедините результат с таблицей military_unit и примените формулу для расчета скорректированной эффективности.', NULL, '{"data": [["8-я гвардейская армия", 98.5, 0.0, 98.5], ["150-я стрелковая дивизия", 97.8, 0.0, 97.8], ["46-й гвардейский ночной бомбардировочный полк", 96.7, 0.0, 96.7], ["37-й гвардейский миномётный полк", 96.5, 0.0, 96.5], ["101-й полк НКВД", 96.2, 0.0, 96.2], ["1-я гвардейская танковая армия", 95.0, 0.0, 95.0], ["585-й женский авиаполк", 94.1, 0.0, 94.1], ["64-я стрелковая дивизия", 92.4, 0.0, 92.4], ["62-я армия", 92.3, 0.0, 92.3], ["Отдельная медико-санитарная рота", 91.7, 0.0, 91.7], ["225-й отдельный инженерный батальон", 89.7, 0.0, 89.7], ["101-й инженерно-сапёрный батальон", 89.5, 0.0, 89.5], ["106-я стрелковая дивизия", 89.3, 0.0, 89.3], ["16-я воздушная армия", 88.9, 0.0, 88.9], ["369-й отдельный батальон морской пехоты", 88.9, 0.0, 88.9], ["18-я дивизия СС \"Хорст Вессель\"", 88.1, 0.0, 88.1], ["316-я стрелковая дивизия", 85.5, 0.0, 85.5], ["Отдельный батальон связи №45", 85.2, 0.0, 85.2], ["3-я воздушная армия", 85.0, 0.0, 85.0], ["1-й отдельный чехословацкий батальон", 85.0, 0.0, 85.0], ["Отдельный отряд собак-истребителей танков", 82.4, 0.0, 82.4], ["1-я морская бригада", 82.4, 0.0, 82.4], ["Отдельный отряд собак-миноискателей", 81.3, 0.0, 81.3], ["1-й чехословацкий отдельный батальон", 78.5, 0.0, 78.5], ["2-я ударная армия", 75.2, 0.0, 75.2], ["88-й отдельный лыжный батальон", 73.9, 0.0, 73.9], ["28-я дивизия народного ополчения", 69.8, 0.0, 69.8], ["101-й учебный полк", 68.3, 0.0, 68.3], ["14-я отдельная штрафная рота", 65.8, 0.0, 65.8]], "columns": ["unit_name", "initial_efficiency", "loss_percentage", "adjusted_efficiency"], "row_count": 29}', '{cte,medium}');
-INSERT INTO public.tasks VALUES (40, 1, 5, 'Логистика Курской дуги', 'Определите рейтинг частей в Курске по объему снабжения. Выведите столбцы unit_name, equipment_type, total, supply_rank. Это ключевые данные для анализа подготовки к крупнейшему танковому сражению', 'Используйте `RANK()` с группировкой по типам снаряжения', NULL, '{"data": [["16-я воздушная армия", "самолёты", 45, 1], ["1-я гвардейская танковая армия", "танки", 58, 2]], "columns": ["unit_name", "equipment_type", "total", "supply_rank"], "row_count": 2}', '{supply,window,medium}');
-INSERT INTO public.tasks VALUES (64, 1, 6, 'Снабжение морской пехоты', 'Проанализируйте снаряжение морских пехотинцев в Севастополе. Выведите столбцы equipment_type, total, items. Это необходимо для оценки их готовности к обороне прибрежных зон', 'Используйте `STRING_AGG` для объединения названий снаряжения и фильтрацию по типу части', NULL, '{"data": [["медицина", 250, "Аптечки полевые"], ["миномёты", 2256, "82-мм, 50-мм"]], "columns": ["equipment_type", "total", "items"], "row_count": 2}', '{medium}');
-INSERT INTO public.tasks VALUES (75, 1, 7, 'Первый и последний', 'Определите первого и последнего солдата, вступившего в каждую часть. Выведите название части, ФИО первого first_enlisted и последнего last_enlisted вступившего солдата. Это может указывать на "костяк" подразделения', 'Примените `FIRST_VALUE()` и `LAST_VALUE()` с оконными функциями', NULL, '{"data": [["316-я стрелковая дивизия", "Иванов Алексей Петрович", "Фёдорова Мария Ивановна"], ["62-я армия", "Петров Дмитрий Иванович", "Павлов Яков Фёдорович"], ["1-я гвардейская танковая армия", "Козлов Николай Семёнович", "Кузнецов Пётр Васильевич"], ["150-я стрелковая дивизия", "Зайцева Людмила Михайловна", "Белов Алексей Николаевич"], ["16-я воздушная армия", "Жуков Андрей Григорьевич", "Соколова Ольга Ивановна"], ["2-я ударная армия", "Громов Михаил Сергеевич", "Громов Михаил Сергеевич"], ["8-я гвардейская армия", "Орлова Вера Павловна", "Орлова Вера Павловна"], ["3-я воздушная армия", "Новиков Александр Иванович", "Новиков Александр Иванович"], ["106-я стрелковая дивизия", "Васнецова Татьяна Дмитриевна", "Васнецова Татьяна Дмитриевна"], ["14-я отдельная штрафная рота", "Морозов Иван Кузьмич", "Морозов Иван Кузьмич"], ["1-я морская бригада", "Волкова Елена Сергеевна", "Волкова Елена Сергеевна"], ["Отдельная медико-санитарная рота", "Ткаченко Григорий Петрович", "Ткаченко Григорий Петрович"], ["88-й отдельный лыжный батальон", "Беляев Павел Дмитриевич", "Беляев Павел Дмитриевич"], ["101-й полк НКВД", "Семёнова Валентина Михайловна", "Семёнова Валентина Михайловна"], ["369-й отдельный батальон морской пехоты", "Ковалёв Сергей Николаевич", "Ковалёв Сергей Николаевич"], ["1-й чехословацкий отдельный батальон", "Мельникова Галина Ивановна", "Мельникова Галина Ивановна"], ["585-й женский авиаполк", "Фёдоров Игорь Васильевич", "Фёдоров Игорь Васильевич"], ["28-я дивизия народного ополчения", "Горбачёв Алексей Дмитриевич", "Горбачёв Алексей Дмитриевич"], ["Отдельный отряд собак-истребителей танков", "Сидорова Екатерина Петровна", "Сидорова Екатерина Петровна"], ["37-й гвардейский миномётный полк", "Смирнов Василий Иванович", "Смирнов Василий Иванович"], ["Отдельный батальон связи №45", "Крылова Надежда Фёдоровна", "Крылова Надежда Фёдоровна"], ["225-й отдельный инженерный батальон", "Орлов Денис Сергеевич", "Орлов Денис Сергеевич"], ["18-я дивизия СС \"Хорст Вессель\"", "Жукова Елена Викторовна", "Жукова Елена Викторовна"], ["101-й учебный полк", "Гришин Алексей Петрович", "Гришин Алексей Петрович"], ["64-я стрелковая дивизия", "Ткаченко Иван Григорьевич", "Соколовская Надежда Викторовна"], ["1-й отдельный чехословацкий батальон", "Белов Дмитрий Николаевич", "Воронцова Лидия Павловна"], ["46-й гвардейский ночной бомбардировочный полк", "Жуковский Виктор Михайлович", "Громова Екатерина Ивановна"], ["101-й инженерно-сапёрный батальон", "Морозова Анна Сергеевна", "Фролов Павел Сергеевич"], ["Отдельный отряд собак-миноискателей", "Ковалёва Ольга Дмитриевна", "Кузнецов Артём Игоревич"]], "columns": ["unit_name", "first_enlisted", "last_enlisted"], "row_count": 29}', '{medium}');
-INSERT INTO public.tasks VALUES (77, 1, 8, 'Солдаты 1942 года', 'Выведите список солдат и их частей, где служба началась в 1942 году. Результат отсортируйте по первому столбцу. Это поможет анализировать мобилизацию в критический период', 'Используйте подзапросы для фильтрации дат и объединения таблиц', NULL, '{"data": [["Белов Дмитрий Николаевич", "1-й отдельный чехословацкий батальон"], ["Громов Михаил Сергеевич", "2-я ударная армия"], ["Жукова Елена Викторовна", "18-я дивизия СС \"Хорст Вессель\""], ["Жуковский Виктор Михайлович", "46-й гвардейский ночной бомбардировочный полк"], ["Ковалёва Ольга Дмитриевна", "Отдельный отряд собак-миноискателей"], ["Мельникова Галина Ивановна", "1-й чехословацкий отдельный батальон"], ["Морозова Анна Сергеевна", "101-й инженерно-сапёрный батальон"], ["Морозов Иван Кузьмич", "14-я отдельная штрафная рота"], ["Павлов Яков Фёдорович", "62-я армия"], ["Семёнова Валентина Михайловна", "101-й полк НКВД"], ["Смирнова Анна Васильевна", "62-я армия"], ["Соколова Ольга Ивановна", "16-я воздушная армия"], ["Фёдоров Игорь Васильевич", "585-й женский авиаполк"]], "columns": ["full_name", "unit_name"], "row_count": 13}', '{medium}');
-INSERT INTO public.tasks VALUES (76, 1, 12, 'Скользящие потери', 'Проанализируйте динамику потерь среди солдат в 1942 году, используя данные о дате призыва. Для каждого месяца 1942 года рассчитайте количество солдат, погибших к этому моменту, и постройте трёхмесячное скользящее среднее для сглаживания временного ряда. Выведите номер месяца (month), количество потерь (killed) и скользящее среднее (moving_avg). Это покажет динамику снижения боеспособности', 'Используйте `AVG()` с окном `ROWS BETWEEN 2 PRECEDING AND CURRENT ROW`', NULL, '{"data": [[5.0, 1, 1.0]], "columns": ["month", "killed", "moving_avg"], "row_count": 1}', '{medium}');
-INSERT INTO public.tasks VALUES (54, 1, 14, 'Накопленные ресурсы', 'Определите накопительный итог поставок боеприпасов в 1942 году. Выведите название подразделения, дату последнего пополнения, а вычисленный столбец назовите cumulative_ammo. Это отразит рост запасов перед ключевыми операциями', 'Примените `SUM() OVER` с сортировкой по дате пополнения', NULL, '{"data": [["316-я стрелковая дивизия", "1942-03-05", 50000], ["62-я армия", "1942-03-05", 50000], ["7-я гвардейская миномётная дивизия", "1942-12-01", 20000], ["Отдельная медико-санитарная рота", "1942-03-05", 30000], ["585-й женский авиаполк", "1942-03-05", 40000], ["37-й гвардейский миномётный полк", "1942-03-05", 50000], ["64-я стрелковая дивизия", "1942-03-05", 70000]], "columns": ["unit_name", "last_replenishment", "cumulative_ammo"], "row_count": 7}', '{supply,window,medium}');
-INSERT INTO public.tasks VALUES (71, 1, 15, 'Боевые товарищи', 'Выявите пары солдат, призванных из одного города. Чтобы избежать дубликатов (А, Б) и (Б, А), добавьте условие `s1.id < s2.id` (где s1 и s2 - алиасы таблицы). Назовите столбцы soldier_name1, soldier_name2 и common_city. Отсортируйте результат по всем столбцам. Это может указывать на дружеские связи или совместную службу', 'Примените самосоединение таблицы `soldier` по городу призыва', NULL, '{"data": [["Белов Алексей Николаевич", "Фролов Павел Сергеевич", "Севастополь"], ["Васнецова Татьяна Дмитриевна", "Жукова Елена Викторовна", "Смоленск"], ["Васнецова Татьяна Дмитриевна", "Ковалёва Ольга Дмитриевна", "Смоленск"], ["Волкова Елена Сергеевна", "Громова Екатерина Ивановна", "Горький"], ["Гришин Алексей Петрович", "Ткаченко Иван Григорьевич", "Харьков"], ["Жуков Андрей Григорьевич", "Сидорова Екатерина Петровна", "Минск"], ["Жукова Елена Викторовна", "Ковалёва Ольга Дмитриевна", "Смоленск"], ["Зайцева Людмила Михайловна", "Воронцова Лидия Павловна", "Ленинград"], ["Иванов Алексей Петрович", "Соколовская Надежда Викторовна", "Москва"], ["Козлов Николай Семёнович", "Гришин Алексей Петрович", "Харьков"], ["Козлов Николай Семёнович", "Ткаченко Иван Григорьевич", "Харьков"], ["Крылова Надежда Фёдоровна", "Морозова Анна Сергеевна", "Одесса"], ["Мельникова Галина Ивановна", "Кузнецов Артём Игоревич", "Сталинград"], ["Орлова Вера Павловна", "Крылова Надежда Фёдоровна", "Одесса"], ["Орлова Вера Павловна", "Морозова Анна Сергеевна", "Одесса"], ["Петров Дмитрий Иванович", "Кузнецов Артём Игоревич", "Сталинград"], ["Петров Дмитрий Иванович", "Мельникова Галина Ивановна", "Сталинград"], ["Смирнов Василий Иванович", "Жуковский Виктор Михайлович", "Киев"], ["Смирнова Анна Васильевна", "Воронцова Лидия Павловна", "Ленинград"], ["Смирнова Анна Васильевна", "Зайцева Людмила Михайловна", "Ленинград"], ["Соколова Ольга Ивановна", "Жуковский Виктор Михайлович", "Киев"], ["Соколова Ольга Ивановна", "Смирнов Василий Иванович", "Киев"], ["Соколова Ольга Ивановна", "Ткаченко Григорий Петрович", "Киев"], ["Ткаченко Григорий Петрович", "Жуковский Виктор Михайлович", "Киев"], ["Ткаченко Григорий Петрович", "Смирнов Василий Иванович", "Киев"], ["Фёдорова Мария Ивановна", "Жуковский Виктор Михайлович", "Киев"], ["Фёдорова Мария Ивановна", "Смирнов Василий Иванович", "Киев"], ["Фёдорова Мария Ивановна", "Соколова Ольга Ивановна", "Киев"], ["Фёдорова Мария Ивановна", "Ткаченко Григорий Петрович", "Киев"]], "columns": ["soldier_name1", "soldier_name2", "common_city"], "row_count": 29}', '{medium}');
-INSERT INTO public.tasks VALUES (43, 1, 16, 'Гендерный баланс', 'Определите части, где количество мужчин и женщин неравно. Выведите название части military_unit_name и отсортируйте результат в обратном порядке. Это отразит гендерные особенности мобилизации', 'Используйте `SUM` с `CASE` для подсчета и фильтрацию через `HAVING`', NULL, '{"data": [["Отдельный отряд собак-истребителей танков"], ["Отдельный батальон связи №45"], ["Отдельная медико-санитарная рота"], ["8-я гвардейская армия"], ["88-й отдельный лыжный батальон"], ["62-я армия"], ["585-й женский авиаполк"], ["3-я воздушная армия"], ["37-й гвардейский миномётный полк"], ["369-й отдельный батальон морской пехоты"], ["2-я ударная армия"], ["28-я дивизия народного ополчения"], ["225-й отдельный инженерный батальон"], ["1-я морская бригада"], ["1-я гвардейская танковая армия"], ["1-й чехословацкий отдельный батальон"], ["18-я дивизия СС \"Хорст Вессель\""], ["14-я отдельная штрафная рота"], ["106-я стрелковая дивизия"], ["101-й учебный полк"], ["101-й полк НКВД"]], "columns": ["military_unit_name"], "row_count": 21}', '{window,medium}');
-INSERT INTO public.tasks VALUES (44, 1, 17, 'Участники Сталинграда', 'Найдите всех солдат, служивших в частях, участвовавших в Сталинградской битве. Это основа для создания мемориальных списков', 'Используйте вложенные запросы с `IN` для фильтрации по ID частей', NULL, '{"data": [["Иванов Алексей Петрович"], ["Смирнова Анна Васильевна"], ["Петров Дмитрий Иванович"], ["Козлов Николай Семёнович"], ["Фёдорова Мария Ивановна"], ["Жуков Андрей Григорьевич"], ["Павлов Яков Фёдорович"], ["Зайцева Людмила Михайловна"], ["Громов Михаил Сергеевич"], ["Орлова Вера Павловна"], ["Новиков Александр Иванович"], ["Васнецова Татьяна Дмитриевна"], ["Кузнецов Пётр Васильевич"], ["Белов Алексей Николаевич"], ["Соколова Ольга Ивановна"], ["Морозов Иван Кузьмич"], ["Волкова Елена Сергеевна"], ["Ткаченко Григорий Петрович"], ["Беляев Павел Дмитриевич"], ["Семёнова Валентина Михайловна"], ["Ковалёв Сергей Николаевич"], ["Мельникова Галина Ивановна"], ["Фёдоров Игорь Васильевич"], ["Горбачёв Алексей Дмитриевич"], ["Сидорова Екатерина Петровна"], ["Смирнов Василий Иванович"], ["Крылова Надежда Фёдоровна"], ["Орлов Денис Сергеевич"], ["Жукова Елена Викторовна"], ["Гришин Алексей Петрович"], ["Ткаченко Иван Григорьевич"], ["Воронцова Лидия Павловна"], ["Жуковский Виктор Михайлович"], ["Морозова Анна Сергеевна"], ["Кузнецов Артём Игоревич"], ["Соколовская Надежда Викторовна"], ["Белов Дмитрий Николаевич"], ["Громова Екатерина Ивановна"], ["Фролов Павел Сергеевич"], ["Ковалёва Ольга Дмитриевна"]], "columns": ["full_name"], "row_count": 40}', '{stalingrad,medium}');
-INSERT INTO public.tasks VALUES (72, 1, 18, 'Чисто мужские/женские части', 'Выведите названия частей, состоящих исключительно из мужчин или женщин. Назовите столбец military_unit_name и отсортируйте результат по алфавиту. Это редкие случаи, характерные для отдельных родов войск', 'Примените `UNION` для объединения результатов двух подзапросов с `EXISTS` и `NOT EXISTS`', NULL, '{"data": [["101-й полк НКВД"], ["101-й учебный полк"], ["106-я стрелковая дивизия"], ["14-я отдельная штрафная рота"], ["18-я дивизия СС \"Хорст Вессель\""], ["1-й чехословацкий отдельный батальон"], ["1-я гвардейская танковая армия"], ["1-я морская бригада"], ["225-й отдельный инженерный батальон"], ["28-я дивизия народного ополчения"], ["2-я ударная армия"], ["369-й отдельный батальон морской пехоты"], ["37-й гвардейский миномётный полк"], ["3-я воздушная армия"], ["585-й женский авиаполк"], ["88-й отдельный лыжный батальон"], ["8-я гвардейская армия"], ["Отдельная медико-санитарная рота"], ["Отдельный батальон связи №45"], ["Отдельный отряд собак-истребителей танков"]], "columns": ["military_unit_name"], "row_count": 20}', '{medium}');
-INSERT INTO public.tasks VALUES (46, 1, 19, 'Накопление ресурсов', 'Рассчитайте накопленный объем боеприпасов, поставляемых в части за 1942 год. Выведите столбцы unit_id, month, total_ammo и отсортируйте результат по первому столбцу. Это отразит логистические усилия в критический период', 'Используйте оконную функцию `SUM` с сортировкой по месяцам', NULL, '{"data": [[1, 3.0, 50000.0], [2, 3.0, 50000.0], [6, 12.0, 20000.0], [13, 3.0, 30000.0], [18, 3.0, 40000.0], [21, 3.0, 50000.0], [26, 3.0, 70000.0]], "columns": ["unit_id", "month", "total_ammo"], "row_count": 7}', '{supply,window,medium}');
-INSERT INTO public.tasks VALUES (73, 1, 21, 'Долгосрочная служба', 'Выявите солдат, чья служба длилась более трех лет. Выведите полное имя солдата и длительность службы в днях (days). Отсортируйте результат от меньшей длительности к большей. Это может указывать на ветеранов, участвовавших в ключевых операциях', 'Рассчитайте разницу между датами начала и окончания службы с помощью `AGE`', NULL, '{"data": [["Громов Михаил Сергеевич", 1126], ["Кузнецов Пётр Васильевич", 1153], ["Гришин Алексей Петрович", 1245]], "columns": ["full_name", "days"], "row_count": 3}', '{medium}');
-INSERT INTO public.tasks VALUES (50, 1, 22, 'Союзники врага', 'Определите все вражеские части, участвовавшие в Курской битве. Это поможет понять структуру сил противника. Выведите только unit_name.', 'Используйте рекурсивный CTE для поиска связанных через таблицу союзов', NULL, '{"data": [["Танковая группа \"Кемпф\""], ["505-й тяжёлый танковый батальон"], ["503-й тяжёлый танковый батальон"], ["505-й инженерный батальон"], ["Эскадра SG2 \"Иммельман\""], ["12-я танковая дивизия"], ["Эскадра KG27 \"Бёльке\""], ["337-я пехотная дивизия"]], "columns": ["unit_name"], "row_count": 8}', '{cte,medium}');
-INSERT INTO public.tasks VALUES (58, 2, 4, 'Снаряжение элитных частей', 'Определите, какие типы снаряжения чаще всего используются в частях с эффективностью выше среднего. Вычисленный столбец назовите total. Отсортируйте результат в алфавитном порядке. Это поможет понять, какие ресурсы влияют на успех', 'Примените подзапрос для вычисления средней эффективности и `GROUP BY` для типов снаряжения', NULL, '{"data": [["артиллерия", 1], ["боеприпасы", 6], ["медицина", 3], ["миномёты", 1], ["противотанковые", 1], ["реактивные снаряды", 1], ["самолёты", 1], ["танки", 2]], "columns": ["equipment_type", "total"], "row_count": 8}', '{supply,hard}');
-INSERT INTO public.tasks VALUES (55, 2, 1, 'Рейтинг героев', 'Ранжируйте солдат по количеству наград в их частях. Выведите имя солдата, название подразделения (unit_name),	количество медалей (medals_count) и вычисленный ранг (medal_rank). Фамилии солдат выведите в алфавитном порядке. Это основа для определения самых отличившихся бойцов', 'Используйте `DENSE_RANK()` с группировкой по частям и сортировкой по наградам', NULL, '{"data": [["Белов Алексей Николаевич", "150-я стрелковая дивизия", 1, 1], ["Белов Дмитрий Николаевич", "1-й отдельный чехословацкий батальон", 0, 1], ["Беляев Павел Дмитриевич", "88-й отдельный лыжный батальон", 0, 1], ["Васнецова Татьяна Дмитриевна", "106-я стрелковая дивизия", 1, 1], ["Волкова Елена Сергеевна", "1-я морская бригада", 0, 1], ["Воронцова Лидия Павловна", "1-й отдельный чехословацкий батальон", 0, 1], ["Горбачёв Алексей Дмитриевич", "28-я дивизия народного ополчения", 0, 1], ["Гришин Алексей Петрович", "101-й учебный полк", 0, 1], ["Громова Екатерина Ивановна", "46-й гвардейский ночной бомбардировочный полк", 0, 1], ["Громов Михаил Сергеевич", "2-я ударная армия", 1, 1], ["Жукова Елена Викторовна", "18-я дивизия СС \"Хорст Вессель\"", 0, 1], ["Жуков Андрей Григорьевич", "16-я воздушная армия", 1, 1], ["Жуковский Виктор Михайлович", "46-й гвардейский ночной бомбардировочный полк", 0, 1], ["Зайцева Людмила Михайловна", "150-я стрелковая дивизия", 1, 1], ["Иванов Алексей Петрович", "316-я стрелковая дивизия", 1, 1], ["Ковалёва Ольга Дмитриевна", "Отдельный отряд собак-миноискателей", 0, 1], ["Ковалёв Сергей Николаевич", "369-й отдельный батальон морской пехоты", 0, 1], ["Козлов Николай Семёнович", "1-я гвардейская танковая армия", 0, 2], ["Крылова Надежда Фёдоровна", "Отдельный батальон связи №45", 0, 1], ["Кузнецов Артём Игоревич", "Отдельный отряд собак-миноискателей", 0, 1], ["Кузнецов Пётр Васильевич", "1-я гвардейская танковая армия", 1, 1], ["Мельникова Галина Ивановна", "1-й чехословацкий отдельный батальон", 0, 1], ["Морозова Анна Сергеевна", "101-й инженерно-сапёрный батальон", 0, 1], ["Морозов Иван Кузьмич", "14-я отдельная штрафная рота", 0, 1], ["Новиков Александр Иванович", "3-я воздушная армия", 1, 1], ["Орлова Вера Павловна", "8-я гвардейская армия", 1, 1], ["Орлов Денис Сергеевич", "225-й отдельный инженерный батальон", 0, 1], ["Павлов Яков Фёдорович", "62-я армия", 1, 1], ["Петров Дмитрий Иванович", "62-я армия", 1, 1], ["Семёнова Валентина Михайловна", "101-й полк НКВД", 0, 1], ["Сидорова Екатерина Петровна", "Отдельный отряд собак-истребителей танков", 0, 1], ["Смирнова Анна Васильевна", "62-я армия", 1, 1], ["Смирнов Василий Иванович", "37-й гвардейский миномётный полк", 0, 1], ["Соколова Ольга Ивановна", "16-я воздушная армия", 1, 1], ["Соколовская Надежда Викторовна", "64-я стрелковая дивизия", 0, 1], ["Ткаченко Григорий Петрович", "Отдельная медико-санитарная рота", 0, 1], ["Ткаченко Иван Григорьевич", "64-я стрелковая дивизия", 0, 1], ["Фёдорова Мария Ивановна", "316-я стрелковая дивизия", 0, 2], ["Фёдоров Игорь Васильевич", "585-й женский авиаполк", 0, 1], ["Фролов Павел Сергеевич", "101-й инженерно-сапёрный батальон", 0, 1]], "columns": ["full_name", "unit_name", "medals_count", "medal_rank"], "row_count": 40}', '{first_any_level,hard}');
-INSERT INTO public.tasks VALUES (78, 2, 2, 'Сравнение стратегий', 'Сравните среднюю эффективность частей, участвовавших в стратегических и локальных операциях. Это покажет разницу в результативности. Назовите столбцы battle_group и avg_efficiency. Назовите средние эффективности "Стратегические битвы" и "Локальные операции"', 'Примените `CASE` для классификации битв и `AVG` для сравнения', NULL, '{"data": [["Локальные операции", 88.07142857142857], ["Стратегические битвы", 85.0875]], "columns": ["battle_group", "avg_efficiency"], "row_count": 2}', '{hard}');
-INSERT INTO public.tasks VALUES (57, 2, 3, 'Анализ интервалов поставок', 'Определите среднее время между пополнениями снаряжения для каждой части. Выведите столбцы unit_name, equipment_type, last_replenishment, prev_replenishment (дата предыдущего пополнения), next_replenishment (дата следующего пополнения), days_between (интервал). Это поможет выявить логистические задержки или перебои', 'Примените `LAG()` для получения предыдущей даты пополнения и рассчитайте разницу между датами', NULL, '{"data": [["316-я стрелковая дивизия", "оружие", "1942-03-01", null, "1942-03-05", null], ["316-я стрелковая дивизия", "боеприпасы", "1942-03-05", "1942-03-01", "1942-05-10", 4], ["316-я стрелковая дивизия", "связь", "1942-05-10", "1942-03-05", null, 66], ["62-я армия", "боеприпасы", "1942-03-05", null, "1942-11-10", null], ["62-я армия", "артиллерия", "1942-11-10", "1942-03-05", "1943-01-10", 250], ["62-я армия", "медицина", "1943-01-10", "1942-11-10", "1943-12-01", 61], ["62-я армия", "медицина", "1943-12-01", "1943-01-10", null, 325], ["1-я гвардейская танковая армия", "танки", "1943-07-05", null, null, null], ["150-я стрелковая дивизия", "миномёты", "1944-01-15", null, null, null], ["16-я воздушная армия", "самолёты", "1943-05-01", null, null, null], ["7-я гвардейская миномётная дивизия", "боеприпасы", "1942-12-01", null, "1942-12-01", null], ["7-я гвардейская миномётная дивизия", "реактивные снаряды", "1942-12-01", "1942-12-01", null, 0], ["2-я ударная армия", "инженерное", "1943-08-14", null, null, null], ["8-я гвардейская армия", "танки", "1944-10-01", null, null, null], ["3-я воздушная армия", "авиабомбы", "1943-09-05", null, null, null], ["106-я стрелковая дивизия", "противотанковые", "1944-02-28", null, null, null], ["1-я морская бригада", "медицина", "1942-03-05", null, "1942-03-05", null], ["1-я морская бригада", "миномёты", "1942-03-05", "1942-03-05", "1942-06-06", 0], ["1-я морская бригада", "миномёты", "1942-06-06", "1942-03-05", null, 93], ["Отдельная медико-санитарная рота", "медицина", "1942-03-05", null, "1942-03-05", null], ["Отдельная медико-санитарная рота", "боеприпасы", "1942-03-05", "1942-03-05", null, 0], ["585-й женский авиаполк", "боеприпасы", "1942-03-05", null, null, null], ["37-й гвардейский миномётный полк", "боеприпасы", "1942-03-05", null, null, null], ["64-я стрелковая дивизия", "боеприпасы", "1942-03-05", null, null, null]], "columns": ["unit_name", "equipment_type", "last_replenishment", "prev_replenishment", "next_replenishment", "days_between"], "row_count": 24}', '{window,hard}');
-INSERT INTO public.tasks VALUES (81, 2, 5, 'Живучесть подразделений', 'Для каждого воинского подразделения рассчитайте: общую продолжительность участия в боях (разница между датой последнего и первого боя), количество боёв, в которых оно участвовало, количество солдат с безвозвратными потерями («убит», «пропал без вести»). На основе этих данных вычислите среднее количество потерь на один бой, определите процентильное положение подразделения по продолжительности участия в боях (чем дольше, тем выше процентиль). Выведите название подразделения (unit_name), общую продолжительность участия в боях (total_duration), количество боёв (battles_count), количество потерь (losses), средние потери на бой (loss_per_battle_ratio), округлённые до 2 знаков, процентиль по продолжительности (survival_percentile), рассчитанный как PERCENT_RANK() по убыванию total_duration. Отсортируйте результат по убыванию общей продолжительности участия в боях. Это покажет, какие подразделения были наиболее устойчивыми. Необходимо вывести колонки unit_name, total_duration, battles_count, losses, loss_per_battle_ratio, survival_percentile по убыванию общей продолжительности сражений.', 'Используйте `MIN()` и `MAX()` для дат сражений, а также `ROUND` для расчета соотношения потерь', NULL, '{"data": [["14-я отдельная штрафная рота", 1190, 1, 0, 0.0, 0.0], ["Отдельный отряд собак-истребителей танков", 871, 1, 0, 0.0, 0.043478260869565216], ["3-я воздушная армия", 447, 1, 1, 1.0, 0.08695652173913043], ["101-й учебный полк", 441, 1, 0, 0.0, 0.13043478260869565], ["101-й инженерно-сапёрный батальон", 441, 1, 0, 0.0, 0.13043478260869565], ["46-й гвардейский ночной бомбардировочный полк", 247, 1, 0, 0.0, 0.21739130434782608], ["37-й гвардейский миномётный полк", 247, 1, 1, 1.0, 0.21739130434782608], ["18-я дивизия СС \"Хорст Вессель\"", 202, 1, 0, 0.0, 0.30434782608695654], ["28-я дивизия народного ополчения", 200, 1, 0, 0.0, 0.34782608695652173], ["316-я стрелковая дивизия", 200, 1, 0, 0.0, 0.34782608695652173], ["1-й чехословацкий отдельный батальон", 200, 1, 0, 0.0, 0.34782608695652173], ["225-й отдельный инженерный батальон", 200, 1, 0, 0.0, 0.34782608695652173], ["Отдельная медико-санитарная рота", 89, 1, 1, 1.0, 0.5217391304347826], ["1-й отдельный чехословацкий батальон", 89, 1, 2, 2.0, 0.5217391304347826], ["88-й отдельный лыжный батальон", 62, 1, 0, 0.0, 0.6086956521739131], ["64-я стрелковая дивизия", 62, 1, 0, 0.0, 0.6086956521739131], ["16-я воздушная армия", 62, 1, 0, 0.0, 0.6086956521739131], ["Отдельный отряд собак-миноискателей", 49, 1, 0, 0.0, 0.7391304347826086], ["585-й женский авиаполк", 49, 1, 1, 1.0, 0.7391304347826086], ["62-я армия", 49, 1, 1, 1.0, 0.7391304347826086], ["Отдельный батальон связи №45", 49, 1, 0, 0.0, 0.7391304347826086], ["106-я стрелковая дивизия", 24, 1, 0, 0.0, 0.9130434782608695], ["1-я гвардейская танковая армия", 22, 1, 1, 1.0, 0.9565217391304348], ["369-й отдельный батальон морской пехоты", 7, 1, 0, 0.0, 1.0]], "columns": ["unit_name", "total_duration", "battles_count", "losses", "loss_per_battle_ratio", "survival_percentile"], "row_count": 24}', '{hard}');
-INSERT INTO public.tasks VALUES (80, 2, 6, 'Полный портрет части', 'Сформируйте сводку по каждой воинской части: количество солдат, снаряжения, участие в битвах и полученные награды. Это основа для комплексного анализа. Выведите колонки unit_name, soldiers_total, equipment_types, battles_participated, medals_received. Выведите результат по убыванию количества солдат.', 'Используйте `LEFT JOIN` для объединения таблиц и агрегатные функции (`COUNT`, `STRING_AGG`)', NULL, '{"data": [["62-я армия", 3, 4, 1, "Герой Советского Союза, Медаль \"За взятие Берлина\", Орден Отечественной войны"], ["Отдельный отряд собак-миноискателей", 2, 0, 1, null], ["150-я стрелковая дивизия", 2, 1, 0, "Медаль \"За оборону Сталинграда\", Медаль \"За отвагу\""], ["16-я воздушная армия", 2, 1, 1, "Медаль \"За оборону Москвы\", Орден Красной Звезды"], ["1-й отдельный чехословацкий батальон", 2, 0, 1, null], ["1-я гвардейская танковая армия", 2, 1, 1, "Герой Советского Союза"], ["316-я стрелковая дивизия", 2, 3, 1, "Медаль \"За отвагу\""], ["46-й гвардейский ночной бомбардировочный полк", 2, 0, 1, null], ["64-я стрелковая дивизия", 2, 1, 1, null], ["101-й инженерно-сапёрный батальон", 2, 0, 1, null], ["1-й чехословацкий отдельный батальон", 1, 0, 1, null], ["1-я морская бригада", 1, 3, 0, null], ["225-й отдельный инженерный батальон", 1, 0, 1, null], ["28-я дивизия народного ополчения", 1, 0, 1, null], ["2-я ударная армия", 1, 1, 0, "Орден Отечественной войны"], ["Отдельная медико-санитарная рота", 1, 2, 1, null], ["369-й отдельный батальон морской пехоты", 1, 0, 1, null], ["37-й гвардейский миномётный полк", 1, 1, 1, null], ["3-я воздушная армия", 1, 1, 1, "Орден Красной Звезды"], ["Отдельный батальон связи №45", 1, 0, 1, null], ["585-й женский авиаполк", 1, 1, 1, null], ["101-й полк НКВД", 1, 0, 0, null], ["101-й учебный полк", 1, 0, 1, null], ["106-я стрелковая дивизия", 1, 1, 1, "Медаль \"Партизану Отечественной войны\""], ["14-я отдельная штрафная рота", 1, 0, 1, null], ["Отдельный отряд собак-истребителей танков", 1, 0, 1, null], ["8-я гвардейская армия", 1, 1, 0, "Орден Славы"], ["18-я дивизия СС \"Хорст Вессель\"", 1, 0, 1, null], ["88-й отдельный лыжный батальон", 1, 0, 1, null], ["7-я гвардейская миномётная дивизия", 0, 2, 0, null]], "columns": ["unit_name", "soldiers_total", "equipment_types", "battles_participated", "medals_received"], "row_count": 30}', '{hard}');
-INSERT INTO public.tasks VALUES (59, 2, 7, 'Критический дефицит', 'Для анализа состояния снабжения воинских подразделений необходимо выявить снаряжение, количество которого значительно отклоняется от среднего уровня по каждому типу. Для этого требуется рассчитать среднее количество и стандартное отклонение для каждого типа снаряжения (equipment_type) по всем подразделениям, а затем определить, в каких именно частях и какие конкретно предметы снаряжения находятся в дефиците. Каждая единица снаряжения должна быть классифицирована как «Критический дефицит», если её количество ниже среднего на полторы стандартные девиации, как «Дефицит», если количество ниже среднего, но не достигает уровня критического дефицита, и как «Норма» в остальных случаях. В результате должен быть выведен список всего снаряжения с указанием его типа, названия, названия подразделения, количества и статуса, отсортированный сначала по типу снаряжения, а затем по возрастанию количества, чтобы наглядно выявить потенциальные узкие места в системе снабжения', 'Примените оконные функции (`AVG`, `STDDEV`)', NULL, '{"data": [["Винтовка Мосина", 1200], ["Аптечки полевые", 350], ["76-мм дивизионная пушка ЗИС-3", 24], ["Т-34", 58], ["БМ-13 \"Катюша\"", 12], ["Ил-2", 45], ["М-31", 1500], ["Сапёрная лопатка", 850], ["ИС-2", 42], ["ФАБ-100", 3200], ["ПТРД", 68], ["Радиостанция РБМ", 15], ["Плазменные флаконы", 480]], "columns": ["item_name", "quantity"], "row_count": 13}', '{supply,hard}');
-INSERT INTO public.tasks VALUES (60, 2, 8, 'Топ вражеских частей', 'Для анализа тактики противника требуется определить три вражеских подразделения, одержавших наибольшее количество побед над советскими войсками. Для этого необходимо проанализировать все бои, в которых вражеские подразделения участвовали, и выявить те сражения, где результат не указывал на победу СССР. В каждом таком бою нужно подсчитать количество безвозвратных потерь среди советских солдат, проходивших службу в подразделениях, участвовавших в этом бою, и с помощью ранжирования определить, какое из вражеских подразделений нанесло наибольший урон, считая его победителем в случае, если в бою было несколько вражеских подразделений. Затем для каждого вражеского подразделения необходимо подсчитать общее количество таких побед (по числу боёв, где оно заняло первое место по урону) и суммарное количество советских потерь, понесённых в этих боях. В результате следует вывести названия трёх лучших по числу побед подразделений, а также количество их побед и общее число потерь среди советских солдат в этих сражениях, отсортировав сначала по убыванию числа побед, а затем — по убыванию суммарных потерь. Выведите unit_name, victories и total_soviet_losses по убыванию  victories и total_soviet_losses.', 'Используйте `RANK()`, `COUNT` с фильтрацией по результату битв и `LIMIT 3`', NULL, '{"data": [["17-я танковая дивизия", 1, 2.0], ["1-я танковая дивизия СС \"Лейбштандарт Адольф Гитлер\"", 1, 1.0], ["9-я армия", 1, 1.0]], "columns": ["unit_name", "victories", "total_soviet_losses"], "row_count": 3}', '{window,hard}');
-INSERT INTO public.tasks VALUES (82, 2, 9, 'Прогноз износа техники', 'Для прогнозирования будущих потребностей в ремонте и замене снаряжения необходимо проанализировать его расход по годам с использованием сглаживающего алгоритма. Для каждого типа снаряжения (equipment_type) и каждого года (issue_date) требуется рассчитать коэффициент потерь как отношение количества снаряжения, выданного солдатам, к количеству солдат, проходивших службу в тот же год, чтобы учесть масштабы деятельности частей. Данный коэффициент следует сгладить с помощью трёхлетнего скользящего среднего (включая текущий год и два предыдущих), чтобы устранить случайные колебания и выявить общую тенденцию. Выведите тип снаряжения, год, исходный коэффициент потерь и сглаженное значение, отсортировав результат сначала по типу снаряжения, а затем по году в порядке возрастания', 'Используйте CTE для подсчёта примените AVG(...) OVER (ORDER BY year ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) для сглаживания', NULL, '{"data": [["авиабомбы", 1943.0, 2.1818, 2.1818], ["артиллерия", 1942.0, 0.0769, 0.0769], ["боеприпасы", 1942.0, 9.2308, 9.2308], ["инженерное", 1943.0, 0.0909, 0.0909], ["медицина", 1943.0, 0.7273, 0.7273], ["миномёты", 1944.0, 20.0, 20.0], ["оружие", 1942.0, 0.0769, 0.0769], ["противотанковые", 1944.0, 0.1667, 0.1667], ["самолёты", 1943.0, 0.0909, 0.0909], ["связь", 1942.0, 0.0769, 0.0769], ["танки", 1943.0, 0.0909, 0.0909], ["танки", 1944.0, 0.1667, 0.1288]], "columns": ["equipment_type", "year", "loss_ratio", "smoothed_ratio"], "row_count": 12}', '{hard}');
-INSERT INTO public.tasks VALUES (61, 2, 10, 'Эффективность наград', 'Для оценки соответствия воинских наград реальным результатам в бою необходимо проанализировать подразделения, которые получили наибольшее количество наград. Для каждого такого подразделения следует определить, какие именно награды ему были присвоены, и подсчитать общее количество раз, когда они были вручены (всего наградовано солдат). Далее, для этих же подразделений необходимо подсчитать количество боёв, в которых они одержали победу (результат боя — «победа»), и общее число солдат с безвозвратными потерями («убит» и «пропал без вести»). На основе этих данных рассчитайте соотношение побед к числу наград (victory_per_medal) и потерь к числу наград (death_per_medal) для каждой награды, чтобы оценить, насколько боевые достижения и потери сопоставимы с полученным признанием. Выведите название подразделения, название награды, количество награждений, количество погибших, число побед и два расчётных показателя, отсортировав результат по убыванию соотношения побед к наградам, при этом строки с нулевым значением victory_per_medal должны располагаться в конце списка.', 'Используйте CTE. Объедините данные по unit_id и medal_id. Рассчитайте victory_per_medal и death_per_medal с округлением. В сортировке используйте CASE, чтобы вывести нули в victory_per_medal в конец', NULL, '{"data": [["3-я воздушная армия", "Орден Красной Звезды", 1, 0, 1, 1.0, 0.0], ["150-я стрелковая дивизия", "Медаль \"За оборону Сталинграда\"", 1, 0, 0, 0.0, 0.0], ["106-я стрелковая дивизия", "Медаль \"Партизану Отечественной войны\"", 1, 0, 0, 0.0, 0.0], ["16-я воздушная армия", "Орден Красной Звезды", 1, 0, 0, 0.0, 0.0], ["150-я стрелковая дивизия", "Медаль \"За отвагу\"", 1, 0, 0, 0.0, 0.0], ["8-я гвардейская армия", "Орден Славы", 1, 0, 0, 0.0, 0.0], ["62-я армия", "Медаль \"За взятие Берлина\"", 1, 0, 0, 0.0, 0.0], ["1-я гвардейская танковая армия", "Герой Советского Союза", 1, 0, 0, 0.0, 0.0], ["62-я армия", "Орден Отечественной войны", 1, 0, 0, 0.0, 0.0], ["62-я армия", "Герой Советского Союза", 1, 0, 0, 0.0, 0.0], ["316-я стрелковая дивизия", "Медаль \"За отвагу\"", 1, 0, 0, 0.0, 0.0], ["2-я ударная армия", "Орден Отечественной войны", 1, 0, 0, 0.0, 0.0], ["16-я воздушная армия", "Медаль \"За оборону Москвы\"", 1, 0, 0, 0.0, 0.0]], "columns": ["unit_name", "medal_name", "awarded", "deaths", "victories", "victory_per_medal", "death_per_medal"], "row_count": 13}', '{window,hard}');
-INSERT INTO public.tasks VALUES (83, 2, 11, 'Сезонность боевых действий', 'Для выявления возможных сезонных закономерностей в боевых действиях советских войск необходимо определить, в какие месяцы года они чаще всего одерживали победы. Для этого требуется проанализировать данные о боях, в которых участвовали советские подразделения, и выделить те сражения, исход которых соответствовал победе СССР (например, строка result содержит "победа СССР", "успешно", "советские войска одержали верх" и т.п.). Для каждой победы следует извлечь месяц из даты окончания боя, так как именно к этому моменту становится ясен её итог. Далее необходимо подсчитать количество побед, одержанных в каждом месяце года, и ранжировать результат по убыванию количества побед. Выведите месяц (в виде числа от 1 до 12), его название (для удобства), общее количество побед в этом месяце и процент всех побед, приходящихся на этот месяц, от общего числа побед за весь период. Отсортируйте результат по убыванию количества побед', 'Используйте `EXTRACT(MONTH)` для группировки и `COUNT` с фильтрацией по результату битв', NULL, '{"data": [[4.0, "April", 1, 100.0]], "columns": ["month_num", "month_name", "victory_count", "victory_percentage"], "row_count": 1}', '{hard}');
-INSERT INTO public.tasks VALUES (62, 2, 12, 'Стоимость победы', 'Для анализа ценности побед в боевых действиях требуется определить, какие битвы, несмотря на успех, были наиболее «дорогими» в терминах потерь среди солдат и затрат ресурсов. Для каждой битвы необходимо рассчитать общее количество безвозвратных потерь (солдаты со статусом «убит» или «пропал без вести»), участвовавших в ней, а также среднюю исходную боевую эффективность подразделений, принимавших в ней участие. Дополнительно нужно подсчитать количество единиц снаряжения, использованного солдатами, участвовавшими в битве, что отразит объём израсходованных материальных ресурсов. На основе этих данных следует вычислить условный «стоимостной коэффициент» битвы (cost_ratio) как отношение числа потерь к средней боевой эффективности — чем выше этот коэффициент, тем «дороже» победа. Затем необходимо проранжировать все битвы по убыванию числа потерь (loss_rank) и по убыванию средней эффективности (eff_rank), где ранг 1 присваивается наибольшему значению. В результате нужно вывести название битвы, количество потерь, среднюю боевую эффективность, объём использованного снаряжения, ранги по потерям и эффективности, а также стоимостной коэффициент, отсортировав итоговый список по убыванию cost_ratio', 'Используйте `RANK()` и арифметические операции с агрегатными функциями', NULL, '{"data": [["Оборона Севастополя", 0, 96.6, 0, 1, 1, 0.0], ["Битва за Берлин", 0, 95.0, 2, 1, 2, 0.0], ["Корсунь-Шевченковская операция", 0, 89.3, 1, 1, 3, 0.0], ["Оборона Брестской крепости", 0, 88.9, 0, 1, 4, 0.0], ["Демянская операция", 0, 88.35, 0, 1, 5, 0.0], ["Курская битва", 0, 88.23, 6, 1, 6, 0.0], ["Битва за Москву", 0, 88.1, 0, 1, 7, 0.0], ["Смоленское сражение", 0, 85.07, 4, 1, 8, 0.0], ["Ржевская битва", 0, 85.0, 24, 1, 9, 0.0], ["Блокада Ленинграда", 0, 82.4, 0, 1, 10, 0.0], ["Сталинградская битва", 0, 80.88, 121, 1, 11, 0.0], ["Битва за Кавказ", 0, 78.9, 0, 1, 12, 0.0], ["Оборона Заполярья", 0, 65.8, 0, 1, 13, 0.0], ["Оборона Тулы", 0, 0.0, 0, 1, 14, 0.0], ["Берлинская операция", 0, 0.0, 0, 1, 14, 0.0], ["Пражская операция", 0, 0.0, 0, 1, 14, 0.0], ["Оборона Брестской крепости", 0, 0.0, 0, 1, 14, 0.0], ["Битва при Дебрецене", 0, 0.0, 0, 1, 14, 0.0], ["Операция \"Багратион\"", 0, 0.0, 0, 1, 14, 0.0], ["Висло-Одерская операция", 0, 0.0, 0, 1, 14, 0.0], ["Будапештская операция", 0, 0.0, 0, 1, 14, 0.0], ["Харьковская операция", 0, 0.0, 0, 1, 14, 0.0], ["Битва за Днепр", 0, 0.0, 0, 1, 14, 0.0], ["Таллинский переход", 0, 0.0, 0, 1, 14, 0.0], ["Прорыв блокады Ленинграда", 0, 0.0, 0, 1, 14, 0.0], ["Битва за Воронеж", 0, 0.0, 0, 1, 14, 0.0], ["Керченско-Эльтигенская операция", 0, 0.0, 0, 1, 14, 0.0], ["Балатонская операция", 0, 0.0, 0, 1, 14, 0.0], ["Восточно-Прусская операция", 0, 0.0, 0, 1, 14, 0.0], ["Маньчжурская операция", 0, 0.0, 0, 1, 14, 0.0]], "columns": ["battle_name", "losses", "avg_efficiency", "equipment_used", "loss_rank", "eff_rank", "cost_ratio"], "row_count": 30}', '{window,hard}');
-INSERT INTO public.tasks VALUES (84, 3, 1, 'Пространство имён', 'Отряд занял немецкий вычислительный узел; база пуста — ни одной таблицы, ни одного объекта. Прежде чем вносить разведданные, подпольному архиву нужно своё пространство имён, чтобы не смешаться с тем, что осталось от немцев.
-INSERT INTO public.tasks VALUES (85, 3, 2, 'Настройка базы', 'Центр принимает донесения по единому времени, а набирать «podpolye.» перед каждым именем таблицы в полутьме — верный способ ошибиться. Семён требует настроить базу один раз и навсегда.
-INSERT INTO public.tasks VALUES (86, 3, 3, 'Таблица складов', 'Первое, что нужно Центру, — учёт немецких складов: номер, название, сектор города и вместимость. Номер — то, чем склад отличается от всех остальных; безымянный склад разведданными не является, а вот вместимость известна не всегда.
-INSERT INTO public.tasks VALUES (87, 3, 4, 'Заплата на сектор', 'Наблюдатель при свече вывел «8» вместо «B» — и база приняла склад в несуществующем секторе. Город поделён ровно на четыре сектора: A, B, C и D. Дыра должна закрыться этой же ночью.
-INSERT INTO public.tasks VALUES (88, 3, 5, 'Справочник секторов', 'Сектор — не буква, а самостоятельная вещь с названием: «Заречный», «Вокзальный». Склады должны ссылаться на справочник по-настоящему: сектор, за которым числятся склады, стереть нельзя.
-INSERT INTO public.tasks VALUES (89, 3, 6, 'Первые донесения', 'Каркас готов, справочник заполнен, база пуста. Три первых склада должны попасть в базу без единой ошибки: что внесено неверно, Центр примет за правду.
-INSERT INTO public.tasks VALUES (104, 4, 9, 'Передоверие', 'Отряд уходит, узел передаётся соседней группе. Их бойцы вам незнакомы — и не должны быть: раздавать доступ своим людям соседи будут сами. Для этого командованию нужно право передавать чтение дальше.
-INSERT INTO public.tasks VALUES (90, 3, 7, 'Журнал рейсов', 'Наблюдатели приносят записки о вывозе: склад, дата, тоннаж. Дата почти всегда сегодняшняя — пусть база подставляет её сама. А рейсы склада, ушедшего из учёта, обязаны исчезнуть вместе с ним.
-INSERT INTO public.tasks VALUES (91, 3, 8, 'Груз и вес', 'В таблице рейсов не хватает главного — что именно вывозят. Заодно в базу попал рейс с отрицательным весом: отрицательных тонн не бывает, и база должна знать это сама.
-INSERT INTO public.tasks VALUES (92, 3, 9, 'Указатель', 'Счётная машина перебирает весь журнал рейсов ради одной сводки по складу. Нужен указатель по столбцу связи — и он не обязан быть уникальным: с одного склада рейсов много.
-INSERT INTO public.tasks VALUES (93, 3, 10, 'Сводка одним словом', 'Семён требует, чтобы сводка вывоза по секторам собиралась сама, одним словом. Мелкие рейсы до 30 тонн — текучка гарнизона, в сводку они не идут.
-INSERT INTO public.tasks VALUES (94, 3, 11, 'Наблюдение за складами', 'За каждым складом закреплён свой человек. Один наблюдатель ведёт несколько складов, за одним складом могут следить двое — но пара «человек и склад» должна встречаться ровно один раз. Ключ здесь — именно пара.
-INSERT INTO public.tasks VALUES (95, 3, 12, 'Журнал радиограмм', 'Повтор донесения Центр считает подтверждением и удваивает оценку сил противника — одинаковых текстов быть не должно. Время отправки база ставит сама: радист в эфире на часы не смотрит.
-INSERT INTO public.tasks VALUES (96, 4, 1, 'Роли отряда', 'Условное имя явки всплыло в немецкой сводке, а работали до сих пор все под одной учётной записью. Разграничение начинается с ролей: командование, разведка, агентура. Это группы, а не люди — входить под ними нельзя.
-INSERT INTO public.tasks VALUES (97, 4, 2, 'Полный доступ командованию', 'Семён отвечает за отряд целиком; урезать его в правах бессмысленно — он возьмёт их обратно окольным путём. Полный доступ начинается с права войти в саму схему.
-INSERT INTO public.tasks VALUES (98, 4, 3, 'Разведке — только перо', 'Разведчику нужно одно: принести новое. Увидел эшелон — вписал строку. Право править и стирать чужие записи в руках противника опаснее, чем право читать: тихо изменённые координаты уведут удар в жилой квартал.
-INSERT INTO public.tasks VALUES (99, 4, 4, 'Явки по столбцам', 'В ночь спешки агентам открыли таблицу явок целиком: адреса, хозяева, всё. Агенту нужны только номер явки и сектор; улица и хозяин не должны быть доступны ему ни при каких условиях. Сначала отобрать всё — потом вернуть ровно необходимое.
-INSERT INTO public.tasks VALUES (100, 4, 5, 'Явки по строкам', 'Вторая линия обороны: проваленная явка опаснее незнания — агент придёт по адресу, который уже под наблюдением. Строки с провалом должны исчезнуть из его выборки на уровне правила самой таблицы.
-INSERT INTO public.tasks VALUES (101, 4, 6, 'Боец Гриша', 'Пора заводить людей поимённо. Если Гришу возьмут, отключить надо будет именно его, не тронув остальных. Личных прав не выдавать ни одного: боец получает их только через роль.
-INSERT INTO public.tasks VALUES (102, 4, 7, 'Отзыв у PUBLIC', 'Права на таблицу явок в спешке выдали PUBLIC — всем, кто сумеет подключиться. Вот почему имя явки оказалось в немецкой сводке: взламывать ничего не пришлось.
-INSERT INTO public.tasks VALUES (103, 4, 8, 'Права наперёд', 'Каждая новая таблица появляется закрытой, и разведка узнаёт о ней, когда кто-нибудь вспомнит выдать права. Правило должно действовать наперёд: всё, что появится в схеме, разведка видит сразу.
-INSERT INTO public.tasks VALUES (105, 4, 10, 'Защита от владельца', 'Политика защиты строк не действует на владельца таблицы: тот, кто доберётся до учётной записи узла, увидит все явки разом. Правило надо сделать обязательным и для владельца — пусть узел, оставшись без хозяев, не выдаст никого.
-INSERT INTO public.tasks VALUES (14, 0, 13, 'Сила в единстве', 'Подсчитайте количество солдат в каждой воинской части и выведите названия этих частей. Названия частей выведите в алфавитном порядке. Это покажет, какие подразделения были наиболее многочисленными', 'Группировка по `unit_id` с использованием `COUNT(*)`', NULL, '{"data": [["1-й отдельный чехословацкий батальон", 2], ["1-й чехословацкий отдельный батальон", 1], ["1-я гвардейская танковая армия", 2], ["1-я морская бригада", 1], ["101-й инженерно-сапёрный батальон", 2], ["101-й полк НКВД", 1], ["101-й учебный полк", 1], ["106-я стрелковая дивизия", 1], ["14-я отдельная штрафная рота", 1], ["150-я стрелковая дивизия", 2], ["16-я воздушная армия", 2], ["18-я дивизия СС \"Хорст Вессель\"", 1], ["2-я ударная армия", 1], ["225-й отдельный инженерный батальон", 1], ["28-я дивизия народного ополчения", 1], ["3-я воздушная армия", 1], ["316-я стрелковая дивизия", 2], ["369-й отдельный батальон морской пехоты", 1], ["37-й гвардейский миномётный полк", 1], ["46-й гвардейский ночной бомбардировочный полк", 2], ["585-й женский авиаполк", 1], ["62-я армия", 3], ["64-я стрелковая дивизия", 2], ["8-я гвардейская армия", 1], ["88-й отдельный лыжный батальон", 1], ["Отдельная медико-санитарная рота", 1], ["Отдельный батальон связи №45", 1], ["Отдельный отряд собак-истребителей танков", 1], ["Отдельный отряд собак-миноискателей", 2]], "columns": ["unit_name", "total_soldiers"], "row_count": 29}', '{easy}');
-INSERT INTO public.tasks VALUES (70, 1, 13, 'Путь солдата', 'Подсчитайте количество солдат в каждой воинской части и выведите названия этих частей. Названия частей выведите в алфавитном порядке. Это покажет, какие подразделения были наиболее многочисленными', 'Объедините таблицы снаряжения, солдат и частей через `JOIN`', NULL, '{"data": [["1-й отдельный чехословацкий батальон", 2], ["1-й чехословацкий отдельный батальон", 1], ["1-я гвардейская танковая армия", 2], ["1-я морская бригада", 1], ["101-й инженерно-сапёрный батальон", 2], ["101-й полк НКВД", 1], ["101-й учебный полк", 1], ["106-я стрелковая дивизия", 1], ["14-я отдельная штрафная рота", 1], ["150-я стрелковая дивизия", 2], ["16-я воздушная армия", 2], ["18-я дивизия СС \"Хорст Вессель\"", 1], ["2-я ударная армия", 1], ["225-й отдельный инженерный батальон", 1], ["28-я дивизия народного ополчения", 1], ["3-я воздушная армия", 1], ["316-я стрелковая дивизия", 2], ["369-й отдельный батальон морской пехоты", 1], ["37-й гвардейский миномётный полк", 1], ["46-й гвардейский ночной бомбардировочный полк", 2], ["585-й женский авиаполк", 1], ["62-я армия", 3], ["64-я стрелковая дивизия", 2], ["8-я гвардейская армия", 1], ["88-й отдельный лыжный батальон", 1], ["Отдельная медико-санитарная рота", 1], ["Отдельный батальон связи №45", 1], ["Отдельный отряд собак-истребителей танков", 1], ["Отдельный отряд собак-миноискателей", 2]], "columns": ["unit_name", "total_soldiers"], "row_count": 29}', '{medium}');
-INSERT INTO public.tasks VALUES (48, 1, 20, 'Статистика ранений', 'Подсчитайте количество солдат по каждому статусу (status). Это основа для анализа людских потерь', 'Примените CTE для группировки по месяцам и `AVG` в оконной функции', NULL, '{"data": [["жив", 16], ["пропал без вести", 7], ["ранен", 8], ["убит", 9]], "columns": ["status", "count"], "row_count": 4}', '{cte,medium}');
-INSERT INTO public.tasks VALUES (23, 0, 23, 'Годовой отчет сражений', 'Определите, в какие годы начинались боевые операции, и подсчитайте их количество. Выведите год начала (как year) и количество (как battles_count). Отсортируйте по году. (Учитывайте только год начала start_date)', 'Извлеките год из даты с помощью `EXTRACT` и сгруппируйте по нему', NULL, '{"data": [[1941.0, 9], [1942.0, 6], [1943.0, 4], [1944.0, 4], [1945.0, 7]], "columns": ["year", "battles_count"], "row_count": 5}', '{easy}');
-INSERT INTO public.tasks VALUES (51, 1, 23, 'Цена победы', 'Определите, в какие годы начинались боевые операции, и подсчитайте их количество. Выведите год начала (как year) и количество (как battles_count). Отсортируйте по году. (Учитывайте только год начала start_date)', 'Примените CTE для раздельного подсчета потерь и `UNION` для объединения результатов', NULL, '{"data": [[1941.0, 9], [1942.0, 6], [1943.0, 4], [1944.0, 4], [1945.0, 7]], "columns": ["year", "battles_count"], "row_count": 5}', '{cte,stalingrad,medium}');
-INSERT INTO public.tasks VALUES (24, 0, 24, 'Возраст призывника', 'Рассчитайте возраст солдат на момент призыва (год призыва минус год рождения). Назовите колонку enlistment_age. Выведите ФИО и возраст.', 'Используйте функцию `AGE` для расчета разницы между датами', NULL, '{"data": [["Иванов Алексей Петрович", 18.0], ["Смирнова Анна Васильевна", 17.0], ["Петров Дмитрий Иванович", 23.0], ["Козлов Николай Семёнович", 21.0], ["Фёдорова Мария Ивановна", 21.0], ["Жуков Андрей Григорьевич", 26.0], ["Павлов Яков Фёдорович", 25.0], ["Зайцева Людмила Михайловна", 19.0], ["Громов Михаил Сергеевич", 23.0], ["Орлова Вера Павловна", 22.0], ["Новиков Александр Иванович", 20.0], ["Васнецова Татьяна Дмитриевна", 20.0], ["Кузнецов Пётр Васильевич", 25.0], ["Белов Алексей Николаевич", 19.0], ["Соколова Ольга Ивановна", 22.0], ["Морозов Иван Кузьмич", 27.0], ["Волкова Елена Сергеевна", 17.0], ["Ткаченко Григорий Петрович", 17.0], ["Беляев Павел Дмитриевич", 29.0], ["Семёнова Валентина Михайловна", 22.0], ["Ковалёв Сергей Николаевич", 18.0], ["Мельникова Галина Ивановна", 18.0], ["Фёдоров Игорь Васильевич", 28.0], ["Горбачёв Алексей Дмитриевич", 17.0], ["Сидорова Екатерина Петровна", 23.0], ["Смирнов Василий Иванович", 30.0], ["Крылова Надежда Фёдоровна", 18.0], ["Орлов Денис Сергеевич", 17.0], ["Жукова Елена Викторовна", 19.0], ["Гришин Алексей Петрович", 23.0], ["Ткаченко Иван Григорьевич", 21.0], ["Воронцова Лидия Павловна", 19.0], ["Жуковский Виктор Михайлович", 26.0], ["Морозова Анна Сергеевна", 20.0], ["Кузнецов Артём Игоревич", 17.0], ["Соколовская Надежда Викторовна", 18.0], ["Белов Дмитрий Николаевич", 25.0], ["Громова Екатерина Ивановна", 18.0], ["Фролов Павел Сергеевич", 16.0], ["Ковалёва Ольга Дмитриевна", 21.0]], "columns": ["full_name", "enlistment_age"], "row_count": 40}', '{easy}');
-INSERT INTO public.tasks VALUES (52, 1, 24, 'Рейтинг эффективности', 'Рассчитайте возраст солдат на момент призыва (год призыва минус год рождения). Назовите колонку enlistment_age. Выведите ФИО и возраст.', 'Примените `RANK()` и `DENSE_RANK()` для сортировки значений', NULL, '{"data": [["Иванов Алексей Петрович", 18.0], ["Смирнова Анна Васильевна", 17.0], ["Петров Дмитрий Иванович", 23.0], ["Козлов Николай Семёнович", 21.0], ["Фёдорова Мария Ивановна", 21.0], ["Жуков Андрей Григорьевич", 26.0], ["Павлов Яков Фёдорович", 25.0], ["Зайцева Людмила Михайловна", 19.0], ["Громов Михаил Сергеевич", 23.0], ["Орлова Вера Павловна", 22.0], ["Новиков Александр Иванович", 20.0], ["Васнецова Татьяна Дмитриевна", 20.0], ["Кузнецов Пётр Васильевич", 25.0], ["Белов Алексей Николаевич", 19.0], ["Соколова Ольга Ивановна", 22.0], ["Морозов Иван Кузьмич", 27.0], ["Волкова Елена Сергеевна", 17.0], ["Ткаченко Григорий Петрович", 17.0], ["Беляев Павел Дмитриевич", 29.0], ["Семёнова Валентина Михайловна", 22.0], ["Ковалёв Сергей Николаевич", 18.0], ["Мельникова Галина Ивановна", 18.0], ["Фёдоров Игорь Васильевич", 28.0], ["Горбачёв Алексей Дмитриевич", 17.0], ["Сидорова Екатерина Петровна", 23.0], ["Смирнов Василий Иванович", 30.0], ["Крылова Надежда Фёдоровна", 18.0], ["Орлов Денис Сергеевич", 17.0], ["Жукова Елена Викторовна", 19.0], ["Гришин Алексей Петрович", 23.0], ["Ткаченко Иван Григорьевич", 21.0], ["Воронцова Лидия Павловна", 19.0], ["Жуковский Виктор Михайлович", 26.0], ["Морозова Анна Сергеевна", 20.0], ["Кузнецов Артём Игоревич", 17.0], ["Соколовская Надежда Викторовна", 18.0], ["Белов Дмитрий Николаевич", 25.0], ["Громова Екатерина Ивановна", 18.0], ["Фролов Павел Сергеевич", 16.0], ["Ковалёва Ольга Дмитриевна", 21.0]], "columns": ["full_name", "enlistment_age"], "row_count": 40}', '{window,medium}');
-INSERT INTO public.tasks VALUES (25, 0, 25, 'Демография частей', 'Определите минимальный и максимальный возраст солдат на момент призыва в каждой части. Выведите название частей и минимальные (min) и максимальные (max) возраста. Отсортируйте по названию части по алфавиту.', 'Примените `MIN` и `MAX` к году рождения с группировкой по частям', NULL, '{"data": [["1-й отдельный чехословацкий батальон", 19.0, 25.0], ["1-й чехословацкий отдельный батальон", 18.0, 18.0], ["1-я гвардейская танковая армия", 21.0, 25.0], ["1-я морская бригада", 17.0, 17.0], ["101-й инженерно-сапёрный батальон", 16.0, 20.0], ["101-й полк НКВД", 22.0, 22.0], ["101-й учебный полк", 23.0, 23.0], ["106-я стрелковая дивизия", 20.0, 20.0], ["14-я отдельная штрафная рота", 27.0, 27.0], ["150-я стрелковая дивизия", 19.0, 19.0], ["16-я воздушная армия", 22.0, 26.0], ["18-я дивизия СС \"Хорст Вессель\"", 19.0, 19.0], ["2-я ударная армия", 23.0, 23.0], ["225-й отдельный инженерный батальон", 17.0, 17.0], ["28-я дивизия народного ополчения", 17.0, 17.0], ["3-я воздушная армия", 20.0, 20.0], ["316-я стрелковая дивизия", 18.0, 21.0], ["369-й отдельный батальон морской пехоты", 18.0, 18.0], ["37-й гвардейский миномётный полк", 30.0, 30.0], ["46-й гвардейский ночной бомбардировочный полк", 18.0, 26.0], ["585-й женский авиаполк", 28.0, 28.0], ["62-я армия", 17.0, 25.0], ["64-я стрелковая дивизия", 18.0, 21.0], ["8-я гвардейская армия", 22.0, 22.0], ["88-й отдельный лыжный батальон", 29.0, 29.0], ["Отдельная медико-санитарная рота", 17.0, 17.0], ["Отдельный батальон связи №45", 18.0, 18.0], ["Отдельный отряд собак-истребителей танков", 23.0, 23.0], ["Отдельный отряд собак-миноискателей", 17.0, 21.0]], "columns": ["unit_name", "min", "max"], "row_count": 29}', '{easy}');
-INSERT INTO public.tasks VALUES (74, 1, 25, 'Хронология призыва', 'Определите минимальный и максимальный возраст солдат на момент призыва в каждой части. Выведите название частей и минимальные (min) и максимальные (max) возраста. Отсортируйте по названию части по алфавиту.', 'Используйте `ROW_NUMBER()` с группировкой по частям и сортировкой по дате', NULL, '{"data": [["1-й отдельный чехословацкий батальон", 19.0, 25.0], ["1-й чехословацкий отдельный батальон", 18.0, 18.0], ["1-я гвардейская танковая армия", 21.0, 25.0], ["1-я морская бригада", 17.0, 17.0], ["101-й инженерно-сапёрный батальон", 16.0, 20.0], ["101-й полк НКВД", 22.0, 22.0], ["101-й учебный полк", 23.0, 23.0], ["106-я стрелковая дивизия", 20.0, 20.0], ["14-я отдельная штрафная рота", 27.0, 27.0], ["150-я стрелковая дивизия", 19.0, 19.0], ["16-я воздушная армия", 22.0, 26.0], ["18-я дивизия СС \"Хорст Вессель\"", 19.0, 19.0], ["2-я ударная армия", 23.0, 23.0], ["225-й отдельный инженерный батальон", 17.0, 17.0], ["28-я дивизия народного ополчения", 17.0, 17.0], ["3-я воздушная армия", 20.0, 20.0], ["316-я стрелковая дивизия", 18.0, 21.0], ["369-й отдельный батальон морской пехоты", 18.0, 18.0], ["37-й гвардейский миномётный полк", 30.0, 30.0], ["46-й гвардейский ночной бомбардировочный полк", 18.0, 26.0], ["585-й женский авиаполк", 28.0, 28.0], ["62-я армия", 17.0, 25.0], ["64-я стрелковая дивизия", 18.0, 21.0], ["8-я гвардейская армия", 22.0, 22.0], ["88-й отдельный лыжный батальон", 29.0, 29.0], ["Отдельная медико-санитарная рота", 17.0, 17.0], ["Отдельный батальон связи №45", 18.0, 18.0], ["Отдельный отряд собак-истребителей танков", 23.0, 23.0], ["Отдельный отряд собак-миноискателей", 17.0, 21.0]], "columns": ["unit_name", "min", "max"], "row_count": 29}', '{medium}');
-INSERT INTO public.tasks VALUES (26, 0, 26, 'Городская аналитика', 'Вычислите средний возраст солдат на момент призыва по городам призыва. Выведите название города и средний возраст как avg_age. Результат округлите до целого, а города выведите в обратном алфавитном порядке.', 'Группировка по городам с использованием `AVG` и арифметических операций. Округление с помощью `ROUND`', NULL, '{"data": [["Челябинск", 18.0], ["Харьков", 22.0], ["Тула", 27.0], ["Сталинград", 19.0], ["Смоленск", 20.0], ["Севастополь", 18.0], ["Свердловск", 23.0], ["Самара", 29.0], ["Ростов-на-Дону", 20.0], ["Омск", 22.0], ["Одесса", 20.0], ["Новосибирск", 25.0], ["Мурманск", 25.0], ["Москва", 18.0], ["Минск", 25.0], ["Ленинград", 18.0], ["Киев", 23.0], ["Казань", 28.0], ["Горький", 18.0], ["Воронеж", 17.0], ["Волгоград", 25.0], ["Брянск", 17.0]], "columns": ["enlistment_city", "avg_age"], "row_count": 22}', '{easy}');
-INSERT INTO public.tasks VALUES (53, 1, 26, 'Циклы пополнения', 'Вычислите средний возраст солдат на момент призыва по городам призыва. Выведите название города и средний возраст как avg_age. Результат округлите до целого, а города выведите в обратном алфавитном порядке.', 'Используйте `LAG()` и `LEAD()` для навигации по датам в рамках части', NULL, '{"data": [["Челябинск", 18.0], ["Харьков", 22.0], ["Тула", 27.0], ["Сталинград", 19.0], ["Смоленск", 20.0], ["Севастополь", 18.0], ["Свердловск", 23.0], ["Самара", 29.0], ["Ростов-на-Дону", 20.0], ["Омск", 22.0], ["Одесса", 20.0], ["Новосибирск", 25.0], ["Мурманск", 25.0], ["Москва", 18.0], ["Минск", 25.0], ["Ленинград", 18.0], ["Киев", 23.0], ["Казань", 28.0], ["Горький", 18.0], ["Воронеж", 17.0], ["Волгоград", 25.0], ["Брянск", 17.0]], "columns": ["enlistment_city", "avg_age"], "row_count": 22}', '{window,medium}');
-INSERT INTO public.tasks VALUES (28, 0, 28, 'История воинских частей', 'Сгруппируйте части по году формирования и подсчитайте их количество. Выведите год формирования (как formation_year) и количество частей (как units_count). Отсортируйте по году формирования.', 'Извлеките год из `formation_date` с помощью `EXTRACT`', NULL, '{"data": [[1939.0, 1], [1941.0, 8], [1942.0, 12], [1943.0, 8], [1944.0, 1]], "columns": ["formation_year", "units_count"], "row_count": 5}', '{easy}');
-INSERT INTO public.tasks VALUES (106, 5, 1, 'Возраст призыва', 'Напишите скалярную функцию get_enlistment_age(p_soldier_id INT), возвращающую возраст солдата на момент призыва (год призыва из enlistment_date минус birth_year).', 'Используйте CREATE OR REPLACE FUNCTION get_enlistment_age(p_soldier_id INT) RETURNS INT AS $$ ... $$ LANGUAGE plpgsql;', 'CREATE OR REPLACE FUNCTION get_enlistment_age(p_soldier_id INT) RETURNS INT AS $$ DECLARE v_age INT; BEGIN SELECT (EXTRACT(YEAR FROM enlistment_date) - birth_year)::INT INTO v_age FROM soldier WHERE id = p_soldier_id; RETURN v_age; END; $$ LANGUAGE plpgsql;', '{"mode": "ddl", "test_query": "SELECT get_enlistment_age(1);", "columns": ["get_enlistment_age"], "data": [[18]]}', '{plpgsql,function,scalar,mission5}');
-INSERT INTO public.tasks VALUES (107, 5, 2, 'Бойцы подразделения', 'Напишите табличную функцию get_unit_soldiers(p_unit_name VARCHAR), возвращающую таблицу (full_name VARCHAR, enlistment_city VARCHAR) с бойцами, служившими в указанной части.', 'Используйте RETURNS TABLE (full_name VARCHAR, enlistment_city VARCHAR) и RETURN QUERY SELECT s.full_name, s.enlistment_city FROM soldier s JOIN military_service ms ON s.id = ms.soldier_id JOIN military_unit mu ON ms.unit_id = mu.id WHERE mu.unit_name = p_unit_name;', 'CREATE OR REPLACE FUNCTION get_unit_soldiers(p_unit_name VARCHAR) RETURNS TABLE (full_name VARCHAR, enlistment_city VARCHAR) AS $$ BEGIN RETURN QUERY SELECT s.full_name, s.enlistment_city FROM soldier s JOIN military_service ms ON s.id = ms.soldier_id JOIN military_unit mu ON ms.unit_id = mu.id WHERE mu.unit_name = p_unit_name; END; $$ LANGUAGE plpgsql;', '{"mode": "ddl", "test_query": "SELECT * FROM get_unit_soldiers(''1-я морская бригада'') ORDER BY full_name;", "columns": ["full_name", "enlistment_city"], "data": [["Волкова Елена Сергеевна", "Ленинград"]]}', '{plpgsql,function,table_function,mission5}');
-INSERT INTO public.tasks VALUES (108, 5, 3, 'Перевод военнослужащего', 'Напишите хранимую процедуру transfer_soldier(p_soldier_id INT, p_new_unit_id INT), которая переводит солдата в новую часть: закрывает текущую службу (end_date = CURRENT_DATE, где end_date IS NULL) и создает новую запись о службе с unit_id = p_new_unit_id и start_date = CURRENT_DATE.', 'Используйте CREATE OR REPLACE PROCEDURE transfer_soldier(p_soldier_id INT, p_new_unit_id INT) AS $$ BEGIN UPDATE military_service SET end_date = CURRENT_DATE WHERE soldier_id = p_soldier_id AND end_date IS NULL; INSERT INTO military_service (soldier_id, unit_id, start_date) VALUES (p_soldier_id, p_new_unit_id, CURRENT_DATE); END; $$ LANGUAGE plpgsql;', 'CREATE OR REPLACE PROCEDURE transfer_soldier(p_soldier_id INT, p_new_unit_id INT) AS $$ BEGIN UPDATE military_service SET end_date = CURRENT_DATE WHERE soldier_id = p_soldier_id AND end_date IS NULL; INSERT INTO military_service (soldier_id, unit_id, start_date) VALUES (p_soldier_id, p_new_unit_id, CURRENT_DATE); END; $$ LANGUAGE plpgsql;', '{"mode": "ddl", "test_query": "CALL transfer_soldier(1, 2); SELECT unit_id FROM military_service WHERE soldier_id = 1 ORDER BY id DESC LIMIT 1;", "columns": ["unit_id"], "data": [[2]]}', '{plpgsql,procedure,mission5}');
-INSERT INTO public.tasks VALUES (109, 5, 4, 'Аудит поступления техники', 'Создайте триггерную функцию log_equipment_addition() и триггер trg_after_equipment_insert на таблице equipment (AFTER INSERT FOR EACH ROW), который при добавлении новой техники записывает в таблицу equipment_audit строку с item_name (NEW.item_name) и added_at (CURRENT_DATE).', 'Триггерная функция должна иметь RETURNS TRIGGER, выполнять INSERT INTO equipment_audit (item_name, added_at) VALUES (NEW.item_name, CURRENT_DATE); RETURN NEW; а триггер: CREATE TRIGGER trg_after_equipment_insert AFTER INSERT ON equipment FOR EACH ROW EXECUTE FUNCTION log_equipment_addition();', 'CREATE OR REPLACE FUNCTION log_equipment_addition() RETURNS TRIGGER AS $$ BEGIN INSERT INTO equipment_audit (item_name, added_at) VALUES (NEW.item_name, CURRENT_DATE); RETURN NEW; END; $$ LANGUAGE plpgsql; CREATE TRIGGER trg_after_equipment_insert AFTER INSERT ON equipment FOR EACH ROW EXECUTE FUNCTION log_equipment_addition();', '{"mode": "ddl", "test_query": "INSERT INTO equipment (id, unit_id, equipment_type, item_name, quantity, last_replenishment) VALUES (9999, 1, ''тест'', ''Тестовый образец'', 1, CURRENT_DATE); SELECT item_name FROM equipment_audit WHERE item_name = ''Тестовый образец'';", "columns": ["item_name"], "data": [["Тестовый образец"]]}', '{plpgsql,trigger,audit,mission5}');
-INSERT INTO public.tasks VALUES (110, 5, 5, 'Контроль возраста призыва', 'Создайте триггерную функцию validate_soldier_age() и триггер trg_before_soldier_insert на таблице soldier (BEFORE INSERT FOR EACH ROW), который проверяет возраст бойца: если EXTRACT(YEAR FROM NEW.enlistment_date) - NEW.birth_year < 16, вызывается ошибка RAISE EXCEPTION ''Возраст призывника не может быть меньше 16 лет''. В остальных случаях возвращается NEW.', 'В теле триггерной функции проверьте IF (EXTRACT(YEAR FROM NEW.enlistment_date) - NEW.birth_year) < 16 THEN RAISE EXCEPTION ''Возраст призывника не может быть меньше 16 лет''; END IF; RETURN NEW;', 'CREATE OR REPLACE FUNCTION validate_soldier_age() RETURNS TRIGGER AS $$ BEGIN IF (EXTRACT(YEAR FROM NEW.enlistment_date) - NEW.birth_year) < 16 THEN RAISE EXCEPTION ''Возраст призывника не может быть меньше 16 лет''; END IF; RETURN NEW; END; $$ LANGUAGE plpgsql; CREATE TRIGGER trg_before_soldier_insert BEFORE INSERT ON soldier FOR EACH ROW EXECUTE FUNCTION validate_soldier_age();', '{"mode": "ddl", "test_query": "INSERT INTO soldier (id, full_name, birth_year, rank, branch, enlistment_city, enlistment_date) VALUES (9999, ''Малолетний боец'', 1930, ''рядовой'', ''пехота'', ''Москва'', ''1941-01-01'');", "expect_error": true}', '{plpgsql,trigger,validation,mission5}');
-
-
---
--- Data for Name: tasks_solved; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.tasks_solved (user_id, task_global_id, solved_at) FROM stdin;
-5	1	2026-09-08
-5	2	2026-09-08
-7	1	2026-09-08
-7	2	2026-09-08
-5	4	2026-09-08
-7	4	2026-09-08
-5	5	2026-09-08
-7	5	2026-09-08
-5	7	2026-09-08
-5	8	2026-09-08
-5	9	2026-09-08
-5	10	2026-09-08
-5	11	2026-09-08
-5	12	2026-09-08
-5	13	2026-09-08
-9	1	2026-09-08
-9	2	2026-09-08
-9	4	2026-09-08
-9	5	2026-09-08
-9	7	2026-09-08
-9	8	2026-09-08
-9	9	2026-09-08
-9	10	2026-09-08
-9	11	2026-09-08
-9	12	2026-09-08
-9	13	2026-09-08
-9	15	2026-09-08
-9	3	2026-09-08
-9	17	2026-09-08
-9	14	2026-09-08
-9	27	2026-09-08
-9	30	2026-09-08
-9	34	2026-09-08
-9	19	2026-09-08
-9	21	2026-09-08
-9	22	2026-09-08
-9	26	2026-09-08
-9	31	2026-09-08
-9	16	2026-09-08
-9	18	2026-09-08
-9	24	2026-09-08
-9	28	2026-09-08
-9	25	2026-09-08
-9	29	2026-09-08
-9	23	2026-09-08
-9	20	2026-09-08
-7	7	2026-09-08
-7	8	2026-09-08
-9	6	2026-09-08
-7	9	2026-09-08
-7	10	2026-09-08
-7	11	2026-09-08
-7	12	2026-09-08
-7	13	2026-09-08
-7	15	2026-09-08
-7	3	2026-09-08
-7	16	2026-09-08
-7	17	2026-09-08
-7	18	2026-09-08
-7	19	2026-09-08
-7	20	2026-09-08
-7	21	2026-09-08
-7	22	2026-09-08
-7	23	2026-09-08
-7	26	2026-09-09
-7	27	2026-09-09
-7	28	2026-09-09
-7	29	2026-09-09
-12	1	2026-09-09
-10	1	2026-09-09
-10	2	2026-09-09
-11	1	2026-09-09
-16	1	2026-09-09
-17	1	2026-09-09
-11	2	2026-09-09
-15	1	2026-09-09
-13	1	2026-09-09
-16	4	2026-09-09
-19	1	2026-09-09
-18	1	2026-09-09
-16	5	2026-09-09
-13	2	2026-09-09
-17	4	2026-09-09
-12	4	2026-09-09
-12	5	2026-09-09
-17	5	2026-09-09
-19	2	2026-09-09
-18	2	2026-09-09
-15	2	2026-09-09
-16	7	2026-09-09
-14	1	2026-09-09
-12	7	2026-09-09
-16	8	2026-09-09
-12	8	2026-09-09
-16	9	2026-09-09
-17	7	2026-09-09
-12	9	2026-09-09
-16	10	2026-09-09
-12	10	2026-09-09
-16	11	2026-09-09
-12	11	2026-09-09
-17	8	2026-09-09
-16	12	2026-09-09
-12	12	2026-09-09
-17	9	2026-09-09
-15	4	2026-09-09
-17	10	2026-09-09
-17	11	2026-09-09
-17	12	2026-09-09
-14	2	2026-09-09
-13	5	2026-09-09
-17	13	2026-09-09
-15	5	2026-09-09
-16	15	2026-09-09
-17	15	2026-09-09
-12	15	2026-09-09
-16	16	2026-09-09
-20	1	2026-09-09
-17	18	2026-09-09
-12	18	2026-09-09
-18	4	2026-09-09
-16	21	2026-09-09
-19	4	2026-09-09
-12	19	2026-09-09
-17	19	2026-09-09
-16	22	2026-09-09
-20	2	2026-09-09
-14	4	2026-09-09
-18	5	2026-09-09
-13	4	2026-09-09
-16	18	2026-09-09
-16	17	2026-09-09
-19	5	2026-09-09
-15	7	2026-09-09
-12	21	2026-09-09
-12	13	2026-09-09
-17	21	2026-09-09
-16	13	2026-09-09
-12	16	2026-09-09
-17	16	2026-09-09
-16	19	2026-09-09
-14	5	2026-09-09
-13	7	2026-09-09
-12	17	2026-09-09
-17	17	2026-09-09
-15	8	2026-09-09
-16	3	2026-09-09
-15	9	2026-09-09
-17	3	2026-09-09
-12	3	2026-09-09
-16	2	2026-09-09
-15	10	2026-09-09
-13	8	2026-09-09
-12	2	2026-09-09
-17	2	2026-09-09
-13	10	2026-09-09
-13	9	2026-09-09
-13	11	2026-09-09
-15	11	2026-09-09
-15	12	2026-09-09
-15	13	2026-09-09
-20	4	2026-09-09
-10	4	2026-09-09
-11	4	2026-09-09
-10	5	2026-09-09
-20	5	2026-09-09
-14	7	2026-09-09
-15	15	2026-09-09
-14	8	2026-09-09
-14	9	2026-09-09
-15	3	2026-09-09
-14	10	2026-09-09
-15	16	2026-09-09
-15	17	2026-09-09
-14	11	2026-09-09
-15	18	2026-09-09
-14	12	2026-09-09
-16	20	2026-09-09
-5	15	2026-09-09
-15	19	2026-09-09
-12	20	2026-09-09
-14	13	2026-09-09
-5	3	2026-09-09
-5	16	2026-09-09
-17	20	2026-09-09
-20	7	2026-09-09
-5	17	2026-09-09
-5	18	2026-09-09
-16	34	2026-09-09
-12	22	2026-09-09
-17	22	2026-09-09
-11	5	2026-09-09
-16	23	2026-09-09
-15	21	2026-09-09
-12	23	2026-09-09
-17	23	2026-09-09
-10	7	2026-09-09
-14	15	2026-09-09
-10	8	2026-09-09
-10	9	2026-09-09
-20	8	2026-09-09
-10	10	2026-09-09
-10	11	2026-09-09
-10	12	2026-09-09
-20	9	2026-09-09
-12	26	2026-09-09
-16	26	2026-09-09
-17	26	2026-09-09
-16	27	2026-09-09
-12	27	2026-09-09
-10	13	2026-09-09
-17	27	2026-09-09
-16	28	2026-09-09
-12	28	2026-09-09
-20	10	2026-09-09
-17	28	2026-09-09
-20	11	2026-09-09
-15	27	2026-09-09
-21	1	2026-09-09
-21	2	2026-09-09
-13	12	2026-09-09
-13	13	2026-09-09
-5	19	2026-09-09
-5	20	2026-09-09
-21	4	2026-09-09
-22	1	2026-09-09
-21	5	2026-09-09
-22	2	2026-09-09
-14	16	2026-09-09
-14	17	2026-09-09
-14	18	2026-09-09
-14	19	2026-09-09
-22	4	2026-09-09
-19	6	2026-09-09
-19	7	2026-09-09
-14	22	2026-09-09
-14	20	2026-09-09
-14	23	2026-09-09
-5	21	2026-09-09
-5	22	2026-09-09
-5	23	2026-09-09
-15	29	2026-09-10
-15	30	2026-09-10
-24	1	2026-09-10
-24	2	2026-09-10
-26	1	2026-09-10
-28	1	2026-09-10
-27	1	2026-09-10
-28	2	2026-09-10
-25	1	2026-09-10
-24	5	2026-09-10
-26	2	2026-09-10
-27	2	2026-09-10
-25	2	2026-09-10
-24	7	2026-09-10
-24	8	2026-09-10
-24	9	2026-09-10
-28	5	2026-09-10
-24	10	2026-09-10
-24	11	2026-09-10
-24	12	2026-09-10
-28	7	2026-09-10
-28	8	2026-09-10
-28	9	2026-09-10
-28	10	2026-09-10
-25	4	2026-09-10
-26	4	2026-09-10
-28	11	2026-09-10
-12	30	2026-09-10
-12	31	2026-09-10
-12	34	2026-09-10
-12	37	2026-09-10
-13	15	2026-09-10
-13	3	2026-09-10
-13	16	2026-09-10
-13	17	2026-09-10
-13	18	2026-09-10
-13	19	2026-09-10
-13	22	2026-09-10
-13	21	2026-09-10
-14	27	2026-09-10
-14	28	2026-09-10
-20	12	2026-09-10
-20	13	2026-09-10
-14	30	2026-09-10
-21	7	2026-09-10
-21	8	2026-09-10
-14	34	2026-09-10
-21	9	2026-09-10
-21	10	2026-09-10
-21	11	2026-09-10
-21	12	2026-09-10
-21	13	2026-09-10
-7	30	2026-09-10
-21	15	2026-09-10
-21	17	2026-09-10
-21	18	2026-09-10
-21	19	2026-09-10
-21	27	2026-09-10
-7	31	2026-09-10
-7	34	2026-09-10
-30	1	2026-09-10
-30	2	2026-09-10
-7	37	2026-09-10
-30	4	2026-09-10
-30	5	2026-09-10
-5	6	2026-09-10
-30	6	2026-09-10
-30	7	2026-09-10
-30	8	2026-09-10
-30	9	2026-09-10
-30	10	2026-09-10
-30	11	2026-09-10
-30	12	2026-09-10
-30	13	2026-09-10
-30	15	2026-09-10
-5	14	2026-09-10
-30	3	2026-09-10
-30	16	2026-09-10
-30	17	2026-09-10
-30	18	2026-09-10
-30	19	2026-09-10
-5	24	2026-09-10
-5	25	2026-09-10
-22	5	2026-09-10
-5	26	2026-09-10
-14	37	2026-09-10
-5	27	2026-09-10
-5	28	2026-09-10
-5	29	2026-09-10
-5	30	2026-09-10
-14	63	2026-09-10
-14	40	2026-09-10
-14	64	2026-09-11
-32	1	2026-09-11
-32	2	2026-09-11
-32	4	2026-09-11
-14	77	2026-09-11
-5	31	2026-09-11
-5	34	2026-09-11
-19	8	2026-09-11
-19	9	2026-09-11
-19	10	2026-09-11
-19	11	2026-09-11
-19	12	2026-09-11
-19	13	2026-09-11
-20	15	2026-09-11
-20	3	2026-09-11
-20	16	2026-09-11
-20	17	2026-09-11
-20	19	2026-09-11
-17	30	2026-09-11
-17	31	2026-09-11
-17	34	2026-09-11
-20	21	2026-09-11
-20	26	2026-09-11
-20	27	2026-09-11
-20	34	2026-09-12
-36	1	2026-09-12
-37	1	2026-09-12
-35	1	2026-09-12
-35	2	2026-09-12
-36	2	2026-09-12
-37	2	2026-09-12
-35	5	2026-09-12
-38	1	2026-09-12
-39	1	2026-09-12
-36	4	2026-09-12
-38	2	2026-09-12
-39	2	2026-09-12
-39	5	2026-09-12
-37	4	2026-09-12
-38	4	2026-09-12
-35	7	2026-09-12
-35	8	2026-09-12
-35	9	2026-09-12
-38	5	2026-09-12
-35	10	2026-09-12
-36	5	2026-09-12
-37	5	2026-09-12
-35	11	2026-09-12
-39	4	2026-09-12
-35	12	2026-09-12
-35	13	2026-09-12
-35	15	2026-09-12
-35	3	2026-09-12
-35	17	2026-09-12
-35	18	2026-09-12
-40	1	2026-09-12
-35	19	2026-09-12
-38	7	2026-09-12
-40	2	2026-09-12
-38	8	2026-09-12
-41	1	2026-09-12
-38	9	2026-09-12
-38	10	2026-09-12
-41	2	2026-09-12
-39	7	2026-09-12
-38	11	2026-09-12
-39	8	2026-09-12
-37	7	2026-09-12
-36	7	2026-09-12
-38	12	2026-09-12
-39	9	2026-09-12
-40	4	2026-09-12
-38	13	2026-09-12
-36	8	2026-09-12
-39	10	2026-09-12
-37	8	2026-09-12
-36	9	2026-09-12
-37	9	2026-09-12
-36	10	2026-09-12
-37	10	2026-09-12
-37	11	2026-09-12
-36	11	2026-09-12
-40	5	2026-09-12
-37	12	2026-09-12
-36	12	2026-09-12
-37	13	2026-09-12
-39	11	2026-09-12
-36	13	2026-09-12
-35	22	2026-09-12
-38	15	2026-09-12
-39	12	2026-09-12
-39	13	2026-09-12
-7	63	2026-09-12
-41	4	2026-09-12
-39	15	2026-09-12
-39	3	2026-09-12
-38	16	2026-09-12
-39	16	2026-09-12
-38	17	2026-09-12
-39	17	2026-09-12
-41	5	2026-09-12
-41	7	2026-09-12
-41	8	2026-09-12
-41	9	2026-09-12
-38	18	2026-09-12
-38	19	2026-09-12
-32	5	2026-09-12
-38	20	2026-09-12
-38	23	2026-09-12
-32	7	2026-09-12
-32	8	2026-09-12
-32	9	2026-09-12
-32	10	2026-09-12
-32	11	2026-09-12
-32	12	2026-09-12
-32	13	2026-09-12
-14	6	2026-09-12
-40	7	2026-09-12
-40	8	2026-09-12
-40	9	2026-09-12
-14	3	2026-09-12
-14	21	2026-09-12
-14	24	2026-09-12
-42	1	2026-09-12
-42	2	2026-09-12
-32	15	2026-09-12
-32	3	2026-09-12
-18	6	2026-09-12
-32	16	2026-09-12
-18	7	2026-09-12
-42	4	2026-09-12
-42	5	2026-09-12
-18	8	2026-09-12
-18	9	2026-09-12
-18	10	2026-09-12
-42	7	2026-09-12
-42	8	2026-09-12
-18	11	2026-09-12
-42	9	2026-09-12
-42	10	2026-09-12
-42	11	2026-09-12
-18	12	2026-09-12
-42	12	2026-09-12
-16	58	2026-09-12
-42	13	2026-09-12
-18	13	2026-09-12
-42	15	2026-09-12
-43	1	2026-09-12
-42	3	2026-09-12
-42	17	2026-09-12
-42	18	2026-09-12
-18	14	2026-09-12
-42	20	2026-09-12
-43	2	2026-09-12
-32	17	2026-09-13
-32	18	2026-09-13
-32	19	2026-09-13
-32	20	2026-09-13
-32	22	2026-09-13
-32	28	2026-09-13
-34	1	2026-09-13
-42	21	2026-09-13
-42	22	2026-09-13
-34	2	2026-09-13
-42	23	2026-09-13
-34	4	2026-09-13
-34	5	2026-09-13
-42	27	2026-09-13
-42	28	2026-09-13
-42	30	2026-09-13
-34	7	2026-09-13
-34	8	2026-09-13
-34	9	2026-09-13
-34	10	2026-09-13
-32	23	2026-09-13
-34	11	2026-09-13
-34	12	2026-09-13
-32	27	2026-09-13
-34	13	2026-09-13
-19	14	2026-09-13
-19	15	2026-09-13
-19	3	2026-09-13
-19	16	2026-09-13
-19	17	2026-09-13
-19	18	2026-09-13
-19	19	2026-09-13
-34	15	2026-09-13
-34	3	2026-09-13
-34	16	2026-09-13
-34	17	2026-09-13
-34	18	2026-09-13
-34	19	2026-09-13
-44	1	2026-09-13
-34	20	2026-09-13
-34	22	2026-09-13
-39	18	2026-09-14
-39	19	2026-09-14
-39	20	2026-09-14
-41	10	2026-09-14
-39	21	2026-09-14
-39	22	2026-09-14
-41	11	2026-09-14
-41	12	2026-09-14
-41	13	2026-09-14
-41	14	2026-09-14
-41	15	2026-09-14
-39	23	2026-09-14
-10	15	2026-09-14
-10	3	2026-09-14
-10	16	2026-09-14
-10	17	2026-09-14
-10	18	2026-09-14
-10	19	2026-09-14
-10	21	2026-09-14
-11	7	2026-09-14
-11	8	2026-09-14
-11	9	2026-09-14
-11	10	2026-09-14
-11	12	2026-09-14
-11	11	2026-09-14
-10	22	2026-09-14
-11	13	2026-09-14
-10	23	2026-09-14
-11	15	2026-09-14
-11	3	2026-09-14
-11	16	2026-09-14
-11	17	2026-09-14
-11	18	2026-09-14
-10	26	2026-09-14
-11	19	2026-09-14
-10	27	2026-09-14
-10	28	2026-09-14
-11	20	2026-09-14
-10	30	2026-09-14
-11	21	2026-09-14
-10	34	2026-09-14
-14	41	2026-09-14
-14	67	2026-09-14
-14	69	2026-09-14
-14	76	2026-09-14
-14	70	2026-09-14
-14	71	2026-09-14
-48	1	2026-09-15
-48	2	2026-09-15
-14	43	2026-09-15
-35	30	2026-09-15
-48	4	2026-09-15
-48	5	2026-09-15
-35	34	2026-09-15
-14	44	2026-09-15
-48	7	2026-09-15
-48	8	2026-09-15
-48	9	2026-09-15
-48	10	2026-09-15
-48	11	2026-09-15
-14	72	2026-09-15
-41	3	2026-09-15
-41	16	2026-09-15
-41	17	2026-09-15
-13	27	2026-09-15
-41	18	2026-09-15
-41	19	2026-09-15
-13	29	2026-09-15
-13	30	2026-09-15
-13	34	2026-09-15
-43	5	2026-09-15
-41	21	2026-09-15
-41	22	2026-09-15
-49	1	2026-09-15
-49	2	2026-09-15
-43	7	2026-09-15
-49	4	2026-09-15
-43	8	2026-09-15
-43	9	2026-09-15
-43	10	2026-09-15
-43	11	2026-09-15
-43	12	2026-09-15
-43	13	2026-09-15
-43	15	2026-09-15
-43	16	2026-09-15
-43	17	2026-09-15
-43	21	2026-09-15
-47	1	2026-09-16
-47	2	2026-09-16
-33	1	2026-09-16
-33	2	2026-09-16
-33	4	2026-09-16
-33	5	2026-09-16
-33	7	2026-09-16
-33	8	2026-09-16
-33	9	2026-09-16
-33	10	2026-09-16
-55	1	2026-09-16
-62	1	2026-09-16
-33	11	2026-09-16
-62	2	2026-09-16
-33	12	2026-09-16
-47	4	2026-09-16
-55	2	2026-09-16
-33	13	2026-09-16
-53	1	2026-09-16
-47	5	2026-09-16
-33	15	2026-09-16
-33	3	2026-09-16
-33	16	2026-09-16
-18	15	2026-09-16
-53	2	2026-09-16
-18	3	2026-09-16
-33	17	2026-09-16
-18	16	2026-09-16
-53	4	2026-09-16
-34	23	2026-09-16
-18	17	2026-09-16
-33	18	2026-09-16
-53	5	2026-09-16
-18	18	2026-09-16
-18	19	2026-09-16
-34	27	2026-09-16
-43	18	2026-09-16
-34	28	2026-09-16
-43	19	2026-09-16
-18	20	2026-09-16
-18	21	2026-09-16
-18	22	2026-09-16
-43	27	2026-09-16
-43	26	2026-09-16
-43	3	2026-09-16
-43	22	2026-09-16
-55	5	2026-09-16
-55	7	2026-09-16
-45	1	2026-09-16
-45	2	2026-09-16
-45	5	2026-09-16
-45	7	2026-09-16
-45	8	2026-09-16
-45	9	2026-09-16
-45	10	2026-09-16
-45	11	2026-09-16
-45	12	2026-09-16
-45	13	2026-09-16
-25	5	2026-09-16
-45	15	2026-09-16
-26	5	2026-09-16
-45	3	2026-09-16
-45	16	2026-09-16
-45	17	2026-09-16
-45	18	2026-09-16
-45	19	2026-09-16
-26	8	2026-09-16
-26	7	2026-09-16
-26	9	2026-09-16
-26	10	2026-09-16
-26	11	2026-09-16
-26	12	2026-09-16
-26	13	2026-09-16
-25	7	2026-09-16
-25	8	2026-09-16
-25	9	2026-09-16
-25	10	2026-09-16
-25	11	2026-09-16
-25	12	2026-09-16
-25	13	2026-09-16
-25	15	2026-09-17
-22	7	2026-09-17
-26	15	2026-09-17
-26	3	2026-09-17
-25	3	2026-09-17
-26	16	2026-09-17
-22	8	2026-09-17
-22	9	2026-09-17
-22	10	2026-09-17
-25	16	2026-09-17
-38	3	2026-09-17
-38	21	2026-09-17
-26	18	2026-09-17
-25	18	2026-09-17
-62	5	2026-09-17
-39	26	2026-09-17
-38	22	2026-09-17
-39	27	2026-09-17
-25	19	2026-09-17
-47	7	2026-09-17
-26	19	2026-09-17
-62	7	2026-09-17
-47	8	2026-09-17
-62	8	2026-09-17
-39	28	2026-09-17
-47	9	2026-09-17
-62	9	2026-09-17
-62	10	2026-09-17
-47	10	2026-09-17
-7	64	2026-09-17
-22	12	2026-09-17
-47	11	2026-09-17
-62	11	2026-09-17
-64	1	2026-09-17
-39	34	2026-09-17
-38	26	2026-09-17
-47	12	2026-09-17
-62	12	2026-09-17
-64	2	2026-09-17
-64	4	2026-09-17
-38	27	2026-09-17
-64	5	2026-09-17
-65	1	2026-09-17
-24	13	2026-09-17
-64	7	2026-09-17
-22	15	2026-09-17
-64	8	2026-09-17
-38	28	2026-09-17
-66	1	2026-09-17
-26	21	2026-09-17
-25	21	2026-09-17
-65	2	2026-09-17
-64	9	2026-09-17
-47	15	2026-09-17
-62	15	2026-09-17
-66	2	2026-09-17
-22	3	2026-09-17
-24	15	2026-09-17
-64	10	2026-09-17
-47	3	2026-09-17
-62	3	2026-09-17
-22	16	2026-09-17
-24	17	2026-09-17
-47	16	2026-09-17
-38	34	2026-09-17
-65	5	2026-09-17
-48	12	2026-09-17
-22	17	2026-09-17
-22	18	2026-09-17
-36	15	2026-09-17
-48	13	2026-09-17
-64	12	2026-09-17
-64	13	2026-09-17
-24	18	2026-09-17
-65	7	2026-09-17
-64	15	2026-09-17
-45	21	2026-09-17
-64	3	2026-09-17
-65	8	2026-09-17
-48	14	2026-09-17
-68	1	2026-09-17
-48	15	2026-09-17
-67	1	2026-09-17
-65	9	2026-09-17
-47	17	2026-09-17
-48	3	2026-09-17
-48	16	2026-09-17
-68	2	2026-09-17
-64	17	2026-09-17
-66	5	2026-09-17
-47	18	2026-09-17
-48	17	2026-09-17
-65	10	2026-09-17
-48	18	2026-09-17
-24	16	2026-09-17
-48	19	2026-09-17
-45	22	2026-09-17
-24	3	2026-09-17
-33	19	2026-09-17
-47	19	2026-09-17
-64	16	2026-09-17
-64	18	2026-09-17
-67	2	2026-09-17
-48	20	2026-09-17
-65	11	2026-09-17
-68	4	2026-09-17
-64	19	2026-09-17
-65	12	2026-09-17
-48	21	2026-09-17
-48	22	2026-09-17
-35	16	2026-09-17
-65	15	2026-09-17
-48	23	2026-09-17
-36	16	2026-09-17
-68	5	2026-09-17
-48	24	2026-09-17
-65	3	2026-09-17
-33	21	2026-09-17
-48	25	2026-09-17
-65	16	2026-09-17
-41	25	2026-09-17
-48	26	2026-09-17
-48	27	2026-09-17
-33	20	2026-09-17
-48	28	2026-09-17
-41	26	2026-09-17
-41	27	2026-09-17
-65	17	2026-09-17
-65	4	2026-09-17
-65	13	2026-09-17
-65	14	2026-09-17
-62	16	2026-09-17
-67	4	2026-09-17
-48	29	2026-09-17
-65	18	2026-09-17
-41	28	2026-09-17
-62	17	2026-09-17
-67	5	2026-09-17
-33	22	2026-09-17
-62	18	2026-09-17
-48	30	2026-09-17
-65	19	2026-09-17
-48	31	2026-09-17
-41	29	2026-09-17
-48	34	2026-09-17
-62	19	2026-09-17
-33	23	2026-09-17
-22	19	2026-09-17
-22	21	2026-09-17
-7	70	2026-09-17
-48	6	2026-09-17
-65	21	2026-09-17
-41	30	2026-09-17
-41	31	2026-09-17
-65	22	2026-09-17
-41	34	2026-09-17
-47	21	2026-09-17
-22	22	2026-09-17
-33	26	2026-09-17
-33	27	2026-09-17
-32	30	2026-09-17
-33	28	2026-09-17
-47	22	2026-09-17
-67	6	2026-09-17
-33	30	2026-09-17
-33	31	2026-09-17
-33	34	2026-09-17
-53	6	2026-09-17
-67	7	2026-09-17
-53	7	2026-09-17
-62	20	2026-09-17
-53	8	2026-09-17
-49	5	2026-09-17
-67	8	2026-09-17
-53	9	2026-09-17
-67	9	2026-09-17
-53	10	2026-09-17
-53	11	2026-09-17
-32	34	2026-09-17
-67	10	2026-09-17
-53	12	2026-09-17
-34	30	2026-09-17
-67	11	2026-09-17
-34	34	2026-09-17
-67	12	2026-09-17
-53	13	2026-09-17
-15	22	2026-09-17
-67	13	2026-09-17
-22	27	2026-09-17
-53	14	2026-09-17
-22	23	2026-09-17
-22	28	2026-09-17
-53	15	2026-09-17
-53	3	2026-09-17
-53	16	2026-09-17
-53	17	2026-09-17
-53	18	2026-09-17
-15	31	2026-09-17
-15	34	2026-09-17
-55	8	2026-09-17
-55	9	2026-09-17
-55	10	2026-09-17
-63	1	2026-09-17
-55	11	2026-09-17
-63	2	2026-09-17
-55	12	2026-09-17
-63	5	2026-09-17
-55	13	2026-09-17
-34	31	2026-09-17
-63	7	2026-09-17
-63	8	2026-09-17
-63	9	2026-09-17
-63	10	2026-09-17
-55	15	2026-09-17
-63	11	2026-09-17
-45	25	2026-09-17
-63	12	2026-09-17
-63	15	2026-09-17
-63	3	2026-09-17
-63	16	2026-09-17
-63	17	2026-09-17
-63	18	2026-09-17
-45	26	2026-09-17
-55	3	2026-09-17
-63	19	2026-09-17
-55	16	2026-09-17
-45	27	2026-09-17
-55	17	2026-09-17
-45	28	2026-09-17
-63	20	2026-09-17
-63	21	2026-09-17
-63	22	2026-09-17
-55	18	2026-09-17
-63	23	2026-09-17
-63	27	2026-09-17
-63	28	2026-09-17
-63	31	2026-09-17
-63	34	2026-09-17
-55	19	2026-09-17
-45	29	2026-09-17
-45	30	2026-09-17
-14	46	2026-09-17
-63	30	2026-09-17
-45	31	2026-09-17
-45	34	2026-09-17
-45	4	2026-09-17
-45	14	2026-09-17
-14	48	2026-09-17
-62	21	2026-09-17
-14	73	2026-09-17
-14	50	2026-09-17
-62	22	2026-09-17
-47	23	2026-09-17
-62	23	2026-09-17
-14	74	2026-09-17
-62	25	2026-09-17
-47	25	2026-09-17
-62	26	2026-09-17
-47	26	2026-09-17
-22	30	2026-09-17
-14	53	2026-09-17
-62	27	2026-09-17
-47	27	2026-09-17
-47	28	2026-09-17
-62	28	2026-09-17
-65	29	2026-09-17
-65	34	2026-09-17
-65	30	2026-09-17
-62	29	2026-09-17
-47	29	2026-09-17
-65	28	2026-09-17
-65	27	2026-09-17
-65	26	2026-09-17
-65	25	2026-09-17
-65	20	2026-09-17
-47	30	2026-09-17
-62	30	2026-09-17
-62	34	2026-09-17
-47	34	2026-09-17
-32	31	2026-09-17
-30	14	2026-09-17
-32	21	2026-09-17
-20	18	2026-09-17
-30	20	2026-09-17
-30	21	2026-09-17
-30	22	2026-09-17
-68	7	2026-09-17
-68	8	2026-09-17
-68	9	2026-09-17
-68	10	2026-09-17
-68	11	2026-09-17
-22	34	2026-09-17
-68	12	2026-09-17
-68	15	2026-09-18
-68	3	2026-09-18
-68	16	2026-09-18
-68	17	2026-09-18
-68	18	2026-09-18
-68	19	2026-09-18
-68	21	2026-09-18
-68	22	2026-09-18
-68	23	2026-09-18
-68	26	2026-09-18
-70	1	2026-09-18
-70	2	2026-09-18
-70	5	2026-09-18
-70	7	2026-09-18
-70	8	2026-09-18
-70	9	2026-09-18
-70	10	2026-09-18
-70	11	2026-09-18
-70	12	2026-09-18
-70	13	2026-09-18
-70	15	2026-09-18
-68	27	2026-09-18
-68	28	2026-09-18
-70	3	2026-09-18
-68	29	2026-09-18
-70	16	2026-09-18
-32	29	2026-09-18
-32	25	2026-09-18
-70	17	2026-09-18
-70	18	2026-09-18
-68	30	2026-09-18
-70	19	2026-09-18
-68	31	2026-09-18
-68	34	2026-09-18
-68	13	2026-09-18
-32	26	2026-09-18
-70	20	2026-09-18
-70	21	2026-09-18
-70	22	2026-09-18
-70	23	2026-09-18
-14	55	2026-09-18
-30	26	2026-09-18
-28	12	2026-09-18
-30	27	2026-09-18
-30	23	2026-09-18
-30	25	2026-09-18
-30	28	2026-09-18
-22	26	2026-09-18
-52	1	2026-09-18
-52	2	2026-09-18
-66	7	2026-09-18
-22	31	2026-09-18
-25	27	2026-09-18
-34	14	2026-09-18
-34	21	2026-09-18
-25	34	2026-09-18
-34	24	2026-09-18
-34	25	2026-09-18
-65	31	2026-09-18
-52	5	2026-09-18
-52	7	2026-09-18
-52	8	2026-09-18
-71	1	2026-09-18
-52	9	2026-09-18
-71	2	2026-09-18
-52	10	2026-09-18
-52	11	2026-09-18
-72	1	2026-09-18
-71	4	2026-09-18
-71	5	2026-09-18
-14	58	2026-09-18
-71	7	2026-09-18
-71	8	2026-09-18
-71	9	2026-09-18
-71	10	2026-09-18
-71	11	2026-09-18
-71	12	2026-09-18
-72	5	2026-09-18
-71	13	2026-09-18
-52	12	2026-09-18
-52	15	2026-09-18
-71	15	2026-09-18
-72	2	2026-09-18
-71	3	2026-09-18
-52	3	2026-09-18
-71	16	2026-09-18
-52	16	2026-09-18
-71	17	2026-09-18
-52	17	2026-09-18
-52	18	2026-09-18
-52	19	2026-09-18
-71	18	2026-09-18
-72	7	2026-09-18
-72	8	2026-09-18
-72	9	2026-09-18
-72	10	2026-09-18
-72	11	2026-09-18
-72	12	2026-09-18
-72	13	2026-09-18
-14	26	2026-09-18
-71	19	2026-09-18
-71	20	2026-09-18
-72	15	2026-09-18
-71	21	2026-09-18
-72	3	2026-09-18
-71	22	2026-09-18
-14	31	2026-09-18
-72	16	2026-09-18
-72	17	2026-09-18
-72	18	2026-09-18
-14	25	2026-09-18
-72	19	2026-09-18
-14	14	2026-09-18
-72	20	2026-09-18
-74	1	2026-09-19
-74	2	2026-09-19
-74	4	2026-09-19
-74	5	2026-09-19
-74	7	2026-09-19
-74	8	2026-09-19
-74	9	2026-09-19
-74	10	2026-09-19
-74	11	2026-09-19
-74	12	2026-09-19
-74	13	2026-09-19
-74	15	2026-09-19
-74	3	2026-09-19
-74	16	2026-09-19
-74	17	2026-09-19
-74	18	2026-09-19
-74	19	2026-09-19
-74	20	2026-09-19
-74	21	2026-09-19
-74	22	2026-09-19
-74	23	2026-09-19
-74	26	2026-09-19
-74	27	2026-09-19
-74	28	2026-09-19
-69	1	2026-09-19
-74	29	2026-09-19
-69	2	2026-09-19
-74	30	2026-09-19
-74	31	2026-09-19
-69	4	2026-09-19
-74	34	2026-09-19
-69	5	2026-09-19
-69	7	2026-09-19
-69	8	2026-09-19
-69	9	2026-09-19
-69	10	2026-09-19
-69	11	2026-09-19
-69	12	2026-09-19
-69	13	2026-09-19
-69	15	2026-09-19
-69	3	2026-09-19
-69	16	2026-09-19
-69	17	2026-09-19
-69	18	2026-09-19
-69	19	2026-09-19
-69	21	2026-09-19
-69	22	2026-09-19
-69	24	2026-09-19
-69	26	2026-09-19
-69	27	2026-09-19
-71	23	2026-09-19
-71	24	2026-09-19
-69	29	2026-09-19
-69	30	2026-09-19
-42	16	2026-09-19
-42	19	2026-09-19
-69	31	2026-09-19
-69	34	2026-09-19
-36	18	2026-09-19
-73	1	2026-09-19
-36	19	2026-09-19
-73	2	2026-09-19
-42	26	2026-09-19
-37	15	2026-09-19
-37	16	2026-09-19
-37	17	2026-09-19
-37	18	2026-09-19
-73	5	2026-09-19
-73	7	2026-09-19
-73	8	2026-09-19
-73	9	2026-09-19
-73	10	2026-09-19
-73	11	2026-09-19
-73	12	2026-09-19
-73	15	2026-09-19
-73	3	2026-09-19
-73	16	2026-09-19
-55	21	2026-09-19
-7	24	2026-09-19
-73	17	2026-09-19
-55	22	2026-09-19
-73	18	2026-09-19
-55	23	2026-09-19
-44	2	2026-09-19
-73	19	2026-09-19
-44	5	2026-09-19
-72	21	2026-09-19
-44	7	2026-09-19
-44	8	2026-09-19
-44	9	2026-09-19
-72	22	2026-09-19
-44	10	2026-09-19
-71	26	2026-09-19
-44	11	2026-09-19
-71	27	2026-09-19
-73	20	2026-09-19
-73	21	2026-09-19
-42	34	2026-09-19
-71	28	2026-09-19
-43	23	2026-09-19
-44	12	2026-09-19
-72	23	2026-09-19
-4	1	2026-09-19
-71	34	2026-09-19
-73	22	2026-09-19
-44	13	2026-09-19
-75	1	2026-09-19
-71	30	2026-09-19
-73	23	2026-09-19
-44	15	2026-09-19
-44	3	2026-09-19
-73	25	2026-09-19
-75	2	2026-09-19
-21	3	2026-09-19
-21	16	2026-09-19
-21	21	2026-09-19
-44	17	2026-09-19
-21	22	2026-09-19
-21	23	2026-09-19
-42	31	2026-09-19
-44	18	2026-09-19
-73	26	2026-09-19
-73	27	2026-09-19
-72	26	2026-09-19
-44	19	2026-09-19
-73	28	2026-09-19
-21	26	2026-09-19
-72	27	2026-09-19
-42	24	2026-09-19
-21	28	2026-09-19
-73	29	2026-09-19
-73	30	2026-09-19
-21	30	2026-09-19
-72	28	2026-09-19
-73	31	2026-09-19
-73	34	2026-09-19
-21	34	2026-09-19
-21	37	2026-09-19
-44	21	2026-09-19
-44	22	2026-09-19
-26	27	2026-09-19
-21	40	2026-09-19
-26	28	2026-09-19
-21	64	2026-09-19
-75	4	2026-09-19
-44	23	2026-09-19
-26	31	2026-09-19
-75	5	2026-09-19
-21	69	2026-09-19
-21	70	2026-09-19
-21	46	2026-09-19
-21	73	2026-09-19
-21	50	2026-09-19
-21	58	2026-09-19
-37	19	2026-09-19
-21	71	2026-09-19
-37	20	2026-09-19
-37	21	2026-09-19
-72	30	2026-09-19
-72	31	2026-09-19
-72	34	2026-09-19
-30	30	2026-09-19
-37	26	2026-09-19
-30	34	2026-09-19
-37	27	2026-09-19
-52	30	2026-09-19
-52	34	2026-09-19
-25	31	2026-09-19
-25	28	2026-09-19
-37	28	2026-09-19
-37	22	2026-09-19
-37	23	2026-09-19
-37	3	2026-09-19
-37	34	2026-09-19
-37	31	2026-09-19
-67	15	2026-09-20
-67	3	2026-09-20
-67	16	2026-09-20
-67	17	2026-09-20
-67	18	2026-09-20
-67	19	2026-09-20
-67	20	2026-09-20
-44	26	2026-09-20
-44	27	2026-09-20
-44	28	2026-09-20
-44	30	2026-09-20
-52	22	2026-09-20
-52	23	2026-09-20
-10	31	2026-09-20
-52	27	2026-09-20
-66	10	2026-09-20
-66	9	2026-09-20
-66	11	2026-09-20
-66	12	2026-09-20
-66	13	2026-09-20
-14	29	2026-09-20
-16	30	2026-09-20
-16	31	2026-09-20
-16	29	2026-09-20
-55	26	2026-09-20
-55	27	2026-09-20
-55	28	2026-09-20
-11	22	2026-09-20
-11	23	2026-09-20
-71	31	2026-09-20
-71	29	2026-09-20
-8	1	2026-09-20
-8	2	2026-09-20
-78	1	2026-09-20
-19	20	2026-09-20
-75	7	2026-09-20
-36	30	2026-09-20
-66	14	2026-09-20
-37	30	2026-09-20
-66	3	2026-09-20
-66	16	2026-09-20
-11	26	2026-09-20
-8	5	2026-09-20
-75	8	2026-09-20
-8	7	2026-09-20
-66	17	2026-09-20
-75	9	2026-09-20
-66	18	2026-09-20
-19	21	2026-09-20
-8	8	2026-09-20
-75	10	2026-09-20
-8	9	2026-09-20
-11	27	2026-09-20
-19	22	2026-09-20
-66	8	2026-09-20
-75	11	2026-09-20
-8	10	2026-09-20
-75	12	2026-09-20
-75	13	2026-09-20
-11	28	2026-09-20
-75	15	2026-09-20
-75	3	2026-09-20
-8	11	2026-09-20
-75	16	2026-09-20
-19	23	2026-09-20
-8	12	2026-09-20
-75	17	2026-09-20
-11	30	2026-09-20
-75	18	2026-09-20
-19	24	2026-09-20
-75	19	2026-09-20
-75	20	2026-09-20
-75	21	2026-09-20
-19	25	2026-09-20
-75	22	2026-09-20
-66	15	2026-09-20
-19	26	2026-09-20
-11	31	2026-09-20
-11	34	2026-09-20
-19	27	2026-09-20
-8	15	2026-09-20
-79	1	2026-09-20
-18	23	2026-09-20
-79	2	2026-09-20
-8	3	2026-09-20
-75	26	2026-09-20
-79	4	2026-09-20
-18	24	2026-09-20
-4	2	2026-09-20
-66	19	2026-09-20
-19	28	2026-09-20
-73	4	2026-09-20
-75	27	2026-09-20
-8	16	2026-09-20
-75	28	2026-09-20
-79	5	2026-09-20
-73	13	2026-09-20
-18	25	2026-09-20
-75	31	2026-09-20
-66	21	2026-09-20
-75	34	2026-09-20
-8	17	2026-09-20
-18	26	2026-09-20
-19	29	2026-09-20
-19	30	2026-09-20
-8	18	2026-09-20
-18	27	2026-09-20
-73	24	2026-09-20
-55	30	2026-09-20
-18	28	2026-09-20
-8	19	2026-09-20
-19	31	2026-09-20
-79	7	2026-09-20
-18	29	2026-09-20
-8	20	2026-09-20
-79	8	2026-09-20
-19	34	2026-09-20
-79	9	2026-09-20
-79	10	2026-09-20
-18	30	2026-09-20
-79	12	2026-09-20
-66	22	2026-09-20
-66	20	2026-09-20
-8	21	2026-09-20
-79	13	2026-09-20
-4	4	2026-09-20
-79	15	2026-09-20
-55	31	2026-09-20
-4	5	2026-09-20
-79	3	2026-09-20
-18	31	2026-09-20
-55	34	2026-09-20
-18	34	2026-09-20
-79	17	2026-09-20
-79	18	2026-09-20
-8	22	2026-09-20
-79	19	2026-09-20
-79	21	2026-09-20
-79	22	2026-09-20
-66	23	2026-09-20
-4	7	2026-09-20
-4	8	2026-09-20
-4	9	2026-09-20
-4	10	2026-09-20
-79	27	2026-09-20
-79	28	2026-09-20
-4	11	2026-09-20
-4	12	2026-09-20
-70	25	2026-09-20
-66	25	2026-09-20
-79	34	2026-09-20
-79	34	2026-09-20
-4	13	2026-09-20
-80	1	2026-09-20
-79	31	2026-09-20
-80	2	2026-09-20
-80	4	2026-09-20
-70	26	2026-09-20
-80	5	2026-09-20
-70	27	2026-09-20
-79	11	2026-09-20
-66	27	2026-09-20
-79	16	2026-09-20
-80	7	2026-09-20
-53	19	2026-09-20
-80	8	2026-09-20
-80	9	2026-09-20
-80	10	2026-09-20
-66	28	2026-09-20
-80	11	2026-09-20
-80	12	2026-09-20
-80	13	2026-09-20
-80	15	2026-09-20
-80	3	2026-09-20
-80	16	2026-09-20
-80	17	2026-09-20
-80	18	2026-09-20
-80	19	2026-09-20
-80	21	2026-09-20
-80	22	2026-09-20
-53	20	2026-09-20
-70	28	2026-09-20
-53	21	2026-09-20
-80	26	2026-09-20
-80	27	2026-09-20
-66	29	2026-09-20
-53	22	2026-09-20
-4	15	2026-09-20
-66	30	2026-09-20
-53	23	2026-09-20
-66	26	2026-09-20
-53	24	2026-09-20
-53	25	2026-09-20
-53	26	2026-09-20
-53	27	2026-09-20
-53	28	2026-09-20
-53	29	2026-09-20
-70	29	2026-09-20
-66	31	2026-09-20
-4	3	2026-09-20
-53	30	2026-09-20
-70	30	2026-09-20
-4	16	2026-09-20
-53	31	2026-09-20
-17	29	2026-09-20
-66	34	2026-09-20
-53	34	2026-09-20
-4	17	2026-09-20
-70	31	2026-09-20
-4	18	2026-09-20
-70	34	2026-09-20
-4	19	2026-09-20
-4	20	2026-09-20
-4	21	2026-09-20
-4	22	2026-09-20
-14	39	2026-09-21
-14	75	2026-09-21
-14	54	2026-09-21
-71	37	2026-09-22
-26	34	2026-09-22
-71	63	2026-09-23
-13	37	2026-09-23
-16	37	2026-09-23
-16	40	2026-09-23
-16	64	2026-09-23
-16	75	2026-09-23
-12	40	2026-09-23
-15	63	2026-09-23
-15	40	2026-09-23
-\.
-
-
---
--- Data for Name: user_achievement_progress; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.user_achievement_progress (user_id, achievement_id, current_count) FROM stdin;
-28	8	2
-19	7	1
-5	7	1
-75	8	2
-18	7	1
-48	7	1
-15	7	1
-75	5	1
-65	8	2
-8	5	1
-80	7	1
-15	8	3
-5	8	2
-40	8	2
-15	5	2
-26	5	1
-12	7	2
-40	2	7
-9	7	1
-35	8	2
-5	5	1
-4	8	2
-9	8	2
-79	5	1
-10	8	2
-17	8	2
-9	5	1
-4	5	1
-71	8	3
-42	7	1
-70	5	1
-32	5	1
-20	8	2
-71	5	2
-63	5	1
-30	7	1
-10	7	1
-35	5	1
-71	7	2
-71	6	1
-33	5	1
-11	7	1
-7	8	3
-7	5	2
-7	7	2
-14	7	4
-40	7	1
-53	7	1
-13	8	3
-18	8	2
-13	5	2
-22	7	1
-25	5	1
-20	7	1
-13	7	2
-38	8	2
-48	8	2
-30	8	2
-18	5	1
-48	5	1
-41	7	1
-68	7	1
-17	5	1
-24	7	1
-30	5	1
-17	7	1
-12	3	2
-16	3	4
-16	7	2
-27	8	1
-12	8	4
-28	7	1
-41	5	1
-12	5	3
-16	5	3
-42	8	2
-26	7	1
-27	7	1
-27	2	2
-25	7	1
-49	8	1
-24	8	2
-49	7	1
-43	5	1
-39	8	2
-16	4	1
-32	7	1
-22	8	2
-19	8	2
-42	5	1
-43	7	1
-36	8	2
-20	5	1
-37	8	2
-34	7	1
-35	7	1
-55	5	1
-36	7	1
-37	7	1
-43	8	2
-34	8	2
-45	7	1
-38	7	1
-39	7	1
-19	5	1
-34	5	1
-7	6	1
-65	7	1
-39	5	1
-47	7	1
-38	5	1
-10	5	1
-41	8	2
-11	8	2
-32	8	2
-33	7	1
-52	8	2
-45	8	2
-64	8	2
-11	5	1
-49	2	4
-24	5	1
-66	7	1
-33	8	2
-47	8	2
-63	7	1
-62	8	2
-45	5	1
-62	7	1
-22	5	1
-67	7	1
-47	5	1
-55	7	1
-62	5	1
-26	8	2
-53	8	2
-28	2	9
-67	8	2
-68	5	1
-25	8	2
-64	7	1
-65	5	1
-64	5	1
-70	7	1
-53	5	1
-7	3	4
-63	8	2
-55	8	2
-52	7	1
-70	8	2
-66	8	2
-68	8	2
-72	8	2
-72	5	1
-14	4	2
-52	5	1
-72	7	1
-74	7	1
-74	8	2
-69	7	1
-74	5	1
-69	8	2
-73	7	1
-69	5	1
-73	8	2
-44	8	2
-73	5	1
-44	7	1
-21	7	2
-44	5	1
-75	7	1
-8	8	2
-21	5	4
-21	6	1
-21	4	1
-21	3	9
-37	5	1
-67	5	1
-8	7	1
-79	7	1
-78	8	1
-78	2	1
-66	5	1
-4	7	1
-79	8	2
-80	8	2
-80	5	1
-71	3	2
-13	3	1
-15	6	1
-15	3	2
-\.
-
-
---
--- Data for Name: user_events; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
-\.
 
 
 --
@@ -26405,76 +30452,78 @@ COPY public.user_progress (user_id, easy_tasks_solved, medium_tasks_solved, hard
 1	0	0	0
 2	0	0	0
 3	0	0	0
-6	0	0	0
 31	0	0	0
 45	28	0	0
 74	28	0	0
 40	7	0	0
-19	32	0	0
-5	32	0	0
+16	28	15	1
 72	26	0	0
 80	21	0	0
 38	25	0	0
 43	21	0	0
+17	28	16	0
 30	29	0	0
 29	0	0	0
 23	0	0	0
-9	32	0	0
+64	18	0	0
+35	21	0	0
 76	0	0	0
+42	28	2	0
 27	2	0	0
-25	21	0	0
 77	0	0	0
 68	27	0	0
 32	29	0	0
 55	25	0	0
-18	32	0	0
+71	29	5	0
 8	18	0	0
-28	9	0	0
+6	2	0	0
 66	29	0	0
 67	19	0	0
 46	0	0	0
 53	32	0	0
-48	32	0	0
-62	26	0	0
-17	28	0	0
-47	26	0	0
+9	32	25	12
+62	26	2	0
 69	26	0	0
 50	0	0	0
+47	26	2	0
 11	27	0	0
 44	22	0	0
 41	28	0	0
 51	0	0	0
 20	21	0	0
-70	28	0	0
-22	24	0	0
-24	15	0	0
-42	28	0	0
+18	32	2	0
 10	26	0	0
 39	25	0	0
 52	20	0	0
 34	29	0	0
-65	29	0	0
 4	20	0	0
-33	27	0	0
-64	16	0	0
+28	15	0	0
+26	21	1	0
+25	21	1	0
 14	32	23	2
-49	4	0	0
-35	19	0	0
-26	21	0	0
-71	29	2	0
-13	23	1	0
-16	28	4	1
+5	32	2	0
+132	0	0	0
+70	28	1	0
+33	27	2	0
 63	24	0	0
 7	29	4	0
 79	23	0	0
 12	27	2	0
 75	25	0	0
 78	1	0	0
-15	24	2	0
+49	26	0	0
 36	16	0	0
+19	32	2	0
 21	25	9	1
 37	27	0	0
+13	23	2	0
+22	24	1	0
+81	0	0	0
 73	30	0	0
+48	32	8	0
+65	29	4	0
+15	24	16	2
+24	20	0	0
 \.
 
 
@@ -26494,33 +30543,33 @@ COPY public.users (user_id, login, email, fullname, "group", total_score) FROM s
 1	aaaa	a@yandex.ru	Ф ф ф 	Бббб-00-00	1000
 2	uuuu	uuuu@uu.uu	Уцуцуга У У	УУУУ-00-00	1000
 3	ikotilevets	ikotilevets@gmail.com	Котилевец Игорь Денисович	ТЕСТ-66-66	1000
-9	aristo	sgolomshtoks@gmail.com	Голомшток Александр Борисович	БСБО-50-24	3760
-6	saysausau	baranovgleb060906@gmail.com	Баранов Глеб Сергеевич	БСБО-53-24	970
+47	elizavetaa	afanaseva.e.d1@edu.mirea.ru	Афанасьева Елизавета Дмитриевна	БСБО-50-24	3950
+25	sheesh	superaleshka2376@mail.ru	Мачихин Алексей Дмитриевич	РНОУ-01-26	2740
 23	vanek	k4rev.ivan@yandex.ru	Карев Иван Олегович	РНОУ-01-26	740
-24	evts	argunovaev@stud.rosnou.ru	Аргунова Ева Витальевна	РНОУ-01-26	2150
-5	wuvi	vladprovidohin@yandex.ru	Провидохин Владислав Андреевич	БСБО-52-24	3090
+53	nikolayg	gushchin.n.m@edu.mirea.ru	Гущин Николай Максимович	БСБО-50-24	3920
 34	baga	artembogovik10@gmail.com	Боговик Артём Денисович	БСБО-53-24	3060
-49	bobylevivan	fuhj12345@mail.ru	Бобылев Иван Александрович	БСБО-50-24	1250
+6	saysausau	baranovgleb060906@gmail.com	Баранов Глеб Сергеевич	БСБО-53-24	980
 52	pluxaldmi	alisa191006@mail.ru	Дмитриева Алиса Антоновна	БСБО-52-24	2540
 50	maksima	aleksandrov.m.a4@edu.mirea.ru	Александров Максим Александрович	БСБО-50-24	1000
-33	xajjne	zolotovskiy.a.s@edu.mirea.ru	Золотовский Александр Сергеевич	БСБО-50-24	3160
-25	sheesh	superaleshka2376@mail.ru	Мачихин Алексей Дмитриевич	РНОУ-01-26	2740
-53	nikolayg	gushchin.n.m@edu.mirea.ru	Гущин Николай Максимович	БСБО-50-24	3950
+19	mparamonova	masha.paramonova77@gmail.com	Парамонова Мария Максимовна	БСБО-51-24	3930
+26	shokkwayy	artemvoronov005@gmail.com	Воронов Артём Валерьевич	РНОУ-01-26	2290
+13	nikalassik	andtelephonezte@gmai.com	Николаев Андрей Дмитриевич	БСБО-51-24	3130
 31	ilyaboretskiy	ilya.boretskiy@yandex.ru	Борецкий Илья Богданович	БСБО-52-24	1000
-15	sahar	ufjsnyjy@mail.ru	Сахарова Мария Алексеевна	БСБО-51-24	2480
-19	mparamonova	masha.paramonova77@gmail.com	Парамонова Мария Максимовна	БСБО-51-24	3720
-35	serka	kazarinsergay1972@gmail.com	Казарин Сергей Павлович	БСБО-54-24	2660
-17	antoxaxaxatothebank	antonmilonow3@gmail.com	Милонов Антогн Григорьевич	БСБО-51-24	3430
-16	timih18	ntm-07@mail.ru	Носенков Тимофей Михайлович	БСБО-51-24	4460
+49	bobylevivan	fuhj12345@mail.ru	Бобылев Иван Александрович	БСБО-50-24	2010
+16	timih18	ntm-07@mail.ru	Носенков Тимофей Михайлович	БСБО-51-24	7460
+48	kirego	kiregopa@gmail.com	Попенков Кирилл Александрович	БСБО-53-24	4940
+35	serka	kazarinsergay1972@gmail.com	Казарин Сергей Павлович	БСБО-54-24	2790
+24	evts	argunovaev@stud.rosnou.ru	Аргунова Ева Витальевна	РНОУ-01-26	2440
 45	melekhinma	matresmel16@gmail.com	Мелехин Матвей Антонович	БСБО-52-24	3380
-26	shokkwayy	artemvoronov005@gmail.com	Воронов Артём Валерьевич	РНОУ-01-26	2140
+5	wuvi	vladprovidohin@yandex.ru	Провидохин Владислав Андреевич	БСБО-52-24	3060
 27	timur123	naiman.tim123@gmil.com	Найман Тимур Александрович	РНОУ-01-26	1200
 8	nikita_ant	antipovnik16@yandex.ru	Антипов Никита Игоревич	БСБО-50-24	2450
 36	vladsewa	vladsewavlad@gmail.com	Севостьянов Владислав Романович	БСБО-54-24	2250
 41	lygovaya_sobachka	valdislave.britvin@yandex.ru	Бривтин Владислав Александрович	БСБО-54-24	3260
+17	antoxaxaxatothebank	antonmilonow3@gmail.com	Милонов Антогн Григорьевич	БСБО-51-24	6190
 7	dryunya	andreiobmolov@yandex.ru	Обмолов Андрей Вячеславович	БСБО-55-24	3630
 11	b_a_m_b_1	niki29092006@mail.ru	Лазаренко Никита Сергеевич	БСБО-51-24	3080
-42	maclaud5429	kirillpetrakoff@gmail.com	Петраков Кирилл Алексеевич 	БСБО-55-24	2900
+42	maclaud5429	kirillpetrakoff@gmail.com	Петраков Кирилл Алексеевич 	БСБО-55-24	3260
 29	ulanov95	ulanov95@mail.ru	Уланов Никита Александрович	ИГОР-24-01	780
 40	wortex1243	zuic517@gmail.com	Чан Тхк Зуи	БСБО-54-24	1160
 32	kylapru	rewqmsdzxci4@gmail.com	Тихонов Марк Александрович	БСБО-53-24	3420
@@ -26531,39 +30580,41 @@ COPY public.users (user_id, login, email, fullname, "group", total_score) FROM s
 12	plsrflttr	nikitapelipko@gmail.com	пелипко никита сергеевич	БСБО-51-24	3510
 21	myaso	anton2006_x@mail.ru	Новоселов Илья Русланович	БСБО-55-24	4320
 44	vanya_terybyte	ivanfilato7@yandex.ru	Филатов Иван Андреевич	БСБО-54-24	2260
-62	maskima	gaih.moa@gmail.com	Александров Максим Александрович	БСБО-50-24	3450
-47	elizavetaa	afanaseva.e.d1@edu.mirea.ru	Афанасьева Елизавета Дмитриевна	БСБО-50-24	3500
-22	sleepydevil	lordini.16@gmail.com	Козлов Роман Дмитриевич	БСБО-52-24	2570
-48	kirego	kiregopa@gmail.com	Попенков Кирилл Александрович	БСБО-53-24	3230
+9	aristo	sgolomshtoks@gmail.com	Голомшток Александр Борисович	БСБО-50-24	14770
+62	maskima	gaih.moa@gmail.com	Александров Максим Александрович	БСБО-50-24	3900
+22	sleepydevil	lordini.16@gmail.com	Козлов Роман Дмитриевич	БСБО-52-24	2750
+33	xajjne	zolotovskiy.a.s@edu.mirea.ru	Золотовский Александр Сергеевич	БСБО-50-24	3520
+15	sahar	ufjsnyjy@mail.ru	Сахарова Мария Алексеевна	БСБО-51-24	5230
 51	st1kyo	svytik2004@gmail.com	Уйманов Святослав Михайлович 	БСБО-53-24	1000
 38	tuzova2006	valery.tuzova06@gmail.com	Тузова Валерия Романовна	БСБО-54-24	3060
 37	ivcherry	i.cheremenski2005@gmail.com	Череменский Иван Андреевич	БСБО-54-24	2400
-28	kolentine	goryunov-17@inbox.ru	Горюнов Николай Витальевич	РНОУ-01-26	1870
+28	kolentine	goryunov-17@inbox.ru	Горюнов Николай Витальевич	РНОУ-01-26	1140
 10	kaya	Timurati10@yandex.ru	Слуцкий Тимур Альбертович	БСБО-51-24	2800
 20	svova	vselvich@gmail.com	Сельвич Владимир Сергеевич	БСБО-51-24	2350
 39	s4f3l	leoman06@yandex.ru	Манилов Леонид Анатольевич	БСБО-54-24	2650
-13	nikalassik	andtelephonezte@gmai.com	Николаев Андрей Дмитриевич	БСБО-51-24	3130
 43	marrik07	mari.morshina@mail.ru	Моршина Мария Владимировна	БСБО-52-24	2320
-18	sshanaeva	sshanaevaaa@yandex.ru	Шанаева	БСБО-51-24	3860
+18	sshanaeva	sshanaevaaa@yandex.ru	Шанаева	БСБО-51-24	4190
 72	andre_el	andreel2911@gmail.com	Елизаров Андрей Антонович	БСБО-50-24	1740
 76	lun4ie	Lun4iepesh@yandex.ru	Пешехонов Григорий Владимирович	АБВГ-12-34	970
 77	liteside	litesidead@gmail.com	Педенко Артём Олегович	БСБО-53-24	1000
-71	shuvserg	shuvserg23@yandex.ru	Шувалов Сергей Валерьевич	БСБО-55-24	3330
 80	sqli_ot_babuli	nikitena06@gmail.com	Аверин Никита Станиславович	БСБО-52-24	2260
 74	dudaev	ttaketwo@mail.ru	Дудаев Харис Исламов	БСБО-53-24	3040
+81	foex	test@ya.ru	Саша		1000
 63	astakhov	thisemptinessmy@yandex.ru	Астахов Лев Алексеевич	БСБО-50-24	2440
-64	mihalych42	pavlihino7@gmail.com	Павлихин Евгений Михайлович	РНОУ-01-26	1740
-65	nikilka	linsr9370@yandex.com	Ермачков Никил	БСБО-52-24	3500
+64	mihalych42	pavlihino7@gmail.com	Павлихин Евгений Михайлович	РНОУ-01-26	1240
 67	egor	Egkharchikov@yandex.ru	Харчиков Егор Геннадьевич	БСБО-55-24	2670
 69	ruslan	a26r12@yandex.ru	Алимов Руслан Маратович	БСБО-53-24	3190
 75	shizough	shizough@yandex.ru	Бесчетнова София Евгеньевна	БСБО-55-24	2390
 78	ildnl	ildaniil006@yandex.ru	Илюшин Даниил Денисович	БСБО-50-24	1090
 66	sereja	skitmynm@xmail.ru	Попов Сергей Алексанлрович	БСБО-52-24	3720
 79	saidov06	ali.saidov06@mail.ru	Саидов Али Шохзодович	БСБО-51-24	2530
-70	nokros	N0kr0s1@yandex.ru	Герасимов Никита Андреевич	БСБО-53-24	2490
 73	skilkov123	adamskilkov@gmail.com	Скилков Адам Данилович	БСБО-55-24	3460
 68	trubnikov	pretty.cvnt64@gmail.com	Трубников Данила Олегович	БСБО-53-24	3280
+71	shuvserg	shuvserg23@yandex.ru	Шувалов Сергей Валерьевич	БСБО-55-24	3000
 55	nick	sibelev.n.s@yandex.ru	Сибелев Никита Сергеевич	БСБО-50-24	2750
+65	nikilka	linsr9370@yandex.com	Ермачков Никил	БСБО-52-24	3620
+132	vanek95	i.o.karev@yandex.ru	Карев Иван Олегович	РНОУ-01-26	1000
+70	nokros	N0kr0s1@yandex.ru	Герасимов Никита Андреевич	БСБО-53-24	2340
 \.
 
 
@@ -26695,6 +30746,21 @@ COPY public.users_achievements (user_id, achievement_id) FROM stdin;
 80	1
 80	2
 16	8
+17	8
+17	6
+17	5
+49	2
+6	1
+15	8
+15	6
+15	5
+9	8
+9	5
+9	6
+9	3
+9	7
+28	2
+16	5
 \.
 
 
@@ -27603,6 +31669,209 @@ COPY public.users_clues (user_id, task_global_id, clue_type) FROM stdin;
 15	40	2
 15	64	2
 15	64	1
+71	39	2
+71	39	1
+17	37	1
+17	37	2
+17	63	1
+17	63	2
+17	39	2
+22	37	2
+65	67	2
+65	71	2
+65	70	2
+65	41	2
+65	77	2
+65	72	2
+65	74	2
+65	44	2
+17	64	2
+17	75	1
+17	75	2
+17	77	2
+17	41	2
+17	41	1
+17	69	2
+17	76	2
+17	76	1
+17	70	2
+17	54	2
+17	43	2
+17	72	2
+17	46	1
+17	46	2
+17	48	2
+17	48	1
+17	51	2
+17	52	2
+17	53	1
+17	53	2
+35	20	2
+35	23	2
+71	72	1
+71	40	2
+71	40	1
+71	64	2
+42	37	1
+71	77	2
+42	37	2
+71	77	1
+42	63	2
+42	63	1
+42	38	1
+19	37	2
+49	11	1
+49	13	1
+49	14	1
+49	15	1
+49	3	1
+49	3	2
+5	37	2
+5	37	1
+15	75	1
+15	75	2
+15	77	1
+15	77	2
+15	41	1
+15	41	2
+15	67	2
+15	69	2
+15	76	1
+15	76	2
+15	70	2
+15	54	1
+15	54	2
+15	71	1
+15	71	2
+15	43	1
+15	43	2
+15	44	2
+15	44	1
+49	16	1
+49	17	1
+49	17	2
+15	72	1
+49	18	1
+49	19	2
+49	19	1
+49	20	1
+49	20	2
+15	52	1
+15	52	2
+15	74	1
+15	74	2
+15	53	1
+49	21	1
+49	21	2
+49	22	2
+49	23	1
+49	23	2
+49	24	2
+49	24	1
+49	25	2
+49	25	1
+49	26	1
+49	26	2
+49	27	1
+49	27	2
+49	28	2
+49	28	1
+49	30	2
+49	31	1
+49	31	2
+49	34	2
+49	34	1
+49	29	2
+49	29	1
+19	63	2
+19	38	1
+19	38	2
+13	63	2
+47	37	2
+9	63	2
+9	38	2
+9	39	2
+9	40	2
+9	64	2
+9	75	2
+9	77	2
+9	41	2
+9	41	1
+9	76	2
+9	54	2
+9	71	2
+9	43	2
+9	44	2
+9	48	2
+9	51	2
+9	52	2
+9	52	1
+9	58	2
+9	55	2
+9	78	2
+9	78	1
+9	81	2
+62	63	2
+9	80	2
+9	59	2
+9	60	2
+9	82	2
+9	61	2
+9	83	2
+9	62	2
+53	63	1
+47	38	2
+18	37	2
+18	37	1
+18	63	2
+18	38	2
+28	13	2
+28	13	1
+5	63	1
+5	63	2
+26	63	2
+5	38	2
+13	39	2
+5	38	1
+5	39	1
+5	39	2
+70	37	1
+70	37	2
+48	37	2
+48	63	2
+48	38	2
+48	39	2
+48	40	2
+33	37	2
+33	63	2
+33	38	2
+49	2	2
+49	4	2
+49	4	1
+15	55	2
+15	55	1
+15	57	2
+15	57	1
+17	55	2
+15	59	1
+15	59	2
+15	82	1
+15	82	2
+48	64	2
+48	75	2
+48	77	2
+25	38	2
+13	40	1
+25	38	1
+24	20	1
+24	20	2
+24	22	2
+24	23	2
+70	63	2
+64	21	2
+64	22	2
+64	28	2
+64	38	2
 \.
 
 
@@ -27647,49 +31916,11 @@ COPY public.users_quest (user_id, quest_id, current_scene_id, created_at, comple
 76	hope	chapter_1	2026-09-19 17:50:12.516166+00	\N
 78	hope	chapter_1	2026-09-20 14:07:06.357821+00	\N
 46	hope	chapter_1	2026-09-20 17:05:54.703648+00	\N
+81	hope	chapter_1	2026-09-24 18:36:04.901977+00	\N
+132	hope	chapter_1	2026-10-01 08:31:51.322089+00	\N
+16	hope	chapter_1	2026-10-11 09:39:54.788181+00	\N
+64	hope	chapter_1	2026-10-11 11:35:31.438735+00	\N
 \.
-
-
---
--- Name: bgw_job_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
---
-
-SELECT pg_catalog.setval('_timescaledb_catalog.bgw_job_id_seq', 1000, false);
-
-
---
--- Name: chunk_column_stats_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
---
-
-SELECT pg_catalog.setval('_timescaledb_catalog.chunk_column_stats_id_seq', 1, false);
-
-
---
--- Name: chunk_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
---
-
-SELECT pg_catalog.setval('_timescaledb_catalog.chunk_id_seq', 4, true);
-
-
---
--- Name: dimension_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
---
-
-SELECT pg_catalog.setval('_timescaledb_catalog.dimension_id_seq', 1, true);
-
-
---
--- Name: dimension_slice_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
---
-
-SELECT pg_catalog.setval('_timescaledb_catalog.dimension_slice_id_seq', 4, true);
-
-
---
--- Name: hypertable_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
---
-
-SELECT pg_catalog.setval('_timescaledb_catalog.hypertable_id_seq', 1, true);
 
 
 --
@@ -27710,46 +31941,14 @@ SELECT pg_catalog.setval('public.tasks_task_global_id_seq', 110, true);
 -- Name: user_events_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.user_events_id_seq', 23884, true);
+SELECT pg_catalog.setval('public.user_events_id_seq', 28030, true);
 
 
 --
 -- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_user_id_seq', 80, true);
-
-
---
--- Name: _hyper_1_1_chunk 1_user_events_pkey; Type: CONSTRAINT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_1_chunk
-    ADD CONSTRAINT "1_user_events_pkey" PRIMARY KEY (user_id, task_id, "timestamp");
-
-
---
--- Name: _hyper_1_2_chunk 2_user_events_pkey; Type: CONSTRAINT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_2_chunk
-    ADD CONSTRAINT "2_user_events_pkey" PRIMARY KEY (user_id, task_id, "timestamp");
-
-
---
--- Name: _hyper_1_3_chunk 3_user_events_pkey; Type: CONSTRAINT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_3_chunk
-    ADD CONSTRAINT "3_user_events_pkey" PRIMARY KEY (user_id, task_id, "timestamp");
-
-
---
--- Name: _hyper_1_4_chunk 4_user_events_pkey; Type: CONSTRAINT; Schema: _timescaledb_internal; Owner: postgres
---
-
-ALTER TABLE ONLY _timescaledb_internal._hyper_1_4_chunk
-    ADD CONSTRAINT "4_user_events_pkey" PRIMARY KEY (user_id, task_id, "timestamp");
+SELECT pg_catalog.setval('public.users_user_id_seq', 132, true);
 
 
 --
@@ -27788,8 +31987,7 @@ ALTER TABLE ONLY public.user_achievement_progress
 -- Name: user_events user_events_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.user_events
-    ADD CONSTRAINT user_events_pkey PRIMARY KEY (user_id, task_id, "timestamp");
+
 
 
 --
@@ -27854,118 +32052,6 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users_quest
     ADD CONSTRAINT users_quest_pkey PRIMARY KEY (user_id, quest_id);
-
-
---
--- Name: _hyper_1_1_chunk_idx_user_events_task; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_1_chunk_idx_user_events_task ON _timescaledb_internal._hyper_1_1_chunk USING btree (task_id) WHERE (task_id IS NOT NULL);
-
-
---
--- Name: _hyper_1_1_chunk_idx_user_events_type; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_1_chunk_idx_user_events_type ON _timescaledb_internal._hyper_1_1_chunk USING btree (event_type);
-
-
---
--- Name: _hyper_1_1_chunk_idx_user_events_user; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_1_chunk_idx_user_events_user ON _timescaledb_internal._hyper_1_1_chunk USING btree (user_id);
-
-
---
--- Name: _hyper_1_1_chunk_user_events_timestamp_idx; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_1_chunk_user_events_timestamp_idx ON _timescaledb_internal._hyper_1_1_chunk USING btree ("timestamp" DESC);
-
-
---
--- Name: _hyper_1_2_chunk_idx_user_events_task; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_2_chunk_idx_user_events_task ON _timescaledb_internal._hyper_1_2_chunk USING btree (task_id) WHERE (task_id IS NOT NULL);
-
-
---
--- Name: _hyper_1_2_chunk_idx_user_events_type; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_2_chunk_idx_user_events_type ON _timescaledb_internal._hyper_1_2_chunk USING btree (event_type);
-
-
---
--- Name: _hyper_1_2_chunk_idx_user_events_user; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_2_chunk_idx_user_events_user ON _timescaledb_internal._hyper_1_2_chunk USING btree (user_id);
-
-
---
--- Name: _hyper_1_2_chunk_user_events_timestamp_idx; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_2_chunk_user_events_timestamp_idx ON _timescaledb_internal._hyper_1_2_chunk USING btree ("timestamp" DESC);
-
-
---
--- Name: _hyper_1_3_chunk_idx_user_events_task; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_3_chunk_idx_user_events_task ON _timescaledb_internal._hyper_1_3_chunk USING btree (task_id) WHERE (task_id IS NOT NULL);
-
-
---
--- Name: _hyper_1_3_chunk_idx_user_events_type; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_3_chunk_idx_user_events_type ON _timescaledb_internal._hyper_1_3_chunk USING btree (event_type);
-
-
---
--- Name: _hyper_1_3_chunk_idx_user_events_user; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_3_chunk_idx_user_events_user ON _timescaledb_internal._hyper_1_3_chunk USING btree (user_id);
-
-
---
--- Name: _hyper_1_3_chunk_user_events_timestamp_idx; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_3_chunk_user_events_timestamp_idx ON _timescaledb_internal._hyper_1_3_chunk USING btree ("timestamp" DESC);
-
-
---
--- Name: _hyper_1_4_chunk_idx_user_events_task; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_4_chunk_idx_user_events_task ON _timescaledb_internal._hyper_1_4_chunk USING btree (task_id) WHERE (task_id IS NOT NULL);
-
-
---
--- Name: _hyper_1_4_chunk_idx_user_events_type; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_4_chunk_idx_user_events_type ON _timescaledb_internal._hyper_1_4_chunk USING btree (event_type);
-
-
---
--- Name: _hyper_1_4_chunk_idx_user_events_user; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_4_chunk_idx_user_events_user ON _timescaledb_internal._hyper_1_4_chunk USING btree (user_id);
-
-
---
--- Name: _hyper_1_4_chunk_user_events_timestamp_idx; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
---
-
-CREATE INDEX _hyper_1_4_chunk_user_events_timestamp_idx ON _timescaledb_internal._hyper_1_4_chunk USING btree ("timestamp" DESC);
 
 
 --
@@ -28102,7 +32188,7 @@ ALTER TABLE ONLY public.users_clues
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 5RS1sKmB7uxBQBQrM6zOEsOByD83KHxdajZfKj40p8voL21baEJux75e1HERliR
+
 
 
 --
@@ -28110,8 +32196,8 @@ ALTER TABLE ONLY public.users_clues
 --
 
 CREATE TABLE IF NOT EXISTS public.quest_tasks_solved (
-    id integer NOT NULL,
-    user_id integer NOT NULL,
+    id SERIAL PRIMARY KEY,
+    user_id integer NOT NULL REFERENCES public.users(user_id),
     quest_id character varying NOT NULL,
     scene_id character varying NOT NULL,
     user_query text,
@@ -28119,27 +32205,4 @@ CREATE TABLE IF NOT EXISTS public.quest_tasks_solved (
 );
 
 ALTER TABLE public.quest_tasks_solved OWNER TO postgres;
-
-CREATE SEQUENCE IF NOT EXISTS public.quest_tasks_solved_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER TABLE public.quest_tasks_solved_id_seq OWNER TO postgres;
-ALTER SEQUENCE public.quest_tasks_solved_id_seq OWNED BY public.quest_tasks_solved.id;
-ALTER TABLE ONLY public.quest_tasks_solved ALTER COLUMN id SET DEFAULT nextval('public.quest_tasks_solved_id_seq'::regclass);
-SELECT pg_catalog.setval('public.quest_tasks_solved_id_seq', 1, false);
-
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'quest_tasks_solved_pkey') THEN
-        ALTER TABLE ONLY public.quest_tasks_solved ADD CONSTRAINT quest_tasks_solved_pkey PRIMARY KEY (id);
-    END IF;
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'quest_tasks_solved_user_id_fkey') THEN
-        ALTER TABLE ONLY public.quest_tasks_solved ADD CONSTRAINT quest_tasks_solved_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
-    END IF;
-END $$;
-
+CREATE INDEX IF NOT EXISTS idx_quest_tasks_solved_user ON public.quest_tasks_solved(user_id);

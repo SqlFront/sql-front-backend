@@ -90,7 +90,9 @@ origins.extend(
         "http://backend:8000",
         "http://192.168.146.1:9000",
         "http://sqlfront.ru",
-        "https://sqlfront.ru"
+        "https://sqlfront.ru",
+        "http://sql-front.mirea.ru",
+        "https://sql-front.mirea.ru"
     ]
 )
 

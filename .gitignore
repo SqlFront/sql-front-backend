@@ -184,4 +184,5 @@ documentation/
 grafana/
 prometheus.yml
 Dockerfile*
+build_clean_dump.py
 

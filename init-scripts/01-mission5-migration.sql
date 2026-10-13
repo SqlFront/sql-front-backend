@@ -1,7 +1,7 @@
 -- Migration for Mission 5 (PL/pgSQL)
 
 -- 1. Apply to game_db:
--- \c game_db
+\c game_db
 CREATE TABLE IF NOT EXISTS public.equipment_audit (
     id SERIAL PRIMARY KEY,
     item_name character varying NOT NULL,
@@ -15,7 +15,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO sql_runner;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO sql_runner;
 
 -- 2. Apply to users_db:
--- \c users_db
+\c users_db
 INSERT INTO public.tasks (task_global_id, mission_id, task_id, title, description, clue, correct_query, expected_result, tags)
 VALUES
 (106, 5, 1, 'Возраст призыва', 'Напишите скалярную функцию get_enlistment_age(p_soldier_id INT), возвращающую возраст солдата на момент призыва (год призыва из enlistment_date минус birth_year).', 'Используйте CREATE OR REPLACE FUNCTION get_enlistment_age(p_soldier_id INT) RETURNS INT AS $$ ... $$ LANGUAGE plpgsql;', 'CREATE OR REPLACE FUNCTION get_enlistment_age(p_soldier_id INT) RETURNS INT AS $$ DECLARE v_age INT; BEGIN SELECT (EXTRACT(YEAR FROM enlistment_date) - birth_year)::INT INTO v_age FROM soldier WHERE id = p_soldier_id; RETURN v_age; END; $$ LANGUAGE plpgsql;', '{"mode": "ddl", "test_query": "SELECT get_enlistment_age(1);", "columns": ["get_enlistment_age"], "data": [[18]]}', '{plpgsql,function,scalar,mission5}'),
