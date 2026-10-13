@@ -293,32 +293,39 @@ async def submit_sql_query(
 
     hint = ""
     user_result = {}
-    if expected_result.get("mode") == "model":
-        is_correct, hint = catalog_model.verify(request.sql_query, expected_result)
-    elif expected_result.get("mode") in ("ddl", "plpgsql"):
-        test_query = expected_result.get("test_query", "")
-        expect_error = expected_result.get("expect_error", False)
-        user_result = await sql_executor.simulate_ddl(
-            request.sql_query, test_query, expect_error=expect_error
-        )
-        if expect_error:
-            is_correct = user_result.get("error_caught", False)
-            hint = "Триггер успешно заблокировал некорректную операцию" if is_correct else ""
+    try:
+        if expected_result.get("mode") == "model":
+            is_correct, hint = catalog_model.verify(request.sql_query, expected_result)
+        elif expected_result.get("mode") in ("ddl", "plpgsql"):
+            test_query = expected_result.get("test_query", "")
+            expect_error = expected_result.get("expect_error", False)
+            user_result = await sql_executor.simulate_ddl(
+                request.sql_query, test_query, expect_error=expect_error
+            )
+            if expect_error:
+                is_correct = user_result.get("error_caught", False)
+                hint = "Триггер успешно заблокировал некорректную операцию" if is_correct else ""
+            else:
+                user_data = user_result.get("data", [])
+                expected_data = expected_result.get("data", [])
+                try:
+                    is_correct = sorted(user_data) == sorted(expected_data)
+                except TypeError:
+                    is_correct = user_data == expected_data
         else:
+            user_result = await sql_executor.execute_sql(request.sql_query)
             user_data = user_result.get("data", [])
             expected_data = expected_result.get("data", [])
             try:
                 is_correct = sorted(user_data) == sorted(expected_data)
             except TypeError:
                 is_correct = user_data == expected_data
-    else:
-        user_result = await sql_executor.execute_sql(request.sql_query)
-        user_data = user_result.get("data", [])
-        expected_data = expected_result.get("data", [])
-        try:
-            is_correct = sorted(user_data) == sorted(expected_data)
-        except TypeError:
-            is_correct = user_data == expected_data
+    except HTTPException as e:
+        is_correct = False
+        hint = str(e.detail)
+    except Exception as e:
+        is_correct = False
+        hint = f"Ошибка выполнения запроса: {str(e)}"
     try:
         result = await repo.check_and_reward_task(
             user_id=current_user.user_id,

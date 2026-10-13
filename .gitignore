@@ -185,4 +185,5 @@ grafana/
 prometheus.yml
 Dockerfile*
 build_clean_dump.py
-
+MISSION_ANSWERS.md
+backups/*full_backup*.sql

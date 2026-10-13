@@ -178,25 +178,28 @@ async def submit_quest_solution(
     user_answer_value = ""
     is_correct = False
 
-    if scene["is_branching"]:
-        user_answer_value = _extract_update_value(request.sql_query)
-        target_table = scene.get("expected_result", {}).get("target_table")
-        if target_table:
-            # Check safely via transaction rollback
-            await sql_executor.simulate_update(request.sql_query, allowed_tables=[target_table])
-        is_correct = user_answer_value in scene.get("branches", {})
-    else:
-        if scene.get("expected_result"):
-            user_result = await sql_executor.execute_sql(request.sql_query)
-            expected = scene["expected_result"]
-            user_data = user_result.get("data", [])
-            expected_data = expected.get("data", [])
-            try:
-                is_correct = sorted(user_data) == sorted(expected_data)
-            except TypeError:
-                is_correct = user_data == expected_data
+    try:
+        if scene["is_branching"]:
+            user_answer_value = _extract_update_value(request.sql_query)
+            target_table = scene.get("expected_result", {}).get("target_table")
+            if target_table:
+                # Check safely via transaction rollback
+                await sql_executor.simulate_update(request.sql_query, allowed_tables=[target_table])
+            is_correct = user_answer_value in scene.get("branches", {})
         else:
-            is_correct = True
+            if scene.get("expected_result"):
+                user_result = await sql_executor.execute_sql(request.sql_query)
+                expected = scene["expected_result"]
+                user_data = user_result.get("data", [])
+                expected_data = expected.get("data", [])
+                try:
+                    is_correct = sorted(user_data) == sorted(expected_data)
+                except TypeError:
+                    is_correct = user_data == expected_data
+            else:
+                is_correct = True
+    except (HTTPException, Exception):
+        is_correct = False
 
     is_quest_completed = False
     scoring_service = ScoringService(db)
