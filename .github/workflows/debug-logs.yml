@@ -1,0 +1,54 @@
+name: Debug and Logs
+
+on:
+  workflow_dispatch:
+    inputs:
+      lines:
+        description: 'Number of log lines to show'
+        required: false
+        default: '150'
+      service:
+        description: 'Target service (backend, frontend, postgres, all)'
+        required: false
+        default: 'backend'
+        type: choice
+        options:
+          - backend
+          - frontend
+          - postgres
+          - all
+
+jobs:
+  debug:
+    runs-on: self-hosted
+    steps:
+      - name: Fetch Logs and Status
+        run: |
+          cd /home/admin/sqlfront/sql-backend
+          echo "=========================================================="
+          echo "=== DOCKER COMPOSE PS ==="
+          echo "=========================================================="
+          docker compose ps
+          
+          LINES="${{ github.event.inputs.lines }}"
+          SERVICE="${{ github.event.inputs.service }}"
+          
+          if [ "$SERVICE" = "all" ]; then
+            echo "=========================================================="
+            echo "=== BACKEND LOGS (last $LINES lines) ==="
+            echo "=========================================================="
+            docker compose logs --tail "$LINES" backend
+            echo "=========================================================="
+            echo "=== FRONTEND LOGS (last $LINES lines) ==="
+            echo "=========================================================="
+            docker compose logs --tail "$LINES" frontend
+            echo "=========================================================="
+            echo "=== POSTGRES LOGS (last $LINES lines) ==="
+            echo "=========================================================="
+            docker compose logs --tail "$LINES" postgres
+          else
+            echo "=========================================================="
+            echo "=== $SERVICE LOGS (last $LINES lines) ==="
+            echo "=========================================================="
+            docker compose logs --tail "$LINES" "$SERVICE"
+          fi
