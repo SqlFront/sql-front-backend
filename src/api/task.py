@@ -23,6 +23,7 @@ from src.utils.analytics import log_user_event
 from src.utils.auth import get_current_user
 from src.utils.sql_executor import SQLExecutor
 from src.utils import catalog_model
+from src.utils.logger import logger
 
 router = APIRouter(prefix="/api/missions", tags=["Миссии и задачи"])
 sql_executor = SQLExecutor(settings.GAME_DATABASE_URL)
@@ -324,8 +325,10 @@ async def submit_sql_query(
         is_correct = False
         hint = str(e.detail)
     except Exception as e:
+        logger.warning(f"Error executing user sql: {e}", exc_info=True)
         is_correct = False
         hint = f"Ошибка выполнения запроса: {str(e)}"
+
     try:
         result = await repo.check_and_reward_task(
             user_id=current_user.user_id,
@@ -333,17 +336,21 @@ async def submit_sql_query(
             task_id=task_id,
             is_correct=is_correct,
         )
-        await log_user_event(
-            session=db,
-            user_id=current_user.user_id,
-            event_type="task_submitted",
-            task_id=task.task_global_id,
-            payload={
-                "mission_id": mission_id,
-                "task_id": task_id,
-                "is_correct": is_correct,
-            },
-        )
+        try:
+            await log_user_event(
+                session=db,
+                user_id=current_user.user_id,
+                event_type="task_submitted",
+                task_id=task.task_global_id,
+                payload={
+                    "mission_id": mission_id,
+                    "task_id": task_id,
+                    "is_correct": is_correct,
+                },
+            )
+        except Exception as log_err:
+            logger.warning(f"Failed to log user event: {log_err}")
+
         return {
             **result, 
             "is_correct": is_correct,
@@ -351,11 +358,16 @@ async def submit_sql_query(
             "data": user_result.get("data", []),
             "hint": hint,
         }
-
     except IndexError:
         raise HTTPException(
             status_code=400,
             detail="Некорректный mission_id: отсутствует в TASK_POINTS (config.py)",
+        )
+    except Exception as e:
+        logger.error(f"Fatal error in submit_sql_query: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Ошибка обработки решения: {str(e)}"
         )
 
 
