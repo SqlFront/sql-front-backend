@@ -226,7 +226,8 @@ class SQLExecutor:
 
         if not allow_star:
             for node in parsed.find_all(exp.Star):
-                raise HTTPException(status_code=400, detail="Использование SELECT * запрещено при финальной отправке, перечислите столбцы явно")
+                if not isinstance(node.parent, exp.Count):
+                    raise HTTPException(status_code=400, detail="Использование SELECT * запрещено при финальной отправке, перечислите столбцы явно")
 
         for table in parsed.find_all(exp.Table):
             table_name = table.name.lower()

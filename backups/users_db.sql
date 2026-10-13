@@ -2,9 +2,8 @@
 -- PostgreSQL database dump
 --
 
-
--- Dumped from database version 15.18
--- Dumped by pg_dump version 15.18
+-- Dumped from database version 15.13
+-- Dumped by pg_dump version 15.13
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -17,6 +16,118 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+ALTER TABLE IF EXISTS ONLY public.users_clues DROP CONSTRAINT IF EXISTS users_clues_users_user_id_fk;
+ALTER TABLE IF EXISTS ONLY public.users_clues DROP CONSTRAINT IF EXISTS users_clues_tasks_task_global_id_fk;
+ALTER TABLE IF EXISTS ONLY public.user_refresh_tokens DROP CONSTRAINT IF EXISTS user_refresh_tokens_users_user_id_fk;
+ALTER TABLE IF EXISTS ONLY public.user_achievement_progress DROP CONSTRAINT IF EXISTS user_achievement_progress_users_user_id_fk;
+ALTER TABLE IF EXISTS ONLY public.user_achievement_progress DROP CONSTRAINT IF EXISTS user_achievement_progress_achievements_achievement_id_fk;
+ALTER TABLE IF EXISTS ONLY public.quest_tasks_solved DROP CONSTRAINT IF EXISTS quest_tasks_solved_user_id_fkey;
+ALTER TABLE IF EXISTS ONLY public.users_achievements DROP CONSTRAINT IF EXISTS fk_users_user_id_to_users_achievements_user_id;
+ALTER TABLE IF EXISTS ONLY public.user_progress DROP CONSTRAINT IF EXISTS fk_users_user_id_to_user_progress_user_id;
+ALTER TABLE IF EXISTS ONLY public.tasks_solved DROP CONSTRAINT IF EXISTS fk_users_user_id_to_tasks_solved_user_id;
+ALTER TABLE IF EXISTS ONLY public.password_hashes DROP CONSTRAINT IF EXISTS fk_users_user_id_to_password_hashes_user_id;
+ALTER TABLE IF EXISTS ONLY public.tasks_solved DROP CONSTRAINT IF EXISTS fk_tasks_task_global_id_to_tasks_solved_task_global_id;
+ALTER TABLE IF EXISTS ONLY public.users_achievements DROP CONSTRAINT IF EXISTS fk_achievements_achievement_id_to_users_achievements_achievemen;
+DROP INDEX IF EXISTS public.user_events_timestamp_idx;
+DROP INDEX IF EXISTS public.idx_users_quest_user_id;
+DROP INDEX IF EXISTS public.idx_user_events_user;
+DROP INDEX IF EXISTS public.idx_user_events_type;
+DROP INDEX IF EXISTS public.idx_user_events_time;
+DROP INDEX IF EXISTS public.idx_user_events_task;
+DROP INDEX IF EXISTS public.idx_quest_tasks_solved_user;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_6_chunk_user_events_timestamp_idx;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_6_chunk_idx_user_events_user;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_6_chunk_idx_user_events_type;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_6_chunk_idx_user_events_time;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_6_chunk_idx_user_events_task;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_5_chunk_user_events_timestamp_idx;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_5_chunk_idx_user_events_user;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_5_chunk_idx_user_events_type;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_5_chunk_idx_user_events_time;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_5_chunk_idx_user_events_task;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_4_chunk_user_events_timestamp_idx;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_4_chunk_idx_user_events_user;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_4_chunk_idx_user_events_type;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_4_chunk_idx_user_events_time;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_4_chunk_idx_user_events_task;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_3_chunk_user_events_timestamp_idx;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_3_chunk_idx_user_events_user;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_3_chunk_idx_user_events_type;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_3_chunk_idx_user_events_time;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_3_chunk_idx_user_events_task;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_2_chunk_user_events_timestamp_idx;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_2_chunk_idx_user_events_user;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_2_chunk_idx_user_events_type;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_2_chunk_idx_user_events_time;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_2_chunk_idx_user_events_task;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_1_chunk_user_events_timestamp_idx;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_1_chunk_idx_user_events_user;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_1_chunk_idx_user_events_type;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_1_chunk_idx_user_events_time;
+DROP INDEX IF EXISTS _timescaledb_internal._hyper_1_1_chunk_idx_user_events_task;
+ALTER TABLE IF EXISTS ONLY public.users_quest DROP CONSTRAINT IF EXISTS users_quest_pkey;
+ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS users_pkey;
+ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS users_login_key;
+ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS users_email_key;
+ALTER TABLE IF EXISTS ONLY public.users_clues DROP CONSTRAINT IF EXISTS users_clues_pk;
+ALTER TABLE IF EXISTS ONLY public.user_refresh_tokens DROP CONSTRAINT IF EXISTS user_refresh_tokens_refresh_token_key;
+ALTER TABLE IF EXISTS ONLY public.user_refresh_tokens DROP CONSTRAINT IF EXISTS user_refresh_tokens_pk;
+ALTER TABLE IF EXISTS ONLY public.user_progress DROP CONSTRAINT IF EXISTS user_progress_user_id_key;
+ALTER TABLE IF EXISTS ONLY public.user_achievement_progress DROP CONSTRAINT IF EXISTS user_achievement_progress_pk;
+ALTER TABLE IF EXISTS ONLY public.tasks DROP CONSTRAINT IF EXISTS tasks_pkey;
+ALTER TABLE IF EXISTS ONLY public.schema_migrations DROP CONSTRAINT IF EXISTS schema_migrations_version_key;
+ALTER TABLE IF EXISTS ONLY public.schema_migrations DROP CONSTRAINT IF EXISTS schema_migrations_pkey;
+ALTER TABLE IF EXISTS ONLY public.quest_tasks_solved DROP CONSTRAINT IF EXISTS quest_tasks_solved_pkey;
+ALTER TABLE IF EXISTS ONLY public.password_hashes DROP CONSTRAINT IF EXISTS password_hashes_user_id_key;
+ALTER TABLE IF EXISTS ONLY public.achievements DROP CONSTRAINT IF EXISTS achievements_pkey;
+ALTER TABLE IF EXISTS public.user_events ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS public.schema_migrations ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS public.quest_tasks_solved ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_6_chunk ALTER COLUMN payload DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_6_chunk ALTER COLUMN "timestamp" DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_6_chunk ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_5_chunk ALTER COLUMN payload DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_5_chunk ALTER COLUMN "timestamp" DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_5_chunk ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_4_chunk ALTER COLUMN payload DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_4_chunk ALTER COLUMN "timestamp" DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_4_chunk ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_3_chunk ALTER COLUMN payload DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_3_chunk ALTER COLUMN "timestamp" DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_3_chunk ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_2_chunk ALTER COLUMN payload DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_2_chunk ALTER COLUMN "timestamp" DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_2_chunk ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_1_chunk ALTER COLUMN payload DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_1_chunk ALTER COLUMN "timestamp" DROP DEFAULT;
+ALTER TABLE IF EXISTS _timescaledb_internal._hyper_1_1_chunk ALTER COLUMN id DROP DEFAULT;
+DROP TABLE IF EXISTS public.users_quest;
+DROP TABLE IF EXISTS public.users_clues;
+DROP TABLE IF EXISTS public.users_achievements;
+DROP TABLE IF EXISTS public.users;
+DROP SEQUENCE IF EXISTS public.users_user_id_seq;
+DROP TABLE IF EXISTS public.user_refresh_tokens;
+DROP TABLE IF EXISTS public.user_progress;
+DROP SEQUENCE IF EXISTS public.user_events_id_seq;
+DROP TABLE IF EXISTS public.user_achievement_progress;
+DROP TABLE IF EXISTS public.tasks_solved;
+DROP TABLE IF EXISTS public.tasks;
+DROP SEQUENCE IF EXISTS public.tasks_task_global_id_seq;
+DROP SEQUENCE IF EXISTS public.schema_migrations_id_seq;
+DROP TABLE IF EXISTS public.schema_migrations;
+DROP SEQUENCE IF EXISTS public.quest_tasks_solved_id_seq;
+DROP TABLE IF EXISTS public.quest_tasks_solved;
+DROP TABLE IF EXISTS public.password_hashes;
+DROP TABLE IF EXISTS public.achievements;
+DROP SEQUENCE IF EXISTS public.achievements_achievement_id_seq;
+DROP TABLE IF EXISTS _timescaledb_internal._hyper_1_6_chunk;
+DROP TABLE IF EXISTS _timescaledb_internal._hyper_1_5_chunk;
+DROP TABLE IF EXISTS _timescaledb_internal._hyper_1_4_chunk;
+DROP TABLE IF EXISTS _timescaledb_internal._hyper_1_3_chunk;
+DROP TABLE IF EXISTS _timescaledb_internal._hyper_1_2_chunk;
+DROP TABLE IF EXISTS _timescaledb_internal._hyper_1_1_chunk;
+DROP TABLE IF EXISTS public.user_events;
+DROP EXTENSION IF EXISTS timescaledb;
 --
 -- Name: timescaledb; Type: EXTENSION; Schema: -; Owner: -
 --
@@ -51,9 +162,77 @@ CREATE TABLE public.user_events (
 
 ALTER TABLE public.user_events OWNER TO postgres;
 
+--
+-- Name: _hyper_1_1_chunk; Type: TABLE; Schema: _timescaledb_internal; Owner: postgres
+--
 
-SELECT public.create_hypertable('public.user_events', 'timestamp', if_not_exists => TRUE);
+CREATE TABLE _timescaledb_internal._hyper_1_1_chunk (
+    CONSTRAINT constraint_1 CHECK ((("timestamp" >= '2026-09-03 00:00:00+00'::timestamp with time zone) AND ("timestamp" < '2026-09-10 00:00:00+00'::timestamp with time zone)))
+)
+INHERITS (public.user_events);
 
+
+ALTER TABLE _timescaledb_internal._hyper_1_1_chunk OWNER TO postgres;
+
+--
+-- Name: _hyper_1_2_chunk; Type: TABLE; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE TABLE _timescaledb_internal._hyper_1_2_chunk (
+    CONSTRAINT constraint_2 CHECK ((("timestamp" >= '2026-09-10 00:00:00+00'::timestamp with time zone) AND ("timestamp" < '2026-09-17 00:00:00+00'::timestamp with time zone)))
+)
+INHERITS (public.user_events);
+
+
+ALTER TABLE _timescaledb_internal._hyper_1_2_chunk OWNER TO postgres;
+
+--
+-- Name: _hyper_1_3_chunk; Type: TABLE; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE TABLE _timescaledb_internal._hyper_1_3_chunk (
+    CONSTRAINT constraint_3 CHECK ((("timestamp" >= '2026-09-17 00:00:00+00'::timestamp with time zone) AND ("timestamp" < '2026-09-24 00:00:00+00'::timestamp with time zone)))
+)
+INHERITS (public.user_events);
+
+
+ALTER TABLE _timescaledb_internal._hyper_1_3_chunk OWNER TO postgres;
+
+--
+-- Name: _hyper_1_4_chunk; Type: TABLE; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE TABLE _timescaledb_internal._hyper_1_4_chunk (
+    CONSTRAINT constraint_4 CHECK ((("timestamp" >= '2026-09-24 00:00:00+00'::timestamp with time zone) AND ("timestamp" < '2026-10-01 00:00:00+00'::timestamp with time zone)))
+)
+INHERITS (public.user_events);
+
+
+ALTER TABLE _timescaledb_internal._hyper_1_4_chunk OWNER TO postgres;
+
+--
+-- Name: _hyper_1_5_chunk; Type: TABLE; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE TABLE _timescaledb_internal._hyper_1_5_chunk (
+    CONSTRAINT constraint_5 CHECK ((("timestamp" >= '2026-10-01 00:00:00+00'::timestamp with time zone) AND ("timestamp" < '2026-10-08 00:00:00+00'::timestamp with time zone)))
+)
+INHERITS (public.user_events);
+
+
+ALTER TABLE _timescaledb_internal._hyper_1_5_chunk OWNER TO postgres;
+
+--
+-- Name: _hyper_1_6_chunk; Type: TABLE; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE TABLE _timescaledb_internal._hyper_1_6_chunk (
+    CONSTRAINT constraint_6 CHECK ((("timestamp" >= '2026-10-08 00:00:00+00'::timestamp with time zone) AND ("timestamp" < '2026-10-15 00:00:00+00'::timestamp with time zone)))
+)
+INHERITS (public.user_events);
+
+
+ALTER TABLE _timescaledb_internal._hyper_1_6_chunk OWNER TO postgres;
 
 --
 -- Name: achievements_achievement_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -98,6 +277,79 @@ CREATE TABLE public.password_hashes (
 
 
 ALTER TABLE public.password_hashes OWNER TO postgres;
+
+--
+-- Name: quest_tasks_solved; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.quest_tasks_solved (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    quest_id character varying NOT NULL,
+    scene_id character varying NOT NULL,
+    user_query text,
+    created_at timestamp with time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.quest_tasks_solved OWNER TO postgres;
+
+--
+-- Name: quest_tasks_solved_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.quest_tasks_solved_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.quest_tasks_solved_id_seq OWNER TO postgres;
+
+--
+-- Name: quest_tasks_solved_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.quest_tasks_solved_id_seq OWNED BY public.quest_tasks_solved.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.schema_migrations (
+    id integer NOT NULL,
+    version character varying(255) NOT NULL,
+    applied_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.schema_migrations OWNER TO postgres;
+
+--
+-- Name: schema_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.schema_migrations_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.schema_migrations_id_seq OWNER TO postgres;
+
+--
+-- Name: schema_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.schema_migrations_id_seq OWNED BY public.schema_migrations.id;
+
 
 --
 -- Name: tasks_task_global_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -278,2159 +530,324 @@ CREATE TABLE public.users_quest (
 ALTER TABLE public.users_quest OWNER TO postgres;
 
 --
+-- Name: _hyper_1_1_chunk id; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_1_chunk ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
+
+
+--
+-- Name: _hyper_1_1_chunk timestamp; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_1_chunk ALTER COLUMN "timestamp" SET DEFAULT now();
+
+
+--
+-- Name: _hyper_1_1_chunk payload; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_1_chunk ALTER COLUMN payload SET DEFAULT '{}'::jsonb;
+
+
+--
+-- Name: _hyper_1_2_chunk id; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_2_chunk ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
+
+
+--
+-- Name: _hyper_1_2_chunk timestamp; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_2_chunk ALTER COLUMN "timestamp" SET DEFAULT now();
+
+
+--
+-- Name: _hyper_1_2_chunk payload; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_2_chunk ALTER COLUMN payload SET DEFAULT '{}'::jsonb;
+
+
+--
+-- Name: _hyper_1_3_chunk id; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_3_chunk ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
+
+
+--
+-- Name: _hyper_1_3_chunk timestamp; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_3_chunk ALTER COLUMN "timestamp" SET DEFAULT now();
+
+
+--
+-- Name: _hyper_1_3_chunk payload; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_3_chunk ALTER COLUMN payload SET DEFAULT '{}'::jsonb;
+
+
+--
+-- Name: _hyper_1_4_chunk id; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_4_chunk ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
+
+
+--
+-- Name: _hyper_1_4_chunk timestamp; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_4_chunk ALTER COLUMN "timestamp" SET DEFAULT now();
+
+
+--
+-- Name: _hyper_1_4_chunk payload; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_4_chunk ALTER COLUMN payload SET DEFAULT '{}'::jsonb;
+
+
+--
+-- Name: _hyper_1_5_chunk id; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_5_chunk ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
+
+
+--
+-- Name: _hyper_1_5_chunk timestamp; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_5_chunk ALTER COLUMN "timestamp" SET DEFAULT now();
+
+
+--
+-- Name: _hyper_1_5_chunk payload; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_5_chunk ALTER COLUMN payload SET DEFAULT '{}'::jsonb;
+
+
+--
+-- Name: _hyper_1_6_chunk id; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_6_chunk ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
+
+
+--
+-- Name: _hyper_1_6_chunk timestamp; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_6_chunk ALTER COLUMN "timestamp" SET DEFAULT now();
+
+
+--
+-- Name: _hyper_1_6_chunk payload; Type: DEFAULT; Schema: _timescaledb_internal; Owner: postgres
+--
+
+ALTER TABLE ONLY _timescaledb_internal._hyper_1_6_chunk ALTER COLUMN payload SET DEFAULT '{}'::jsonb;
+
+
+--
+-- Name: quest_tasks_solved id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.quest_tasks_solved ALTER COLUMN id SET DEFAULT nextval('public.quest_tasks_solved_id_seq'::regclass);
+
+
+--
+-- Name: schema_migrations id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schema_migrations ALTER COLUMN id SET DEFAULT nextval('public.schema_migrations_id_seq'::regclass);
+
+
+--
 -- Name: user_events id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE public.user_events ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
+ALTER TABLE ONLY public.user_events ALTER COLUMN id SET DEFAULT nextval('public.user_events_id_seq'::regclass);
 
 
 --
--- Data for Name: achievements; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: hypertable; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
 --
 
-COPY public.achievements (achievement_id, category_name, icon, name, description, historical_info, tag, required_count) FROM stdin;
-6	Техническое мастерство	🧩	CTE Специалист	Решить 3 задачи с использованием рекурсивных CTE	Рекурсивные операции, как партизанские сети, требуют глубокого планирования	cte	3
-3	Боевые достижения	🗺	Опытный командир	Решить 20 задач нормальной сложности	Как командующие фронтами, вы учитесь принимать решения под давлением	medium	20
-8	Исторические подвиги	🏆	Блокадный Ленинград	Решить 5 задач на логистику и распределение ресурсов	125 граммов хлеба в день — так жил Ленинград. Ваши расчеты спасают жизни!	supply	5
-5	Техническое мастерство	🔍	Мастер оконных функций	Использовать RANK(), LAG(), и SUM() OVER() в 5 разных задачах	Анализ данных — это современная артиллерия. Точный расчет решает исход битвы!	window	5
-7	Исторические подвиги	🏙	Защитник Сталинграда	Решить все задачи, связанные со Сталинградской битвой	200 дней мужества. Вы защитили город, как это делали герои 1943 года!	stalingrad	5
-1	Боевые достижения	🎖	Первая кровь	Решить первую задачу любого уровня	Первый шаг к победе - самый важный. Так начинался путь многих героев ВОВ	first_any_level	1
-10	Боевые достижения	📈	Стратег Победы	Решить 10 задач, связанных с анализом эффективности военных операций	Великие полководцы, как Жуков и Рокоссовский, строили победы на точных расчётах. Теперь и ваш анализ ведёт к успеху!	efficiency	10
-4	Боевые достижения	🏅	Ветеран SQL-фронта	Решить 15 сложных задач	Сложные миссии требуют мастерства. Вы достойны звания ветерана!	hard	15
-2	Боевые достижения	📜	Стратег-новичок	Решить 10 легких задач	В 1941 году советские солдаты учились воевать в тяжелейших условиях. Ты на верном пути!	easy	10
-9	Исторические подвиги	🚩	Освободитель Берлина	Завершить все миссии финального этапа войны	Знамя Победы над Рейхстагом — ваш код водружает его снова!	final	15
+COPY _timescaledb_catalog.hypertable (id, schema_name, table_name, associated_schema_name, associated_table_prefix, num_dimensions, chunk_sizing_func_schema, chunk_sizing_func_name, chunk_target_size, compression_state, compressed_hypertable_id, status) FROM stdin;
+1	public	user_events	_timescaledb_internal	_hyper_1	1	_timescaledb_functions	calculate_chunk_interval	0	0	\N	0
 \.
 
 
 --
--- Data for Name: password_hashes; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: bgw_job; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
 --
 
-COPY public.password_hashes (user_id, password_hash) FROM stdin;
-1	$2b$12$cnMS3rEBgZVT8tKYwBlOwOmSbp7MHcA32LHD84irB9pYAlo9fcUcK
-2	$2b$12$e6elfqyCGMA9ucTtzjsYU.KZhnFjRFxrj3D/9BBMqrwpyOBgBgSnC
-3	$2b$12$ZZaLXfG9vsCsDeIjqWT6fuC4zl5UcWK668dy8FxiGtVOA4dhDeHWC
-4	$2b$12$ZCdyF41r6Hi4FvPCGXgoau367FPGiBoIfAwPd8d4NiAYMnloS4kDW
-5	$2b$12$5qwtZEoHl3368Pll/Q0NiOXwZfidStzlQ3mxMlIfeHotog2CX0owS
-6	$2b$12$kNhCNUiXsAkiOglvhbV5Ueuliq4KF1G.xedgHwWfsb08kCNyzvnBu
-7	$2b$12$FCitfRhbZWIll/aynrNeF.X/2qdeyQJ5pZeC7U/qDkCPVFVjBjfgy
-8	$2b$12$PkgyI5qWzXoswdlGGrWCh.NcxiEx8zyEspH0Vy.rA0AcLE6r1mATK
-9	$2b$12$2OPTyD3jawUhc.8n6pNJNOeeMDidOMZ7dtYJU/wdEDplkm10SZItG
-10	$2b$12$l2AXW9WgI5hvnsSKVTiawuriRq/avLxWmJmM0kYLbhK2BDbbbl91q
-11	$2b$12$SK6llI73AOqAiM7tgzvTFeLSHsIJSipvPHS.CjslZvJikUCbCUSMG
-12	$2b$12$JVe2tLIbNLt3lmXsmuUaSes0HDswx4EM/tSZ.ONjN6vMye32iZyay
-13	$2b$12$NYFTis8hjWXeqkZjZH8QsebJJZ4Htt6POKT0.2mDXwsOEHyl2Akg2
-14	$2b$12$KocSStb2d8ZV2GoTOF1pMeUJK1ZjEcPYfRh6l0LydR02j/LX1.5le
-15	$2b$12$yr3B29IpMMXAcXBbJbfLBu.cHeqy5r5IQyjLxp2soGv8atGwuqoma
-16	$2b$12$8iOJ/MeLJ03qKEmIkaj5refuUTkijEXCFoSOXIvVr.2.hCJk8SET6
-17	$2b$12$k97uI9eZCDhwwn99oD5XU.G/GAVDi.ikLXX/..E2z/Ds1RSJ2YPi6
-18	$2b$12$1e70ndzl56wCqpkuvqprE.5Q8K4MkLADFF9p9cMN1r.Li1DPrLSia
-19	$2b$12$BPNmsnYie8jNoIZnPusUrOmLLf3JMScAnQS0D/sE0lOBUr3BiuXW2
-20	$2b$12$4s0VEVwzdDMoPLG2Ci/d6uJs7qVeAdMVf1FH1eTCh/NMXZcxAgXrO
-21	$2b$12$BaHZ7wG1uRlRCYcHhuGpfObNhgBf5GY5Cv1Do4mPNx1yLCebIgI7C
-22	$2b$12$dYN.qinxYCxvwACcMcPXWutBg4bgYGpVizTqmbVyMeXa5QDWXhHTS
-23	$2b$12$GfN9aKugktv6CDEjZU4K8.OdW7WMtZpldGe4A1XhFLQ6r4M7lGQHK
-24	$2b$12$k7KZwbCq0QRUqVJep/XdRO58IAexEkxtJmi/VxwKtyle3TY1ly0Ny
-25	$2b$12$.U3gt7Cgt/HLnqBQrJUymOnEJpK6Tj.zVVc1L/p7E2VOT5KLUSI6C
-26	$2b$12$434ZTWFAP3J.8.OygXbYe.mu9X0LoXgboyvK9wl/X.nizTisxrt1S
-27	$2b$12$adXLiKN91GlzfFCvWrilO.k1Khu4AtS2EKgDDljwOFc2tnrAaOY1a
-28	$2b$12$EDBzqEAYdDQy.QwzZl9RZeLfpFn6eBwuPRW/B3ZMNZs.GpHHN44W.
-29	$2b$12$7RYzy35PTmLCl6CQ8oLNiuoScgSOgmXuKbwplt7d2ZxJUDT.Gk0Vu
-30	$2b$12$S24IXgaHm6fzltwoWSy.seznNSbDh1iR9sU9SDa3WxtTMt8s/Y9jC
-31	$2b$12$F6VXjHbowpuJ2WdbsRm9bOFWJZ4tUb6TP1.6OVBoX2UZeDMIdvZae
-32	$2b$12$Yvl/mtIGzBd7goCB.agUk.yThMqVRXOMmzPWkKeAKU9LUNIQScFpu
-33	$2b$12$b9rv0M1ouBM02TT2eQlEMOg1Eh8v4xiTHu2eiHkfMgUYIzvf/axX.
-34	$2b$12$ASKaNCHIeHVQo5W9H8DBhufm2W/2fa22gdVdj.LKZP2nu1Pyj70z.
-35	$2b$12$j8DrdQqCtSWVFG6XoObX8u1URprCIwPn5ISilVMIByzwmQD8k51Ea
-36	$2b$12$nUbBAr9e9L4Q21ZAdH.b9O2Ap0jegjWpNwo3tHGvXjYpRQGq4EVTC
-37	$2b$12$Rbu5o5yNgWRwRbGMawZwlOckWSOTNFgVttVKSaEFuug9EpS/m1rOS
-38	$2b$12$fU1RDJ41vGdj6p1fr1AaRuaWWuUkiCbWWBCJCjorVNQbS0rvh9Bna
-39	$2b$12$qz7D/yFYSZwlGLbQPHgUd.0Yh5gyKeMv3oE9YRMtmz/8vSrYYUOjG
-40	$2b$12$zNR5kgmAd3VbzTgdX3qog.qBFKz5x2I/TbrdIJnMsYXOOzzR4g5IK
-41	$2b$12$Bz0xE1j92kmfFkMOz6kecOx5C1XwEBzyIHH4AGdeO/SphiE9oXH1S
-42	$2b$12$PxNK/ca4gYjVYE4fDL2Jl.XTdrozClad5/HfJYbagTDaFGVmfCe7W
-43	$2b$12$fpkf5ZXssLYZHKGOJcVd8.4pRGefq4upkSR1g2yBdOXxRlpKBXaUi
-44	$2b$12$hWWVagALwEKzVHxthfkth.y0Ef1Dxown2vFAJ22H5e5Ed0L0D2bi.
-45	$2b$12$Xoa.W4w6YFglGhYYGh/DauIXgLMYG62AVNJ1sk67aQOAQULDuNT.u
-46	$2b$12$LLplPZYabI/P2EGqcQMHf.AUqBz6/jd533e6cIZq3xUNe/zh0btkO
-47	$2b$12$VwFkzIeBmA1kTnxwAwHJmelbZQNgaKxN14MOykmXeJOFxVJ2zGjeO
-48	$2b$12$gt7TmM6trtujPCLxiaVvbOfoC6IohhvTl6wrCpA2TuBTPYN6iVHEa
-49	$2b$12$8gtKg1kP2UJHkKonLvNaruQoWYSzxy5hBPQOlqVjBIWueF5OvdIJm
-50	$2b$12$4Ch.ljrCElSXVebPA.Qg6O7ufGd5SeNcqYvIrPFX2D.FxZV1LNkMW
-51	$2b$12$Z19spu0VfWD5oPE.Kj7k7uzuqCbLX5.4ucYn4/LYGDczZ8oNvGX3O
-52	$2b$12$AM0B7DSVVfRlzRcuSPl18exW3rD7MJtFL02ftSV35YbGlc5fjYHNm
-53	$2b$12$CegH44N8pUy/ndUtOmhs.OS5lptTYRZBTtAjqt27pC6msBLjYkZ.y
-55	$2b$12$8pZiGHw2jJQyJ71OhKnMF.DfN5dSXuw2LclrRB/OCeWBHdf.yey8S
-62	$2b$12$MH8Asdey/y3sT9gAqn7b/.1zgWk5.i3u2AiMjgz9vMjaaGSvnQOyC
-63	$2b$12$le9XD/o5qNLz8yUvGLAvnuhP/pfGmgxjsAbU7s2ApV1s/i9nLiXnO
-64	$2b$12$rCre6rmSI.Vei8weSMuvO.CbsQxRhhJYC2VHzGg0ec6tzDAQa2TqC
-65	$2b$12$W0LD5P69paPPFu4Eg.lkN.qYxa/zPyf8J3/j/OK3MQM4fCiomu4H.
-66	$2b$12$yGHwe3Wy4Z6a1TQWVDttPOVCahM8Ngi58IrJXXOyNcTKSE8uznLxG
-67	$2b$12$T.m1DE0GwhpL6XuoEAhzs.BQpK2UAIw2ve3yDoXY29mshw7GKdCr6
-68	$2b$12$vfHWpuci1Wt2ylKHOyJRfuy38tXwFuRIS/QmhP3xLxb4TnZ1dyNsi
-69	$2b$12$58oBekv88XnRmO3NxfGsT.aFePEclLbwikJvpn.fqAS00GBQXfsjW
-70	$2b$12$8eSBNLWzcDo.P0jJNrns/u47vEOYuWz3eAxpUBuIcAgm154kQuyQm
-71	$2b$12$JfdlREZwYLoePuJN7g62c./.JWc8yEzCYsd2aLUkS7YIGPbCGN6ty
-72	$2b$12$n2zdTFoFIAgcnt5Bc0LheuQ7vkTlC4q3ZL1nukpqD.CyT9KPsD06a
-73	$2b$12$cNXv.LZD5g4YQzCFis7JK.ECvSaOc4bSlCdm5KJoZm4946l8Mg1X.
-74	$2b$12$KTnPcf079gfYyMcIjpPlbeweZwzOaGat.aZEPB8DojbGKXw1ZoDd.
-75	$2b$12$x0aHjLk9fPCvIw5ojzEks.WY.kBjDY9fDxNmbmRlbGy.rROIoA5u6
-76	$2b$12$JigEOBJ9ECCXLZvVbaYnZuLlxvXCGIybXezTumu7Ddb4Ok/84j1Om
-77	$2b$12$DBeVhoyzq2azHcBoy8VR5.QSKEjARSGDU4iL3/5K1Xa.QUvB1RM56
-78	$2b$12$902oiIEsDuPv0TgzK.o6uemb51SifCc4UQOHYTKKsgiF/x5bnfcAy
-79	$2b$12$KjIiqW65rQvIZkx/JRVEyeIzkNCME4ieZkHAODCAEO5DMB0nP30cq
-80	$2b$12$jBsfxsNxVO4Ez1h4Md6Mp.vGwSYNXGLF/KaZiaao5EQK3FRR0088m
-81	$2b$12$HObYCiJRKVYl5YNiD0.dnO4xNPV9IeTdGqc2rN7158Gy1yEpO2mKm
-132	$2b$12$zhTtN7THJ5qgHjQeddqlyO1jxjna/rwzml1RiqM5Gg3cbehsEva0K
+COPY _timescaledb_catalog.bgw_job (id, application_name, schedule_interval, max_runtime, max_retries, retry_period, proc_schema, proc_name, owner, scheduled, fixed_schedule, initial_start, hypertable_id, config, check_schema, check_name, timezone) FROM stdin;
 \.
 
 
 --
--- Data for Name: tasks; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: chunk; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
 --
 
-INSERT INTO public.tasks VALUES (1, 0, 1, 'Архив личного состава', 'Составьте список всех военнослужащих с указанием их полных имен и годов рождения. Это необходимо для анализа возрастного состава армии и планирования ресурсов', 'Используйте таблицу `soldier`, выбрав два ключевых столбца.', NULL, '{"data": [["Иванов Алексей Петрович", 1923], ["Смирнова Анна Васильевна", 1925], ["Петров Дмитрий Иванович", 1918], ["Козлов Николай Семёнович", 1920], ["Фёдорова Мария Ивановна", 1922], ["Жуков Андрей Григорьевич", 1915], ["Павлов Яков Фёдорович", 1917], ["Зайцева Людмила Михайловна", 1924], ["Громов Михаил Сергеевич", 1919], ["Орлова Вера Павловна", 1921], ["Новиков Александр Иванович", 1924], ["Васнецова Татьяна Дмитриевна", 1923], ["Кузнецов Пётр Васильевич", 1916], ["Белов Алексей Николаевич", 1925], ["Соколова Ольга Ивановна", 1920], ["Морозов Иван Кузьмич", 1914], ["Волкова Елена Сергеевна", 1926], ["Ткаченко Григорий Петрович", 1927], ["Беляев Павел Дмитриевич", 1912], ["Семёнова Валентина Михайловна", 1920], ["Ковалёв Сергей Николаевич", 1925], ["Мельникова Галина Ивановна", 1924], ["Фёдоров Игорь Васильевич", 1913], ["Горбачёв Алексей Дмитриевич", 1926], ["Сидорова Екатерина Петровна", 1921], ["Смирнов Василий Иванович", 1911], ["Крылова Надежда Фёдоровна", 1925], ["Орлов Денис Сергеевич", 1927], ["Жукова Елена Викторовна", 1923], ["Гришин Алексей Петрович", 1918], ["Ткаченко Иван Григорьевич", 1920], ["Воронцова Лидия Павловна", 1924], ["Жуковский Виктор Михайлович", 1915], ["Морозова Анна Сергеевна", 1922], ["Кузнецов Артём Игоревич", 1926], ["Соколовская Надежда Викторовна", 1923], ["Белов Дмитрий Николаевич", 1917], ["Громова Екатерина Ивановна", 1925], ["Фролов Павел Сергеевич", 1928], ["Ковалёва Ольга Дмитриевна", 1921]], "columns": ["full_name", "birth_year"], "row_count": 40}', '{first_any_level,supply,easy}');
-INSERT INTO public.tasks VALUES (2, 0, 2, 'География сражений', 'Определите все боевые операции, проведенные в Сталинграде. Результаты помогут оценить стратегическую значимость этого региона', 'Фильтрация по локации в таблице `battles` с использованием точного значения', NULL, '{"data": [["Сталинградская битва"]], "columns": ["battle_name"], "row_count": 1}', '{stalingrad,easy}');
-INSERT INTO public.tasks VALUES (4, 0, 3, 'Оптимизация численности', 'Найдите количество подразделений, где численность личного состава людей не превышает 500 человек. Вычисленный столбец назовите answer. Это критично для перераспределения сил между частями', 'Используйте вложенный запрос с группировкой и агрегатной функцией для подсчета солдат', NULL, '{"data": [[29]], "columns": ["answer"], "row_count": 1}', '{easy}');
-INSERT INTO public.tasks VALUES (5, 0, 4, 'Хроники войны', 'Выведите список всех сражений с их названиями, датами начала и окончания и местоположениями, отсортированный в хронологическом порядке по дате начала. Это ключ к пониманию этапов войны. Примечание: в результате допустимо дублирование данных.', 'Сортировка по дате в таблице `battle` с указанием направления', NULL, '{"data": [["Оборона Брестской крепости", "1941-06-22", "1941-06-29", "Брест"], ["Оборона Брестской крепости", "1941-06-22", "1941-06-29", "Брест"], ["Оборона Заполярья", "1941-06-29", "1944-10-01", "Мурманск"], ["Смоленское сражение", "1941-07-10", "1941-09-10", "Смоленск"], ["Таллинский переход", "1941-08-27", "1941-08-30", "Балтийское море"], ["Блокада Ленинграда", "1941-09-08", "1944-01-27", "Ленинград"], ["Битва за Москву", "1941-09-30", "1942-04-20", "Москва"], ["Оборона Тулы", "1941-10-24", "1941-12-05", "Тула"], ["Оборона Севастополя", "1941-10-30", "1942-07-04", "Севастополь"], ["Ржевская битва", "1942-01-08", "1943-03-31", "Ржев"], ["Демянская операция", "1942-02-20", "1942-05-20", "Новгородская обл."], ["Харьковская операция", "1942-05-12", "1942-05-28", "Харьков"], ["Битва за Воронеж", "1942-06-28", "1943-01-25", "Воронеж"], ["Сталинградская битва", "1942-07-17", "1943-02-02", "Сталинград"], ["Битва за Кавказ", "1942-07-25", "1943-10-09", "Кавказ"], ["Прорыв блокады Ленинграда", "1943-01-12", "1943-01-30", "Ленинград"], ["Курская битва", "1943-07-05", "1943-08-23", "Курск"], ["Битва за Днепр", "1943-08-26", "1943-12-23", "Днепр"], ["Керченско-Эльтигенская операция", "1943-10-31", "1943-12-11", "Керчь"], ["Корсунь-Шевченковская операция", "1944-01-24", "1944-02-17", "Украина"], ["Операция \"Багратион\"", "1944-06-23", "1944-08-29", "Белоруссия"], ["Битва при Дебрецене", "1944-10-06", "1944-10-29", "Венгрия"], ["Будапештская операция", "1944-10-29", "1945-02-13", "Венгрия"], ["Висло-Одерская операция", "1945-01-12", "1945-02-03", "Польша"], ["Восточно-Прусская операция", "1945-01-13", "1945-04-25", "Кёнигсберг"], ["Балатонская операция", "1945-03-06", "1945-03-15", "Венгрия"], ["Берлинская операция", "1945-04-16", "1945-05-08", "Берлин"], ["Битва за Берлин", "1945-04-16", "1945-05-08", "Берлин"], ["Пражская операция", "1945-05-06", "1945-05-11", "Прага"], ["Маньчжурская операция", "1945-08-09", "1945-09-02", "Маньчжурия"]], "columns": ["battle_name", "start_date", "end_date", "location"], "row_count": 30}', '{easy}');
-INSERT INTO public.tasks VALUES (6, 0, 5, 'Галерея героев', 'Создайте список солдат и наград, которые они получили. Это основа для формирования мемориальных архивов', 'Объединение трех таблиц: `soldier`, `soldier_medal` и `medal` через INNER JOIN', NULL, '{"data": [["Павлов Яков Фёдорович", "Герой Советского Союза"], ["Зайцева Людмила Михайловна", "Медаль \"За отвагу\""], ["Жуков Андрей Григорьевич", "Орден Красной Звезды"], ["Громов Михаил Сергеевич", "Орден Отечественной войны"], ["Орлова Вера Павловна", "Орден Славы"], ["Новиков Александр Иванович", "Орден Красной Звезды"], ["Васнецова Татьяна Дмитриевна", "Медаль \"Партизану Отечественной войны\""], ["Кузнецов Пётр Васильевич", "Герой Советского Союза"], ["Белов Алексей Николаевич", "Медаль \"За оборону Сталинграда\""], ["Соколова Ольга Ивановна", "Медаль \"За оборону Москвы\""], ["Иванов Алексей Петрович", "Медаль \"За отвагу\""], ["Смирнова Анна Васильевна", "Орден Отечественной войны"], ["Петров Дмитрий Иванович", "Медаль \"За взятие Берлина\""]], "columns": ["full_name", "medal_name"], "row_count": 13}', '{easy}');
-INSERT INTO public.tasks VALUES (7, 0, 6, 'Семейная история', 'Выявите всех солдат с фамилией, начинающейся на «Иванов». Возможно, это представители одной семьи', 'Используйте оператор `LIKE` с шаблоном для поиска по началу строки', NULL, '{"data": [["Иванов Алексей Петрович"]], "columns": ["full_name"], "row_count": 1}', '{easy}');
-INSERT INTO public.tasks VALUES (8, 0, 7, 'Элитные подразделения', 'Найдите все воинские части(подразделения), в названии которых встречается слово «гвардейская» (в любом регистре). Такие части часто были элитой армии', 'Регистронезависимый поиск через `ILIKE`', NULL, '{"data": [["1-я гвардейская танковая армия"], ["7-я гвардейская миномётная дивизия"], ["8-я гвардейская армия"]], "columns": ["unit_name"], "row_count": 3}', '{easy}');
-INSERT INTO public.tasks VALUES (9, 0, 8, 'Артиллерийский учет', 'Составьте список снаряжения, в названии которого есть «пушка». Это поможет оценить наличие тяжелого вооружения', 'Используйте POSIX-оператор `~` для поиска по регулярному выражению', 'SELECT item_name FROM equipment WHERE item_name ~ ''пушка'';', '{"data": [["76-мм дивизионная пушка ЗИС-3"]], "columns": ["item_name"], "row_count": 1}', '{easy,supply}');
-INSERT INTO public.tasks VALUES (10, 0, 9, 'Отцовские корни', 'Найдите солдат с отчеством «Петрович» или «Иванович». Данные могут быть полезны для генеалогических исследований', 'Примените POSIX-оператор `|` для выбора одного из двух вариантов', 'SELECT full_name FROM soldier WHERE full_name ~ ''(Петрович|Иванович)$'';', '{"data": [["Иванов Алексей Петрович"], ["Петров Дмитрий Иванович"], ["Новиков Александр Иванович"], ["Ткаченко Григорий Петрович"], ["Смирнов Василий Иванович"], ["Гришин Алексей Петрович"]], "columns": ["full_name"], "row_count": 6}', '{easy}');
-INSERT INTO public.tasks VALUES (11, 0, 10, 'Исключение стрелковых частей', 'Выведите названия подразделений, не относящихся к стрелковым. Это важно для анализа структуры войск', 'Используйте `NOT LIKE` для исключения определенного типа частей', 'SELECT unit_name FROM military_unit WHERE unit_type NOT LIKE ''%танковая%'';', '{"data": [["62-я армия"], ["1-я гвардейская танковая армия"], ["16-я воздушная армия"], ["7-я гвардейская миномётная дивизия"], ["2-я ударная армия"], ["8-я гвардейская армия"], ["3-я воздушная армия"], ["14-я отдельная штрафная рота"], ["1-я морская бригада"], ["Отдельная медико-санитарная рота"], ["88-й отдельный лыжный батальон"], ["101-й полк НКВД"], ["369-й отдельный батальон морской пехоты"], ["1-й чехословацкий отдельный батальон"], ["585-й женский авиаполк"], ["28-я дивизия народного ополчения"], ["Отдельный отряд собак-истребителей танков"], ["37-й гвардейский миномётный полк"], ["Отдельный батальон связи №45"], ["225-й отдельный инженерный батальон"], ["18-я дивизия СС \"Хорст Вессель\""], ["101-й учебный полк"], ["1-й отдельный чехословацкий батальон"], ["46-й гвардейский ночной бомбардировочный полк"], ["101-й инженерно-сапёрный батальон"], ["Отдельный отряд собак-миноискателей"]], "columns": ["unit_name"], "row_count": 26}', '{easy}');
-INSERT INTO public.tasks VALUES (13, 0, 12, 'Тип операции', 'Выявите бои, в названии которых есть слова «освобождение» или «оборона». Это поможет классифицировать сражения по их целям', 'Примените POSIX-оператор `|` для поиска по двум ключевым словам', 'SELECT battle_name FROM battle WHERE battle_name ~ ''(Освобождение|Оборона)'';', '{"data": [["Оборона Брестской крепости"], ["Оборона Севастополя"], ["Оборона Заполярья"], ["Оборона Брестской крепости"], ["Оборона Тулы"]], "columns": ["battle_name"], "row_count": 5}', '{easy}');
-INSERT INTO public.tasks VALUES (12, 0, 11, 'Короткие названия', 'Найдите снаряжение, название которого состоит ровно из 4 символов. Возможно, это кодированные обозначения', 'Используйте `LIKE` с пятью символами `_`', NULL, '{"data": [["Т-34"], ["Ил-2"], ["М-31"], ["ИС-2"], ["ПТРД"]], "columns": ["item_name"], "row_count": 5}', '{easy}');
-INSERT INTO public.tasks VALUES (15, 0, 14, 'Средний возраст победителей', 'Рассчитайте средний возраст солдат на момент окончания войны (1945 год). Назовите столбец average_age. Это ключевой показатель для демографического анализа', 'Используйте арифметические операции с `AVG` и `birth_year`', NULL, '{"data": [[23.875]], "columns": ["average_age"], "row_count": 1}', '{easy}');
-INSERT INTO public.tasks VALUES (41, 1, 9, 'Логистика Сталинградского фронта', 'Рассчитайте объем снаряжения на одного солдата в Сталинграде за период обороны. Это покажет, насколько войска были обеспечены ресурсами', 'Используйте `ROUND` и арифметические операции с группировкой по типам снаряжения', NULL, '{"data": [["артиллерия", 72, "24.00"]], "columns": ["equipment_type", "total", "per_soldier"], "row_count": 1}', '{supply,stalingrad,medium}');
-INSERT INTO public.tasks VALUES (3, 0, 15, 'Логистика вооружений', 'Определите общее количество снаряжения каждого типа. Назовите вычисленное поле "total". Это основа для оценки обеспеченности войск', 'Группировка по типу снаряжения с применением `SUM`', NULL, '{"data": [["авиабомбы", 3200], ["боеприпасы", 310000], ["артиллерия", 24], ["миномёты", 2268], ["противотанковые", 68], ["связь", 15], ["медицина", 1330], ["самолёты", 45], ["инженерное", 850], ["реактивные снаряды", 1500], ["оружие", 1200], ["танки", 100]], "columns": ["equipment_type", "total"], "row_count": 12}', '{window,easy}');
-INSERT INTO public.tasks VALUES (16, 0, 16, 'История формирования', 'Найдите самую раннюю и позднюю даты создания воинских частей. Это отразит этапы развития армии', 'Используйте агрегатные функции `MIN` и `MAX` для дат', NULL, '{"data": [["1939-04-20", "1944-01-10"]], "columns": ["min", "max"], "row_count": 1}', '{easy}');
-INSERT INTO public.tasks VALUES (17, 0, 17, 'Идентификация званий', 'Создайте строку, объединяющую имя солдата и его звание в формате "ФИО (звание)". Назовите получившееся поле soldier_info. Это упростит работу с архивными записями', 'Конкатенация строк с использованием `||`', NULL, '{"data": [["Иванов Алексей Петрович (рядовой)"], ["Смирнова Анна Васильевна (медсестра)"], ["Петров Дмитрий Иванович (сержант)"], ["Козлов Николай Семёнович (лейтенант)"], ["Фёдорова Мария Ивановна (санитар)"], ["Жуков Андрей Григорьевич (капитан)"], ["Павлов Яков Фёдорович (сержант)"], ["Зайцева Людмила Михайловна (снайпер)"], ["Громов Михаил Сергеевич (старшина)"], ["Орлова Вера Павловна (радист)"], ["Новиков Александр Иванович (ефрейтор)"], ["Васнецова Татьяна Дмитриевна (разведчик)"], ["Кузнецов Пётр Васильевич (майор)"], ["Белов Алексей Николаевич (рядовой)"], ["Соколова Ольга Ивановна (хирург)"], ["Морозов Иван Кузьмич (полковник)"], ["Волкова Елена Сергеевна (зенитчик)"], ["Ткаченко Григорий Петрович (рядовой)"], ["Беляев Павел Дмитриевич (подполковник)"], ["Семёнова Валентина Михайловна (связист)"], ["Ковалёв Сергей Николаевич (лейтенант)"], ["Мельникова Галина Ивановна (снайпер)"], ["Фёдоров Игорь Васильевич (полковник)"], ["Горбачёв Алексей Дмитриевич (рядовой)"], ["Сидорова Екатерина Петровна (радист)"], ["Смирнов Василий Иванович (генерал-майор)"], ["Крылова Надежда Фёдоровна (санитар)"], ["Орлов Денис Сергеевич (рядовой)"], ["Жукова Елена Викторовна (радист)"], ["Гришин Алексей Петрович (капитан)"], ["Ткаченко Иван Григорьевич (старший сержант)"], ["Воронцова Лидия Павловна (снайпер)"], ["Жуковский Виктор Михайлович (полковник)"], ["Морозова Анна Сергеевна (радист)"], ["Кузнецов Артём Игоревич (рядовой)"], ["Соколовская Надежда Викторовна (хирург)"], ["Белов Дмитрий Николаевич (капитан)"], ["Громова Екатерина Ивановна (зенитчик)"], ["Фролов Павел Сергеевич (рядовой)"], ["Ковалёва Ольга Дмитриевна (разведчик)"]], "columns": ["soldier_info"], "row_count": 40}', '{easy}');
-INSERT INTO public.tasks VALUES (18, 0, 18, 'География призыва', 'Определите количество уникальных городов, откуда призывались солдаты. Это покажет масштаб мобилизации', 'Используйте `COUNT(DISTINCT ...)` для столбца с городами', NULL, '{"data": [[22]], "columns": ["count"], "row_count": 1}', '{easy}');
-INSERT INTO public.tasks VALUES (19, 0, 19, 'Эффективность подразделений', 'Рассчитайте среднюю боевую эффективность для каждого типа частей. Вычисленное значение назовите avg_efficiency. Результат выведите в алфавитном порядке. Это поможет оценить их вклад в победу', 'Группировка по `unit_type` с функцией `AVG`', NULL, '{"data": [["авиация", 91.175], ["инженерные войска", 89.6], ["лыжные войска", 73.9], ["медицинская", 91.7], ["морская пехота", 85.65], ["общевойсковая", 83.75], ["пехота", 83.0125], ["противник", 88.1], ["реактивная артиллерия", 93.5], ["резерв", 68.3], ["связисты", 85.2], ["спецназ", 86.63333333333334], ["танковые войска", 96.75]], "columns": ["unit_type", "avg_efficiency"], "row_count": 13}', '{easy}');
-INSERT INTO public.tasks VALUES (21, 0, 21, 'Анализ надежности', 'Вычислите дисперсию боевой эффективности для каждого типа частей. Назовите столбец variance и отсортируйте результат по алфавиту. Высокая дисперсия может указывать на нестабильность', 'Используйте `VAR_SAMP` для расчета дисперсии', NULL, '{"data": [["авиация", 27.4625], ["инженерные войска", 0.02], ["лыжные войска", null], ["медицинская", null], ["морская пехота", 21.125], ["общевойсковая", 146.205], ["пехота", 121.09553571428572], ["противник", null], ["реактивная артиллерия", 18.0], ["резерв", null], ["связисты", null], ["спецназ", 68.94333333333333], ["танковые войска", 6.125]], "columns": ["unit_type", "variance"], "row_count": 13}', '{easy}');
-INSERT INTO public.tasks VALUES (67, 1, 10, 'Снаряжение героев', 'Найдите солдат, получивших снаряжение 12 января 1943 года. Это может быть связано с подготовкой к операции «Искра»', 'Примените вложенные запросы и фильтрацию по дате и ID снаряжения', NULL, '{"data": [["Смирнова Анна Васильевна"]], "columns": ["full_name"], "row_count": 1}', '{medium}');
-INSERT INTO public.tasks VALUES (20, 0, 20, 'Статистика потерь', 'Подсчитайте количество солдат по каждому статусу (status). Это основа для анализа людских потерь', 'Группировка по статусу с использованием `CASE` в `COUNT`', NULL, '{"data": [["жив", 16], ["пропал без вести", 7], ["ранен", 8], ["убит", 9]], "columns": ["status", "count"], "row_count": 4}', '{easy}');
-INSERT INTO public.tasks VALUES (22, 0, 22, 'Классификация эффективности', 'Разделите части на три категории: высокая, средняя и низкая эффективность. Столбец с категориями назовите efficiency_category. Это основа для стратегического планирования. Примечание: "Высокая" (КПД ≥ 90), "Средняя" (70 ≤ КПД < 90), "Низкая" (КПД < 70).', 'Примените `CASE` с диапазонами значений `combat_efficiency`', NULL, '{"data": [["316-я стрелковая дивизия", "Средняя"], ["62-я армия", "Высокая"], ["1-я гвардейская танковая армия", "Высокая"], ["150-я стрелковая дивизия", "Высокая"], ["16-я воздушная армия", "Средняя"], ["7-я гвардейская миномётная дивизия", "Высокая"], ["2-я ударная армия", "Средняя"], ["8-я гвардейская армия", "Высокая"], ["3-я воздушная армия", "Средняя"], ["106-я стрелковая дивизия", "Средняя"], ["14-я отдельная штрафная рота", "Низкая"], ["1-я морская бригада", "Средняя"], ["Отдельная медико-санитарная рота", "Высокая"], ["88-й отдельный лыжный батальон", "Средняя"], ["101-й полк НКВД", "Высокая"], ["369-й отдельный батальон морской пехоты", "Средняя"], ["1-й чехословацкий отдельный батальон", "Средняя"], ["585-й женский авиаполк", "Высокая"], ["28-я дивизия народного ополчения", "Низкая"], ["Отдельный отряд собак-истребителей танков", "Средняя"], ["37-й гвардейский миномётный полк", "Высокая"], ["Отдельный батальон связи №45", "Средняя"], ["225-й отдельный инженерный батальон", "Средняя"], ["18-я дивизия СС \"Хорст Вессель\"", "Средняя"], ["101-й учебный полк", "Низкая"], ["64-я стрелковая дивизия", "Высокая"], ["1-й отдельный чехословацкий батальон", "Средняя"], ["46-й гвардейский ночной бомбардировочный полк", "Высокая"], ["101-й инженерно-сапёрный батальон", "Средняя"], ["Отдельный отряд собак-миноискателей", "Средняя"]], "columns": ["unit_name", "efficiency_category"], "row_count": 30}', '{easy}');
-INSERT INTO public.tasks VALUES (69, 1, 11, 'Возрастные категории', 'Посчитайте сколько солдат в каждой возрастной группе на момент начала войны(< 18, 18-25, > 25). Колонку с группой назовите age_group, а с количеством солдат — quantity. Результат отсортируйте по убыванию количества. Это поможет понять, какие возрастные группы преобладали в армии', 'Используйте `CASE` с диапазонами на основе года рождения', NULL, '{"data": [["18-25", 19], ["< 18", 15], ["> 25", 6]], "columns": ["age_group", "quantity"], "row_count": 3}', '{medium}');
-INSERT INTO public.tasks VALUES (27, 0, 27, 'Долгие сражения', 'Найдите бои, длившиеся более 30 дней. Вычисленный столбец назовите duration_days. Результат отсортируйте по убыванию длительности. Такие операции часто становились переломными', 'Рассчитайте разницу между датами начала и окончания с использованием `HAVING`', NULL, '{"data": [["Оборона Заполярья", 1190], ["Блокада Ленинграда", 871], ["Ржевская битва", 447], ["Битва за Кавказ", 441], ["Оборона Севастополя", 247], ["Битва за Воронеж", 211], ["Битва за Москву", 202], ["Сталинградская битва", 200], ["Битва за Днепр", 119], ["Будапештская операция", 107], ["Восточно-Прусская операция", 102], ["Демянская операция", 89], ["Операция \"Багратион\"", 67], ["Смоленское сражение", 62], ["Курская битва", 49], ["Оборона Тулы", 42], ["Керченско-Эльтигенская операция", 41]], "columns": ["battle_name", "duration_days"], "row_count": 17}', '{easy}');
-INSERT INTO public.tasks VALUES (29, 0, 29, 'Молодая кровь', 'Для каждой части определите самого молодого солдата. Выведите название части и год рождения самого молодого солдата. Назовите вычисленный столбец youngest_birth_year, а результат отсортируйте по убыванию годов рождения. Это может указывать на пополнение в критический момент', 'Используйте `MAX` с годом рождения и группировку по частям', NULL, '{"data": [["101-й инженерно-сапёрный батальон", 1928], ["Отдельная медико-санитарная рота", 1927], ["225-й отдельный инженерный батальон", 1927], ["1-я морская бригада", 1926], ["Отдельный отряд собак-миноискателей", 1926], ["28-я дивизия народного ополчения", 1926], ["Отдельный батальон связи №45", 1925], ["369-й отдельный батальон морской пехоты", 1925], ["62-я армия", 1925], ["46-й гвардейский ночной бомбардировочный полк", 1925], ["150-я стрелковая дивизия", 1925], ["1-й чехословацкий отдельный батальон", 1924], ["3-я воздушная армия", 1924], ["1-й отдельный чехословацкий батальон", 1924], ["18-я дивизия СС \"Хорст Вессель\"", 1923], ["64-я стрелковая дивизия", 1923], ["316-я стрелковая дивизия", 1923], ["106-я стрелковая дивизия", 1923], ["8-я гвардейская армия", 1921], ["Отдельный отряд собак-истребителей танков", 1921], ["101-й полк НКВД", 1920], ["16-я воздушная армия", 1920], ["1-я гвардейская танковая армия", 1920], ["2-я ударная армия", 1919], ["101-й учебный полк", 1918], ["14-я отдельная штрафная рота", 1914], ["585-й женский авиаполк", 1913], ["88-й отдельный лыжный батальон", 1912], ["37-й гвардейский миномётный полк", 1911]], "columns": ["unit_name", "youngest_birth_year"], "row_count": 29}', '{easy}');
-INSERT INTO public.tasks VALUES (30, 0, 30, 'Танковые части', 'Найдите подразделения, оснащенные танками. Это важно для анализа бронетанковых сил', 'Используйте подзапрос с `EXISTS` для проверки наличия снаряжения', NULL, '{"data": [["1-я гвардейская танковая армия"], ["8-я гвардейская армия"]], "columns": ["unit_name"], "row_count": 2}', '{easy}');
-INSERT INTO public.tasks VALUES (31, 0, 31, 'Ветераны частей', 'Определите солдат, которые были старше всех в своем подразделении. Возможно, это опытные командиры', 'Примените подзапрос с `ALL` для сравнения возрастов', NULL, '{"data": [["Фёдорова Мария Ивановна"], ["Жуков Андрей Григорьевич"], ["Павлов Яков Фёдорович"], ["Зайцева Людмила Михайловна"], ["Громов Михаил Сергеевич"], ["Орлова Вера Павловна"], ["Новиков Александр Иванович"], ["Васнецова Татьяна Дмитриевна"], ["Кузнецов Пётр Васильевич"], ["Морозов Иван Кузьмич"], ["Волкова Елена Сергеевна"], ["Ткаченко Григорий Петрович"], ["Беляев Павел Дмитриевич"], ["Семёнова Валентина Михайловна"], ["Ковалёв Сергей Николаевич"], ["Мельникова Галина Ивановна"], ["Фёдоров Игорь Васильевич"], ["Горбачёв Алексей Дмитриевич"], ["Сидорова Екатерина Петровна"], ["Смирнов Василий Иванович"], ["Крылова Надежда Фёдоровна"], ["Орлов Денис Сергеевич"], ["Жукова Елена Викторовна"], ["Гришин Алексей Петрович"], ["Ткаченко Иван Григорьевич"], ["Жуковский Виктор Михайлович"], ["Морозова Анна Сергеевна"], ["Белов Дмитрий Николаевич"], ["Ковалёва Ольга Дмитриевна"]], "columns": ["full_name"], "row_count": 29}', '{easy}');
-INSERT INTO public.tasks VALUES (34, 0, 32, 'Неуничтоженные враги', 'Определите вражеские части, которые не были ликвидированы. Отсортируйте результат по убыванию. Это может указывать на сохранившиеся угрозы', 'Используйте `EXCEPT` для исключения уничтоженных частей', NULL, '{"data": [["Эскадра JG54 \"Зелёное сердце\""], ["Люфтваффе: эскадра JG52"]], "columns": ["unit_name"], "row_count": 2}', '{easy}');
-INSERT INTO public.tasks VALUES (37, 1, 1, 'Логистика Сталинградской битвы', 'Определите общее количество боеприпасов, выделенных каждой части в Сталинграде. Выведите уникальный идентификатор части, а вычисленный столбец назовите total_ammo. Это поможет оценить обеспеченность войск в критический период обороны', 'Используйте оконную функцию `SUM` с группировкой по `unit_id` и подзапрос для фильтрации локации', NULL, '{"data": [[2, 50000], [13, 30000], [18, 40000], [21, 50000], [26, 70000]], "columns": ["unit_id", "total_ammo"], "row_count": 5}', '{first_any_level,supply,window,stalingrad,medium}');
-INSERT INTO public.tasks VALUES (63, 1, 2, 'Снабжение перед операцией', 'Для воинских частей, у которых общее количество всего снаряжения на складе превышает 1000 единиц, необходимо вывести название части, а также суммарное количество находящихся в ней боеприпасов ammunition_total и медикаментов medicine_total. Это важно для планирования крупных наступлений', 'Сначала найдите подразделения, где общее количество снаряжения больше 1000, используя GROUP BY и HAVING SUM(quantity). Затем, для этих подразделений, посчитайте суммы по типам, применив условную агрегацию в основном запросе', NULL, '{"data": [["1-я морская бригада", 0, 250], ["3-я воздушная армия", 0, 0], ["316-я стрелковая дивизия", 50000, 0], ["37-й гвардейский миномётный полк", 50000, 0], ["585-й женский авиаполк", 40000, 0], ["62-я армия", 50000, 830], ["64-я стрелковая дивизия", 70000, 0], ["7-я гвардейская миномётная дивизия", 20000, 0], ["Отдельная медико-санитарная рота", 30000, 250]], "columns": ["unit_name", "ammunition_total", "medicine_total"], "row_count": 9}', '{cte,medium}');
-INSERT INTO public.tasks VALUES (38, 1, 3, 'Поиск героев для награждения', 'Выявите 20 солдат, участвовавших в наибольшем количестве сражений, и присвойте им ранги. Вычисленные столбцы назовите battles_participated и hero_rank. Это основа для награждения орденами и медалями', 'Используйте `RANK()` с сортировкой по убыванию количества битв', NULL, '{"data": [["Жуков Андрей Григорьевич", 30, 1], ["Иванов Алексей Петрович", 28, 2], ["Громов Михаил Сергеевич", 23, 3], ["Жуковский Виктор Михайлович", 23, 3], ["Гришин Алексей Петрович", 21, 5], ["Семёнова Валентина Михайловна", 20, 6], ["Соколова Ольга Ивановна", 20, 6], ["Кузнецов Пётр Васильевич", 19, 8], ["Зайцева Людмила Михайловна", 17, 9], ["Орлова Вера Павловна", 17, 9], ["Фёдоров Игорь Васильевич", 16, 11], ["Кузнецов Артём Игоревич", 16, 11], ["Крылова Надежда Фёдоровна", 16, 11], ["Козлов Николай Семёнович", 16, 11], ["Фёдорова Мария Ивановна", 15, 15], ["Смирнов Василий Иванович", 15, 15], ["Соколовская Надежда Викторовна", 15, 15], ["Ковалёва Ольга Дмитриевна", 14, 18], ["Ткаченко Иван Григорьевич", 14, 18], ["Громова Екатерина Ивановна", 13, 20]], "columns": ["full_name", "battles_participated", "hero_rank"], "row_count": 20}', '{window,medium}');
-INSERT INTO public.tasks VALUES (39, 1, 4, 'Анализ эффективности частей', 'Выведите для каждого военного подразделения его исходную и скорректированную боевую эффективность. Корректировка рассчитывается путем уменьшения исходного показателя (combat_efficiency) пропорционально доле безвозвратных потерь (статусы «убит» и «пропал без вести») от общей численности личного состава в данном подразделении. Результат должен содержать: название подразделения, исходную боевую эффективность initial_efficiency, процент потерь loss_percentage, скорректированную боевую эффективность adjusted_efficiency. Это покажет, как потери влияют на боеспособность', 'Сгруппируйте солдат по подразделениям (unit_id). Внутри каждой группы посчитайте общую численность и количество безвозвратных потерь, используя условную агрегацию (CASE). Затем соедините результат с таблицей military_unit и примените формулу для расчета скорректированной эффективности.', NULL, '{"data": [["8-я гвардейская армия", 98.5, 0.0, 98.5], ["150-я стрелковая дивизия", 97.8, 0.0, 97.8], ["46-й гвардейский ночной бомбардировочный полк", 96.7, 0.0, 96.7], ["37-й гвардейский миномётный полк", 96.5, 0.0, 96.5], ["101-й полк НКВД", 96.2, 0.0, 96.2], ["1-я гвардейская танковая армия", 95.0, 0.0, 95.0], ["585-й женский авиаполк", 94.1, 0.0, 94.1], ["64-я стрелковая дивизия", 92.4, 0.0, 92.4], ["62-я армия", 92.3, 0.0, 92.3], ["Отдельная медико-санитарная рота", 91.7, 0.0, 91.7], ["225-й отдельный инженерный батальон", 89.7, 0.0, 89.7], ["101-й инженерно-сапёрный батальон", 89.5, 0.0, 89.5], ["106-я стрелковая дивизия", 89.3, 0.0, 89.3], ["16-я воздушная армия", 88.9, 0.0, 88.9], ["369-й отдельный батальон морской пехоты", 88.9, 0.0, 88.9], ["18-я дивизия СС \"Хорст Вессель\"", 88.1, 0.0, 88.1], ["316-я стрелковая дивизия", 85.5, 0.0, 85.5], ["Отдельный батальон связи №45", 85.2, 0.0, 85.2], ["3-я воздушная армия", 85.0, 0.0, 85.0], ["1-й отдельный чехословацкий батальон", 85.0, 0.0, 85.0], ["Отдельный отряд собак-истребителей танков", 82.4, 0.0, 82.4], ["1-я морская бригада", 82.4, 0.0, 82.4], ["Отдельный отряд собак-миноискателей", 81.3, 0.0, 81.3], ["1-й чехословацкий отдельный батальон", 78.5, 0.0, 78.5], ["2-я ударная армия", 75.2, 0.0, 75.2], ["88-й отдельный лыжный батальон", 73.9, 0.0, 73.9], ["28-я дивизия народного ополчения", 69.8, 0.0, 69.8], ["101-й учебный полк", 68.3, 0.0, 68.3], ["14-я отдельная штрафная рота", 65.8, 0.0, 65.8]], "columns": ["unit_name", "initial_efficiency", "loss_percentage", "adjusted_efficiency"], "row_count": 29}', '{cte,medium}');
-INSERT INTO public.tasks VALUES (40, 1, 5, 'Логистика Курской дуги', 'Определите рейтинг частей в Курске по объему снабжения. Выведите столбцы unit_name, equipment_type, total, supply_rank. Это ключевые данные для анализа подготовки к крупнейшему танковому сражению', 'Используйте `RANK()` с группировкой по типам снаряжения', NULL, '{"data": [["16-я воздушная армия", "самолёты", 45, 1], ["1-я гвардейская танковая армия", "танки", 58, 2]], "columns": ["unit_name", "equipment_type", "total", "supply_rank"], "row_count": 2}', '{supply,window,medium}');
-INSERT INTO public.tasks VALUES (64, 1, 6, 'Снабжение морской пехоты', 'Проанализируйте снаряжение морских пехотинцев в Севастополе. Выведите столбцы equipment_type, total, items. Это необходимо для оценки их готовности к обороне прибрежных зон', 'Используйте `STRING_AGG` для объединения названий снаряжения и фильтрацию по типу части', NULL, '{"data": [["медицина", 250, "Аптечки полевые"], ["миномёты", 2256, "82-мм, 50-мм"]], "columns": ["equipment_type", "total", "items"], "row_count": 2}', '{medium}');
-INSERT INTO public.tasks VALUES (75, 1, 7, 'Первый и последний', 'Определите первого и последнего солдата, вступившего в каждую часть. Выведите название части, ФИО первого first_enlisted и последнего last_enlisted вступившего солдата. Это может указывать на "костяк" подразделения', 'Примените `FIRST_VALUE()` и `LAST_VALUE()` с оконными функциями', NULL, '{"data": [["316-я стрелковая дивизия", "Иванов Алексей Петрович", "Фёдорова Мария Ивановна"], ["62-я армия", "Петров Дмитрий Иванович", "Павлов Яков Фёдорович"], ["1-я гвардейская танковая армия", "Козлов Николай Семёнович", "Кузнецов Пётр Васильевич"], ["150-я стрелковая дивизия", "Зайцева Людмила Михайловна", "Белов Алексей Николаевич"], ["16-я воздушная армия", "Жуков Андрей Григорьевич", "Соколова Ольга Ивановна"], ["2-я ударная армия", "Громов Михаил Сергеевич", "Громов Михаил Сергеевич"], ["8-я гвардейская армия", "Орлова Вера Павловна", "Орлова Вера Павловна"], ["3-я воздушная армия", "Новиков Александр Иванович", "Новиков Александр Иванович"], ["106-я стрелковая дивизия", "Васнецова Татьяна Дмитриевна", "Васнецова Татьяна Дмитриевна"], ["14-я отдельная штрафная рота", "Морозов Иван Кузьмич", "Морозов Иван Кузьмич"], ["1-я морская бригада", "Волкова Елена Сергеевна", "Волкова Елена Сергеевна"], ["Отдельная медико-санитарная рота", "Ткаченко Григорий Петрович", "Ткаченко Григорий Петрович"], ["88-й отдельный лыжный батальон", "Беляев Павел Дмитриевич", "Беляев Павел Дмитриевич"], ["101-й полк НКВД", "Семёнова Валентина Михайловна", "Семёнова Валентина Михайловна"], ["369-й отдельный батальон морской пехоты", "Ковалёв Сергей Николаевич", "Ковалёв Сергей Николаевич"], ["1-й чехословацкий отдельный батальон", "Мельникова Галина Ивановна", "Мельникова Галина Ивановна"], ["585-й женский авиаполк", "Фёдоров Игорь Васильевич", "Фёдоров Игорь Васильевич"], ["28-я дивизия народного ополчения", "Горбачёв Алексей Дмитриевич", "Горбачёв Алексей Дмитриевич"], ["Отдельный отряд собак-истребителей танков", "Сидорова Екатерина Петровна", "Сидорова Екатерина Петровна"], ["37-й гвардейский миномётный полк", "Смирнов Василий Иванович", "Смирнов Василий Иванович"], ["Отдельный батальон связи №45", "Крылова Надежда Фёдоровна", "Крылова Надежда Фёдоровна"], ["225-й отдельный инженерный батальон", "Орлов Денис Сергеевич", "Орлов Денис Сергеевич"], ["18-я дивизия СС \"Хорст Вессель\"", "Жукова Елена Викторовна", "Жукова Елена Викторовна"], ["101-й учебный полк", "Гришин Алексей Петрович", "Гришин Алексей Петрович"], ["64-я стрелковая дивизия", "Ткаченко Иван Григорьевич", "Соколовская Надежда Викторовна"], ["1-й отдельный чехословацкий батальон", "Белов Дмитрий Николаевич", "Воронцова Лидия Павловна"], ["46-й гвардейский ночной бомбардировочный полк", "Жуковский Виктор Михайлович", "Громова Екатерина Ивановна"], ["101-й инженерно-сапёрный батальон", "Морозова Анна Сергеевна", "Фролов Павел Сергеевич"], ["Отдельный отряд собак-миноискателей", "Ковалёва Ольга Дмитриевна", "Кузнецов Артём Игоревич"]], "columns": ["unit_name", "first_enlisted", "last_enlisted"], "row_count": 29}', '{medium}');
-INSERT INTO public.tasks VALUES (77, 1, 8, 'Солдаты 1942 года', 'Выведите список солдат и их частей, где служба началась в 1942 году. Результат отсортируйте по первому столбцу. Это поможет анализировать мобилизацию в критический период', 'Используйте подзапросы для фильтрации дат и объединения таблиц', NULL, '{"data": [["Белов Дмитрий Николаевич", "1-й отдельный чехословацкий батальон"], ["Громов Михаил Сергеевич", "2-я ударная армия"], ["Жукова Елена Викторовна", "18-я дивизия СС \"Хорст Вессель\""], ["Жуковский Виктор Михайлович", "46-й гвардейский ночной бомбардировочный полк"], ["Ковалёва Ольга Дмитриевна", "Отдельный отряд собак-миноискателей"], ["Мельникова Галина Ивановна", "1-й чехословацкий отдельный батальон"], ["Морозова Анна Сергеевна", "101-й инженерно-сапёрный батальон"], ["Морозов Иван Кузьмич", "14-я отдельная штрафная рота"], ["Павлов Яков Фёдорович", "62-я армия"], ["Семёнова Валентина Михайловна", "101-й полк НКВД"], ["Смирнова Анна Васильевна", "62-я армия"], ["Соколова Ольга Ивановна", "16-я воздушная армия"], ["Фёдоров Игорь Васильевич", "585-й женский авиаполк"]], "columns": ["full_name", "unit_name"], "row_count": 13}', '{medium}');
-INSERT INTO public.tasks VALUES (76, 1, 12, 'Скользящие потери', 'Проанализируйте динамику потерь среди солдат в 1942 году, используя данные о дате призыва. Для каждого месяца 1942 года рассчитайте количество солдат, погибших к этому моменту, и постройте трёхмесячное скользящее среднее для сглаживания временного ряда. Выведите номер месяца (month), количество потерь (killed) и скользящее среднее (moving_avg). Это покажет динамику снижения боеспособности', 'Используйте `AVG()` с окном `ROWS BETWEEN 2 PRECEDING AND CURRENT ROW`', NULL, '{"data": [[5.0, 1, 1.0]], "columns": ["month", "killed", "moving_avg"], "row_count": 1}', '{medium}');
-INSERT INTO public.tasks VALUES (54, 1, 14, 'Накопленные ресурсы', 'Определите накопительный итог поставок боеприпасов в 1942 году. Выведите название подразделения, дату последнего пополнения, а вычисленный столбец назовите cumulative_ammo. Это отразит рост запасов перед ключевыми операциями', 'Примените `SUM() OVER` с сортировкой по дате пополнения', NULL, '{"data": [["316-я стрелковая дивизия", "1942-03-05", 50000], ["62-я армия", "1942-03-05", 50000], ["7-я гвардейская миномётная дивизия", "1942-12-01", 20000], ["Отдельная медико-санитарная рота", "1942-03-05", 30000], ["585-й женский авиаполк", "1942-03-05", 40000], ["37-й гвардейский миномётный полк", "1942-03-05", 50000], ["64-я стрелковая дивизия", "1942-03-05", 70000]], "columns": ["unit_name", "last_replenishment", "cumulative_ammo"], "row_count": 7}', '{supply,window,medium}');
-INSERT INTO public.tasks VALUES (71, 1, 15, 'Боевые товарищи', 'Выявите пары солдат, призванных из одного города. Чтобы избежать дубликатов (А, Б) и (Б, А), добавьте условие `s1.id < s2.id` (где s1 и s2 - алиасы таблицы). Назовите столбцы soldier_name1, soldier_name2 и common_city. Отсортируйте результат по всем столбцам. Это может указывать на дружеские связи или совместную службу', 'Примените самосоединение таблицы `soldier` по городу призыва', NULL, '{"data": [["Белов Алексей Николаевич", "Фролов Павел Сергеевич", "Севастополь"], ["Васнецова Татьяна Дмитриевна", "Жукова Елена Викторовна", "Смоленск"], ["Васнецова Татьяна Дмитриевна", "Ковалёва Ольга Дмитриевна", "Смоленск"], ["Волкова Елена Сергеевна", "Громова Екатерина Ивановна", "Горький"], ["Гришин Алексей Петрович", "Ткаченко Иван Григорьевич", "Харьков"], ["Жуков Андрей Григорьевич", "Сидорова Екатерина Петровна", "Минск"], ["Жукова Елена Викторовна", "Ковалёва Ольга Дмитриевна", "Смоленск"], ["Зайцева Людмила Михайловна", "Воронцова Лидия Павловна", "Ленинград"], ["Иванов Алексей Петрович", "Соколовская Надежда Викторовна", "Москва"], ["Козлов Николай Семёнович", "Гришин Алексей Петрович", "Харьков"], ["Козлов Николай Семёнович", "Ткаченко Иван Григорьевич", "Харьков"], ["Крылова Надежда Фёдоровна", "Морозова Анна Сергеевна", "Одесса"], ["Мельникова Галина Ивановна", "Кузнецов Артём Игоревич", "Сталинград"], ["Орлова Вера Павловна", "Крылова Надежда Фёдоровна", "Одесса"], ["Орлова Вера Павловна", "Морозова Анна Сергеевна", "Одесса"], ["Петров Дмитрий Иванович", "Кузнецов Артём Игоревич", "Сталинград"], ["Петров Дмитрий Иванович", "Мельникова Галина Ивановна", "Сталинград"], ["Смирнов Василий Иванович", "Жуковский Виктор Михайлович", "Киев"], ["Смирнова Анна Васильевна", "Воронцова Лидия Павловна", "Ленинград"], ["Смирнова Анна Васильевна", "Зайцева Людмила Михайловна", "Ленинград"], ["Соколова Ольга Ивановна", "Жуковский Виктор Михайлович", "Киев"], ["Соколова Ольга Ивановна", "Смирнов Василий Иванович", "Киев"], ["Соколова Ольга Ивановна", "Ткаченко Григорий Петрович", "Киев"], ["Ткаченко Григорий Петрович", "Жуковский Виктор Михайлович", "Киев"], ["Ткаченко Григорий Петрович", "Смирнов Василий Иванович", "Киев"], ["Фёдорова Мария Ивановна", "Жуковский Виктор Михайлович", "Киев"], ["Фёдорова Мария Ивановна", "Смирнов Василий Иванович", "Киев"], ["Фёдорова Мария Ивановна", "Соколова Ольга Ивановна", "Киев"], ["Фёдорова Мария Ивановна", "Ткаченко Григорий Петрович", "Киев"]], "columns": ["soldier_name1", "soldier_name2", "common_city"], "row_count": 29}', '{medium}');
-INSERT INTO public.tasks VALUES (43, 1, 16, 'Гендерный баланс', 'Определите части, где количество мужчин и женщин неравно. Выведите название части military_unit_name и отсортируйте результат в обратном порядке. Это отразит гендерные особенности мобилизации', 'Используйте `SUM` с `CASE` для подсчета и фильтрацию через `HAVING`', NULL, '{"data": [["Отдельный отряд собак-истребителей танков"], ["Отдельный батальон связи №45"], ["Отдельная медико-санитарная рота"], ["8-я гвардейская армия"], ["88-й отдельный лыжный батальон"], ["62-я армия"], ["585-й женский авиаполк"], ["3-я воздушная армия"], ["37-й гвардейский миномётный полк"], ["369-й отдельный батальон морской пехоты"], ["2-я ударная армия"], ["28-я дивизия народного ополчения"], ["225-й отдельный инженерный батальон"], ["1-я морская бригада"], ["1-я гвардейская танковая армия"], ["1-й чехословацкий отдельный батальон"], ["18-я дивизия СС \"Хорст Вессель\""], ["14-я отдельная штрафная рота"], ["106-я стрелковая дивизия"], ["101-й учебный полк"], ["101-й полк НКВД"]], "columns": ["military_unit_name"], "row_count": 21}', '{window,medium}');
-INSERT INTO public.tasks VALUES (44, 1, 17, 'Участники Сталинграда', 'Найдите всех солдат, служивших в частях, участвовавших в Сталинградской битве. Это основа для создания мемориальных списков', 'Используйте вложенные запросы с `IN` для фильтрации по ID частей', NULL, '{"data": [["Иванов Алексей Петрович"], ["Смирнова Анна Васильевна"], ["Петров Дмитрий Иванович"], ["Козлов Николай Семёнович"], ["Фёдорова Мария Ивановна"], ["Жуков Андрей Григорьевич"], ["Павлов Яков Фёдорович"], ["Зайцева Людмила Михайловна"], ["Громов Михаил Сергеевич"], ["Орлова Вера Павловна"], ["Новиков Александр Иванович"], ["Васнецова Татьяна Дмитриевна"], ["Кузнецов Пётр Васильевич"], ["Белов Алексей Николаевич"], ["Соколова Ольга Ивановна"], ["Морозов Иван Кузьмич"], ["Волкова Елена Сергеевна"], ["Ткаченко Григорий Петрович"], ["Беляев Павел Дмитриевич"], ["Семёнова Валентина Михайловна"], ["Ковалёв Сергей Николаевич"], ["Мельникова Галина Ивановна"], ["Фёдоров Игорь Васильевич"], ["Горбачёв Алексей Дмитриевич"], ["Сидорова Екатерина Петровна"], ["Смирнов Василий Иванович"], ["Крылова Надежда Фёдоровна"], ["Орлов Денис Сергеевич"], ["Жукова Елена Викторовна"], ["Гришин Алексей Петрович"], ["Ткаченко Иван Григорьевич"], ["Воронцова Лидия Павловна"], ["Жуковский Виктор Михайлович"], ["Морозова Анна Сергеевна"], ["Кузнецов Артём Игоревич"], ["Соколовская Надежда Викторовна"], ["Белов Дмитрий Николаевич"], ["Громова Екатерина Ивановна"], ["Фролов Павел Сергеевич"], ["Ковалёва Ольга Дмитриевна"]], "columns": ["full_name"], "row_count": 40}', '{stalingrad,medium}');
-INSERT INTO public.tasks VALUES (72, 1, 18, 'Чисто мужские/женские части', 'Выведите названия частей, состоящих исключительно из мужчин или женщин. Назовите столбец military_unit_name и отсортируйте результат по алфавиту. Это редкие случаи, характерные для отдельных родов войск', 'Примените `UNION` для объединения результатов двух подзапросов с `EXISTS` и `NOT EXISTS`', NULL, '{"data": [["101-й полк НКВД"], ["101-й учебный полк"], ["106-я стрелковая дивизия"], ["14-я отдельная штрафная рота"], ["18-я дивизия СС \"Хорст Вессель\""], ["1-й чехословацкий отдельный батальон"], ["1-я гвардейская танковая армия"], ["1-я морская бригада"], ["225-й отдельный инженерный батальон"], ["28-я дивизия народного ополчения"], ["2-я ударная армия"], ["369-й отдельный батальон морской пехоты"], ["37-й гвардейский миномётный полк"], ["3-я воздушная армия"], ["585-й женский авиаполк"], ["88-й отдельный лыжный батальон"], ["8-я гвардейская армия"], ["Отдельная медико-санитарная рота"], ["Отдельный батальон связи №45"], ["Отдельный отряд собак-истребителей танков"]], "columns": ["military_unit_name"], "row_count": 20}', '{medium}');
-INSERT INTO public.tasks VALUES (46, 1, 19, 'Накопление ресурсов', 'Рассчитайте накопленный объем боеприпасов, поставляемых в части за 1942 год. Выведите столбцы unit_id, month, total_ammo и отсортируйте результат по первому столбцу. Это отразит логистические усилия в критический период', 'Используйте оконную функцию `SUM` с сортировкой по месяцам', NULL, '{"data": [[1, 3.0, 50000.0], [2, 3.0, 50000.0], [6, 12.0, 20000.0], [13, 3.0, 30000.0], [18, 3.0, 40000.0], [21, 3.0, 50000.0], [26, 3.0, 70000.0]], "columns": ["unit_id", "month", "total_ammo"], "row_count": 7}', '{supply,window,medium}');
-INSERT INTO public.tasks VALUES (73, 1, 21, 'Долгосрочная служба', 'Выявите солдат, чья служба длилась более трех лет. Выведите полное имя солдата и длительность службы в днях (days). Отсортируйте результат от меньшей длительности к большей. Это может указывать на ветеранов, участвовавших в ключевых операциях', 'Рассчитайте разницу между датами начала и окончания службы с помощью `AGE`', NULL, '{"data": [["Громов Михаил Сергеевич", 1126], ["Кузнецов Пётр Васильевич", 1153], ["Гришин Алексей Петрович", 1245]], "columns": ["full_name", "days"], "row_count": 3}', '{medium}');
-INSERT INTO public.tasks VALUES (50, 1, 22, 'Союзники врага', 'Определите все вражеские части, участвовавшие в Курской битве. Это поможет понять структуру сил противника. Выведите только unit_name.', 'Используйте рекурсивный CTE для поиска связанных через таблицу союзов', NULL, '{"data": [["Танковая группа \"Кемпф\""], ["505-й тяжёлый танковый батальон"], ["503-й тяжёлый танковый батальон"], ["505-й инженерный батальон"], ["Эскадра SG2 \"Иммельман\""], ["12-я танковая дивизия"], ["Эскадра KG27 \"Бёльке\""], ["337-я пехотная дивизия"]], "columns": ["unit_name"], "row_count": 8}', '{cte,medium}');
-INSERT INTO public.tasks VALUES (58, 2, 4, 'Снаряжение элитных частей', 'Определите, какие типы снаряжения чаще всего используются в частях с эффективностью выше среднего. Вычисленный столбец назовите total. Отсортируйте результат в алфавитном порядке. Это поможет понять, какие ресурсы влияют на успех', 'Примените подзапрос для вычисления средней эффективности и `GROUP BY` для типов снаряжения', NULL, '{"data": [["артиллерия", 1], ["боеприпасы", 6], ["медицина", 3], ["миномёты", 1], ["противотанковые", 1], ["реактивные снаряды", 1], ["самолёты", 1], ["танки", 2]], "columns": ["equipment_type", "total"], "row_count": 8}', '{supply,hard}');
-INSERT INTO public.tasks VALUES (55, 2, 1, 'Рейтинг героев', 'Ранжируйте солдат по количеству наград в их частях. Выведите имя солдата, название подразделения (unit_name),	количество медалей (medals_count) и вычисленный ранг (medal_rank). Фамилии солдат выведите в алфавитном порядке. Это основа для определения самых отличившихся бойцов', 'Используйте `DENSE_RANK()` с группировкой по частям и сортировкой по наградам', NULL, '{"data": [["Белов Алексей Николаевич", "150-я стрелковая дивизия", 1, 1], ["Белов Дмитрий Николаевич", "1-й отдельный чехословацкий батальон", 0, 1], ["Беляев Павел Дмитриевич", "88-й отдельный лыжный батальон", 0, 1], ["Васнецова Татьяна Дмитриевна", "106-я стрелковая дивизия", 1, 1], ["Волкова Елена Сергеевна", "1-я морская бригада", 0, 1], ["Воронцова Лидия Павловна", "1-й отдельный чехословацкий батальон", 0, 1], ["Горбачёв Алексей Дмитриевич", "28-я дивизия народного ополчения", 0, 1], ["Гришин Алексей Петрович", "101-й учебный полк", 0, 1], ["Громова Екатерина Ивановна", "46-й гвардейский ночной бомбардировочный полк", 0, 1], ["Громов Михаил Сергеевич", "2-я ударная армия", 1, 1], ["Жукова Елена Викторовна", "18-я дивизия СС \"Хорст Вессель\"", 0, 1], ["Жуков Андрей Григорьевич", "16-я воздушная армия", 1, 1], ["Жуковский Виктор Михайлович", "46-й гвардейский ночной бомбардировочный полк", 0, 1], ["Зайцева Людмила Михайловна", "150-я стрелковая дивизия", 1, 1], ["Иванов Алексей Петрович", "316-я стрелковая дивизия", 1, 1], ["Ковалёва Ольга Дмитриевна", "Отдельный отряд собак-миноискателей", 0, 1], ["Ковалёв Сергей Николаевич", "369-й отдельный батальон морской пехоты", 0, 1], ["Козлов Николай Семёнович", "1-я гвардейская танковая армия", 0, 2], ["Крылова Надежда Фёдоровна", "Отдельный батальон связи №45", 0, 1], ["Кузнецов Артём Игоревич", "Отдельный отряд собак-миноискателей", 0, 1], ["Кузнецов Пётр Васильевич", "1-я гвардейская танковая армия", 1, 1], ["Мельникова Галина Ивановна", "1-й чехословацкий отдельный батальон", 0, 1], ["Морозова Анна Сергеевна", "101-й инженерно-сапёрный батальон", 0, 1], ["Морозов Иван Кузьмич", "14-я отдельная штрафная рота", 0, 1], ["Новиков Александр Иванович", "3-я воздушная армия", 1, 1], ["Орлова Вера Павловна", "8-я гвардейская армия", 1, 1], ["Орлов Денис Сергеевич", "225-й отдельный инженерный батальон", 0, 1], ["Павлов Яков Фёдорович", "62-я армия", 1, 1], ["Петров Дмитрий Иванович", "62-я армия", 1, 1], ["Семёнова Валентина Михайловна", "101-й полк НКВД", 0, 1], ["Сидорова Екатерина Петровна", "Отдельный отряд собак-истребителей танков", 0, 1], ["Смирнова Анна Васильевна", "62-я армия", 1, 1], ["Смирнов Василий Иванович", "37-й гвардейский миномётный полк", 0, 1], ["Соколова Ольга Ивановна", "16-я воздушная армия", 1, 1], ["Соколовская Надежда Викторовна", "64-я стрелковая дивизия", 0, 1], ["Ткаченко Григорий Петрович", "Отдельная медико-санитарная рота", 0, 1], ["Ткаченко Иван Григорьевич", "64-я стрелковая дивизия", 0, 1], ["Фёдорова Мария Ивановна", "316-я стрелковая дивизия", 0, 2], ["Фёдоров Игорь Васильевич", "585-й женский авиаполк", 0, 1], ["Фролов Павел Сергеевич", "101-й инженерно-сапёрный батальон", 0, 1]], "columns": ["full_name", "unit_name", "medals_count", "medal_rank"], "row_count": 40}', '{first_any_level,hard}');
-INSERT INTO public.tasks VALUES (78, 2, 2, 'Сравнение стратегий', 'Сравните среднюю эффективность частей, участвовавших в стратегических и локальных операциях. Это покажет разницу в результативности. Назовите столбцы battle_group и avg_efficiency. Назовите средние эффективности "Стратегические битвы" и "Локальные операции"', 'Примените `CASE` для классификации битв и `AVG` для сравнения', NULL, '{"data": [["Локальные операции", 88.07142857142857], ["Стратегические битвы", 85.0875]], "columns": ["battle_group", "avg_efficiency"], "row_count": 2}', '{hard}');
-INSERT INTO public.tasks VALUES (57, 2, 3, 'Анализ интервалов поставок', 'Определите среднее время между пополнениями снаряжения для каждой части. Выведите столбцы unit_name, equipment_type, last_replenishment, prev_replenishment (дата предыдущего пополнения), next_replenishment (дата следующего пополнения), days_between (интервал). Это поможет выявить логистические задержки или перебои', 'Примените `LAG()` для получения предыдущей даты пополнения и рассчитайте разницу между датами', NULL, '{"data": [["316-я стрелковая дивизия", "оружие", "1942-03-01", null, "1942-03-05", null], ["316-я стрелковая дивизия", "боеприпасы", "1942-03-05", "1942-03-01", "1942-05-10", 4], ["316-я стрелковая дивизия", "связь", "1942-05-10", "1942-03-05", null, 66], ["62-я армия", "боеприпасы", "1942-03-05", null, "1942-11-10", null], ["62-я армия", "артиллерия", "1942-11-10", "1942-03-05", "1943-01-10", 250], ["62-я армия", "медицина", "1943-01-10", "1942-11-10", "1943-12-01", 61], ["62-я армия", "медицина", "1943-12-01", "1943-01-10", null, 325], ["1-я гвардейская танковая армия", "танки", "1943-07-05", null, null, null], ["150-я стрелковая дивизия", "миномёты", "1944-01-15", null, null, null], ["16-я воздушная армия", "самолёты", "1943-05-01", null, null, null], ["7-я гвардейская миномётная дивизия", "боеприпасы", "1942-12-01", null, "1942-12-01", null], ["7-я гвардейская миномётная дивизия", "реактивные снаряды", "1942-12-01", "1942-12-01", null, 0], ["2-я ударная армия", "инженерное", "1943-08-14", null, null, null], ["8-я гвардейская армия", "танки", "1944-10-01", null, null, null], ["3-я воздушная армия", "авиабомбы", "1943-09-05", null, null, null], ["106-я стрелковая дивизия", "противотанковые", "1944-02-28", null, null, null], ["1-я морская бригада", "медицина", "1942-03-05", null, "1942-03-05", null], ["1-я морская бригада", "миномёты", "1942-03-05", "1942-03-05", "1942-06-06", 0], ["1-я морская бригада", "миномёты", "1942-06-06", "1942-03-05", null, 93], ["Отдельная медико-санитарная рота", "медицина", "1942-03-05", null, "1942-03-05", null], ["Отдельная медико-санитарная рота", "боеприпасы", "1942-03-05", "1942-03-05", null, 0], ["585-й женский авиаполк", "боеприпасы", "1942-03-05", null, null, null], ["37-й гвардейский миномётный полк", "боеприпасы", "1942-03-05", null, null, null], ["64-я стрелковая дивизия", "боеприпасы", "1942-03-05", null, null, null]], "columns": ["unit_name", "equipment_type", "last_replenishment", "prev_replenishment", "next_replenishment", "days_between"], "row_count": 24}', '{window,hard}');
-INSERT INTO public.tasks VALUES (81, 2, 5, 'Живучесть подразделений', 'Для каждого воинского подразделения рассчитайте: общую продолжительность участия в боях (разница между датой последнего и первого боя), количество боёв, в которых оно участвовало, количество солдат с безвозвратными потерями («убит», «пропал без вести»). На основе этих данных вычислите среднее количество потерь на один бой, определите процентильное положение подразделения по продолжительности участия в боях (чем дольше, тем выше процентиль). Выведите название подразделения (unit_name), общую продолжительность участия в боях (total_duration), количество боёв (battles_count), количество потерь (losses), средние потери на бой (loss_per_battle_ratio), округлённые до 2 знаков, процентиль по продолжительности (survival_percentile), рассчитанный как PERCENT_RANK() по убыванию total_duration. Отсортируйте результат по убыванию общей продолжительности участия в боях. Это покажет, какие подразделения были наиболее устойчивыми. Необходимо вывести колонки unit_name, total_duration, battles_count, losses, loss_per_battle_ratio, survival_percentile по убыванию общей продолжительности сражений.', 'Используйте `MIN()` и `MAX()` для дат сражений, а также `ROUND` для расчета соотношения потерь', NULL, '{"data": [["14-я отдельная штрафная рота", 1190, 1, 0, 0.0, 0.0], ["Отдельный отряд собак-истребителей танков", 871, 1, 0, 0.0, 0.043478260869565216], ["3-я воздушная армия", 447, 1, 1, 1.0, 0.08695652173913043], ["101-й учебный полк", 441, 1, 0, 0.0, 0.13043478260869565], ["101-й инженерно-сапёрный батальон", 441, 1, 0, 0.0, 0.13043478260869565], ["46-й гвардейский ночной бомбардировочный полк", 247, 1, 0, 0.0, 0.21739130434782608], ["37-й гвардейский миномётный полк", 247, 1, 1, 1.0, 0.21739130434782608], ["18-я дивизия СС \"Хорст Вессель\"", 202, 1, 0, 0.0, 0.30434782608695654], ["28-я дивизия народного ополчения", 200, 1, 0, 0.0, 0.34782608695652173], ["316-я стрелковая дивизия", 200, 1, 0, 0.0, 0.34782608695652173], ["1-й чехословацкий отдельный батальон", 200, 1, 0, 0.0, 0.34782608695652173], ["225-й отдельный инженерный батальон", 200, 1, 0, 0.0, 0.34782608695652173], ["Отдельная медико-санитарная рота", 89, 1, 1, 1.0, 0.5217391304347826], ["1-й отдельный чехословацкий батальон", 89, 1, 2, 2.0, 0.5217391304347826], ["88-й отдельный лыжный батальон", 62, 1, 0, 0.0, 0.6086956521739131], ["64-я стрелковая дивизия", 62, 1, 0, 0.0, 0.6086956521739131], ["16-я воздушная армия", 62, 1, 0, 0.0, 0.6086956521739131], ["Отдельный отряд собак-миноискателей", 49, 1, 0, 0.0, 0.7391304347826086], ["585-й женский авиаполк", 49, 1, 1, 1.0, 0.7391304347826086], ["62-я армия", 49, 1, 1, 1.0, 0.7391304347826086], ["Отдельный батальон связи №45", 49, 1, 0, 0.0, 0.7391304347826086], ["106-я стрелковая дивизия", 24, 1, 0, 0.0, 0.9130434782608695], ["1-я гвардейская танковая армия", 22, 1, 1, 1.0, 0.9565217391304348], ["369-й отдельный батальон морской пехоты", 7, 1, 0, 0.0, 1.0]], "columns": ["unit_name", "total_duration", "battles_count", "losses", "loss_per_battle_ratio", "survival_percentile"], "row_count": 24}', '{hard}');
-INSERT INTO public.tasks VALUES (80, 2, 6, 'Полный портрет части', 'Сформируйте сводку по каждой воинской части: количество солдат, снаряжения, участие в битвах и полученные награды. Это основа для комплексного анализа. Выведите колонки unit_name, soldiers_total, equipment_types, battles_participated, medals_received. Выведите результат по убыванию количества солдат.', 'Используйте `LEFT JOIN` для объединения таблиц и агрегатные функции (`COUNT`, `STRING_AGG`)', NULL, '{"data": [["62-я армия", 3, 4, 1, "Герой Советского Союза, Медаль \"За взятие Берлина\", Орден Отечественной войны"], ["Отдельный отряд собак-миноискателей", 2, 0, 1, null], ["150-я стрелковая дивизия", 2, 1, 0, "Медаль \"За оборону Сталинграда\", Медаль \"За отвагу\""], ["16-я воздушная армия", 2, 1, 1, "Медаль \"За оборону Москвы\", Орден Красной Звезды"], ["1-й отдельный чехословацкий батальон", 2, 0, 1, null], ["1-я гвардейская танковая армия", 2, 1, 1, "Герой Советского Союза"], ["316-я стрелковая дивизия", 2, 3, 1, "Медаль \"За отвагу\""], ["46-й гвардейский ночной бомбардировочный полк", 2, 0, 1, null], ["64-я стрелковая дивизия", 2, 1, 1, null], ["101-й инженерно-сапёрный батальон", 2, 0, 1, null], ["1-й чехословацкий отдельный батальон", 1, 0, 1, null], ["1-я морская бригада", 1, 3, 0, null], ["225-й отдельный инженерный батальон", 1, 0, 1, null], ["28-я дивизия народного ополчения", 1, 0, 1, null], ["2-я ударная армия", 1, 1, 0, "Орден Отечественной войны"], ["Отдельная медико-санитарная рота", 1, 2, 1, null], ["369-й отдельный батальон морской пехоты", 1, 0, 1, null], ["37-й гвардейский миномётный полк", 1, 1, 1, null], ["3-я воздушная армия", 1, 1, 1, "Орден Красной Звезды"], ["Отдельный батальон связи №45", 1, 0, 1, null], ["585-й женский авиаполк", 1, 1, 1, null], ["101-й полк НКВД", 1, 0, 0, null], ["101-й учебный полк", 1, 0, 1, null], ["106-я стрелковая дивизия", 1, 1, 1, "Медаль \"Партизану Отечественной войны\""], ["14-я отдельная штрафная рота", 1, 0, 1, null], ["Отдельный отряд собак-истребителей танков", 1, 0, 1, null], ["8-я гвардейская армия", 1, 1, 0, "Орден Славы"], ["18-я дивизия СС \"Хорст Вессель\"", 1, 0, 1, null], ["88-й отдельный лыжный батальон", 1, 0, 1, null], ["7-я гвардейская миномётная дивизия", 0, 2, 0, null]], "columns": ["unit_name", "soldiers_total", "equipment_types", "battles_participated", "medals_received"], "row_count": 30}', '{hard}');
-INSERT INTO public.tasks VALUES (59, 2, 7, 'Критический дефицит', 'Для анализа состояния снабжения воинских подразделений необходимо выявить снаряжение, количество которого значительно отклоняется от среднего уровня по каждому типу. Для этого требуется рассчитать среднее количество и стандартное отклонение для каждого типа снаряжения (equipment_type) по всем подразделениям, а затем определить, в каких именно частях и какие конкретно предметы снаряжения находятся в дефиците. Каждая единица снаряжения должна быть классифицирована как «Критический дефицит», если её количество ниже среднего на полторы стандартные девиации, как «Дефицит», если количество ниже среднего, но не достигает уровня критического дефицита, и как «Норма» в остальных случаях. В результате должен быть выведен список всего снаряжения с указанием его типа, названия, названия подразделения, количества и статуса, отсортированный сначала по типу снаряжения, а затем по возрастанию количества, чтобы наглядно выявить потенциальные узкие места в системе снабжения', 'Примените оконные функции (`AVG`, `STDDEV`)', NULL, '{"data": [["Винтовка Мосина", 1200], ["Аптечки полевые", 350], ["76-мм дивизионная пушка ЗИС-3", 24], ["Т-34", 58], ["БМ-13 \"Катюша\"", 12], ["Ил-2", 45], ["М-31", 1500], ["Сапёрная лопатка", 850], ["ИС-2", 42], ["ФАБ-100", 3200], ["ПТРД", 68], ["Радиостанция РБМ", 15], ["Плазменные флаконы", 480]], "columns": ["item_name", "quantity"], "row_count": 13}', '{supply,hard}');
-INSERT INTO public.tasks VALUES (60, 2, 8, 'Топ вражеских частей', 'Для анализа тактики противника требуется определить три вражеских подразделения, одержавших наибольшее количество побед над советскими войсками. Для этого необходимо проанализировать все бои, в которых вражеские подразделения участвовали, и выявить те сражения, где результат не указывал на победу СССР. В каждом таком бою нужно подсчитать количество безвозвратных потерь среди советских солдат, проходивших службу в подразделениях, участвовавших в этом бою, и с помощью ранжирования определить, какое из вражеских подразделений нанесло наибольший урон, считая его победителем в случае, если в бою было несколько вражеских подразделений. Затем для каждого вражеского подразделения необходимо подсчитать общее количество таких побед (по числу боёв, где оно заняло первое место по урону) и суммарное количество советских потерь, понесённых в этих боях. В результате следует вывести названия трёх лучших по числу побед подразделений, а также количество их побед и общее число потерь среди советских солдат в этих сражениях, отсортировав сначала по убыванию числа побед, а затем — по убыванию суммарных потерь. Выведите unit_name, victories и total_soviet_losses по убыванию  victories и total_soviet_losses.', 'Используйте `RANK()`, `COUNT` с фильтрацией по результату битв и `LIMIT 3`', NULL, '{"data": [["17-я танковая дивизия", 1, 2.0], ["1-я танковая дивизия СС \"Лейбштандарт Адольф Гитлер\"", 1, 1.0], ["9-я армия", 1, 1.0]], "columns": ["unit_name", "victories", "total_soviet_losses"], "row_count": 3}', '{window,hard}');
-INSERT INTO public.tasks VALUES (82, 2, 9, 'Прогноз износа техники', 'Для прогнозирования будущих потребностей в ремонте и замене снаряжения необходимо проанализировать его расход по годам с использованием сглаживающего алгоритма. Для каждого типа снаряжения (equipment_type) и каждого года (issue_date) требуется рассчитать коэффициент потерь как отношение количества снаряжения, выданного солдатам, к количеству солдат, проходивших службу в тот же год, чтобы учесть масштабы деятельности частей. Данный коэффициент следует сгладить с помощью трёхлетнего скользящего среднего (включая текущий год и два предыдущих), чтобы устранить случайные колебания и выявить общую тенденцию. Выведите тип снаряжения, год, исходный коэффициент потерь и сглаженное значение, отсортировав результат сначала по типу снаряжения, а затем по году в порядке возрастания', 'Используйте CTE для подсчёта примените AVG(...) OVER (ORDER BY year ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) для сглаживания', NULL, '{"data": [["авиабомбы", 1943.0, 2.1818, 2.1818], ["артиллерия", 1942.0, 0.0769, 0.0769], ["боеприпасы", 1942.0, 9.2308, 9.2308], ["инженерное", 1943.0, 0.0909, 0.0909], ["медицина", 1943.0, 0.7273, 0.7273], ["миномёты", 1944.0, 20.0, 20.0], ["оружие", 1942.0, 0.0769, 0.0769], ["противотанковые", 1944.0, 0.1667, 0.1667], ["самолёты", 1943.0, 0.0909, 0.0909], ["связь", 1942.0, 0.0769, 0.0769], ["танки", 1943.0, 0.0909, 0.0909], ["танки", 1944.0, 0.1667, 0.1288]], "columns": ["equipment_type", "year", "loss_ratio", "smoothed_ratio"], "row_count": 12}', '{hard}');
-INSERT INTO public.tasks VALUES (61, 2, 10, 'Эффективность наград', 'Для оценки соответствия воинских наград реальным результатам в бою необходимо проанализировать подразделения, которые получили наибольшее количество наград. Для каждого такого подразделения следует определить, какие именно награды ему были присвоены, и подсчитать общее количество раз, когда они были вручены (всего наградовано солдат). Далее, для этих же подразделений необходимо подсчитать количество боёв, в которых они одержали победу (результат боя — «победа»), и общее число солдат с безвозвратными потерями («убит» и «пропал без вести»). На основе этих данных рассчитайте соотношение побед к числу наград (victory_per_medal) и потерь к числу наград (death_per_medal) для каждой награды, чтобы оценить, насколько боевые достижения и потери сопоставимы с полученным признанием. Выведите название подразделения, название награды, количество награждений, количество погибших, число побед и два расчётных показателя, отсортировав результат по убыванию соотношения побед к наградам, при этом строки с нулевым значением victory_per_medal должны располагаться в конце списка.', 'Используйте CTE. Объедините данные по unit_id и medal_id. Рассчитайте victory_per_medal и death_per_medal с округлением. В сортировке используйте CASE, чтобы вывести нули в victory_per_medal в конец', NULL, '{"data": [["3-я воздушная армия", "Орден Красной Звезды", 1, 0, 1, 1.0, 0.0], ["150-я стрелковая дивизия", "Медаль \"За оборону Сталинграда\"", 1, 0, 0, 0.0, 0.0], ["106-я стрелковая дивизия", "Медаль \"Партизану Отечественной войны\"", 1, 0, 0, 0.0, 0.0], ["16-я воздушная армия", "Орден Красной Звезды", 1, 0, 0, 0.0, 0.0], ["150-я стрелковая дивизия", "Медаль \"За отвагу\"", 1, 0, 0, 0.0, 0.0], ["8-я гвардейская армия", "Орден Славы", 1, 0, 0, 0.0, 0.0], ["62-я армия", "Медаль \"За взятие Берлина\"", 1, 0, 0, 0.0, 0.0], ["1-я гвардейская танковая армия", "Герой Советского Союза", 1, 0, 0, 0.0, 0.0], ["62-я армия", "Орден Отечественной войны", 1, 0, 0, 0.0, 0.0], ["62-я армия", "Герой Советского Союза", 1, 0, 0, 0.0, 0.0], ["316-я стрелковая дивизия", "Медаль \"За отвагу\"", 1, 0, 0, 0.0, 0.0], ["2-я ударная армия", "Орден Отечественной войны", 1, 0, 0, 0.0, 0.0], ["16-я воздушная армия", "Медаль \"За оборону Москвы\"", 1, 0, 0, 0.0, 0.0]], "columns": ["unit_name", "medal_name", "awarded", "deaths", "victories", "victory_per_medal", "death_per_medal"], "row_count": 13}', '{window,hard}');
-INSERT INTO public.tasks VALUES (83, 2, 11, 'Сезонность боевых действий', 'Для выявления возможных сезонных закономерностей в боевых действиях советских войск необходимо определить, в какие месяцы года они чаще всего одерживали победы. Для этого требуется проанализировать данные о боях, в которых участвовали советские подразделения, и выделить те сражения, исход которых соответствовал победе СССР (например, строка result содержит "победа СССР", "успешно", "советские войска одержали верх" и т.п.). Для каждой победы следует извлечь месяц из даты окончания боя, так как именно к этому моменту становится ясен её итог. Далее необходимо подсчитать количество побед, одержанных в каждом месяце года, и ранжировать результат по убыванию количества побед. Выведите месяц (в виде числа от 1 до 12), его название (для удобства), общее количество побед в этом месяце и процент всех побед, приходящихся на этот месяц, от общего числа побед за весь период. Отсортируйте результат по убыванию количества побед', 'Используйте `EXTRACT(MONTH)` для группировки и `COUNT` с фильтрацией по результату битв', NULL, '{"data": [[4.0, "April", 1, 100.0]], "columns": ["month_num", "month_name", "victory_count", "victory_percentage"], "row_count": 1}', '{hard}');
-INSERT INTO public.tasks VALUES (62, 2, 12, 'Стоимость победы', 'Для анализа ценности побед в боевых действиях требуется определить, какие битвы, несмотря на успех, были наиболее «дорогими» в терминах потерь среди солдат и затрат ресурсов. Для каждой битвы необходимо рассчитать общее количество безвозвратных потерь (солдаты со статусом «убит» или «пропал без вести»), участвовавших в ней, а также среднюю исходную боевую эффективность подразделений, принимавших в ней участие. Дополнительно нужно подсчитать количество единиц снаряжения, использованного солдатами, участвовавшими в битве, что отразит объём израсходованных материальных ресурсов. На основе этих данных следует вычислить условный «стоимостной коэффициент» битвы (cost_ratio) как отношение числа потерь к средней боевой эффективности — чем выше этот коэффициент, тем «дороже» победа. Затем необходимо проранжировать все битвы по убыванию числа потерь (loss_rank) и по убыванию средней эффективности (eff_rank), где ранг 1 присваивается наибольшему значению. В результате нужно вывести название битвы, количество потерь, среднюю боевую эффективность, объём использованного снаряжения, ранги по потерям и эффективности, а также стоимостной коэффициент, отсортировав итоговый список по убыванию cost_ratio', 'Используйте `RANK()` и арифметические операции с агрегатными функциями', NULL, '{"data": [["Оборона Севастополя", 0, 96.6, 0, 1, 1, 0.0], ["Битва за Берлин", 0, 95.0, 2, 1, 2, 0.0], ["Корсунь-Шевченковская операция", 0, 89.3, 1, 1, 3, 0.0], ["Оборона Брестской крепости", 0, 88.9, 0, 1, 4, 0.0], ["Демянская операция", 0, 88.35, 0, 1, 5, 0.0], ["Курская битва", 0, 88.23, 6, 1, 6, 0.0], ["Битва за Москву", 0, 88.1, 0, 1, 7, 0.0], ["Смоленское сражение", 0, 85.07, 4, 1, 8, 0.0], ["Ржевская битва", 0, 85.0, 24, 1, 9, 0.0], ["Блокада Ленинграда", 0, 82.4, 0, 1, 10, 0.0], ["Сталинградская битва", 0, 80.88, 121, 1, 11, 0.0], ["Битва за Кавказ", 0, 78.9, 0, 1, 12, 0.0], ["Оборона Заполярья", 0, 65.8, 0, 1, 13, 0.0], ["Оборона Тулы", 0, 0.0, 0, 1, 14, 0.0], ["Берлинская операция", 0, 0.0, 0, 1, 14, 0.0], ["Пражская операция", 0, 0.0, 0, 1, 14, 0.0], ["Оборона Брестской крепости", 0, 0.0, 0, 1, 14, 0.0], ["Битва при Дебрецене", 0, 0.0, 0, 1, 14, 0.0], ["Операция \"Багратион\"", 0, 0.0, 0, 1, 14, 0.0], ["Висло-Одерская операция", 0, 0.0, 0, 1, 14, 0.0], ["Будапештская операция", 0, 0.0, 0, 1, 14, 0.0], ["Харьковская операция", 0, 0.0, 0, 1, 14, 0.0], ["Битва за Днепр", 0, 0.0, 0, 1, 14, 0.0], ["Таллинский переход", 0, 0.0, 0, 1, 14, 0.0], ["Прорыв блокады Ленинграда", 0, 0.0, 0, 1, 14, 0.0], ["Битва за Воронеж", 0, 0.0, 0, 1, 14, 0.0], ["Керченско-Эльтигенская операция", 0, 0.0, 0, 1, 14, 0.0], ["Балатонская операция", 0, 0.0, 0, 1, 14, 0.0], ["Восточно-Прусская операция", 0, 0.0, 0, 1, 14, 0.0], ["Маньчжурская операция", 0, 0.0, 0, 1, 14, 0.0]], "columns": ["battle_name", "losses", "avg_efficiency", "equipment_used", "loss_rank", "eff_rank", "cost_ratio"], "row_count": 30}', '{window,hard}');
-INSERT INTO public.tasks VALUES (84, 3, 1, 'Пространство имён', 'Отряд занял немецкий вычислительный узел; база пуста — ни одной таблицы, ни одного объекта. Прежде чем вносить разведданные, подпольному архиву нужно своё пространство имён, чтобы не смешаться с тем, что осталось от немцев.
-
-Создайте схему podpolye — отдельное пространство имён для подпольной базы.', 'Пространство имён создаётся одним оператором: CREATE SCHEMA <имя>. Схема — это «папка» для таблиц; больше в этом задании ничего не требуется.', 'CREATE SCHEMA podpolye', '{"mode": "model", "setup": [], "expect": [{"args": {"name": "podpolye"}, "probe": "schema_exists", "title": "схема подполья создана", "value": true}, {"args": {"name": "public"}, "probe": "schema_exists", "title": "схема public не тронута", "value": true}, {"args": {"schema": "podpolye", "grantee": "PUBLIC"}, "probe": "schema_privs", "title": "посторонним схему не открывали", "value": []}, {"args": {}, "probe": "all_roles", "title": "посторонних ролей не заводили", "value": []}], "reveal": "Что проверяется: схема подполья создана; схема public не тронута; посторонним схему не открывали; посторонних ролей не заводили."}', '{ddl,schema}');
-INSERT INTO public.tasks VALUES (85, 3, 2, 'Настройка базы', 'Центр принимает донесения по единому времени, а набирать «podpolye.» перед каждым именем таблицы в полутьме — верный способ ошибиться. Семён требует настроить базу один раз и навсегда.
-
-Настройте базу quest_sandbox: часовой пояс по умолчанию — ''UTC'', а путь поиска схем — сначала podpolye, затем public.', 'Параметры уровня базы задаются оператором изменения базы данных, а не правкой файла настроек: ALTER DATABASE <имя> SET <параметр> TO <значение>. Здесь таких оператора два — по одному на каждый параметр.', 'ALTER DATABASE quest_sandbox SET timezone TO ''UTC''; ALTER DATABASE quest_sandbox SET search_path TO podpolye, public', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye"], "expect": [{"args": {"db": "quest_sandbox"}, "probe": "db_settings", "title": "настройки базы", "value": [["search_path", "podpolye,public"], ["timezone", "UTC"]]}, {"args": {"name": "podpolye"}, "probe": "schema_exists", "title": "схема на месте", "value": true}], "reveal": "Что проверяется: настройки базы; схема на месте."}', '{ddl,config}');
-INSERT INTO public.tasks VALUES (86, 3, 3, 'Таблица складов', 'Первое, что нужно Центру, — учёт немецких складов: номер, название, сектор города и вместимость. Номер — то, чем склад отличается от всех остальных; безымянный склад разведданными не является, а вот вместимость известна не всегда.
-
-Создайте таблицу podpolye.depots: depot_id — целое число, первичный ключ; depot_name — строка не длиннее 40 символов, обязательная; sector — ровно один символ, обязательный; capacity_t — целое число, может оставаться пустым.', '«Целое число» — тип integer, «строка не длиннее N» — varchar(N), «ровно один символ» — char(1). Обязательность — NOT NULL, а первичный ключ можно объявить прямо в определении столбца: depot_id integer PRIMARY KEY.', 'CREATE TABLE podpolye.depots(
-    depot_id   integer PRIMARY KEY,
-    depot_name varchar(40) NOT NULL,
-    sector     char(1) NOT NULL,
-    capacity_t integer)', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye"], "expect": [{"args": {"table": "podpolye.depots"}, "probe": "columns", "title": "столбцы таблицы складов", "value": [["depot_id", "integer", null, true, false], ["depot_name", "character varying", 40, true, false], ["sector", "character", 1, true, false], ["capacity_t", "integer", null, false, false]]}, {"args": {"table": "podpolye.depots"}, "probe": "primary_key", "title": "первичный ключ складов", "value": ["depot_id"]}, {"args": {"table": "podpolye.depots"}, "probe": "uniques", "title": "лишних ограничений уникальности нет", "value": []}, {"args": {"table": "podpolye.depots"}, "probe": "public_privs", "title": "права никому не раздавали", "value": []}], "reveal": "Что проверяется: столбцы таблицы складов; первичный ключ складов; лишних ограничений уникальности нет; права никому не раздавали."}', '{ddl,table,constraint}');
-INSERT INTO public.tasks VALUES (87, 3, 4, 'Заплата на сектор', 'Наблюдатель при свече вывел «8» вместо «B» — и база приняла склад в несуществующем секторе. Город поделён ровно на четыре сектора: A, B, C и D. Дыра должна закрыться этой же ночью.
-
-Добавьте к таблице podpolye.depots ограничение-проверку, которое разрешает в столбце sector только значения ''A'', ''B'', ''C'' и ''D''.', 'Ограничение добавляется к готовой таблице: ALTER TABLE ... ADD CONSTRAINT <имя> CHECK (условие). Условие «одно из перечисленных значений» короче всего записывается через IN: sector IN (''A'',''B'',''C'',''D'').', 'ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)"], "expect": [{"args": {"cases": [{"row": {"sector": "A", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "A"}, {"row": {"sector": "B", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "B"}, {"row": {"sector": "C", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "C"}, {"row": {"sector": "D", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "D"}, {"row": {"sector": "E", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "E"}, {"row": {"sector": "X", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "X"}, {"row": {"sector": "Z", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "Z"}, {"row": {"sector": "a", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "строчная a"}, {"row": {"sector": "Z", "depot_id": 99, "depot_name": "Проба"}, "label": "Z без вместимости"}], "table": "podpolye.depots"}, "probe": "accepts", "title": "какие сектора база принимает", "value": [["A", true], ["B", true], ["C", true], ["D", true], ["E", false], ["X", false], ["Z", false], ["строчная a", false], ["Z без вместимости", false]]}, {"args": {"table": "podpolye.depots"}, "probe": "columns", "title": "столбцы складов не тронуты", "value": [["depot_id", "integer", null, true, false], ["depot_name", "character varying", 40, true, false], ["sector", "character", 1, true, false], ["capacity_t", "integer", null, false, false]]}, {"args": {"table": "podpolye.depots"}, "probe": "primary_key", "title": "первичный ключ на месте", "value": ["depot_id"]}], "reveal": "Что проверяется: какие сектора база принимает; столбцы складов не тронуты; первичный ключ на месте."}', '{ddl,alter,constraint,check}');
-INSERT INTO public.tasks VALUES (88, 3, 5, 'Справочник секторов', 'Сектор — не буква, а самостоятельная вещь с названием: «Заречный», «Вокзальный». Склады должны ссылаться на справочник по-настоящему: сектор, за которым числятся склады, стереть нельзя.
-
-Создайте справочник podpolye.sectors: sector — ровно один символ, первичный ключ; title — строка не длиннее 30 символов, обязательная. Затем свяжите с ним склады: добавьте к podpolye.depots внешний ключ из столбца sector на sectors.sector, запрещающий удалять сектор, пока на него ссылаются склады.', 'Справочник создаётся обычным CREATE TABLE, а связь добавляется к уже существующей таблице: ALTER TABLE ... ADD CONSTRAINT ... FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector). Запрет удаления «пока есть ссылки» — это ON DELETE RESTRICT.', 'CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL); ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))"], "expect": [{"args": {"table": "podpolye.sectors"}, "probe": "columns", "title": "столбцы справочника секторов", "value": [["sector", "character", 1, true, false], ["title", "character varying", 30, true, false]]}, {"args": {"table": "podpolye.sectors"}, "probe": "primary_key", "title": "первичный ключ справочника", "value": ["sector"]}, {"args": {"table": "podpolye.depots"}, "probe": "foreign_keys", "title": "внешний ключ складов на сектора", "value": [["sector", "podpolye.sectors", "sector", "запрещает удаление"]]}, {"args": {"table": "podpolye.depots"}, "probe": "columns", "title": "склады остались прежними", "value": [["depot_id", "integer", null, true, false], ["depot_name", "character varying", 40, true, false], ["sector", "character", 1, true, false], ["capacity_t", "integer", null, false, false]]}, {"args": {"table": "podpolye.depots"}, "probe": "primary_key", "title": "первичный ключ складов на месте", "value": ["depot_id"]}], "reveal": "Что проверяется: столбцы справочника секторов; первичный ключ справочника; внешний ключ складов на сектора; склады остались прежними; первичный ключ складов на месте."}', '{ddl,table,foreign_key}');
-INSERT INTO public.tasks VALUES (89, 3, 6, 'Первые донесения', 'Каркас готов, справочник заполнен, база пуста. Три первых склада должны попасть в базу без единой ошибки: что внесено неверно, Центр примет за правду.
-
-Внесите в podpolye.depots три склада: (1, ''Арсенал №1'', ''A'', 800), (2, ''Топливный склад'', ''A'', 450) и (3, ''Продовольственный'', ''B'', 300).', 'Несколько строк вносятся одним оператором: INSERT INTO <таблица>(столбцы) VALUES (...), (...), (...). Строковые значения — в одинарных кавычках, порядок значений должен совпадать с порядком перечисленных столбцов.', 'INSERT INTO podpolye.depots(depot_id, depot_name, sector, capacity_t) VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES (''A'',''Заречный''),(''B'',''Вокзальный''),(''C'',''Старый город''),(''D'',''Фабричный'')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT"], "expect": [{"args": {"table": "podpolye.depots", "columns": ["depot_id", "depot_name", "sector", "capacity_t"], "order_by": "depot_id"}, "probe": "rows", "title": "содержимое таблицы складов", "value": [[1, "Арсенал №1", "A", 800], [2, "Топливный склад", "A", 450], [3, "Продовольственный", "B", 300]]}, {"args": {"table": "podpolye.depots"}, "probe": "columns", "title": "таблица осталась прежней", "value": [["depot_id", "integer", null, true, false], ["depot_name", "character varying", 40, true, false], ["sector", "character", 1, true, false], ["capacity_t", "integer", null, false, false]]}, {"args": {"table": "podpolye.depots"}, "probe": "primary_key", "title": "первичный ключ на месте", "value": ["depot_id"]}], "reveal": "Что проверяется: содержимое таблицы складов; таблица осталась прежней; первичный ключ на месте."}', '{dml,insert}');
-INSERT INTO public.tasks VALUES (104, 4, 9, 'Передоверие', 'Отряд уходит, узел передаётся соседней группе. Их бойцы вам незнакомы — и не должны быть: раздавать доступ своим людям соседи будут сами. Для этого командованию нужно право передавать чтение дальше.
-
-Выдайте роли commanders право читать таблицу podpolye.safehouses так, чтобы она могла передавать это право другим ролям.', 'Возможность передавать право дальше добавляется к обычной выдаче: GRANT SELECT ON podpolye.safehouses TO commanders WITH GRANT OPTION. Именно WITH GRANT OPTION отличает передоверие от простого чтения.', 'GRANT SELECT ON podpolye.safehouses TO commanders WITH GRANT OPTION', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)", "CREATE ROLE grisha LOGIN", "GRANT scouts TO grisha", "ALTER DEFAULT PRIVILEGES IN SCHEMA podpolye GRANT SELECT ON TABLES TO scouts"], "expect": [{"args": {"table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "grantable", "title": "право командования и возможность передачи", "value": [["DELETE", false], ["INSERT", false], ["REFERENCES", false], ["SELECT", true], ["TRIGGER", false], ["TRUNCATE", false], ["UPDATE", false]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "has_privs", "title": "состав прав командования не менялся", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", true], ["DELETE", true], ["TRUNCATE", true], ["REFERENCES", true], ["TRIGGER", true]]}, {"args": {"schema": "podpolye", "grantee": "commanders"}, "probe": "schema_privs", "title": "доступ командования к схеме сохранён", "value": ["USAGE"]}, {"args": {"privs": ["SELECT"], "table": "podpolye.safehouses", "grantees": ["spies", "PUBLIC"]}, "probe": "privs_matrix", "title": "посторонним явки не открывали", "value": [["spies", "SELECT", false], ["PUBLIC", "SELECT", false]]}, {"args": {}, "probe": "all_memberships", "title": "членство ролей не меняли", "value": [["grisha", "scouts"]]}], "reveal": "Что проверяется: право командования и возможность передачи; состав прав командования не менялся; доступ командования к схеме сохранён; посторонним явки не открывали; членство ролей не меняли."}', '{dcl,grant,grant_option}');
-INSERT INTO public.tasks VALUES (90, 3, 7, 'Журнал рейсов', 'Наблюдатели приносят записки о вывозе: склад, дата, тоннаж. Дата почти всегда сегодняшняя — пусть база подставляет её сама. А рейсы склада, ушедшего из учёта, обязаны исчезнуть вместе с ним.
-
-Создайте таблицу podpolye.movements: move_id — целое, первичный ключ; depot_id — целое, обязательное, внешний ключ на podpolye.depots(depot_id), причём вместе со складом должны удаляться и его рейсы; at_date — дата, обязательная, по умолчанию текущая; tons — целое.', 'Связь можно объявить прямо в столбце: depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE — каскад и означает «удалять рейсы вместе со складом». Текущая дата по умолчанию — DEFAULT current_date.', 'CREATE TABLE podpolye.movements(
-    move_id  integer PRIMARY KEY,
-    depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE,
-    at_date  date NOT NULL DEFAULT current_date,
-    tons     integer)', '{"mode": "model", "post": ["INSERT INTO podpolye.movements(move_id, depot_id, tons) VALUES (1,1,60),(2,1,38),(3,2,52)"], "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES (''A'',''Заречный''),(''B'',''Вокзальный''),(''C'',''Старый город''),(''D'',''Фабричный'')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)"], "expect": [{"args": {"table": "podpolye.movements"}, "probe": "columns", "title": "столбцы таблицы рейсов", "value": [["move_id", "integer", null, true, false], ["depot_id", "integer", null, true, false], ["at_date", "date", null, true, true], ["tons", "integer", null, false, false]]}, {"args": {"table": "podpolye.movements"}, "probe": "primary_key", "title": "первичный ключ рейсов", "value": ["move_id"]}, {"args": {"table": "podpolye.movements"}, "probe": "foreign_keys", "title": "внешний ключ рейсов на склады", "value": [["depot_id", "podpolye.depots", "depot_id", "удаляет следом"]]}, {"args": {"table": "podpolye.movements", "columns": ["at_date"]}, "probe": "default_kind", "title": "дата подставляется сама", "value": [["at_date", "текущий момент"]]}, {"args": {"table": "podpolye.depots", "value": 1, "column": "depot_id"}, "probe": "delete_allowed", "title": "склад удаляется вместе со своими рейсами", "value": true}, {"args": {"cases": [{"row": {"tons": 5, "move_id": 1, "depot_id": 2}, "label": "повтор номера"}, {"row": {"tons": 5, "move_id": 99, "depot_id": 2}, "label": "новый номер"}], "table": "podpolye.movements"}, "probe": "accepts", "title": "повтор номера рейса и новый номер", "value": [["повтор номера", false], ["новый номер", true]]}], "reveal": "Что проверяется: столбцы таблицы рейсов; первичный ключ рейсов; внешний ключ рейсов на склады; дата подставляется сама; склад удаляется вместе со своими рейсами; повтор номера рейса и новый номер."}', '{ddl,table,foreign_key,default}');
-INSERT INTO public.tasks VALUES (91, 3, 8, 'Груз и вес', 'В таблице рейсов не хватает главного — что именно вывозят. Заодно в базу попал рейс с отрицательным весом: отрицательных тонн не бывает, и база должна знать это сама.
-
-В таблицу podpolye.movements добавьте столбец cargo_ru — строка не длиннее 30 символов, и ограничение, требующее, чтобы значение tons было строго больше нуля.', 'Здесь два отдельных действия над готовой таблицей: ALTER TABLE ... ADD COLUMN cargo_ru varchar(30) и ALTER TABLE ... ADD CONSTRAINT ... CHECK (tons > 0). «Строго больше нуля» — именно >, а не >=.', 'ALTER TABLE podpolye.movements ADD COLUMN cargo_ru varchar(30); ALTER TABLE podpolye.movements ADD CONSTRAINT movements_tons_chk CHECK (tons > 0)', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES (''A'',''Заречный''),(''B'',''Вокзальный''),(''C'',''Старый город''),(''D'',''Фабричный'')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.movements(\n    move_id  integer PRIMARY KEY,\n    depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE,\n    at_date  date NOT NULL DEFAULT current_date,\n    tons     integer)", "INSERT INTO podpolye.movements(move_id, depot_id, at_date, tons) VALUES (1,1,''1944-09-11'',60),(2,1,''1944-09-15'',38),(3,2,''1944-09-12'',52),(4,3,''1944-09-14'',22),(5,3,''1944-09-18'',45)"], "expect": [{"args": {"table": "podpolye.movements"}, "probe": "columns", "title": "столбцы рейсов после правки", "value": [["move_id", "integer", null, true, false], ["depot_id", "integer", null, true, false], ["at_date", "date", null, true, true], ["tons", "integer", null, false, false], ["cargo_ru", "character varying", 30, false, false]]}, {"args": {"cases": [{"row": {"tons": 10, "move_id": 99, "depot_id": 1}, "label": "10 тонн"}, {"row": {"tons": 5, "move_id": 99, "depot_id": 1}, "label": "5 тонн"}, {"row": {"tons": 1, "move_id": 99, "depot_id": 1}, "label": "1 тонна"}, {"row": {"tons": 0, "move_id": 99, "depot_id": 1}, "label": "ноль"}, {"row": {"tons": -5, "move_id": 99, "depot_id": 1}, "label": "минус пять"}, {"row": {"tons": -100, "move_id": 99, "depot_id": 1}, "label": "минус сто"}], "table": "podpolye.movements"}, "probe": "accepts", "title": "какой вес база принимает", "value": [["10 тонн", true], ["5 тонн", true], ["1 тонна", true], ["ноль", false], ["минус пять", false], ["минус сто", false]]}, {"args": {"table": "podpolye.movements"}, "probe": "foreign_keys", "title": "связь со складами не потеряна", "value": [["depot_id", "podpolye.depots", "depot_id", "удаляет следом"]]}, {"args": {"table": "podpolye.movements"}, "probe": "primary_key", "title": "первичный ключ рейсов на месте", "value": ["move_id"]}, {"args": {"table": "podpolye.movements", "columns": ["move_id", "depot_id", "tons"], "order_by": "move_id"}, "probe": "rows", "title": "рейсы на месте", "value": [[1, 1, 60], [2, 1, 38], [3, 2, 52], [4, 3, 22], [5, 3, 45]]}], "reveal": "Что проверяется: столбцы рейсов после правки; какой вес база принимает; связь со складами не потеряна; первичный ключ рейсов на месте; рейсы на месте."}', '{ddl,alter,constraint,check}');
-INSERT INTO public.tasks VALUES (92, 3, 9, 'Указатель', 'Счётная машина перебирает весь журнал рейсов ради одной сводки по складу. Нужен указатель по столбцу связи — и он не обязан быть уникальным: с одного склада рейсов много.
-
-Постройте по столбцу depot_id таблицы podpolye.movements обычный, не уникальный индекс.', 'Индекс создаётся оператором CREATE INDEX <имя> ON <таблица>(<столбец>). Слово UNIQUE добавлять не нужно — как раз потому, что значения в depot_id повторяются.', 'CREATE INDEX movements_depot_idx ON podpolye.movements(depot_id)', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES (''A'',''Заречный''),(''B'',''Вокзальный''),(''C'',''Старый город''),(''D'',''Фабричный'')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.movements(\n    move_id  integer PRIMARY KEY,\n    depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE,\n    at_date  date NOT NULL DEFAULT current_date,\n    tons     integer)", "INSERT INTO podpolye.movements(move_id, depot_id, at_date, tons) VALUES (1,1,''1944-09-11'',60),(2,1,''1944-09-15'',38),(3,2,''1944-09-12'',52),(4,3,''1944-09-14'',22),(5,3,''1944-09-18'',45)"], "expect": [{"args": {"table": "podpolye.movements"}, "probe": "indexes", "title": "индексы рейсов, кроме первичного ключа", "value": [["depot_id", false, "btree", false]]}, {"args": {"table": "podpolye.movements"}, "probe": "primary_key", "title": "первичный ключ не тронут", "value": ["move_id"]}, {"args": {"table": "podpolye.movements", "columns": ["move_id", "depot_id", "tons"], "order_by": "move_id"}, "probe": "rows", "title": "рейсы на месте", "value": [[1, 1, 60], [2, 1, 38], [3, 2, 52], [4, 3, 22], [5, 3, 45]]}], "reveal": "Что проверяется: индексы рейсов, кроме первичного ключа; первичный ключ не тронут; рейсы на месте."}', '{ddl,index}');
-INSERT INTO public.tasks VALUES (93, 3, 10, 'Сводка одним словом', 'Семён требует, чтобы сводка вывоза по секторам собиралась сама, одним словом. Мелкие рейсы до 30 тонн — текучка гарнизона, в сводку они не идут.
-
-Создайте представление podpolye.depot_load, явно объявив его столбцы: sector — сектор склада и tons — суммарный вывоз по этому сектору. Учитывайте только рейсы тяжелее 30 тонн, записав условие отбора именно как tons > 30. Имена столбцов укажите в скобках после имени представления: CREATE VIEW podpolye.depot_load(sector, tons) AS ...', 'Представление — это сохранённый запрос: CREATE VIEW <имя>(<столбцы>) AS SELECT ... Внутри — соединение depots и movements по depot_id, отбор WHERE tons > 30 и группировка по сектору с sum(tons).', 'CREATE VIEW podpolye.depot_load(sector, tons) AS SELECT d.sector, sum(m.tons) FROM podpolye.depots d JOIN podpolye.movements m ON m.depot_id = d.depot_id WHERE m.tons > 30 GROUP BY d.sector', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES (''A'',''Заречный''),(''B'',''Вокзальный''),(''C'',''Старый город''),(''D'',''Фабричный'')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.movements(\n    move_id  integer PRIMARY KEY,\n    depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE,\n    at_date  date NOT NULL DEFAULT current_date,\n    tons     integer)", "INSERT INTO podpolye.movements(move_id, depot_id, at_date, tons) VALUES (1,1,''1944-09-11'',60),(2,1,''1944-09-15'',38),(3,2,''1944-09-12'',52),(4,3,''1944-09-14'',22),(5,3,''1944-09-18'',45)"], "expect": [{"args": {"name": "podpolye.depot_load"}, "probe": "view_columns", "title": "столбцы представления", "value": ["sector", "tons"]}, {"args": {"name": "podpolye.depot_load", "mentions": ["depots", "movements", "sum", "group", "sector", "30"]}, "probe": "view_shape", "title": "форма определения представления", "value": [["существует", true], ["упоминает depots", true], ["упоминает movements", true], ["упоминает sum", true], ["упоминает group", true], ["упоминает sector", true], ["упоминает 30", true]]}], "reveal": "Что проверяется: столбцы представления; форма определения представления."}', '{ddl,view,select,where}');
-INSERT INTO public.tasks VALUES (94, 3, 11, 'Наблюдение за складами', 'За каждым складом закреплён свой человек. Один наблюдатель ведёт несколько складов, за одним складом могут следить двое — но пара «человек и склад» должна встречаться ровно один раз. Ключ здесь — именно пара.
-
-Создайте таблицу podpolye.watch: spotter — строка не длиннее 20 символов; depot_id — целое, ссылающееся на podpolye.depots(depot_id). Первичный ключ должен быть составным: пара (spotter, depot_id).', 'Составной ключ нельзя объявить в одном столбце — он записывается отдельным элементом таблицы: PRIMARY KEY (spotter, depot_id). Ссылка на склады при этом остаётся обычным REFERENCES в определении depot_id.', 'CREATE TABLE podpolye.watch(spotter varchar(20), depot_id integer REFERENCES podpolye.depots(depot_id), PRIMARY KEY (spotter, depot_id))', '{"mode": "model", "post": ["INSERT INTO podpolye.watch VALUES (''Гриша'', 1)"], "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN (''A'',''B'',''C'',''D''))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES (''A'',''Заречный''),(''B'',''Вокзальный''),(''C'',''Старый город''),(''D'',''Фабричный'')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)"], "expect": [{"args": {"table": "podpolye.watch"}, "probe": "primary_key", "title": "состав первичного ключа наблюдения", "value": ["spotter", "depot_id"]}, {"args": {"table": "podpolye.watch"}, "probe": "columns", "title": "столбцы наблюдения", "value": [["spotter", "character varying", 20, true, false], ["depot_id", "integer", null, true, false]]}, {"args": {"table": "podpolye.watch"}, "probe": "foreign_keys", "title": "ссылка на склады", "value": [["depot_id", "podpolye.depots", "depot_id", "запрещает удаление"]]}, {"args": {"cases": [{"row": {"spotter": "Гриша", "depot_id": 1}, "label": "та же пара"}, {"row": {"spotter": "Гриша", "depot_id": 2}, "label": "другой склад"}, {"row": {"spotter": "Гриша", "depot_id": 77}, "label": "несуществующий склад"}], "table": "podpolye.watch"}, "probe": "accepts", "title": "повтор пары и другая пара", "value": [["та же пара", false], ["другой склад", true], ["несуществующий склад", false]]}], "reveal": "Что проверяется: состав первичного ключа наблюдения; столбцы наблюдения; ссылка на склады; повтор пары и другая пара."}', '{ddl,table,primary_key,foreign_key}');
-INSERT INTO public.tasks VALUES (95, 3, 12, 'Журнал радиограмм', 'Повтор донесения Центр считает подтверждением и удваивает оценку сил противника — одинаковых текстов быть не должно. Время отправки база ставит сама: радист в эфире на часы не смотрит.
-
-Создайте таблицу podpolye.radiograms: radio_id — целое, первичный ключ; body — текст, обязательный, причём два донесения с одинаковым текстом в журнал попадать не должны; sent_at — отметка времени, обязательная, по умолчанию текущий момент.', '«Одинаковых текстов быть не должно» — это ограничение UNIQUE на столбце body. «Отметка времени» — тип timestamp, а текущий момент по умолчанию — DEFAULT now().', 'CREATE TABLE podpolye.radiograms(radio_id integer PRIMARY KEY, body text NOT NULL UNIQUE, sent_at timestamp NOT NULL DEFAULT now())', '{"mode": "model", "post": ["INSERT INTO podpolye.radiograms(radio_id, body) VALUES (1, ''связь установлена'')"], "setup": ["CREATE SCHEMA podpolye"], "expect": [{"args": {"table": "podpolye.radiograms"}, "probe": "columns", "title": "столбцы журнала донесений", "value": [["radio_id", "integer", null, true, false], ["body", "text", null, true, false], ["sent_at", "timestamp without time zone", null, true, true]]}, {"args": {"table": "podpolye.radiograms"}, "probe": "primary_key", "title": "первичный ключ журнала", "value": ["radio_id"]}, {"args": {"table": "podpolye.radiograms"}, "probe": "uniques", "title": "уникальность в журнале", "value": ["body"]}, {"args": {"table": "podpolye.radiograms", "columns": ["sent_at"]}, "probe": "default_kind", "title": "время проставляется само", "value": [["sent_at", "текущий момент"]]}, {"args": {"table": "podpolye.radiograms", "column": "sent_at"}, "probe": "rows_filled", "title": "отметка времени заполнена", "value": true}, {"args": {"cases": [{"row": {"body": "связь установлена", "radio_id": 2}, "label": "повтор текста"}, {"row": {"body": "иное донесение", "radio_id": 1}, "label": "повтор номера"}, {"row": {"body": "эшелон на восток", "radio_id": 2}, "label": "новое"}], "table": "podpolye.radiograms"}, "probe": "accepts", "title": "повтор текста, повтор номера и новое донесение", "value": [["повтор текста", false], ["повтор номера", false], ["новое", true]]}], "reveal": "Что проверяется: столбцы журнала донесений; первичный ключ журнала; уникальность в журнале; время проставляется само; отметка времени заполнена; повтор текста, повтор номера и новое донесение."}', '{ddl,table,unique,default}');
-INSERT INTO public.tasks VALUES (96, 4, 1, 'Роли отряда', 'Условное имя явки всплыло в немецкой сводке, а работали до сих пор все под одной учётной записью. Разграничение начинается с ролей: командование, разведка, агентура. Это группы, а не люди — входить под ними нельзя.
-
-Заведите три роли: commanders, scouts и spies. Входить в систему непосредственно под ними нельзя.', 'Роль заводится оператором CREATE ROLE <имя> — по одному на каждую. Право входа по умолчанию выключено, поэтому дописывать ничего не нужно; главное — не написать CREATE USER, который как раз вход разрешает.', 'CREATE ROLE commanders; CREATE ROLE scouts; CREATE ROLE spies', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)"], "expect": [{"args": {"names": ["commanders", "scouts", "spies"]}, "probe": "roles", "title": "роли отряда", "value": [["commanders", false, false], ["scouts", false, false], ["spies", false, false]]}, {"args": {}, "probe": "all_roles", "title": "посторонних ролей не заведено", "value": ["commanders", "scouts", "spies"]}, {"args": {}, "probe": "all_memberships", "title": "роли друг в друга не вложены", "value": []}], "reveal": "Что проверяется: роли отряда; посторонних ролей не заведено; роли друг в друга не вложены."}', '{dcl,role}');
-INSERT INTO public.tasks VALUES (97, 4, 2, 'Полный доступ командованию', 'Семён отвечает за отряд целиком; урезать его в правах бессмысленно — он возьмёт их обратно окольным путём. Полный доступ начинается с права войти в саму схему.
-
-Откройте командованию полный доступ: роль commanders должна получить право пользоваться схемой podpolye и все привилегии на таблицы podpolye.depots и podpolye.safehouses.', 'Право войти в схему и права на таблицы выдаются разными операторами: GRANT USAGE ON SCHEMA podpolye TO commanders и GRANT ALL PRIVILEGES ON <таблицы> TO commanders. Слово ALL PRIVILEGES заменяет перечисление всех прав, а таблицы можно указать через запятую.', 'GRANT USAGE ON SCHEMA podpolye TO commanders; GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies"], "expect": [{"args": {"schema": "podpolye", "grantee": "commanders"}, "probe": "schema_privs", "title": "права командования на схему", "value": ["USAGE"]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.depots", "grantee": "commanders"}, "probe": "has_privs", "title": "права командования на склады", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", true], ["DELETE", true], ["TRUNCATE", true], ["REFERENCES", true], ["TRIGGER", true]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "has_privs", "title": "права командования на явки", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", true], ["DELETE", true], ["TRUNCATE", true], ["REFERENCES", true], ["TRIGGER", true]]}, {"args": {"table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "grantable", "title": "передоверия не давали", "value": [["DELETE", false], ["INSERT", false], ["REFERENCES", false], ["SELECT", false], ["TRIGGER", false], ["TRUNCATE", false], ["UPDATE", false]]}, {"args": {"privs": ["SELECT", "UPDATE"], "table": "podpolye.safehouses", "grantees": ["scouts", "spies", "PUBLIC"]}, "probe": "privs_matrix", "title": "остальным ничего не открыли", "value": [["scouts", "SELECT", false], ["scouts", "UPDATE", false], ["spies", "SELECT", false], ["spies", "UPDATE", false], ["PUBLIC", "SELECT", false], ["PUBLIC", "UPDATE", false]]}], "reveal": "Что проверяется: права командования на схему; права командования на склады; права командования на явки; передоверия не давали; остальным ничего не открыли."}', '{dcl,grant}');
-INSERT INTO public.tasks VALUES (98, 4, 3, 'Разведке — только перо', 'Разведчику нужно одно: принести новое. Увидел эшелон — вписал строку. Право править и стирать чужие записи в руках противника опаснее, чем право читать: тихо изменённые координаты уведут удар в жилой квартал.
-
-Выдайте роли scouts право пользоваться схемой podpolye и на таблицу podpolye.depots — только чтение и добавление строк. Права изменять и удалять записи у неё быть не должно.', 'Права перечисляются через запятую в одном операторе: GRANT SELECT, INSERT ON podpolye.depots TO scouts. Отдельным оператором — доступ к схеме: GRANT USAGE ON SCHEMA podpolye TO scouts. ALL здесь писать нельзя — это выдаст лишнее.', 'GRANT USAGE ON SCHEMA podpolye TO scouts; GRANT SELECT, INSERT ON podpolye.depots TO scouts', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders"], "expect": [{"args": {"schema": "podpolye", "grantee": "scouts"}, "probe": "schema_privs", "title": "права разведки на схему", "value": ["USAGE"]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.depots", "grantee": "scouts"}, "probe": "has_privs", "title": "права разведки на склады", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"table": "podpolye.depots", "grantee": "scouts"}, "probe": "grantable", "title": "передоверия не давали", "value": [["INSERT", false], ["SELECT", false]]}, {"args": {"privs": ["SELECT"], "table": "podpolye.depots", "grantees": ["spies", "PUBLIC"]}, "probe": "privs_matrix", "title": "остальным складов не открывали", "value": [["spies", "SELECT", false], ["PUBLIC", "SELECT", false]]}, {"args": {}, "probe": "all_memberships", "title": "роли друг в друга не вложены", "value": []}, {"args": {"schema": "podpolye"}, "probe": "default_privs", "title": "прав по умолчанию не заводили", "value": []}], "reveal": "Что проверяется: права разведки на схему; права разведки на склады; передоверия не давали; остальным складов не открывали; роли друг в друга не вложены; прав по умолчанию не заводили."}', '{dcl,grant}');
-INSERT INTO public.tasks VALUES (99, 4, 4, 'Явки по столбцам', 'В ночь спешки агентам открыли таблицу явок целиком: адреса, хозяева, всё. Агенту нужны только номер явки и сектор; улица и хозяин не должны быть доступны ему ни при каких условиях. Сначала отобрать всё — потом вернуть ровно необходимое.
-
-Отберите у роли spies все права на таблицу podpolye.safehouses, а затем выдайте ей право читать только два столбца — house_id и sector.', 'Сначала REVOKE ALL ON podpolye.safehouses FROM spies. Права на отдельные столбцы выдаются перечислением в скобках сразу после названия права: GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies.', 'REVOKE ALL ON podpolye.safehouses FROM spies; GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT ON podpolye.safehouses TO spies"], "expect": [{"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "spies"}, "probe": "has_privs", "title": "права на таблицу явок целиком", "value": [["SELECT", false], ["INSERT", false], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"table": "podpolye.safehouses", "grantee": "spies"}, "probe": "column_grants_all", "title": "права на отдельные столбцы", "value": [["house_id", "SELECT", false], ["sector", "SELECT", false]]}, {"args": {"table": "podpolye.safehouses", "columns": ["house_id", "sector", "street", "keeper"], "grantee": "spies"}, "probe": "can_read_columns", "title": "что агент может прочитать", "value": [["house_id", true], ["sector", true], ["street", false], ["keeper", false]]}, {"args": {"table": "podpolye.safehouses", "grantee": "spies"}, "probe": "grantable", "title": "передоверия не давали", "value": []}, {"args": {"privs": ["SELECT"], "table": "podpolye.safehouses", "grantees": ["scouts", "PUBLIC"]}, "probe": "privs_matrix", "title": "посторонним явки не открывали", "value": [["scouts", "SELECT", false], ["PUBLIC", "SELECT", false]]}, {"args": {"schema": "podpolye"}, "probe": "default_privs", "title": "прав по умолчанию не заводили", "value": []}], "reveal": "Что проверяется: права на таблицу явок целиком; права на отдельные столбцы; что агент может прочитать; передоверия не давали; посторонним явки не открывали; прав по умолчанию не заводили."}', '{dcl,revoke,column_privileges}');
-INSERT INTO public.tasks VALUES (100, 4, 5, 'Явки по строкам', 'Вторая линия обороны: проваленная явка опаснее незнания — агент придёт по адресу, который уже под наблюдением. Строки с провалом должны исчезнуть из его выборки на уровне правила самой таблицы.
-
-Включите на таблице podpolye.safehouses защиту строк и создайте политику с именем house_open, разрешающую роли spies читать только те строки, где is_burnt равно false.', 'Защита строк включается отдельным оператором: ALTER TABLE ... ENABLE ROW LEVEL SECURITY. Правило видимости — политикой: CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false). Пока защита не включена, политика не действует.', 'ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY; CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)', '{"mode": "model", "post": ["INSERT INTO podpolye.safehouses VALUES (7,''Мост'',''Речная, 4'',''Игнат'',''D'',false),(8,''Склеп'',''Тихая, 1'',''Ким'',''D'',true)"], "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies"], "expect": [{"args": {"table": "podpolye.safehouses"}, "probe": "rls", "title": "защита строк на таблице явок", "value": [true, false]}, {"args": {"table": "podpolye.safehouses"}, "probe": "policies", "title": "политика", "value": [["house_open", "SELECT", "spies"]]}, {"args": {"role": "spies", "table": "podpolye.safehouses", "columns": ["house_id"], "order_by": "house_id"}, "probe": "visible_rows", "title": "номера явок, видимых агенту", "value": [[1], [3], [4], [6], [7]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "spies"}, "probe": "has_privs", "title": "лишних прав агенту не выдали", "value": [["SELECT", false], ["INSERT", false], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"table": "podpolye.safehouses", "grantee": "spies"}, "probe": "column_grants_all", "title": "столбцовые права не расширяли", "value": [["house_id", "SELECT", false], ["sector", "SELECT", false]]}], "reveal": "Что проверяется: защита строк на таблице явок; политика; номера явок, видимых агенту; лишних прав агенту не выдали; столбцовые права не расширяли."}', '{dcl,rls,policy}');
-INSERT INTO public.tasks VALUES (101, 4, 6, 'Боец Гриша', 'Пора заводить людей поимённо. Если Гришу возьмут, отключить надо будет именно его, не тронув остальных. Личных прав не выдавать ни одного: боец получает их только через роль.
-
-Заведите учётную запись grisha, которая может входить в систему, и включите её в роль scouts. Никаких прав на таблицы непосредственно этой учётной записи выдавать не нужно.', 'Учётная запись с правом входа — CREATE ROLE grisha LOGIN (или CREATE USER grisha). Включение в роль — тем же словом, что и выдача прав: GRANT scouts TO grisha. На таблицы при этом не выдаётся ничего.', 'CREATE ROLE grisha LOGIN; GRANT scouts TO grisha', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)"], "expect": [{"args": {"names": ["grisha"]}, "probe": "roles", "title": "учётная запись бойца", "value": [["grisha", true, false]]}, {"args": {"member": "grisha"}, "probe": "member_of", "title": "в какие роли включён боец", "value": ["scouts"]}, {"args": {"member": "grisha"}, "probe": "member_admin", "title": "раздавать членство боец не может", "value": [["scouts", false]]}, {"args": {"table": "podpolye.depots", "grantee": "grisha"}, "probe": "direct_table_grants", "title": "личных прав на таблицы нет", "value": []}, {"args": {"table": "podpolye.depots", "grantee": "grisha"}, "probe": "column_grants_all", "title": "личных прав на столбцы нет", "value": []}, {"args": {"privs": ["SELECT", "INSERT"], "table": "podpolye.depots", "grantee": "grisha"}, "probe": "has_privs", "title": "права пришли через роль", "value": [["SELECT", true], ["INSERT", true]]}, {"args": {"table": "podpolye.depots"}, "probe": "public_privs", "title": "посторонним ничего не открыли", "value": []}, {"args": {"schema": "podpolye"}, "probe": "default_privs", "title": "прав по умолчанию не заводили", "value": []}], "reveal": "Что проверяется: учётная запись бойца; в какие роли включён боец; раздавать членство боец не может; личных прав на таблицы нет; личных прав на столбцы нет; права пришли через роль; посторонним ничего не открыли; прав по умолчанию не заводили."}', '{dcl,role,membership}');
-INSERT INTO public.tasks VALUES (102, 4, 7, 'Отзыв у PUBLIC', 'Права на таблицу явок в спешке выдали PUBLIC — всем, кто сумеет подключиться. Вот почему имя явки оказалось в немецкой сводке: взламывать ничего не пришлось.
-
-Отберите у PUBLIC все права на таблицу podpolye.safehouses. Права, выданные роли commanders отдельно, при этом трогать нельзя.', 'PUBLIC в операторе отзыва пишется как обычное имя роли: REVOKE ALL ON podpolye.safehouses FROM PUBLIC. Отзыв у PUBLIC не трогает права, выданные ролям поимённо, — их отбирать не нужно.', 'REVOKE ALL ON podpolye.safehouses FROM PUBLIC', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)", "CREATE ROLE grisha LOGIN", "GRANT scouts TO grisha", "GRANT SELECT ON podpolye.safehouses TO PUBLIC"], "expect": [{"args": {"table": "podpolye.safehouses"}, "probe": "public_privs", "title": "права PUBLIC на явки", "value": []}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "has_privs", "title": "права командования не тронуты", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", true], ["DELETE", true], ["TRUNCATE", true], ["REFERENCES", true], ["TRIGGER", true]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "spies"}, "probe": "has_privs", "title": "агентура сверх столбцов ничего не получила", "value": [["SELECT", false], ["INSERT", false], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "scouts"}, "probe": "has_privs", "title": "разведке явки не открывали", "value": [["SELECT", false], ["INSERT", false], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"table": "podpolye.safehouses"}, "probe": "columns", "title": "таблица явок цела", "value": [["house_id", "integer", null, true, false], ["code_name", "character varying", 20, true, false], ["street", "character varying", 40, true, false], ["keeper", "character varying", 20, true, false], ["sector", "character", 1, true, false], ["is_burnt", "boolean", null, true, true]]}], "reveal": "Что проверяется: права PUBLIC на явки; права командования не тронуты; агентура сверх столбцов ничего не получила; разведке явки не открывали; таблица явок цела."}', '{dcl,revoke,public}');
-INSERT INTO public.tasks VALUES (103, 4, 8, 'Права наперёд', 'Каждая новая таблица появляется закрытой, и разведка узнаёт о ней, когда кто-нибудь вспомнит выдать права. Правило должно действовать наперёд: всё, что появится в схеме, разведка видит сразу.
-
-Задайте право по умолчанию: все таблицы, которые впредь будут создаваться в схеме podpolye, должны становиться доступными роли scouts на чтение.', 'Права по умолчанию задаются оператором ALTER DEFAULT PRIVILEGES IN SCHEMA podpolye GRANT SELECT ON TABLES TO scouts. Он не трогает существующие таблицы, а описывает, что произойдёт с будущими.', 'ALTER DEFAULT PRIVILEGES IN SCHEMA podpolye GRANT SELECT ON TABLES TO scouts', '{"mode": "model", "post": ["CREATE TABLE podpolye.trains(train_id integer PRIMARY KEY, cargo_ru text)"], "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)", "CREATE ROLE grisha LOGIN", "GRANT scouts TO grisha"], "expect": [{"args": {"schema": "podpolye"}, "probe": "default_privs", "title": "правило по умолчанию в схеме подполья", "value": [["r", "scouts", "SELECT"]]}, {"args": {"schema": "public"}, "probe": "default_privs", "title": "в других схемах правил не заводили", "value": []}, {"args": {"privs": ["SELECT"], "table": "podpolye.trains", "grantee": "scouts"}, "probe": "has_privs", "title": "новая таблица сразу доступна разведке", "value": [["SELECT", true]]}, {"args": {"privs": ["SELECT"], "table": "podpolye.trains", "grantees": ["spies", "PUBLIC"]}, "probe": "privs_matrix", "title": "посторонним она недоступна", "value": [["spies", "SELECT", false], ["PUBLIC", "SELECT", false]]}, {"args": {"schema": "podpolye", "grantee": "scouts"}, "probe": "schema_privs", "title": "доступ разведки к схеме не тронут", "value": ["USAGE"]}, {"args": {}, "probe": "all_memberships", "title": "членство ролей не меняли", "value": [["grisha", "scouts"]]}], "reveal": "Что проверяется: правило по умолчанию в схеме подполья; в других схемах правил не заводили; новая таблица сразу доступна разведке; посторонним она недоступна; доступ разведки к схеме не тронут; членство ролей не меняли."}', '{dcl,default_privileges}');
-INSERT INTO public.tasks VALUES (105, 4, 10, 'Защита от владельца', 'Политика защиты строк не действует на владельца таблицы: тот, кто доберётся до учётной записи узла, увидит все явки разом. Правило надо сделать обязательным и для владельца — пусть узел, оставшись без хозяев, не выдаст никого.
-
-Включите для таблицы podpolye.safehouses принудительную защиту строк, чтобы действующие политики распространялись и на владельца таблицы.', 'Принудительный режим включается оператором ALTER TABLE podpolye.safehouses FORCE ROW LEVEL SECURITY. Обычный ENABLE уже включён раньше — FORCE добавляется поверх него и распространяет правила на владельца.', 'ALTER TABLE podpolye.safehouses FORCE ROW LEVEL SECURITY', '{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\n    depot_id   integer PRIMARY KEY,\n    depot_name varchar(40) NOT NULL,\n    sector     char(1) NOT NULL,\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,''Арсенал №1'',''A'',800),(2,''Топливный склад'',''A'',450),(3,''Продовольственный'',''B'',300)", "CREATE TABLE podpolye.safehouses(\n    house_id  integer PRIMARY KEY,\n    code_name varchar(20) NOT NULL,\n    street    varchar(40) NOT NULL,\n    keeper    varchar(20) NOT NULL,\n    sector    char(1) NOT NULL,\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,''Мельница'',''Заречная, 7'',''Прохор'',''A'',false),(2,''Аптека'',''Соборная, 14'',''Вера'',''A'',true),(3,''Сапожник'',''Кузнечная, 3'',''Пётр'',''B'',false),(4,''Пекарня'',''Хлебный пер., 2'',''Дарья'',''B'',false),(5,''Часовщик'',''Ратушная, 21'',''Артур'',''C'',true),(6,''Прачечная'',''Луговая, 9'',''Клава'',''C'',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)", "CREATE ROLE grisha LOGIN", "GRANT scouts TO grisha", "ALTER DEFAULT PRIVILEGES IN SCHEMA podpolye GRANT SELECT ON TABLES TO scouts", "GRANT SELECT ON podpolye.safehouses TO commanders WITH GRANT OPTION"], "expect": [{"args": {"table": "podpolye.safehouses"}, "probe": "rls", "title": "принудительная защита строк", "value": [true, true]}, {"args": {"table": "podpolye.safehouses"}, "probe": "policies", "title": "политика на месте", "value": [["house_open", "SELECT", "spies"]]}, {"args": {"role": "owner", "table": "podpolye.safehouses", "columns": ["house_id"], "order_by": "house_id"}, "probe": "visible_rows", "title": "владелец больше не видит ни одной явки", "value": []}, {"args": {"table": "podpolye.safehouses"}, "probe": "public_privs", "title": "посторонним прав не раздавали", "value": []}], "reveal": "Что проверяется: принудительная защита строк; политика на месте; владелец больше не видит ни одной явки; посторонним прав не раздавали."}', '{dcl,rls,force}');
-INSERT INTO public.tasks VALUES (14, 0, 13, 'Сила в единстве', 'Подсчитайте количество солдат в каждой воинской части и выведите названия этих частей. Названия частей выведите в алфавитном порядке. Это покажет, какие подразделения были наиболее многочисленными', 'Группировка по `unit_id` с использованием `COUNT(*)`', NULL, '{"data": [["1-й отдельный чехословацкий батальон", 2], ["1-й чехословацкий отдельный батальон", 1], ["1-я гвардейская танковая армия", 2], ["1-я морская бригада", 1], ["101-й инженерно-сапёрный батальон", 2], ["101-й полк НКВД", 1], ["101-й учебный полк", 1], ["106-я стрелковая дивизия", 1], ["14-я отдельная штрафная рота", 1], ["150-я стрелковая дивизия", 2], ["16-я воздушная армия", 2], ["18-я дивизия СС \"Хорст Вессель\"", 1], ["2-я ударная армия", 1], ["225-й отдельный инженерный батальон", 1], ["28-я дивизия народного ополчения", 1], ["3-я воздушная армия", 1], ["316-я стрелковая дивизия", 2], ["369-й отдельный батальон морской пехоты", 1], ["37-й гвардейский миномётный полк", 1], ["46-й гвардейский ночной бомбардировочный полк", 2], ["585-й женский авиаполк", 1], ["62-я армия", 3], ["64-я стрелковая дивизия", 2], ["8-я гвардейская армия", 1], ["88-й отдельный лыжный батальон", 1], ["Отдельная медико-санитарная рота", 1], ["Отдельный батальон связи №45", 1], ["Отдельный отряд собак-истребителей танков", 1], ["Отдельный отряд собак-миноискателей", 2]], "columns": ["unit_name", "total_soldiers"], "row_count": 29}', '{easy}');
-INSERT INTO public.tasks VALUES (70, 1, 13, 'Путь солдата', 'Подсчитайте количество солдат в каждой воинской части и выведите названия этих частей. Названия частей выведите в алфавитном порядке. Это покажет, какие подразделения были наиболее многочисленными', 'Объедините таблицы снаряжения, солдат и частей через `JOIN`', NULL, '{"data": [["1-й отдельный чехословацкий батальон", 2], ["1-й чехословацкий отдельный батальон", 1], ["1-я гвардейская танковая армия", 2], ["1-я морская бригада", 1], ["101-й инженерно-сапёрный батальон", 2], ["101-й полк НКВД", 1], ["101-й учебный полк", 1], ["106-я стрелковая дивизия", 1], ["14-я отдельная штрафная рота", 1], ["150-я стрелковая дивизия", 2], ["16-я воздушная армия", 2], ["18-я дивизия СС \"Хорст Вессель\"", 1], ["2-я ударная армия", 1], ["225-й отдельный инженерный батальон", 1], ["28-я дивизия народного ополчения", 1], ["3-я воздушная армия", 1], ["316-я стрелковая дивизия", 2], ["369-й отдельный батальон морской пехоты", 1], ["37-й гвардейский миномётный полк", 1], ["46-й гвардейский ночной бомбардировочный полк", 2], ["585-й женский авиаполк", 1], ["62-я армия", 3], ["64-я стрелковая дивизия", 2], ["8-я гвардейская армия", 1], ["88-й отдельный лыжный батальон", 1], ["Отдельная медико-санитарная рота", 1], ["Отдельный батальон связи №45", 1], ["Отдельный отряд собак-истребителей танков", 1], ["Отдельный отряд собак-миноискателей", 2]], "columns": ["unit_name", "total_soldiers"], "row_count": 29}', '{medium}');
-INSERT INTO public.tasks VALUES (48, 1, 20, 'Статистика ранений', 'Подсчитайте количество солдат по каждому статусу (status). Это основа для анализа людских потерь', 'Примените CTE для группировки по месяцам и `AVG` в оконной функции', NULL, '{"data": [["жив", 16], ["пропал без вести", 7], ["ранен", 8], ["убит", 9]], "columns": ["status", "count"], "row_count": 4}', '{cte,medium}');
-INSERT INTO public.tasks VALUES (23, 0, 23, 'Годовой отчет сражений', 'Определите, в какие годы начинались боевые операции, и подсчитайте их количество. Выведите год начала (как year) и количество (как battles_count). Отсортируйте по году. (Учитывайте только год начала start_date)', 'Извлеките год из даты с помощью `EXTRACT` и сгруппируйте по нему', NULL, '{"data": [[1941.0, 9], [1942.0, 6], [1943.0, 4], [1944.0, 4], [1945.0, 7]], "columns": ["year", "battles_count"], "row_count": 5}', '{easy}');
-INSERT INTO public.tasks VALUES (51, 1, 23, 'Цена победы', 'Определите, в какие годы начинались боевые операции, и подсчитайте их количество. Выведите год начала (как year) и количество (как battles_count). Отсортируйте по году. (Учитывайте только год начала start_date)', 'Примените CTE для раздельного подсчета потерь и `UNION` для объединения результатов', NULL, '{"data": [[1941.0, 9], [1942.0, 6], [1943.0, 4], [1944.0, 4], [1945.0, 7]], "columns": ["year", "battles_count"], "row_count": 5}', '{cte,stalingrad,medium}');
-INSERT INTO public.tasks VALUES (24, 0, 24, 'Возраст призывника', 'Рассчитайте возраст солдат на момент призыва (год призыва минус год рождения). Назовите колонку enlistment_age. Выведите ФИО и возраст.', 'Используйте функцию `AGE` для расчета разницы между датами', NULL, '{"data": [["Иванов Алексей Петрович", 18.0], ["Смирнова Анна Васильевна", 17.0], ["Петров Дмитрий Иванович", 23.0], ["Козлов Николай Семёнович", 21.0], ["Фёдорова Мария Ивановна", 21.0], ["Жуков Андрей Григорьевич", 26.0], ["Павлов Яков Фёдорович", 25.0], ["Зайцева Людмила Михайловна", 19.0], ["Громов Михаил Сергеевич", 23.0], ["Орлова Вера Павловна", 22.0], ["Новиков Александр Иванович", 20.0], ["Васнецова Татьяна Дмитриевна", 20.0], ["Кузнецов Пётр Васильевич", 25.0], ["Белов Алексей Николаевич", 19.0], ["Соколова Ольга Ивановна", 22.0], ["Морозов Иван Кузьмич", 27.0], ["Волкова Елена Сергеевна", 17.0], ["Ткаченко Григорий Петрович", 17.0], ["Беляев Павел Дмитриевич", 29.0], ["Семёнова Валентина Михайловна", 22.0], ["Ковалёв Сергей Николаевич", 18.0], ["Мельникова Галина Ивановна", 18.0], ["Фёдоров Игорь Васильевич", 28.0], ["Горбачёв Алексей Дмитриевич", 17.0], ["Сидорова Екатерина Петровна", 23.0], ["Смирнов Василий Иванович", 30.0], ["Крылова Надежда Фёдоровна", 18.0], ["Орлов Денис Сергеевич", 17.0], ["Жукова Елена Викторовна", 19.0], ["Гришин Алексей Петрович", 23.0], ["Ткаченко Иван Григорьевич", 21.0], ["Воронцова Лидия Павловна", 19.0], ["Жуковский Виктор Михайлович", 26.0], ["Морозова Анна Сергеевна", 20.0], ["Кузнецов Артём Игоревич", 17.0], ["Соколовская Надежда Викторовна", 18.0], ["Белов Дмитрий Николаевич", 25.0], ["Громова Екатерина Ивановна", 18.0], ["Фролов Павел Сергеевич", 16.0], ["Ковалёва Ольга Дмитриевна", 21.0]], "columns": ["full_name", "enlistment_age"], "row_count": 40}', '{easy}');
-INSERT INTO public.tasks VALUES (52, 1, 24, 'Рейтинг эффективности', 'Рассчитайте возраст солдат на момент призыва (год призыва минус год рождения). Назовите колонку enlistment_age. Выведите ФИО и возраст.', 'Примените `RANK()` и `DENSE_RANK()` для сортировки значений', NULL, '{"data": [["Иванов Алексей Петрович", 18.0], ["Смирнова Анна Васильевна", 17.0], ["Петров Дмитрий Иванович", 23.0], ["Козлов Николай Семёнович", 21.0], ["Фёдорова Мария Ивановна", 21.0], ["Жуков Андрей Григорьевич", 26.0], ["Павлов Яков Фёдорович", 25.0], ["Зайцева Людмила Михайловна", 19.0], ["Громов Михаил Сергеевич", 23.0], ["Орлова Вера Павловна", 22.0], ["Новиков Александр Иванович", 20.0], ["Васнецова Татьяна Дмитриевна", 20.0], ["Кузнецов Пётр Васильевич", 25.0], ["Белов Алексей Николаевич", 19.0], ["Соколова Ольга Ивановна", 22.0], ["Морозов Иван Кузьмич", 27.0], ["Волкова Елена Сергеевна", 17.0], ["Ткаченко Григорий Петрович", 17.0], ["Беляев Павел Дмитриевич", 29.0], ["Семёнова Валентина Михайловна", 22.0], ["Ковалёв Сергей Николаевич", 18.0], ["Мельникова Галина Ивановна", 18.0], ["Фёдоров Игорь Васильевич", 28.0], ["Горбачёв Алексей Дмитриевич", 17.0], ["Сидорова Екатерина Петровна", 23.0], ["Смирнов Василий Иванович", 30.0], ["Крылова Надежда Фёдоровна", 18.0], ["Орлов Денис Сергеевич", 17.0], ["Жукова Елена Викторовна", 19.0], ["Гришин Алексей Петрович", 23.0], ["Ткаченко Иван Григорьевич", 21.0], ["Воронцова Лидия Павловна", 19.0], ["Жуковский Виктор Михайлович", 26.0], ["Морозова Анна Сергеевна", 20.0], ["Кузнецов Артём Игоревич", 17.0], ["Соколовская Надежда Викторовна", 18.0], ["Белов Дмитрий Николаевич", 25.0], ["Громова Екатерина Ивановна", 18.0], ["Фролов Павел Сергеевич", 16.0], ["Ковалёва Ольга Дмитриевна", 21.0]], "columns": ["full_name", "enlistment_age"], "row_count": 40}', '{window,medium}');
-INSERT INTO public.tasks VALUES (25, 0, 25, 'Демография частей', 'Определите минимальный и максимальный возраст солдат на момент призыва в каждой части. Выведите название частей и минимальные (min) и максимальные (max) возраста. Отсортируйте по названию части по алфавиту.', 'Примените `MIN` и `MAX` к году рождения с группировкой по частям', NULL, '{"data": [["1-й отдельный чехословацкий батальон", 19.0, 25.0], ["1-й чехословацкий отдельный батальон", 18.0, 18.0], ["1-я гвардейская танковая армия", 21.0, 25.0], ["1-я морская бригада", 17.0, 17.0], ["101-й инженерно-сапёрный батальон", 16.0, 20.0], ["101-й полк НКВД", 22.0, 22.0], ["101-й учебный полк", 23.0, 23.0], ["106-я стрелковая дивизия", 20.0, 20.0], ["14-я отдельная штрафная рота", 27.0, 27.0], ["150-я стрелковая дивизия", 19.0, 19.0], ["16-я воздушная армия", 22.0, 26.0], ["18-я дивизия СС \"Хорст Вессель\"", 19.0, 19.0], ["2-я ударная армия", 23.0, 23.0], ["225-й отдельный инженерный батальон", 17.0, 17.0], ["28-я дивизия народного ополчения", 17.0, 17.0], ["3-я воздушная армия", 20.0, 20.0], ["316-я стрелковая дивизия", 18.0, 21.0], ["369-й отдельный батальон морской пехоты", 18.0, 18.0], ["37-й гвардейский миномётный полк", 30.0, 30.0], ["46-й гвардейский ночной бомбардировочный полк", 18.0, 26.0], ["585-й женский авиаполк", 28.0, 28.0], ["62-я армия", 17.0, 25.0], ["64-я стрелковая дивизия", 18.0, 21.0], ["8-я гвардейская армия", 22.0, 22.0], ["88-й отдельный лыжный батальон", 29.0, 29.0], ["Отдельная медико-санитарная рота", 17.0, 17.0], ["Отдельный батальон связи №45", 18.0, 18.0], ["Отдельный отряд собак-истребителей танков", 23.0, 23.0], ["Отдельный отряд собак-миноискателей", 17.0, 21.0]], "columns": ["unit_name", "min", "max"], "row_count": 29}', '{easy}');
-INSERT INTO public.tasks VALUES (74, 1, 25, 'Хронология призыва', 'Определите минимальный и максимальный возраст солдат на момент призыва в каждой части. Выведите название частей и минимальные (min) и максимальные (max) возраста. Отсортируйте по названию части по алфавиту.', 'Используйте `ROW_NUMBER()` с группировкой по частям и сортировкой по дате', NULL, '{"data": [["1-й отдельный чехословацкий батальон", 19.0, 25.0], ["1-й чехословацкий отдельный батальон", 18.0, 18.0], ["1-я гвардейская танковая армия", 21.0, 25.0], ["1-я морская бригада", 17.0, 17.0], ["101-й инженерно-сапёрный батальон", 16.0, 20.0], ["101-й полк НКВД", 22.0, 22.0], ["101-й учебный полк", 23.0, 23.0], ["106-я стрелковая дивизия", 20.0, 20.0], ["14-я отдельная штрафная рота", 27.0, 27.0], ["150-я стрелковая дивизия", 19.0, 19.0], ["16-я воздушная армия", 22.0, 26.0], ["18-я дивизия СС \"Хорст Вессель\"", 19.0, 19.0], ["2-я ударная армия", 23.0, 23.0], ["225-й отдельный инженерный батальон", 17.0, 17.0], ["28-я дивизия народного ополчения", 17.0, 17.0], ["3-я воздушная армия", 20.0, 20.0], ["316-я стрелковая дивизия", 18.0, 21.0], ["369-й отдельный батальон морской пехоты", 18.0, 18.0], ["37-й гвардейский миномётный полк", 30.0, 30.0], ["46-й гвардейский ночной бомбардировочный полк", 18.0, 26.0], ["585-й женский авиаполк", 28.0, 28.0], ["62-я армия", 17.0, 25.0], ["64-я стрелковая дивизия", 18.0, 21.0], ["8-я гвардейская армия", 22.0, 22.0], ["88-й отдельный лыжный батальон", 29.0, 29.0], ["Отдельная медико-санитарная рота", 17.0, 17.0], ["Отдельный батальон связи №45", 18.0, 18.0], ["Отдельный отряд собак-истребителей танков", 23.0, 23.0], ["Отдельный отряд собак-миноискателей", 17.0, 21.0]], "columns": ["unit_name", "min", "max"], "row_count": 29}', '{medium}');
-INSERT INTO public.tasks VALUES (26, 0, 26, 'Городская аналитика', 'Вычислите средний возраст солдат на момент призыва по городам призыва. Выведите название города и средний возраст как avg_age. Результат округлите до целого, а города выведите в обратном алфавитном порядке.', 'Группировка по городам с использованием `AVG` и арифметических операций. Округление с помощью `ROUND`', NULL, '{"data": [["Челябинск", 18.0], ["Харьков", 22.0], ["Тула", 27.0], ["Сталинград", 19.0], ["Смоленск", 20.0], ["Севастополь", 18.0], ["Свердловск", 23.0], ["Самара", 29.0], ["Ростов-на-Дону", 20.0], ["Омск", 22.0], ["Одесса", 20.0], ["Новосибирск", 25.0], ["Мурманск", 25.0], ["Москва", 18.0], ["Минск", 25.0], ["Ленинград", 18.0], ["Киев", 23.0], ["Казань", 28.0], ["Горький", 18.0], ["Воронеж", 17.0], ["Волгоград", 25.0], ["Брянск", 17.0]], "columns": ["enlistment_city", "avg_age"], "row_count": 22}', '{easy}');
-INSERT INTO public.tasks VALUES (53, 1, 26, 'Циклы пополнения', 'Вычислите средний возраст солдат на момент призыва по городам призыва. Выведите название города и средний возраст как avg_age. Результат округлите до целого, а города выведите в обратном алфавитном порядке.', 'Используйте `LAG()` и `LEAD()` для навигации по датам в рамках части', NULL, '{"data": [["Челябинск", 18.0], ["Харьков", 22.0], ["Тула", 27.0], ["Сталинград", 19.0], ["Смоленск", 20.0], ["Севастополь", 18.0], ["Свердловск", 23.0], ["Самара", 29.0], ["Ростов-на-Дону", 20.0], ["Омск", 22.0], ["Одесса", 20.0], ["Новосибирск", 25.0], ["Мурманск", 25.0], ["Москва", 18.0], ["Минск", 25.0], ["Ленинград", 18.0], ["Киев", 23.0], ["Казань", 28.0], ["Горький", 18.0], ["Воронеж", 17.0], ["Волгоград", 25.0], ["Брянск", 17.0]], "columns": ["enlistment_city", "avg_age"], "row_count": 22}', '{window,medium}');
-INSERT INTO public.tasks VALUES (28, 0, 28, 'История воинских частей', 'Сгруппируйте части по году формирования и подсчитайте их количество. Выведите год формирования (как formation_year) и количество частей (как units_count). Отсортируйте по году формирования.', 'Извлеките год из `formation_date` с помощью `EXTRACT`', NULL, '{"data": [[1939.0, 1], [1941.0, 8], [1942.0, 12], [1943.0, 8], [1944.0, 1]], "columns": ["formation_year", "units_count"], "row_count": 5}', '{easy}');
-INSERT INTO public.tasks (task_global_id, mission_id, task_id, title, description, clue, correct_query, expected_result, tags) VALUES (106, 5, 1, 'Возраст призыва', 'Напишите скалярную функцию get_enlistment_age(p_soldier_id INT), возвращающую возраст солдата на момент призыва (год призыва из enlistment_date минус birth_year).', 'Используйте CREATE OR REPLACE FUNCTION get_enlistment_age(p_soldier_id INT) RETURNS INT AS $$ ... $$ LANGUAGE plpgsql;', 'CREATE OR REPLACE FUNCTION get_enlistment_age(p_soldier_id INT) RETURNS INT AS $$ DECLARE v_age INT; BEGIN SELECT (EXTRACT(YEAR FROM enlistment_date) - birth_year)::INT INTO v_age FROM soldier WHERE id = p_soldier_id; RETURN v_age; END; $$ LANGUAGE plpgsql;', '{"mode": "ddl", "test_query": "SELECT get_enlistment_age(1);", "columns": ["get_enlistment_age"], "data": [[18]]}', '{plpgsql,function,scalar,mission5}');
-INSERT INTO public.tasks (task_global_id, mission_id, task_id, title, description, clue, correct_query, expected_result, tags) VALUES (107, 5, 2, 'Бойцы подразделения', 'Напишите табличную функцию get_unit_soldiers(p_unit_name VARCHAR), возвращающую таблицу (full_name VARCHAR, enlistment_city VARCHAR) с бойцами, служившими в указанной части.', 'Используйте RETURNS TABLE (full_name VARCHAR, enlistment_city VARCHAR) и RETURN QUERY SELECT s.full_name, s.enlistment_city FROM soldier s JOIN military_service ms ON s.id = ms.soldier_id JOIN military_unit mu ON ms.unit_id = mu.id WHERE mu.unit_name = p_unit_name;', 'CREATE OR REPLACE FUNCTION get_unit_soldiers(p_unit_name VARCHAR) RETURNS TABLE (full_name VARCHAR, enlistment_city VARCHAR) AS $$ BEGIN RETURN QUERY SELECT s.full_name, s.enlistment_city FROM soldier s JOIN military_service ms ON s.id = ms.soldier_id JOIN military_unit mu ON ms.unit_id = mu.id WHERE mu.unit_name = p_unit_name; END; $$ LANGUAGE plpgsql;', '{"mode": "ddl", "test_query": "SELECT * FROM get_unit_soldiers(''1-я морская бригада'') ORDER BY full_name;", "columns": ["full_name", "enlistment_city"], "data": [["Волкова Елена Сергеевна", "Ленинград"]]}', '{plpgsql,function,table_function,mission5}');
-INSERT INTO public.tasks (task_global_id, mission_id, task_id, title, description, clue, correct_query, expected_result, tags) VALUES (108, 5, 3, 'Перевод военнослужащего', 'Напишите хранимую процедуру transfer_soldier(p_soldier_id INT, p_new_unit_id INT), которая переводит солдата в новую часть: закрывает текущую службу (end_date = CURRENT_DATE, где end_date IS NULL) и создает новую запись о службе с unit_id = p_new_unit_id и start_date = CURRENT_DATE.', 'Используйте CREATE OR REPLACE PROCEDURE transfer_soldier(p_soldier_id INT, p_new_unit_id INT) AS $$ BEGIN UPDATE military_service SET end_date = CURRENT_DATE WHERE soldier_id = p_soldier_id AND end_date IS NULL; INSERT INTO military_service (soldier_id, unit_id, start_date) VALUES (p_soldier_id, p_new_unit_id, CURRENT_DATE); END; $$ LANGUAGE plpgsql;', 'CREATE OR REPLACE PROCEDURE transfer_soldier(p_soldier_id INT, p_new_unit_id INT) AS $$ BEGIN UPDATE military_service SET end_date = CURRENT_DATE WHERE soldier_id = p_soldier_id AND end_date IS NULL; INSERT INTO military_service (soldier_id, unit_id, start_date) VALUES (p_soldier_id, p_new_unit_id, CURRENT_DATE); END; $$ LANGUAGE plpgsql;', '{"mode": "ddl", "test_query": "CALL transfer_soldier(1, 2); SELECT unit_id FROM military_service WHERE soldier_id = 1 ORDER BY id DESC LIMIT 1;", "columns": ["unit_id"], "data": [[2]]}', '{plpgsql,procedure,mission5}');
-INSERT INTO public.tasks (task_global_id, mission_id, task_id, title, description, clue, correct_query, expected_result, tags) VALUES (109, 5, 4, 'Аудит поступления техники', 'Создайте триггерную функцию log_equipment_addition() и триггер trg_after_equipment_insert на таблице equipment (AFTER INSERT FOR EACH ROW), который при добавлении новой техники записывает в таблицу equipment_audit строку с item_name (NEW.item_name) и added_at (CURRENT_DATE).', 'Триггерная функция должна иметь RETURNS TRIGGER, выполнять INSERT INTO equipment_audit (item_name, added_at) VALUES (NEW.item_name, CURRENT_DATE); RETURN NEW; а триггер: CREATE TRIGGER trg_after_equipment_insert AFTER INSERT ON equipment FOR EACH ROW EXECUTE FUNCTION log_equipment_addition();', 'CREATE OR REPLACE FUNCTION log_equipment_addition() RETURNS TRIGGER AS $$ BEGIN INSERT INTO equipment_audit (item_name, added_at) VALUES (NEW.item_name, CURRENT_DATE); RETURN NEW; END; $$ LANGUAGE plpgsql; CREATE TRIGGER trg_after_equipment_insert AFTER INSERT ON equipment FOR EACH ROW EXECUTE FUNCTION log_equipment_addition();', '{"mode": "ddl", "test_query": "INSERT INTO equipment (id, unit_id, equipment_type, item_name, quantity, last_replenishment) VALUES (9999, 1, ''тест'', ''Тестовый образец'', 1, CURRENT_DATE); SELECT item_name FROM equipment_audit WHERE item_name = ''Тестовый образец'';", "columns": ["item_name"], "data": [["Тестовый образец"]]}', '{plpgsql,trigger,audit,mission5}');
-INSERT INTO public.tasks (task_global_id, mission_id, task_id, title, description, clue, correct_query, expected_result, tags) VALUES (110, 5, 5, 'Контроль возраста призыва', 'Создайте триггерную функцию validate_soldier_age() и триггер trg_before_soldier_insert на таблице soldier (BEFORE INSERT FOR EACH ROW), который проверяет возраст бойца: если EXTRACT(YEAR FROM NEW.enlistment_date) - NEW.birth_year < 16, вызывается ошибка RAISE EXCEPTION ''Возраст призывника не может быть меньше 16 лет''. В остальных случаях возвращается NEW.', 'В теле триггерной функции проверьте IF (EXTRACT(YEAR FROM NEW.enlistment_date) - NEW.birth_year) < 16 THEN RAISE EXCEPTION ''Возраст призывника не может быть меньше 16 лет''; END IF; RETURN NEW;', 'CREATE OR REPLACE FUNCTION validate_soldier_age() RETURNS TRIGGER AS $$ BEGIN IF (EXTRACT(YEAR FROM NEW.enlistment_date) - NEW.birth_year) < 16 THEN RAISE EXCEPTION ''Возраст призывника не может быть меньше 16 лет''; END IF; RETURN NEW; END; $$ LANGUAGE plpgsql; CREATE TRIGGER trg_before_soldier_insert BEFORE INSERT ON soldier FOR EACH ROW EXECUTE FUNCTION validate_soldier_age();', '{"mode": "ddl", "test_query": "INSERT INTO soldier (id, full_name, birth_year, rank, branch, enlistment_city, enlistment_date) VALUES (9999, ''Малолетний боец'', 1930, ''рядовой'', ''пехота'', ''Москва'', ''1941-01-01'');", "expect_error": true}', '{plpgsql,trigger,validation,mission5}');
-
-
---
--- Data for Name: tasks_solved; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.tasks_solved (user_id, task_global_id, solved_at) FROM stdin;
-5	1	2026-09-08
-5	2	2026-09-08
-7	1	2026-09-08
-7	2	2026-09-08
-5	4	2026-09-08
-7	4	2026-09-08
-5	5	2026-09-08
-7	5	2026-09-08
-5	7	2026-09-08
-5	8	2026-09-08
-5	9	2026-09-08
-5	10	2026-09-08
-5	11	2026-09-08
-5	12	2026-09-08
-5	13	2026-09-08
-9	1	2026-09-08
-9	2	2026-09-08
-9	4	2026-09-08
-9	5	2026-09-08
-9	7	2026-09-08
-9	8	2026-09-08
-9	9	2026-09-08
-9	10	2026-09-08
-9	11	2026-09-08
-9	12	2026-09-08
-9	13	2026-09-08
-9	15	2026-09-08
-9	3	2026-09-08
-9	17	2026-09-08
-9	14	2026-09-08
-9	27	2026-09-08
-9	30	2026-09-08
-9	34	2026-09-08
-9	19	2026-09-08
-9	21	2026-09-08
-9	22	2026-09-08
-9	26	2026-09-08
-9	31	2026-09-08
-9	16	2026-09-08
-9	18	2026-09-08
-9	24	2026-09-08
-9	28	2026-09-08
-9	25	2026-09-08
-9	29	2026-09-08
-9	23	2026-09-08
-9	20	2026-09-08
-7	7	2026-09-08
-7	8	2026-09-08
-9	6	2026-09-08
-7	9	2026-09-08
-7	10	2026-09-08
-7	11	2026-09-08
-7	12	2026-09-08
-7	13	2026-09-08
-7	15	2026-09-08
-7	3	2026-09-08
-7	16	2026-09-08
-7	17	2026-09-08
-7	18	2026-09-08
-7	19	2026-09-08
-7	20	2026-09-08
-7	21	2026-09-08
-7	22	2026-09-08
-7	23	2026-09-08
-7	26	2026-09-09
-7	27	2026-09-09
-7	28	2026-09-09
-7	29	2026-09-09
-12	1	2026-09-09
-10	1	2026-09-09
-10	2	2026-09-09
-11	1	2026-09-09
-16	1	2026-09-09
-17	1	2026-09-09
-11	2	2026-09-09
-15	1	2026-09-09
-13	1	2026-09-09
-16	4	2026-09-09
-19	1	2026-09-09
-18	1	2026-09-09
-16	5	2026-09-09
-13	2	2026-09-09
-17	4	2026-09-09
-12	4	2026-09-09
-12	5	2026-09-09
-17	5	2026-09-09
-19	2	2026-09-09
-18	2	2026-09-09
-15	2	2026-09-09
-16	7	2026-09-09
-14	1	2026-09-09
-12	7	2026-09-09
-16	8	2026-09-09
-12	8	2026-09-09
-16	9	2026-09-09
-17	7	2026-09-09
-12	9	2026-09-09
-16	10	2026-09-09
-12	10	2026-09-09
-16	11	2026-09-09
-12	11	2026-09-09
-17	8	2026-09-09
-16	12	2026-09-09
-12	12	2026-09-09
-17	9	2026-09-09
-15	4	2026-09-09
-17	10	2026-09-09
-17	11	2026-09-09
-17	12	2026-09-09
-14	2	2026-09-09
-13	5	2026-09-09
-17	13	2026-09-09
-15	5	2026-09-09
-16	15	2026-09-09
-17	15	2026-09-09
-12	15	2026-09-09
-16	16	2026-09-09
-20	1	2026-09-09
-17	18	2026-09-09
-12	18	2026-09-09
-18	4	2026-09-09
-16	21	2026-09-09
-19	4	2026-09-09
-12	19	2026-09-09
-17	19	2026-09-09
-16	22	2026-09-09
-20	2	2026-09-09
-14	4	2026-09-09
-18	5	2026-09-09
-13	4	2026-09-09
-16	18	2026-09-09
-16	17	2026-09-09
-19	5	2026-09-09
-15	7	2026-09-09
-12	21	2026-09-09
-12	13	2026-09-09
-17	21	2026-09-09
-16	13	2026-09-09
-12	16	2026-09-09
-17	16	2026-09-09
-16	19	2026-09-09
-14	5	2026-09-09
-13	7	2026-09-09
-12	17	2026-09-09
-17	17	2026-09-09
-15	8	2026-09-09
-16	3	2026-09-09
-15	9	2026-09-09
-17	3	2026-09-09
-12	3	2026-09-09
-16	2	2026-09-09
-15	10	2026-09-09
-13	8	2026-09-09
-12	2	2026-09-09
-17	2	2026-09-09
-13	10	2026-09-09
-13	9	2026-09-09
-13	11	2026-09-09
-15	11	2026-09-09
-15	12	2026-09-09
-15	13	2026-09-09
-20	4	2026-09-09
-10	4	2026-09-09
-11	4	2026-09-09
-10	5	2026-09-09
-20	5	2026-09-09
-14	7	2026-09-09
-15	15	2026-09-09
-14	8	2026-09-09
-14	9	2026-09-09
-15	3	2026-09-09
-14	10	2026-09-09
-15	16	2026-09-09
-15	17	2026-09-09
-14	11	2026-09-09
-15	18	2026-09-09
-14	12	2026-09-09
-16	20	2026-09-09
-5	15	2026-09-09
-15	19	2026-09-09
-12	20	2026-09-09
-14	13	2026-09-09
-5	3	2026-09-09
-5	16	2026-09-09
-17	20	2026-09-09
-20	7	2026-09-09
-5	17	2026-09-09
-5	18	2026-09-09
-16	34	2026-09-09
-12	22	2026-09-09
-17	22	2026-09-09
-11	5	2026-09-09
-16	23	2026-09-09
-15	21	2026-09-09
-12	23	2026-09-09
-17	23	2026-09-09
-10	7	2026-09-09
-14	15	2026-09-09
-10	8	2026-09-09
-10	9	2026-09-09
-20	8	2026-09-09
-10	10	2026-09-09
-10	11	2026-09-09
-10	12	2026-09-09
-20	9	2026-09-09
-12	26	2026-09-09
-16	26	2026-09-09
-17	26	2026-09-09
-16	27	2026-09-09
-12	27	2026-09-09
-10	13	2026-09-09
-17	27	2026-09-09
-16	28	2026-09-09
-12	28	2026-09-09
-20	10	2026-09-09
-17	28	2026-09-09
-20	11	2026-09-09
-15	27	2026-09-09
-21	1	2026-09-09
-21	2	2026-09-09
-13	12	2026-09-09
-13	13	2026-09-09
-5	19	2026-09-09
-5	20	2026-09-09
-21	4	2026-09-09
-22	1	2026-09-09
-21	5	2026-09-09
-22	2	2026-09-09
-14	16	2026-09-09
-14	17	2026-09-09
-14	18	2026-09-09
-14	19	2026-09-09
-22	4	2026-09-09
-19	6	2026-09-09
-19	7	2026-09-09
-14	22	2026-09-09
-14	20	2026-09-09
-14	23	2026-09-09
-5	21	2026-09-09
-5	22	2026-09-09
-5	23	2026-09-09
-15	29	2026-09-10
-15	30	2026-09-10
-24	1	2026-09-10
-24	2	2026-09-10
-26	1	2026-09-10
-28	1	2026-09-10
-27	1	2026-09-10
-28	2	2026-09-10
-25	1	2026-09-10
-24	5	2026-09-10
-26	2	2026-09-10
-27	2	2026-09-10
-25	2	2026-09-10
-24	7	2026-09-10
-24	8	2026-09-10
-24	9	2026-09-10
-28	5	2026-09-10
-24	10	2026-09-10
-24	11	2026-09-10
-24	12	2026-09-10
-28	7	2026-09-10
-28	8	2026-09-10
-28	9	2026-09-10
-28	10	2026-09-10
-25	4	2026-09-10
-26	4	2026-09-10
-28	11	2026-09-10
-12	30	2026-09-10
-12	31	2026-09-10
-12	34	2026-09-10
-12	37	2026-09-10
-13	15	2026-09-10
-13	3	2026-09-10
-13	16	2026-09-10
-13	17	2026-09-10
-13	18	2026-09-10
-13	19	2026-09-10
-13	22	2026-09-10
-13	21	2026-09-10
-14	27	2026-09-10
-14	28	2026-09-10
-20	12	2026-09-10
-20	13	2026-09-10
-14	30	2026-09-10
-21	7	2026-09-10
-21	8	2026-09-10
-14	34	2026-09-10
-21	9	2026-09-10
-21	10	2026-09-10
-21	11	2026-09-10
-21	12	2026-09-10
-21	13	2026-09-10
-7	30	2026-09-10
-21	15	2026-09-10
-21	17	2026-09-10
-21	18	2026-09-10
-21	19	2026-09-10
-21	27	2026-09-10
-7	31	2026-09-10
-7	34	2026-09-10
-30	1	2026-09-10
-30	2	2026-09-10
-7	37	2026-09-10
-30	4	2026-09-10
-30	5	2026-09-10
-5	6	2026-09-10
-30	6	2026-09-10
-30	7	2026-09-10
-30	8	2026-09-10
-30	9	2026-09-10
-30	10	2026-09-10
-30	11	2026-09-10
-30	12	2026-09-10
-30	13	2026-09-10
-30	15	2026-09-10
-5	14	2026-09-10
-30	3	2026-09-10
-30	16	2026-09-10
-30	17	2026-09-10
-30	18	2026-09-10
-30	19	2026-09-10
-5	24	2026-09-10
-5	25	2026-09-10
-22	5	2026-09-10
-5	26	2026-09-10
-14	37	2026-09-10
-5	27	2026-09-10
-5	28	2026-09-10
-5	29	2026-09-10
-5	30	2026-09-10
-14	63	2026-09-10
-14	40	2026-09-10
-14	64	2026-09-11
-32	1	2026-09-11
-32	2	2026-09-11
-32	4	2026-09-11
-14	77	2026-09-11
-5	31	2026-09-11
-5	34	2026-09-11
-19	8	2026-09-11
-19	9	2026-09-11
-19	10	2026-09-11
-19	11	2026-09-11
-19	12	2026-09-11
-19	13	2026-09-11
-20	15	2026-09-11
-20	3	2026-09-11
-20	16	2026-09-11
-20	17	2026-09-11
-20	19	2026-09-11
-17	30	2026-09-11
-17	31	2026-09-11
-17	34	2026-09-11
-20	21	2026-09-11
-20	26	2026-09-11
-20	27	2026-09-11
-20	34	2026-09-12
-36	1	2026-09-12
-37	1	2026-09-12
-35	1	2026-09-12
-35	2	2026-09-12
-36	2	2026-09-12
-37	2	2026-09-12
-35	5	2026-09-12
-38	1	2026-09-12
-39	1	2026-09-12
-36	4	2026-09-12
-38	2	2026-09-12
-39	2	2026-09-12
-39	5	2026-09-12
-37	4	2026-09-12
-38	4	2026-09-12
-35	7	2026-09-12
-35	8	2026-09-12
-35	9	2026-09-12
-38	5	2026-09-12
-35	10	2026-09-12
-36	5	2026-09-12
-37	5	2026-09-12
-35	11	2026-09-12
-39	4	2026-09-12
-35	12	2026-09-12
-35	13	2026-09-12
-35	15	2026-09-12
-35	3	2026-09-12
-35	17	2026-09-12
-35	18	2026-09-12
-40	1	2026-09-12
-35	19	2026-09-12
-38	7	2026-09-12
-40	2	2026-09-12
-38	8	2026-09-12
-41	1	2026-09-12
-38	9	2026-09-12
-38	10	2026-09-12
-41	2	2026-09-12
-39	7	2026-09-12
-38	11	2026-09-12
-39	8	2026-09-12
-37	7	2026-09-12
-36	7	2026-09-12
-38	12	2026-09-12
-39	9	2026-09-12
-40	4	2026-09-12
-38	13	2026-09-12
-36	8	2026-09-12
-39	10	2026-09-12
-37	8	2026-09-12
-36	9	2026-09-12
-37	9	2026-09-12
-36	10	2026-09-12
-37	10	2026-09-12
-37	11	2026-09-12
-36	11	2026-09-12
-40	5	2026-09-12
-37	12	2026-09-12
-36	12	2026-09-12
-37	13	2026-09-12
-39	11	2026-09-12
-36	13	2026-09-12
-35	22	2026-09-12
-38	15	2026-09-12
-39	12	2026-09-12
-39	13	2026-09-12
-7	63	2026-09-12
-41	4	2026-09-12
-39	15	2026-09-12
-39	3	2026-09-12
-38	16	2026-09-12
-39	16	2026-09-12
-38	17	2026-09-12
-39	17	2026-09-12
-41	5	2026-09-12
-41	7	2026-09-12
-41	8	2026-09-12
-41	9	2026-09-12
-38	18	2026-09-12
-38	19	2026-09-12
-32	5	2026-09-12
-38	20	2026-09-12
-38	23	2026-09-12
-32	7	2026-09-12
-32	8	2026-09-12
-32	9	2026-09-12
-32	10	2026-09-12
-32	11	2026-09-12
-32	12	2026-09-12
-32	13	2026-09-12
-14	6	2026-09-12
-40	7	2026-09-12
-40	8	2026-09-12
-40	9	2026-09-12
-14	3	2026-09-12
-14	21	2026-09-12
-14	24	2026-09-12
-42	1	2026-09-12
-42	2	2026-09-12
-32	15	2026-09-12
-32	3	2026-09-12
-18	6	2026-09-12
-32	16	2026-09-12
-18	7	2026-09-12
-42	4	2026-09-12
-42	5	2026-09-12
-18	8	2026-09-12
-18	9	2026-09-12
-18	10	2026-09-12
-42	7	2026-09-12
-42	8	2026-09-12
-18	11	2026-09-12
-42	9	2026-09-12
-42	10	2026-09-12
-42	11	2026-09-12
-18	12	2026-09-12
-42	12	2026-09-12
-16	58	2026-09-12
-42	13	2026-09-12
-18	13	2026-09-12
-42	15	2026-09-12
-43	1	2026-09-12
-42	3	2026-09-12
-42	17	2026-09-12
-42	18	2026-09-12
-18	14	2026-09-12
-42	20	2026-09-12
-43	2	2026-09-12
-32	17	2026-09-13
-32	18	2026-09-13
-32	19	2026-09-13
-32	20	2026-09-13
-32	22	2026-09-13
-32	28	2026-09-13
-34	1	2026-09-13
-42	21	2026-09-13
-42	22	2026-09-13
-34	2	2026-09-13
-42	23	2026-09-13
-34	4	2026-09-13
-34	5	2026-09-13
-42	27	2026-09-13
-42	28	2026-09-13
-42	30	2026-09-13
-34	7	2026-09-13
-34	8	2026-09-13
-34	9	2026-09-13
-34	10	2026-09-13
-32	23	2026-09-13
-34	11	2026-09-13
-34	12	2026-09-13
-32	27	2026-09-13
-34	13	2026-09-13
-19	14	2026-09-13
-19	15	2026-09-13
-19	3	2026-09-13
-19	16	2026-09-13
-19	17	2026-09-13
-19	18	2026-09-13
-19	19	2026-09-13
-34	15	2026-09-13
-34	3	2026-09-13
-34	16	2026-09-13
-34	17	2026-09-13
-34	18	2026-09-13
-34	19	2026-09-13
-44	1	2026-09-13
-34	20	2026-09-13
-34	22	2026-09-13
-39	18	2026-09-14
-39	19	2026-09-14
-39	20	2026-09-14
-41	10	2026-09-14
-39	21	2026-09-14
-39	22	2026-09-14
-41	11	2026-09-14
-41	12	2026-09-14
-41	13	2026-09-14
-41	14	2026-09-14
-41	15	2026-09-14
-39	23	2026-09-14
-10	15	2026-09-14
-10	3	2026-09-14
-10	16	2026-09-14
-10	17	2026-09-14
-10	18	2026-09-14
-10	19	2026-09-14
-10	21	2026-09-14
-11	7	2026-09-14
-11	8	2026-09-14
-11	9	2026-09-14
-11	10	2026-09-14
-11	12	2026-09-14
-11	11	2026-09-14
-10	22	2026-09-14
-11	13	2026-09-14
-10	23	2026-09-14
-11	15	2026-09-14
-11	3	2026-09-14
-11	16	2026-09-14
-11	17	2026-09-14
-11	18	2026-09-14
-10	26	2026-09-14
-11	19	2026-09-14
-10	27	2026-09-14
-10	28	2026-09-14
-11	20	2026-09-14
-10	30	2026-09-14
-11	21	2026-09-14
-10	34	2026-09-14
-14	41	2026-09-14
-14	67	2026-09-14
-14	69	2026-09-14
-14	76	2026-09-14
-14	70	2026-09-14
-14	71	2026-09-14
-48	1	2026-09-15
-48	2	2026-09-15
-14	43	2026-09-15
-35	30	2026-09-15
-48	4	2026-09-15
-48	5	2026-09-15
-35	34	2026-09-15
-14	44	2026-09-15
-48	7	2026-09-15
-48	8	2026-09-15
-48	9	2026-09-15
-48	10	2026-09-15
-48	11	2026-09-15
-14	72	2026-09-15
-41	3	2026-09-15
-41	16	2026-09-15
-41	17	2026-09-15
-13	27	2026-09-15
-41	18	2026-09-15
-41	19	2026-09-15
-13	29	2026-09-15
-13	30	2026-09-15
-13	34	2026-09-15
-43	5	2026-09-15
-41	21	2026-09-15
-41	22	2026-09-15
-49	1	2026-09-15
-49	2	2026-09-15
-43	7	2026-09-15
-49	4	2026-09-15
-43	8	2026-09-15
-43	9	2026-09-15
-43	10	2026-09-15
-43	11	2026-09-15
-43	12	2026-09-15
-43	13	2026-09-15
-43	15	2026-09-15
-43	16	2026-09-15
-43	17	2026-09-15
-43	21	2026-09-15
-47	1	2026-09-16
-47	2	2026-09-16
-33	1	2026-09-16
-33	2	2026-09-16
-33	4	2026-09-16
-33	5	2026-09-16
-33	7	2026-09-16
-33	8	2026-09-16
-33	9	2026-09-16
-33	10	2026-09-16
-55	1	2026-09-16
-62	1	2026-09-16
-33	11	2026-09-16
-62	2	2026-09-16
-33	12	2026-09-16
-47	4	2026-09-16
-55	2	2026-09-16
-33	13	2026-09-16
-53	1	2026-09-16
-47	5	2026-09-16
-33	15	2026-09-16
-33	3	2026-09-16
-33	16	2026-09-16
-18	15	2026-09-16
-53	2	2026-09-16
-18	3	2026-09-16
-33	17	2026-09-16
-18	16	2026-09-16
-53	4	2026-09-16
-34	23	2026-09-16
-18	17	2026-09-16
-33	18	2026-09-16
-53	5	2026-09-16
-18	18	2026-09-16
-18	19	2026-09-16
-34	27	2026-09-16
-43	18	2026-09-16
-34	28	2026-09-16
-43	19	2026-09-16
-18	20	2026-09-16
-18	21	2026-09-16
-18	22	2026-09-16
-43	27	2026-09-16
-43	26	2026-09-16
-43	3	2026-09-16
-43	22	2026-09-16
-55	5	2026-09-16
-55	7	2026-09-16
-45	1	2026-09-16
-45	2	2026-09-16
-45	5	2026-09-16
-45	7	2026-09-16
-45	8	2026-09-16
-45	9	2026-09-16
-45	10	2026-09-16
-45	11	2026-09-16
-45	12	2026-09-16
-45	13	2026-09-16
-25	5	2026-09-16
-45	15	2026-09-16
-26	5	2026-09-16
-45	3	2026-09-16
-45	16	2026-09-16
-45	17	2026-09-16
-45	18	2026-09-16
-45	19	2026-09-16
-26	8	2026-09-16
-26	7	2026-09-16
-26	9	2026-09-16
-26	10	2026-09-16
-26	11	2026-09-16
-26	12	2026-09-16
-26	13	2026-09-16
-25	7	2026-09-16
-25	8	2026-09-16
-25	9	2026-09-16
-25	10	2026-09-16
-25	11	2026-09-16
-25	12	2026-09-16
-25	13	2026-09-16
-25	15	2026-09-17
-22	7	2026-09-17
-26	15	2026-09-17
-26	3	2026-09-17
-25	3	2026-09-17
-26	16	2026-09-17
-22	8	2026-09-17
-22	9	2026-09-17
-22	10	2026-09-17
-25	16	2026-09-17
-38	3	2026-09-17
-38	21	2026-09-17
-26	18	2026-09-17
-25	18	2026-09-17
-62	5	2026-09-17
-39	26	2026-09-17
-38	22	2026-09-17
-39	27	2026-09-17
-25	19	2026-09-17
-47	7	2026-09-17
-26	19	2026-09-17
-62	7	2026-09-17
-47	8	2026-09-17
-62	8	2026-09-17
-39	28	2026-09-17
-47	9	2026-09-17
-62	9	2026-09-17
-62	10	2026-09-17
-47	10	2026-09-17
-7	64	2026-09-17
-22	12	2026-09-17
-47	11	2026-09-17
-62	11	2026-09-17
-64	1	2026-09-17
-39	34	2026-09-17
-38	26	2026-09-17
-47	12	2026-09-17
-62	12	2026-09-17
-64	2	2026-09-17
-64	4	2026-09-17
-38	27	2026-09-17
-64	5	2026-09-17
-65	1	2026-09-17
-24	13	2026-09-17
-64	7	2026-09-17
-22	15	2026-09-17
-64	8	2026-09-17
-38	28	2026-09-17
-66	1	2026-09-17
-26	21	2026-09-17
-25	21	2026-09-17
-65	2	2026-09-17
-64	9	2026-09-17
-47	15	2026-09-17
-62	15	2026-09-17
-66	2	2026-09-17
-22	3	2026-09-17
-24	15	2026-09-17
-64	10	2026-09-17
-47	3	2026-09-17
-62	3	2026-09-17
-22	16	2026-09-17
-24	17	2026-09-17
-47	16	2026-09-17
-38	34	2026-09-17
-65	5	2026-09-17
-48	12	2026-09-17
-22	17	2026-09-17
-22	18	2026-09-17
-36	15	2026-09-17
-48	13	2026-09-17
-64	12	2026-09-17
-64	13	2026-09-17
-24	18	2026-09-17
-65	7	2026-09-17
-64	15	2026-09-17
-45	21	2026-09-17
-64	3	2026-09-17
-65	8	2026-09-17
-48	14	2026-09-17
-68	1	2026-09-17
-48	15	2026-09-17
-67	1	2026-09-17
-65	9	2026-09-17
-47	17	2026-09-17
-48	3	2026-09-17
-48	16	2026-09-17
-68	2	2026-09-17
-64	17	2026-09-17
-66	5	2026-09-17
-47	18	2026-09-17
-48	17	2026-09-17
-65	10	2026-09-17
-48	18	2026-09-17
-24	16	2026-09-17
-48	19	2026-09-17
-45	22	2026-09-17
-24	3	2026-09-17
-33	19	2026-09-17
-47	19	2026-09-17
-64	16	2026-09-17
-64	18	2026-09-17
-67	2	2026-09-17
-48	20	2026-09-17
-65	11	2026-09-17
-68	4	2026-09-17
-64	19	2026-09-17
-65	12	2026-09-17
-48	21	2026-09-17
-48	22	2026-09-17
-35	16	2026-09-17
-65	15	2026-09-17
-48	23	2026-09-17
-36	16	2026-09-17
-68	5	2026-09-17
-48	24	2026-09-17
-65	3	2026-09-17
-33	21	2026-09-17
-48	25	2026-09-17
-65	16	2026-09-17
-41	25	2026-09-17
-48	26	2026-09-17
-48	27	2026-09-17
-33	20	2026-09-17
-48	28	2026-09-17
-41	26	2026-09-17
-41	27	2026-09-17
-65	17	2026-09-17
-65	4	2026-09-17
-65	13	2026-09-17
-65	14	2026-09-17
-62	16	2026-09-17
-67	4	2026-09-17
-48	29	2026-09-17
-65	18	2026-09-17
-41	28	2026-09-17
-62	17	2026-09-17
-67	5	2026-09-17
-33	22	2026-09-17
-62	18	2026-09-17
-48	30	2026-09-17
-65	19	2026-09-17
-48	31	2026-09-17
-41	29	2026-09-17
-48	34	2026-09-17
-62	19	2026-09-17
-33	23	2026-09-17
-22	19	2026-09-17
-22	21	2026-09-17
-7	70	2026-09-17
-48	6	2026-09-17
-65	21	2026-09-17
-41	30	2026-09-17
-41	31	2026-09-17
-65	22	2026-09-17
-41	34	2026-09-17
-47	21	2026-09-17
-22	22	2026-09-17
-33	26	2026-09-17
-33	27	2026-09-17
-32	30	2026-09-17
-33	28	2026-09-17
-47	22	2026-09-17
-67	6	2026-09-17
-33	30	2026-09-17
-33	31	2026-09-17
-33	34	2026-09-17
-53	6	2026-09-17
-67	7	2026-09-17
-53	7	2026-09-17
-62	20	2026-09-17
-53	8	2026-09-17
-49	5	2026-09-17
-67	8	2026-09-17
-53	9	2026-09-17
-67	9	2026-09-17
-53	10	2026-09-17
-53	11	2026-09-17
-32	34	2026-09-17
-67	10	2026-09-17
-53	12	2026-09-17
-34	30	2026-09-17
-67	11	2026-09-17
-34	34	2026-09-17
-67	12	2026-09-17
-53	13	2026-09-17
-15	22	2026-09-17
-67	13	2026-09-17
-22	27	2026-09-17
-53	14	2026-09-17
-22	23	2026-09-17
-22	28	2026-09-17
-53	15	2026-09-17
-53	3	2026-09-17
-53	16	2026-09-17
-53	17	2026-09-17
-53	18	2026-09-17
-15	31	2026-09-17
-15	34	2026-09-17
-55	8	2026-09-17
-55	9	2026-09-17
-55	10	2026-09-17
-63	1	2026-09-17
-55	11	2026-09-17
-63	2	2026-09-17
-55	12	2026-09-17
-63	5	2026-09-17
-55	13	2026-09-17
-34	31	2026-09-17
-63	7	2026-09-17
-63	8	2026-09-17
-63	9	2026-09-17
-63	10	2026-09-17
-55	15	2026-09-17
-63	11	2026-09-17
-45	25	2026-09-17
-63	12	2026-09-17
-63	15	2026-09-17
-63	3	2026-09-17
-63	16	2026-09-17
-63	17	2026-09-17
-63	18	2026-09-17
-45	26	2026-09-17
-55	3	2026-09-17
-63	19	2026-09-17
-55	16	2026-09-17
-45	27	2026-09-17
-55	17	2026-09-17
-45	28	2026-09-17
-63	20	2026-09-17
-63	21	2026-09-17
-63	22	2026-09-17
-55	18	2026-09-17
-63	23	2026-09-17
-63	27	2026-09-17
-63	28	2026-09-17
-63	31	2026-09-17
-63	34	2026-09-17
-55	19	2026-09-17
-45	29	2026-09-17
-45	30	2026-09-17
-14	46	2026-09-17
-63	30	2026-09-17
-45	31	2026-09-17
-45	34	2026-09-17
-45	4	2026-09-17
-45	14	2026-09-17
-14	48	2026-09-17
-62	21	2026-09-17
-14	73	2026-09-17
-14	50	2026-09-17
-62	22	2026-09-17
-47	23	2026-09-17
-62	23	2026-09-17
-14	74	2026-09-17
-62	25	2026-09-17
-47	25	2026-09-17
-62	26	2026-09-17
-47	26	2026-09-17
-22	30	2026-09-17
-14	53	2026-09-17
-62	27	2026-09-17
-47	27	2026-09-17
-47	28	2026-09-17
-62	28	2026-09-17
-65	29	2026-09-17
-65	34	2026-09-17
-65	30	2026-09-17
-62	29	2026-09-17
-47	29	2026-09-17
-65	28	2026-09-17
-65	27	2026-09-17
-65	26	2026-09-17
-65	25	2026-09-17
-65	20	2026-09-17
-47	30	2026-09-17
-62	30	2026-09-17
-62	34	2026-09-17
-47	34	2026-09-17
-32	31	2026-09-17
-30	14	2026-09-17
-32	21	2026-09-17
-20	18	2026-09-17
-30	20	2026-09-17
-30	21	2026-09-17
-30	22	2026-09-17
-68	7	2026-09-17
-68	8	2026-09-17
-68	9	2026-09-17
-68	10	2026-09-17
-68	11	2026-09-17
-22	34	2026-09-17
-68	12	2026-09-17
-68	15	2026-09-18
-68	3	2026-09-18
-68	16	2026-09-18
-68	17	2026-09-18
-68	18	2026-09-18
-68	19	2026-09-18
-68	21	2026-09-18
-68	22	2026-09-18
-68	23	2026-09-18
-68	26	2026-09-18
-70	1	2026-09-18
-70	2	2026-09-18
-70	5	2026-09-18
-70	7	2026-09-18
-70	8	2026-09-18
-70	9	2026-09-18
-70	10	2026-09-18
-70	11	2026-09-18
-70	12	2026-09-18
-70	13	2026-09-18
-70	15	2026-09-18
-68	27	2026-09-18
-68	28	2026-09-18
-70	3	2026-09-18
-68	29	2026-09-18
-70	16	2026-09-18
-32	29	2026-09-18
-32	25	2026-09-18
-70	17	2026-09-18
-70	18	2026-09-18
-68	30	2026-09-18
-70	19	2026-09-18
-68	31	2026-09-18
-68	34	2026-09-18
-68	13	2026-09-18
-32	26	2026-09-18
-70	20	2026-09-18
-70	21	2026-09-18
-70	22	2026-09-18
-70	23	2026-09-18
-14	55	2026-09-18
-30	26	2026-09-18
-28	12	2026-09-18
-30	27	2026-09-18
-30	23	2026-09-18
-30	25	2026-09-18
-30	28	2026-09-18
-22	26	2026-09-18
-52	1	2026-09-18
-52	2	2026-09-18
-66	7	2026-09-18
-22	31	2026-09-18
-25	27	2026-09-18
-34	14	2026-09-18
-34	21	2026-09-18
-25	34	2026-09-18
-34	24	2026-09-18
-34	25	2026-09-18
-65	31	2026-09-18
-52	5	2026-09-18
-52	7	2026-09-18
-52	8	2026-09-18
-71	1	2026-09-18
-52	9	2026-09-18
-71	2	2026-09-18
-52	10	2026-09-18
-52	11	2026-09-18
-72	1	2026-09-18
-71	4	2026-09-18
-71	5	2026-09-18
-14	58	2026-09-18
-71	7	2026-09-18
-71	8	2026-09-18
-71	9	2026-09-18
-71	10	2026-09-18
-71	11	2026-09-18
-71	12	2026-09-18
-72	5	2026-09-18
-71	13	2026-09-18
-52	12	2026-09-18
-52	15	2026-09-18
-71	15	2026-09-18
-72	2	2026-09-18
-71	3	2026-09-18
-52	3	2026-09-18
-71	16	2026-09-18
-52	16	2026-09-18
-71	17	2026-09-18
-52	17	2026-09-18
-52	18	2026-09-18
-52	19	2026-09-18
-71	18	2026-09-18
-72	7	2026-09-18
-72	8	2026-09-18
-72	9	2026-09-18
-72	10	2026-09-18
-72	11	2026-09-18
-72	12	2026-09-18
-72	13	2026-09-18
-14	26	2026-09-18
-71	19	2026-09-18
-71	20	2026-09-18
-72	15	2026-09-18
-71	21	2026-09-18
-72	3	2026-09-18
-71	22	2026-09-18
-14	31	2026-09-18
-72	16	2026-09-18
-72	17	2026-09-18
-72	18	2026-09-18
-14	25	2026-09-18
-72	19	2026-09-18
-14	14	2026-09-18
-72	20	2026-09-18
-74	1	2026-09-19
-74	2	2026-09-19
-74	4	2026-09-19
-74	5	2026-09-19
-74	7	2026-09-19
-74	8	2026-09-19
-74	9	2026-09-19
-74	10	2026-09-19
-74	11	2026-09-19
-74	12	2026-09-19
-74	13	2026-09-19
-74	15	2026-09-19
-74	3	2026-09-19
-74	16	2026-09-19
-74	17	2026-09-19
-74	18	2026-09-19
-74	19	2026-09-19
-74	20	2026-09-19
-74	21	2026-09-19
-74	22	2026-09-19
-74	23	2026-09-19
-74	26	2026-09-19
-74	27	2026-09-19
-74	28	2026-09-19
-69	1	2026-09-19
-74	29	2026-09-19
-69	2	2026-09-19
-74	30	2026-09-19
-74	31	2026-09-19
-69	4	2026-09-19
-74	34	2026-09-19
-69	5	2026-09-19
-69	7	2026-09-19
-69	8	2026-09-19
-69	9	2026-09-19
-69	10	2026-09-19
-69	11	2026-09-19
-69	12	2026-09-19
-69	13	2026-09-19
-69	15	2026-09-19
-69	3	2026-09-19
-69	16	2026-09-19
-69	17	2026-09-19
-69	18	2026-09-19
-69	19	2026-09-19
-69	21	2026-09-19
-69	22	2026-09-19
-69	24	2026-09-19
-69	26	2026-09-19
-69	27	2026-09-19
-71	23	2026-09-19
-71	24	2026-09-19
-69	29	2026-09-19
-69	30	2026-09-19
-42	16	2026-09-19
-42	19	2026-09-19
-69	31	2026-09-19
-69	34	2026-09-19
-36	18	2026-09-19
-73	1	2026-09-19
-36	19	2026-09-19
-73	2	2026-09-19
-42	26	2026-09-19
-37	15	2026-09-19
-37	16	2026-09-19
-37	17	2026-09-19
-37	18	2026-09-19
-73	5	2026-09-19
-73	7	2026-09-19
-73	8	2026-09-19
-73	9	2026-09-19
-73	10	2026-09-19
-73	11	2026-09-19
-73	12	2026-09-19
-73	15	2026-09-19
-73	3	2026-09-19
-73	16	2026-09-19
-55	21	2026-09-19
-7	24	2026-09-19
-73	17	2026-09-19
-55	22	2026-09-19
-73	18	2026-09-19
-55	23	2026-09-19
-44	2	2026-09-19
-73	19	2026-09-19
-44	5	2026-09-19
-72	21	2026-09-19
-44	7	2026-09-19
-44	8	2026-09-19
-44	9	2026-09-19
-72	22	2026-09-19
-44	10	2026-09-19
-71	26	2026-09-19
-44	11	2026-09-19
-71	27	2026-09-19
-73	20	2026-09-19
-73	21	2026-09-19
-42	34	2026-09-19
-71	28	2026-09-19
-43	23	2026-09-19
-44	12	2026-09-19
-72	23	2026-09-19
-4	1	2026-09-19
-71	34	2026-09-19
-73	22	2026-09-19
-44	13	2026-09-19
-75	1	2026-09-19
-71	30	2026-09-19
-73	23	2026-09-19
-44	15	2026-09-19
-44	3	2026-09-19
-73	25	2026-09-19
-75	2	2026-09-19
-21	3	2026-09-19
-21	16	2026-09-19
-21	21	2026-09-19
-44	17	2026-09-19
-21	22	2026-09-19
-21	23	2026-09-19
-42	31	2026-09-19
-44	18	2026-09-19
-73	26	2026-09-19
-73	27	2026-09-19
-72	26	2026-09-19
-44	19	2026-09-19
-73	28	2026-09-19
-21	26	2026-09-19
-72	27	2026-09-19
-42	24	2026-09-19
-21	28	2026-09-19
-73	29	2026-09-19
-73	30	2026-09-19
-21	30	2026-09-19
-72	28	2026-09-19
-73	31	2026-09-19
-73	34	2026-09-19
-21	34	2026-09-19
-21	37	2026-09-19
-44	21	2026-09-19
-44	22	2026-09-19
-26	27	2026-09-19
-21	40	2026-09-19
-26	28	2026-09-19
-21	64	2026-09-19
-75	4	2026-09-19
-44	23	2026-09-19
-26	31	2026-09-19
-75	5	2026-09-19
-21	69	2026-09-19
-21	70	2026-09-19
-21	46	2026-09-19
-21	73	2026-09-19
-21	50	2026-09-19
-21	58	2026-09-19
-37	19	2026-09-19
-21	71	2026-09-19
-37	20	2026-09-19
-37	21	2026-09-19
-72	30	2026-09-19
-72	31	2026-09-19
-72	34	2026-09-19
-30	30	2026-09-19
-37	26	2026-09-19
-30	34	2026-09-19
-37	27	2026-09-19
-52	30	2026-09-19
-52	34	2026-09-19
-25	31	2026-09-19
-25	28	2026-09-19
-37	28	2026-09-19
-37	22	2026-09-19
-37	23	2026-09-19
-37	3	2026-09-19
-37	34	2026-09-19
-37	31	2026-09-19
-67	15	2026-09-20
-67	3	2026-09-20
-67	16	2026-09-20
-67	17	2026-09-20
-67	18	2026-09-20
-67	19	2026-09-20
-67	20	2026-09-20
-44	26	2026-09-20
-44	27	2026-09-20
-44	28	2026-09-20
-44	30	2026-09-20
-52	22	2026-09-20
-52	23	2026-09-20
-10	31	2026-09-20
-52	27	2026-09-20
-66	10	2026-09-20
-66	9	2026-09-20
-66	11	2026-09-20
-66	12	2026-09-20
-66	13	2026-09-20
-14	29	2026-09-20
-16	30	2026-09-20
-16	31	2026-09-20
-16	29	2026-09-20
-55	26	2026-09-20
-55	27	2026-09-20
-55	28	2026-09-20
-11	22	2026-09-20
-11	23	2026-09-20
-71	31	2026-09-20
-71	29	2026-09-20
-8	1	2026-09-20
-8	2	2026-09-20
-78	1	2026-09-20
-19	20	2026-09-20
-75	7	2026-09-20
-36	30	2026-09-20
-66	14	2026-09-20
-37	30	2026-09-20
-66	3	2026-09-20
-66	16	2026-09-20
-11	26	2026-09-20
-8	5	2026-09-20
-75	8	2026-09-20
-8	7	2026-09-20
-66	17	2026-09-20
-75	9	2026-09-20
-66	18	2026-09-20
-19	21	2026-09-20
-8	8	2026-09-20
-75	10	2026-09-20
-8	9	2026-09-20
-11	27	2026-09-20
-19	22	2026-09-20
-66	8	2026-09-20
-75	11	2026-09-20
-8	10	2026-09-20
-75	12	2026-09-20
-75	13	2026-09-20
-11	28	2026-09-20
-75	15	2026-09-20
-75	3	2026-09-20
-8	11	2026-09-20
-75	16	2026-09-20
-19	23	2026-09-20
-8	12	2026-09-20
-75	17	2026-09-20
-11	30	2026-09-20
-75	18	2026-09-20
-19	24	2026-09-20
-75	19	2026-09-20
-75	20	2026-09-20
-75	21	2026-09-20
-19	25	2026-09-20
-75	22	2026-09-20
-66	15	2026-09-20
-19	26	2026-09-20
-11	31	2026-09-20
-11	34	2026-09-20
-19	27	2026-09-20
-8	15	2026-09-20
-79	1	2026-09-20
-18	23	2026-09-20
-79	2	2026-09-20
-8	3	2026-09-20
-75	26	2026-09-20
-79	4	2026-09-20
-18	24	2026-09-20
-4	2	2026-09-20
-66	19	2026-09-20
-19	28	2026-09-20
-73	4	2026-09-20
-75	27	2026-09-20
-8	16	2026-09-20
-75	28	2026-09-20
-79	5	2026-09-20
-73	13	2026-09-20
-18	25	2026-09-20
-75	31	2026-09-20
-66	21	2026-09-20
-75	34	2026-09-20
-8	17	2026-09-20
-18	26	2026-09-20
-19	29	2026-09-20
-19	30	2026-09-20
-8	18	2026-09-20
-18	27	2026-09-20
-73	24	2026-09-20
-55	30	2026-09-20
-18	28	2026-09-20
-8	19	2026-09-20
-19	31	2026-09-20
-79	7	2026-09-20
-18	29	2026-09-20
-8	20	2026-09-20
-79	8	2026-09-20
-19	34	2026-09-20
-79	9	2026-09-20
-79	10	2026-09-20
-18	30	2026-09-20
-79	12	2026-09-20
-66	22	2026-09-20
-66	20	2026-09-20
-8	21	2026-09-20
-79	13	2026-09-20
-4	4	2026-09-20
-79	15	2026-09-20
-55	31	2026-09-20
-4	5	2026-09-20
-79	3	2026-09-20
-18	31	2026-09-20
-55	34	2026-09-20
-18	34	2026-09-20
-79	17	2026-09-20
-79	18	2026-09-20
-8	22	2026-09-20
-79	19	2026-09-20
-79	21	2026-09-20
-79	22	2026-09-20
-66	23	2026-09-20
-4	7	2026-09-20
-4	8	2026-09-20
-4	9	2026-09-20
-4	10	2026-09-20
-79	27	2026-09-20
-79	28	2026-09-20
-4	11	2026-09-20
-4	12	2026-09-20
-70	25	2026-09-20
-66	25	2026-09-20
-79	34	2026-09-20
-79	34	2026-09-20
-4	13	2026-09-20
-80	1	2026-09-20
-79	31	2026-09-20
-80	2	2026-09-20
-80	4	2026-09-20
-70	26	2026-09-20
-80	5	2026-09-20
-70	27	2026-09-20
-79	11	2026-09-20
-66	27	2026-09-20
-79	16	2026-09-20
-80	7	2026-09-20
-53	19	2026-09-20
-80	8	2026-09-20
-80	9	2026-09-20
-80	10	2026-09-20
-66	28	2026-09-20
-80	11	2026-09-20
-80	12	2026-09-20
-80	13	2026-09-20
-80	15	2026-09-20
-80	3	2026-09-20
-80	16	2026-09-20
-80	17	2026-09-20
-80	18	2026-09-20
-80	19	2026-09-20
-80	21	2026-09-20
-80	22	2026-09-20
-53	20	2026-09-20
-70	28	2026-09-20
-53	21	2026-09-20
-80	26	2026-09-20
-80	27	2026-09-20
-66	29	2026-09-20
-53	22	2026-09-20
-4	15	2026-09-20
-66	30	2026-09-20
-53	23	2026-09-20
-66	26	2026-09-20
-53	24	2026-09-20
-53	25	2026-09-20
-53	26	2026-09-20
-53	27	2026-09-20
-53	28	2026-09-20
-53	29	2026-09-20
-70	29	2026-09-20
-66	31	2026-09-20
-4	3	2026-09-20
-53	30	2026-09-20
-70	30	2026-09-20
-4	16	2026-09-20
-53	31	2026-09-20
-17	29	2026-09-20
-66	34	2026-09-20
-53	34	2026-09-20
-4	17	2026-09-20
-70	31	2026-09-20
-4	18	2026-09-20
-70	34	2026-09-20
-4	19	2026-09-20
-4	20	2026-09-20
-4	21	2026-09-20
-4	22	2026-09-20
-14	39	2026-09-21
-14	75	2026-09-21
-14	54	2026-09-21
-71	37	2026-09-22
-26	34	2026-09-22
-71	63	2026-09-23
-13	37	2026-09-23
-16	37	2026-09-23
-16	40	2026-09-23
-16	64	2026-09-23
-16	75	2026-09-23
-12	40	2026-09-23
-15	63	2026-09-23
-15	40	2026-09-23
-17	37	2026-09-24
-17	63	2026-09-24
-17	40	2026-09-24
-22	37	2026-09-24
-65	37	2026-09-24
-65	67	2026-09-24
-65	69	2026-09-24
-65	70	2026-09-24
-17	64	2026-09-25
-17	41	2026-09-25
-17	67	2026-09-25
-17	69	2026-09-25
-17	76	2026-09-25
-17	70	2026-09-25
-17	71	2026-09-26
-17	46	2026-09-26
-17	48	2026-09-26
-17	73	2026-09-26
-17	50	2026-09-26
-17	74	2026-09-26
-17	53	2026-09-26
-35	20	2026-09-26
-35	23	2026-09-26
-71	40	2026-09-26
-71	64	2026-09-26
-42	37	2026-09-26
-42	63	2026-09-26
-49	7	2026-09-26
-49	8	2026-09-26
-49	9	2026-09-26
-49	10	2026-09-26
-49	11	2026-09-26
-49	12	2026-09-26
-49	15	2026-09-26
-49	3	2026-09-26
-71	70	2026-09-27
-6	1	2026-09-27
-19	37	2026-09-27
-6	2	2026-09-27
-15	75	2026-09-27
-15	67	2026-09-27
-15	69	2026-09-27
-15	76	2026-09-27
-15	70	2026-09-27
-15	54	2026-09-27
-15	71	2026-09-27
-49	16	2026-09-27
-49	17	2026-09-27
-49	18	2026-09-27
-49	19	2026-09-27
-15	46	2026-09-27
-15	48	2026-09-27
-15	73	2026-09-27
-15	50	2026-09-27
-15	74	2026-09-27
-15	53	2026-09-27
-49	20	2026-09-27
-49	21	2026-09-27
-49	22	2026-09-27
-49	23	2026-09-27
-15	37	2026-09-28
-49	27	2026-09-28
-49	28	2026-09-28
-49	30	2026-09-28
-49	31	2026-09-28
-49	34	2026-09-28
-49	29	2026-09-28
-19	63	2026-09-28
-5	37	2026-09-28
-13	63	2026-09-29
-62	37	2026-09-30
-47	37	2026-09-30
-9	37	2026-09-30
-9	63	2026-09-30
-9	38	2026-09-30
-9	39	2026-09-30
-9	40	2026-09-30
-9	64	2026-09-30
-9	75	2026-09-30
-9	77	2026-09-30
-9	41	2026-09-30
-9	67	2026-09-30
-9	69	2026-09-30
-9	76	2026-09-30
-9	70	2026-09-30
-9	54	2026-09-30
-9	71	2026-09-30
-9	43	2026-09-30
-9	44	2026-09-30
-9	72	2026-09-30
-9	46	2026-09-30
-9	48	2026-09-30
-9	73	2026-09-30
-9	50	2026-09-30
-9	51	2026-09-30
-9	74	2026-09-30
-9	53	2026-09-30
-9	58	2026-09-30
-9	55	2026-09-30
-9	57	2026-09-30
-9	81	2026-09-30
-9	78	2026-09-30
-9	80	2026-09-30
-9	59	2026-09-30
-9	60	2026-09-30
-9	82	2026-09-30
-9	61	2026-09-30
-9	83	2026-09-30
-9	62	2026-09-30
-62	63	2026-09-30
-47	63	2026-09-30
-18	37	2026-09-30
-18	63	2026-09-30
-28	4	2026-09-30
-28	15	2026-09-30
-28	3	2026-09-30
-28	17	2026-09-30
-28	19	2026-09-30
-28	21	2026-09-30
-26	37	2026-10-01
-25	37	2026-10-01
-5	63	2026-10-01
-70	37	2026-10-04
-48	37	2026-10-04
-48	63	2026-10-04
-48	38	2026-10-04
-48	39	2026-10-04
-48	40	2026-10-04
-33	37	2026-10-05
-33	63	2026-10-05
-16	67	2026-10-07
-16	69	2026-10-07
-15	58	2026-10-07
-48	64	2026-10-07
-48	75	2026-10-07
-48	77	2026-10-07
-15	82	2026-10-07
-24	19	2026-10-08
-24	4	2026-10-08
-24	21	2026-10-08
-16	70	2026-10-08
-24	22	2026-10-08
-24	23	2026-10-08
-16	54	2026-10-08
-16	46	2026-10-09
-16	71	2026-10-10
-16	48	2026-10-11
-16	73	2026-10-11
-16	50	2026-10-11
-16	74	2026-10-11
-16	53	2026-10-11
-64	22	2026-10-11
-64	27	2026-10-11
+COPY _timescaledb_catalog.chunk (id, hypertable_id, schema_name, table_name, compressed_chunk_id, status, osm_chunk, creation_time) FROM stdin;
+1	1	_timescaledb_internal	_hyper_1_1_chunk	\N	0	f	2026-10-13 08:30:33.620242+00
+2	1	_timescaledb_internal	_hyper_1_2_chunk	\N	0	f	2026-10-13 08:30:33.734825+00
+3	1	_timescaledb_internal	_hyper_1_3_chunk	\N	0	f	2026-10-13 08:30:33.985874+00
+4	1	_timescaledb_internal	_hyper_1_4_chunk	\N	0	f	2026-10-13 08:30:34.308753+00
+5	1	_timescaledb_internal	_hyper_1_5_chunk	\N	0	f	2026-10-13 08:30:42.173752+00
+6	1	_timescaledb_internal	_hyper_1_6_chunk	\N	0	f	2026-10-13 08:30:42.212791+00
 \.
 
 
 --
--- Data for Name: user_achievement_progress; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: chunk_column_stats; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
 --
 
-COPY public.user_achievement_progress (user_id, achievement_id, current_count) FROM stdin;
-28	8	2
-75	8	2
-75	5	1
-17	3	16
-8	5	1
-80	7	1
-15	7	2
-62	8	3
-40	8	2
-19	6	1
-9	4	12
-47	3	2
-12	7	2
-40	2	7
-35	8	2
-4	8	2
-79	5	1
-10	8	2
-22	8	3
-4	5	1
-42	8	3
-32	5	1
-20	8	2
-42	5	2
-63	5	1
-30	7	1
-10	7	1
-35	5	1
-71	7	2
-47	6	1
-71	6	1
-18	8	3
-11	7	1
-7	8	3
-18	5	2
-7	5	2
-7	7	2
-14	7	4
-40	7	1
-53	7	1
-13	8	3
-26	8	3
-13	5	2
-20	7	1
-13	7	2
-38	8	2
-33	8	3
-30	8	2
-41	7	1
-68	7	1
-18	7	2
-24	7	1
-30	5	1
-12	3	2
-16	7	2
-27	8	1
-12	8	4
-28	7	1
-41	5	1
-12	5	3
-16	3	15
-42	3	2
-27	7	1
-27	2	2
-22	5	2
-18	6	1
-24	8	2
-49	7	1
-43	5	1
-39	8	2
-22	7	2
-71	8	4
-16	4	1
-32	7	1
-71	5	3
-65	8	3
-19	3	2
-43	7	1
-36	8	2
-20	5	1
-42	7	2
-37	8	2
-22	3	1
-65	5	2
-34	7	1
-35	7	1
-55	5	1
-36	7	1
-37	7	1
-43	8	2
-65	7	2
-49	8	2
-34	8	2
-45	7	1
-17	7	3
-38	7	1
-39	7	1
-19	8	3
-34	5	1
-49	5	1
-19	5	2
-7	6	1
-19	7	2
-39	5	1
-38	5	1
-10	5	1
-41	8	2
-5	8	3
-5	5	2
-11	8	2
-32	8	2
-52	8	2
-45	8	2
-64	8	2
-11	5	1
-5	7	2
-24	5	1
-66	7	1
-26	3	1
-63	7	1
-47	8	3
-13	6	1
-62	5	2
-62	7	2
-47	5	2
-45	5	1
-67	7	1
-55	7	1
-25	8	3
-53	8	2
-26	5	2
-67	8	2
-68	5	1
-47	7	2
-70	8	3
-26	7	2
-25	5	2
-25	7	2
-64	7	1
-64	5	1
-70	5	2
-70	7	2
-33	5	2
-48	8	4
-48	7	2
-53	5	1
-7	3	4
-63	8	2
-48	5	4
-33	7	2
-55	8	2
-52	7	1
-66	8	2
-68	8	2
-72	8	2
-72	5	1
-14	4	2
-52	5	1
-72	7	1
-74	7	1
-74	8	2
-69	7	1
-74	5	1
-69	8	2
-73	7	1
-69	5	1
-73	8	2
-44	8	2
-73	5	1
-44	7	1
-21	7	2
-44	5	1
-75	7	1
-8	8	2
-62	6	1
-62	3	2
-21	5	4
-21	6	1
-21	4	1
-21	3	9
-37	5	1
-67	5	1
-18	3	2
-28	5	1
-8	7	1
-79	7	1
-78	8	1
-25	3	1
-78	2	1
-5	6	1
-66	5	1
-4	7	1
-5	3	2
-70	3	1
-79	8	2
-48	6	2
-33	6	1
-33	3	2
-48	3	8
-80	8	2
-15	4	2
-16	6	2
-80	5	1
-65	3	4
-42	6	1
-71	3	5
-6	8	1
-6	7	1
-6	2	2
-15	3	16
-13	3	2
+COPY _timescaledb_catalog.chunk_column_stats (id, hypertable_id, chunk_id, column_name, range_start, range_end, valid) FROM stdin;
 \.
 
 
 --
--- Data for Name: user_events; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: dimension; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
 --
 
-COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
+COPY _timescaledb_catalog.dimension (id, hypertable_id, column_name, column_type, aligned, num_slices, partitioning_func_schema, partitioning_func, interval_length, compress_interval_length, integer_now_func_schema, integer_now_func) FROM stdin;
+1	1	timestamp	timestamp with time zone	t	\N	\N	\N	604800000000	\N	\N	\N
+\.
+
+
+--
+-- Data for Name: dimension_slice; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.dimension_slice (id, dimension_id, range_start, range_end) FROM stdin;
+1	1	1788393600000000	1788998400000000
+2	1	1788998400000000	1789603200000000
+3	1	1789603200000000	1790208000000000
+4	1	1790208000000000	1790812800000000
+5	1	1790812800000000	1791417600000000
+6	1	1791417600000000	1792022400000000
+\.
+
+
+--
+-- Data for Name: chunk_constraint; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.chunk_constraint (chunk_id, dimension_slice_id, constraint_name, hypertable_constraint_name) FROM stdin;
+1	1	constraint_1	\N
+2	2	constraint_2	\N
+3	3	constraint_3	\N
+4	4	constraint_4	\N
+5	5	constraint_5	\N
+6	6	constraint_6	\N
+\.
+
+
+--
+-- Data for Name: compression_chunk_size; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.compression_chunk_size (chunk_id, compressed_chunk_id, uncompressed_heap_size, uncompressed_toast_size, uncompressed_index_size, compressed_heap_size, compressed_toast_size, compressed_index_size, numrows_pre_compression, numrows_post_compression, numrows_frozen_immediately) FROM stdin;
+\.
+
+
+--
+-- Data for Name: compression_settings; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.compression_settings (relid, compress_relid, segmentby, orderby, orderby_desc, orderby_nullsfirst, index) FROM stdin;
+\.
+
+
+--
+-- Data for Name: continuous_agg; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.continuous_agg (mat_hypertable_id, raw_hypertable_id, parent_mat_hypertable_id, user_view_schema, user_view_name, partial_view_schema, partial_view_name, direct_view_schema, direct_view_name, materialized_only) FROM stdin;
+\.
+
+
+--
+-- Data for Name: continuous_aggs_bucket_function; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.continuous_aggs_bucket_function (mat_hypertable_id, bucket_func, bucket_width, bucket_origin, bucket_offset, bucket_timezone, bucket_fixed_width) FROM stdin;
+\.
+
+
+--
+-- Data for Name: continuous_aggs_hypertable_invalidation_log; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.continuous_aggs_hypertable_invalidation_log (hypertable_id, lowest_modified_value, greatest_modified_value) FROM stdin;
+\.
+
+
+--
+-- Data for Name: continuous_aggs_invalidation_threshold; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.continuous_aggs_invalidation_threshold (hypertable_id, watermark) FROM stdin;
+\.
+
+
+--
+-- Data for Name: continuous_aggs_materialization_invalidation_log; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.continuous_aggs_materialization_invalidation_log (materialization_id, lowest_modified_value, greatest_modified_value) FROM stdin;
+\.
+
+
+--
+-- Data for Name: continuous_aggs_materialization_ranges; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.continuous_aggs_materialization_ranges (materialization_id, lowest_modified_value, greatest_modified_value) FROM stdin;
+\.
+
+
+--
+-- Data for Name: continuous_aggs_watermark; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.continuous_aggs_watermark (mat_hypertable_id, watermark) FROM stdin;
+\.
+
+
+--
+-- Data for Name: metadata; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.metadata (key, value, include_in_telemetry) FROM stdin;
+install_timestamp	2026-10-13 08:30:31.35394+00	t
+timescaledb_version	2.26.1	f
+exported_uuid	5258eaed-7aba-4d5f-a143-96cea2364984	t
+\.
+
+
+--
+-- Data for Name: tablespace; Type: TABLE DATA; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+COPY _timescaledb_catalog.tablespace (id, hypertable_id, tablespace_name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: _hyper_1_1_chunk; Type: TABLE DATA; Schema: _timescaledb_internal; Owner: postgres
+--
+
+COPY _timescaledb_internal._hyper_1_1_chunk (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
 1	2026-09-04 15:14:49.929484+00	1	1	task_started	{"task_id": 1, "mission_id": 0}
 2	2026-09-04 15:14:55.10822+00	1	55	task_started	{"task_id": 1, "mission_id": 2}
 3	2026-09-06 21:08:37.623545+00	3	1	task_started	{"task_id": 1, "mission_id": 0}
@@ -5686,6 +4103,14 @@ COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload)
 2941	2026-09-09 17:20:50.335574+00	21	4	task_attempt	{"task_id": 3, "mission_id": 0}
 2944	2026-09-09 17:21:29.85017+00	21	4	task_attempt	{"task_id": 3, "mission_id": 0}
 2946	2026-09-09 17:21:55.009728+00	13	14	task_attempt	{"task_id": 13, "mission_id": 0}
+\.
+
+
+--
+-- Data for Name: _hyper_1_2_chunk; Type: TABLE DATA; Schema: _timescaledb_internal; Owner: postgres
+--
+
+COPY _timescaledb_internal._hyper_1_2_chunk (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
 3259	2026-09-10 00:09:49.814134+00	15	28	task_started	{"task_id": 28, "mission_id": 0}
 3260	2026-09-10 00:09:53.702058+00	15	28	task_attempt	{"task_id": 28, "mission_id": 0}
 3261	2026-09-10 00:10:18.347264+00	15	28	task_attempt	{"task_id": 28, "mission_id": 0}
@@ -13570,6 +11995,14 @@ COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload)
 11098	2026-09-16 19:49:20.864578+00	26	13	purchase_clue	{"task_id": 12, "clue_type": 2, "mission_id": 0}
 11100	2026-09-16 19:49:40.99873+00	41	4	task_started	{"task_id": 3, "mission_id": 0}
 11102	2026-09-16 19:49:57.526315+00	26	13	task_submitted	{"task_id": 12, "is_correct": true, "mission_id": 0}
+\.
+
+
+--
+-- Data for Name: _hyper_1_3_chunk; Type: TABLE DATA; Schema: _timescaledb_internal; Owner: postgres
+--
+
+COPY _timescaledb_internal._hyper_1_3_chunk (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
 11154	2026-09-17 06:01:15.570286+00	26	6	task_started	{"task_id": 5, "mission_id": 0}
 11155	2026-09-17 06:01:26.524749+00	26	14	task_started	{"task_id": 13, "mission_id": 0}
 11156	2026-09-17 06:02:56.434475+00	25	14	task_started	{"task_id": 13, "mission_id": 0}
@@ -18570,6 +17003,7 @@ COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload)
 15220	2026-09-18 11:17:51.254004+00	68	6	task_attempt	{"task_id": 5, "mission_id": 0}
 15225	2026-09-18 11:18:00.293609+00	68	6	task_attempt	{"task_id": 5, "mission_id": 0}
 15231	2026-09-18 11:20:49.902019+00	70	24	task_attempt	{"task_id": 24, "mission_id": 0}
+15235	2026-09-18 11:23:48.542873+00	70	24	task_attempt	{"task_id": 24, "mission_id": 0}
 15233	2026-09-18 11:22:20.602201+00	70	24	purchase_clue	{"task_id": 24, "clue_type": 2, "mission_id": 0}
 15234	2026-09-18 11:23:06.514752+00	30	23	task_attempt	{"task_id": 23, "mission_id": 0}
 16057	2026-09-18 17:15:01.044631+00	72	2	task_attempt	{"task_id": 2, "mission_id": 0}
@@ -18633,7 +17067,6 @@ COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload)
 15221	2026-09-18 11:17:51.661779+00	68	6	task_attempt	{"task_id": 5, "mission_id": 0}
 15226	2026-09-18 11:18:00.50832+00	68	6	task_attempt	{"task_id": 5, "mission_id": 0}
 15229	2026-09-18 11:20:25.216516+00	70	24	task_attempt	{"task_id": 24, "mission_id": 0}
-15235	2026-09-18 11:23:48.542873+00	70	24	task_attempt	{"task_id": 24, "mission_id": 0}
 16058	2026-09-18 17:15:01.453562+00	71	5	task_attempt	{"task_id": 4, "mission_id": 0}
 16236	2026-09-18 18:07:12.206377+00	71	14	task_attempt	{"task_id": 13, "mission_id": 0}
 16241	2026-09-18 18:07:45.797074+00	52	15	task_attempt	{"task_id": 14, "mission_id": 0}
@@ -24782,6 +23215,7 @@ COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload)
 20302	2026-09-20 11:01:05.763656+00	16	31	task_attempt	{"task_id": 31, "mission_id": 0}
 20303	2026-09-20 11:02:10.574704+00	16	34	task_started	{"task_id": 32, "mission_id": 0}
 20305	2026-09-20 11:05:30.512437+00	16	31	task_attempt	{"task_id": 31, "mission_id": 0}
+21425	2026-09-20 16:40:43.657328+00	66	20	task_attempt	{"task_id": 20, "mission_id": 0}
 20306	2026-09-20 11:05:32.038746+00	16	31	task_submitted	{"task_id": 31, "is_correct": true, "mission_id": 0}
 20307	2026-09-20 11:05:50.561898+00	16	31	task_started	{"task_id": 31, "mission_id": 0}
 20309	2026-09-20 11:06:51.983807+00	16	29	task_attempt	{"task_id": 29, "mission_id": 0}
@@ -24846,7 +23280,6 @@ COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload)
 21407	2026-09-20 16:38:02.403154+00	73	10	task_started	{"task_id": 9, "mission_id": 0}
 21416	2026-09-20 16:39:00.142437+00	73	11	task_submitted	{"task_id": 10, "is_correct": true, "mission_id": 0}
 21422	2026-09-20 16:40:16.845979+00	75	29	task_attempt	{"task_id": 29, "mission_id": 0}
-21425	2026-09-20 16:40:43.657328+00	66	20	task_attempt	{"task_id": 20, "mission_id": 0}
 21428	2026-09-20 16:41:06.603779+00	75	29	task_attempt	{"task_id": 29, "mission_id": 0}
 21432	2026-09-20 16:41:15.388001+00	18	25	task_attempt	{"task_id": 25, "mission_id": 0}
 22003	2026-09-20 17:41:46.951966+00	79	16	task_attempt	{"task_id": 16, "mission_id": 0}
@@ -26291,6 +24724,14 @@ COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload)
 21562	2026-09-20 16:50:51.831794+00	79	7	task_attempt	{"task_id": 6, "mission_id": 0}
 21569	2026-09-20 16:51:22.688847+00	18	27	task_attempt	{"task_id": 27, "mission_id": 0}
 22207	2026-09-20 18:42:41.784221+00	12	5	task_started	{"task_id": 4, "mission_id": 0}
+\.
+
+
+--
+-- Data for Name: _hyper_1_4_chunk; Type: TABLE DATA; Schema: _timescaledb_internal; Owner: postgres
+--
+
+COPY _timescaledb_internal._hyper_1_4_chunk (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
 23878	2026-09-24 09:59:34.21245+00	71	38	task_started	{"task_id": 3, "mission_id": 1}
 23879	2026-09-24 10:21:10.932805+00	7	39	task_started	{"task_id": 4, "mission_id": 1}
 23880	2026-09-24 12:03:25.599043+00	71	39	task_started	{"task_id": 4, "mission_id": 1}
@@ -27572,6 +26013,7 @@ COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload)
 25528	2026-09-28 16:43:21.466722+00	19	63	task_started	{"task_id": 2, "mission_id": 1}
 26414	2026-09-30 12:31:37.869865+00	62	63	task_attempt	{"task_id": 2, "mission_id": 1}
 26547	2026-09-30 21:05:49.361554+00	28	17	task_attempt	{"task_id": 17, "mission_id": 0}
+25547	2026-09-28 16:49:15.684917+00	49	14	task_started	{"task_id": 13, "mission_id": 0}
 26549	2026-09-30 21:05:50.391801+00	28	17	task_submitted	{"task_id": 17, "is_correct": true, "mission_id": 0}
 26553	2026-09-30 21:06:13.048718+00	28	18	task_attempt	{"task_id": 18, "mission_id": 0}
 26558	2026-09-30 21:06:36.836434+00	28	18	task_attempt	{"task_id": 18, "mission_id": 0}
@@ -27636,7 +26078,6 @@ COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload)
 25540	2026-09-28 16:46:45.392607+00	49	26	task_started	{"task_id": 26, "mission_id": 0}
 25543	2026-09-28 16:47:41.576612+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
 25545	2026-09-28 16:48:19.432997+00	49	25	task_attempt	{"task_id": 25, "mission_id": 0}
-25547	2026-09-28 16:49:15.684917+00	49	14	task_started	{"task_id": 13, "mission_id": 0}
 25551	2026-09-28 16:49:53.782325+00	49	82	task_started	{"task_id": 9, "mission_id": 2}
 25556	2026-09-28 16:53:14.53089+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
 25558	2026-09-28 16:53:36.263761+00	19	63	task_attempt	{"task_id": 2, "mission_id": 1}
@@ -28998,6 +27439,14 @@ COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload)
 26032	2026-09-30 11:19:35.331758+00	9	53	task_attempt	{"task_id": 26, "mission_id": 1}
 26035	2026-09-30 11:19:50.939323+00	9	52	task_attempt	{"task_id": 24, "mission_id": 1}
 26520	2026-09-30 21:04:08.768588+00	28	14	task_attempt	{"task_id": 13, "mission_id": 0}
+\.
+
+
+--
+-- Data for Name: _hyper_1_5_chunk; Type: TABLE DATA; Schema: _timescaledb_internal; Owner: postgres
+--
+
+COPY _timescaledb_internal._hyper_1_5_chunk (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
 26587	2026-10-01 06:04:14.573765+00	26	37	task_started	{"task_id": 1, "mission_id": 1}
 26588	2026-10-01 06:05:34.163687+00	25	37	task_started	{"task_id": 1, "mission_id": 1}
 26589	2026-10-01 06:05:34.366437+00	26	37	task_started	{"task_id": 1, "mission_id": 1}
@@ -29996,6 +28445,14 @@ COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload)
 27583	2026-10-07 22:23:16.050334+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
 27584	2026-10-07 22:55:10.61992+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
 27585	2026-10-07 22:55:45.929034+00	15	82	task_attempt	{"task_id": 9, "mission_id": 2}
+\.
+
+
+--
+-- Data for Name: _hyper_1_6_chunk; Type: TABLE DATA; Schema: _timescaledb_internal; Owner: postgres
+--
+
+COPY _timescaledb_internal._hyper_1_6_chunk (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
 27586	2026-10-08 02:02:25.53997+00	4	62	task_started	{"task_id": 12, "mission_id": 2}
 27587	2026-10-08 06:09:08.068983+00	25	38	task_started	{"task_id": 3, "mission_id": 1}
 27588	2026-10-08 06:10:33.203012+00	25	38	task_started	{"task_id": 3, "mission_id": 1}
@@ -30442,6 +28899,2123 @@ COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload)
 28030	2026-10-12 18:04:20.742166+00	72	21	task_started	{"task_id": 21, "mission_id": 0}
 \.
 
+
+--
+-- Data for Name: achievements; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.achievements (achievement_id, category_name, icon, name, description, historical_info, tag, required_count) FROM stdin;
+6	Техническое мастерство	🧩	CTE Специалист	Решить 3 задачи с использованием рекурсивных CTE	Рекурсивные операции, как партизанские сети, требуют глубокого планирования	cte	3
+3	Боевые достижения	🗺	Опытный командир	Решить 20 задач нормальной сложности	Как командующие фронтами, вы учитесь принимать решения под давлением	medium	20
+8	Исторические подвиги	🏆	Блокадный Ленинград	Решить 5 задач на логистику и распределение ресурсов	125 граммов хлеба в день — так жил Ленинград. Ваши расчеты спасают жизни!	supply	5
+5	Техническое мастерство	🔍	Мастер оконных функций	Использовать RANK(), LAG(), и SUM() OVER() в 5 разных задачах	Анализ данных — это современная артиллерия. Точный расчет решает исход битвы!	window	5
+7	Исторические подвиги	🏙	Защитник Сталинграда	Решить все задачи, связанные со Сталинградской битвой	200 дней мужества. Вы защитили город, как это делали герои 1943 года!	stalingrad	5
+1	Боевые достижения	🎖	Первая кровь	Решить первую задачу любого уровня	Первый шаг к победе - самый важный. Так начинался путь многих героев ВОВ	first_any_level	1
+10	Боевые достижения	📈	Стратег Победы	Решить 10 задач, связанных с анализом эффективности военных операций	Великие полководцы, как Жуков и Рокоссовский, строили победы на точных расчётах. Теперь и ваш анализ ведёт к успеху!	efficiency	10
+4	Боевые достижения	🏅	Ветеран SQL-фронта	Решить 15 сложных задач	Сложные миссии требуют мастерства. Вы достойны звания ветерана!	hard	15
+2	Боевые достижения	📜	Стратег-новичок	Решить 10 легких задач	В 1941 году советские солдаты учились воевать в тяжелейших условиях. Ты на верном пути!	easy	10
+9	Исторические подвиги	🚩	Освободитель Берлина	Завершить все миссии финального этапа войны	Знамя Победы над Рейхстагом — ваш код водружает его снова!	final	15
+\.
+
+
+--
+-- Data for Name: password_hashes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.password_hashes (user_id, password_hash) FROM stdin;
+1	$2b$12$cnMS3rEBgZVT8tKYwBlOwOmSbp7MHcA32LHD84irB9pYAlo9fcUcK
+2	$2b$12$e6elfqyCGMA9ucTtzjsYU.KZhnFjRFxrj3D/9BBMqrwpyOBgBgSnC
+3	$2b$12$ZZaLXfG9vsCsDeIjqWT6fuC4zl5UcWK668dy8FxiGtVOA4dhDeHWC
+4	$2b$12$ZCdyF41r6Hi4FvPCGXgoau367FPGiBoIfAwPd8d4NiAYMnloS4kDW
+5	$2b$12$5qwtZEoHl3368Pll/Q0NiOXwZfidStzlQ3mxMlIfeHotog2CX0owS
+6	$2b$12$kNhCNUiXsAkiOglvhbV5Ueuliq4KF1G.xedgHwWfsb08kCNyzvnBu
+7	$2b$12$FCitfRhbZWIll/aynrNeF.X/2qdeyQJ5pZeC7U/qDkCPVFVjBjfgy
+8	$2b$12$PkgyI5qWzXoswdlGGrWCh.NcxiEx8zyEspH0Vy.rA0AcLE6r1mATK
+9	$2b$12$2OPTyD3jawUhc.8n6pNJNOeeMDidOMZ7dtYJU/wdEDplkm10SZItG
+10	$2b$12$l2AXW9WgI5hvnsSKVTiawuriRq/avLxWmJmM0kYLbhK2BDbbbl91q
+11	$2b$12$SK6llI73AOqAiM7tgzvTFeLSHsIJSipvPHS.CjslZvJikUCbCUSMG
+12	$2b$12$JVe2tLIbNLt3lmXsmuUaSes0HDswx4EM/tSZ.ONjN6vMye32iZyay
+13	$2b$12$NYFTis8hjWXeqkZjZH8QsebJJZ4Htt6POKT0.2mDXwsOEHyl2Akg2
+14	$2b$12$KocSStb2d8ZV2GoTOF1pMeUJK1ZjEcPYfRh6l0LydR02j/LX1.5le
+15	$2b$12$yr3B29IpMMXAcXBbJbfLBu.cHeqy5r5IQyjLxp2soGv8atGwuqoma
+16	$2b$12$8iOJ/MeLJ03qKEmIkaj5refuUTkijEXCFoSOXIvVr.2.hCJk8SET6
+17	$2b$12$k97uI9eZCDhwwn99oD5XU.G/GAVDi.ikLXX/..E2z/Ds1RSJ2YPi6
+18	$2b$12$1e70ndzl56wCqpkuvqprE.5Q8K4MkLADFF9p9cMN1r.Li1DPrLSia
+19	$2b$12$BPNmsnYie8jNoIZnPusUrOmLLf3JMScAnQS0D/sE0lOBUr3BiuXW2
+20	$2b$12$4s0VEVwzdDMoPLG2Ci/d6uJs7qVeAdMVf1FH1eTCh/NMXZcxAgXrO
+21	$2b$12$BaHZ7wG1uRlRCYcHhuGpfObNhgBf5GY5Cv1Do4mPNx1yLCebIgI7C
+22	$2b$12$dYN.qinxYCxvwACcMcPXWutBg4bgYGpVizTqmbVyMeXa5QDWXhHTS
+23	$2b$12$GfN9aKugktv6CDEjZU4K8.OdW7WMtZpldGe4A1XhFLQ6r4M7lGQHK
+24	$2b$12$k7KZwbCq0QRUqVJep/XdRO58IAexEkxtJmi/VxwKtyle3TY1ly0Ny
+25	$2b$12$.U3gt7Cgt/HLnqBQrJUymOnEJpK6Tj.zVVc1L/p7E2VOT5KLUSI6C
+26	$2b$12$434ZTWFAP3J.8.OygXbYe.mu9X0LoXgboyvK9wl/X.nizTisxrt1S
+27	$2b$12$adXLiKN91GlzfFCvWrilO.k1Khu4AtS2EKgDDljwOFc2tnrAaOY1a
+28	$2b$12$EDBzqEAYdDQy.QwzZl9RZeLfpFn6eBwuPRW/B3ZMNZs.GpHHN44W.
+29	$2b$12$7RYzy35PTmLCl6CQ8oLNiuoScgSOgmXuKbwplt7d2ZxJUDT.Gk0Vu
+30	$2b$12$S24IXgaHm6fzltwoWSy.seznNSbDh1iR9sU9SDa3WxtTMt8s/Y9jC
+31	$2b$12$F6VXjHbowpuJ2WdbsRm9bOFWJZ4tUb6TP1.6OVBoX2UZeDMIdvZae
+32	$2b$12$Yvl/mtIGzBd7goCB.agUk.yThMqVRXOMmzPWkKeAKU9LUNIQScFpu
+33	$2b$12$b9rv0M1ouBM02TT2eQlEMOg1Eh8v4xiTHu2eiHkfMgUYIzvf/axX.
+34	$2b$12$ASKaNCHIeHVQo5W9H8DBhufm2W/2fa22gdVdj.LKZP2nu1Pyj70z.
+35	$2b$12$j8DrdQqCtSWVFG6XoObX8u1URprCIwPn5ISilVMIByzwmQD8k51Ea
+36	$2b$12$nUbBAr9e9L4Q21ZAdH.b9O2Ap0jegjWpNwo3tHGvXjYpRQGq4EVTC
+37	$2b$12$Rbu5o5yNgWRwRbGMawZwlOckWSOTNFgVttVKSaEFuug9EpS/m1rOS
+38	$2b$12$fU1RDJ41vGdj6p1fr1AaRuaWWuUkiCbWWBCJCjorVNQbS0rvh9Bna
+39	$2b$12$qz7D/yFYSZwlGLbQPHgUd.0Yh5gyKeMv3oE9YRMtmz/8vSrYYUOjG
+40	$2b$12$zNR5kgmAd3VbzTgdX3qog.qBFKz5x2I/TbrdIJnMsYXOOzzR4g5IK
+41	$2b$12$Bz0xE1j92kmfFkMOz6kecOx5C1XwEBzyIHH4AGdeO/SphiE9oXH1S
+42	$2b$12$PxNK/ca4gYjVYE4fDL2Jl.XTdrozClad5/HfJYbagTDaFGVmfCe7W
+43	$2b$12$fpkf5ZXssLYZHKGOJcVd8.4pRGefq4upkSR1g2yBdOXxRlpKBXaUi
+44	$2b$12$hWWVagALwEKzVHxthfkth.y0Ef1Dxown2vFAJ22H5e5Ed0L0D2bi.
+45	$2b$12$Xoa.W4w6YFglGhYYGh/DauIXgLMYG62AVNJ1sk67aQOAQULDuNT.u
+46	$2b$12$LLplPZYabI/P2EGqcQMHf.AUqBz6/jd533e6cIZq3xUNe/zh0btkO
+47	$2b$12$VwFkzIeBmA1kTnxwAwHJmelbZQNgaKxN14MOykmXeJOFxVJ2zGjeO
+48	$2b$12$gt7TmM6trtujPCLxiaVvbOfoC6IohhvTl6wrCpA2TuBTPYN6iVHEa
+49	$2b$12$8gtKg1kP2UJHkKonLvNaruQoWYSzxy5hBPQOlqVjBIWueF5OvdIJm
+50	$2b$12$4Ch.ljrCElSXVebPA.Qg6O7ufGd5SeNcqYvIrPFX2D.FxZV1LNkMW
+51	$2b$12$Z19spu0VfWD5oPE.Kj7k7uzuqCbLX5.4ucYn4/LYGDczZ8oNvGX3O
+52	$2b$12$AM0B7DSVVfRlzRcuSPl18exW3rD7MJtFL02ftSV35YbGlc5fjYHNm
+53	$2b$12$CegH44N8pUy/ndUtOmhs.OS5lptTYRZBTtAjqt27pC6msBLjYkZ.y
+55	$2b$12$8pZiGHw2jJQyJ71OhKnMF.DfN5dSXuw2LclrRB/OCeWBHdf.yey8S
+62	$2b$12$MH8Asdey/y3sT9gAqn7b/.1zgWk5.i3u2AiMjgz9vMjaaGSvnQOyC
+63	$2b$12$le9XD/o5qNLz8yUvGLAvnuhP/pfGmgxjsAbU7s2ApV1s/i9nLiXnO
+64	$2b$12$rCre6rmSI.Vei8weSMuvO.CbsQxRhhJYC2VHzGg0ec6tzDAQa2TqC
+65	$2b$12$W0LD5P69paPPFu4Eg.lkN.qYxa/zPyf8J3/j/OK3MQM4fCiomu4H.
+66	$2b$12$yGHwe3Wy4Z6a1TQWVDttPOVCahM8Ngi58IrJXXOyNcTKSE8uznLxG
+67	$2b$12$T.m1DE0GwhpL6XuoEAhzs.BQpK2UAIw2ve3yDoXY29mshw7GKdCr6
+68	$2b$12$vfHWpuci1Wt2ylKHOyJRfuy38tXwFuRIS/QmhP3xLxb4TnZ1dyNsi
+69	$2b$12$58oBekv88XnRmO3NxfGsT.aFePEclLbwikJvpn.fqAS00GBQXfsjW
+70	$2b$12$8eSBNLWzcDo.P0jJNrns/u47vEOYuWz3eAxpUBuIcAgm154kQuyQm
+71	$2b$12$JfdlREZwYLoePuJN7g62c./.JWc8yEzCYsd2aLUkS7YIGPbCGN6ty
+72	$2b$12$n2zdTFoFIAgcnt5Bc0LheuQ7vkTlC4q3ZL1nukpqD.CyT9KPsD06a
+73	$2b$12$cNXv.LZD5g4YQzCFis7JK.ECvSaOc4bSlCdm5KJoZm4946l8Mg1X.
+74	$2b$12$KTnPcf079gfYyMcIjpPlbeweZwzOaGat.aZEPB8DojbGKXw1ZoDd.
+75	$2b$12$x0aHjLk9fPCvIw5ojzEks.WY.kBjDY9fDxNmbmRlbGy.rROIoA5u6
+76	$2b$12$JigEOBJ9ECCXLZvVbaYnZuLlxvXCGIybXezTumu7Ddb4Ok/84j1Om
+77	$2b$12$DBeVhoyzq2azHcBoy8VR5.QSKEjARSGDU4iL3/5K1Xa.QUvB1RM56
+78	$2b$12$902oiIEsDuPv0TgzK.o6uemb51SifCc4UQOHYTKKsgiF/x5bnfcAy
+79	$2b$12$KjIiqW65rQvIZkx/JRVEyeIzkNCME4ieZkHAODCAEO5DMB0nP30cq
+80	$2b$12$jBsfxsNxVO4Ez1h4Md6Mp.vGwSYNXGLF/KaZiaao5EQK3FRR0088m
+81	$2b$12$HObYCiJRKVYl5YNiD0.dnO4xNPV9IeTdGqc2rN7158Gy1yEpO2mKm
+132	$2b$12$zhTtN7THJ5qgHjQeddqlyO1jxjna/rwzml1RiqM5Gg3cbehsEva0K
+\.
+
+
+--
+-- Data for Name: quest_tasks_solved; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.quest_tasks_solved (id, user_id, quest_id, scene_id, user_query, created_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.schema_migrations (id, version, applied_at) FROM stdin;
+1	001_sync_tasks_and_tables.sql	2026-10-13 12:54:50.8661+00
+2	002_fix_curriculum_duplicates.sql	2026-10-13 12:54:50.8661+00
+\.
+
+
+--
+-- Data for Name: tasks; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tasks (task_global_id, mission_id, task_id, title, description, clue, correct_query, expected_result, tags) FROM stdin;
+1	0	1	Архив личного состава	Составьте список всех военнослужащих с указанием их полных имен и годов рождения. Это необходимо для анализа возрастного состава армии и планирования ресурсов	Используйте таблицу `soldier`, выбрав два ключевых столбца.	\N	{"data": [["Иванов Алексей Петрович", 1923], ["Смирнова Анна Васильевна", 1925], ["Петров Дмитрий Иванович", 1918], ["Козлов Николай Семёнович", 1920], ["Фёдорова Мария Ивановна", 1922], ["Жуков Андрей Григорьевич", 1915], ["Павлов Яков Фёдорович", 1917], ["Зайцева Людмила Михайловна", 1924], ["Громов Михаил Сергеевич", 1919], ["Орлова Вера Павловна", 1921], ["Новиков Александр Иванович", 1924], ["Васнецова Татьяна Дмитриевна", 1923], ["Кузнецов Пётр Васильевич", 1916], ["Белов Алексей Николаевич", 1925], ["Соколова Ольга Ивановна", 1920], ["Морозов Иван Кузьмич", 1914], ["Волкова Елена Сергеевна", 1926], ["Ткаченко Григорий Петрович", 1927], ["Беляев Павел Дмитриевич", 1912], ["Семёнова Валентина Михайловна", 1920], ["Ковалёв Сергей Николаевич", 1925], ["Мельникова Галина Ивановна", 1924], ["Фёдоров Игорь Васильевич", 1913], ["Горбачёв Алексей Дмитриевич", 1926], ["Сидорова Екатерина Петровна", 1921], ["Смирнов Василий Иванович", 1911], ["Крылова Надежда Фёдоровна", 1925], ["Орлов Денис Сергеевич", 1927], ["Жукова Елена Викторовна", 1923], ["Гришин Алексей Петрович", 1918], ["Ткаченко Иван Григорьевич", 1920], ["Воронцова Лидия Павловна", 1924], ["Жуковский Виктор Михайлович", 1915], ["Морозова Анна Сергеевна", 1922], ["Кузнецов Артём Игоревич", 1926], ["Соколовская Надежда Викторовна", 1923], ["Белов Дмитрий Николаевич", 1917], ["Громова Екатерина Ивановна", 1925], ["Фролов Павел Сергеевич", 1928], ["Ковалёва Ольга Дмитриевна", 1921]], "columns": ["full_name", "birth_year"], "row_count": 40}	{first_any_level,supply,easy}
+2	0	2	География сражений	Определите все боевые операции, проведенные в Сталинграде. Результаты помогут оценить стратегическую значимость этого региона	Фильтрация по локации в таблице `battles` с использованием точного значения	\N	{"data": [["Сталинградская битва"]], "columns": ["battle_name"], "row_count": 1}	{stalingrad,easy}
+4	0	3	Оптимизация численности	Найдите количество подразделений, где численность личного состава людей не превышает 500 человек. Вычисленный столбец назовите answer. Это критично для перераспределения сил между частями	Используйте вложенный запрос с группировкой и агрегатной функцией для подсчета солдат	\N	{"data": [[29]], "columns": ["answer"], "row_count": 1}	{easy}
+5	0	4	Хроники войны	Выведите список всех сражений с их названиями, датами начала и окончания и местоположениями, отсортированный в хронологическом порядке по дате начала. Это ключ к пониманию этапов войны. Примечание: в результате допустимо дублирование данных.	Сортировка по дате в таблице `battle` с указанием направления	\N	{"data": [["Оборона Брестской крепости", "1941-06-22", "1941-06-29", "Брест"], ["Оборона Брестской крепости", "1941-06-22", "1941-06-29", "Брест"], ["Оборона Заполярья", "1941-06-29", "1944-10-01", "Мурманск"], ["Смоленское сражение", "1941-07-10", "1941-09-10", "Смоленск"], ["Таллинский переход", "1941-08-27", "1941-08-30", "Балтийское море"], ["Блокада Ленинграда", "1941-09-08", "1944-01-27", "Ленинград"], ["Битва за Москву", "1941-09-30", "1942-04-20", "Москва"], ["Оборона Тулы", "1941-10-24", "1941-12-05", "Тула"], ["Оборона Севастополя", "1941-10-30", "1942-07-04", "Севастополь"], ["Ржевская битва", "1942-01-08", "1943-03-31", "Ржев"], ["Демянская операция", "1942-02-20", "1942-05-20", "Новгородская обл."], ["Харьковская операция", "1942-05-12", "1942-05-28", "Харьков"], ["Битва за Воронеж", "1942-06-28", "1943-01-25", "Воронеж"], ["Сталинградская битва", "1942-07-17", "1943-02-02", "Сталинград"], ["Битва за Кавказ", "1942-07-25", "1943-10-09", "Кавказ"], ["Прорыв блокады Ленинграда", "1943-01-12", "1943-01-30", "Ленинград"], ["Курская битва", "1943-07-05", "1943-08-23", "Курск"], ["Битва за Днепр", "1943-08-26", "1943-12-23", "Днепр"], ["Керченско-Эльтигенская операция", "1943-10-31", "1943-12-11", "Керчь"], ["Корсунь-Шевченковская операция", "1944-01-24", "1944-02-17", "Украина"], ["Операция \\"Багратион\\"", "1944-06-23", "1944-08-29", "Белоруссия"], ["Битва при Дебрецене", "1944-10-06", "1944-10-29", "Венгрия"], ["Будапештская операция", "1944-10-29", "1945-02-13", "Венгрия"], ["Висло-Одерская операция", "1945-01-12", "1945-02-03", "Польша"], ["Восточно-Прусская операция", "1945-01-13", "1945-04-25", "Кёнигсберг"], ["Балатонская операция", "1945-03-06", "1945-03-15", "Венгрия"], ["Берлинская операция", "1945-04-16", "1945-05-08", "Берлин"], ["Битва за Берлин", "1945-04-16", "1945-05-08", "Берлин"], ["Пражская операция", "1945-05-06", "1945-05-11", "Прага"], ["Маньчжурская операция", "1945-08-09", "1945-09-02", "Маньчжурия"]], "columns": ["battle_name", "start_date", "end_date", "location"], "row_count": 30}	{easy}
+6	0	5	Галерея героев	Создайте список солдат и наград, которые они получили. Это основа для формирования мемориальных архивов	Объединение трех таблиц: `soldier`, `soldier_medal` и `medal` через INNER JOIN	\N	{"data": [["Павлов Яков Фёдорович", "Герой Советского Союза"], ["Зайцева Людмила Михайловна", "Медаль \\"За отвагу\\""], ["Жуков Андрей Григорьевич", "Орден Красной Звезды"], ["Громов Михаил Сергеевич", "Орден Отечественной войны"], ["Орлова Вера Павловна", "Орден Славы"], ["Новиков Александр Иванович", "Орден Красной Звезды"], ["Васнецова Татьяна Дмитриевна", "Медаль \\"Партизану Отечественной войны\\""], ["Кузнецов Пётр Васильевич", "Герой Советского Союза"], ["Белов Алексей Николаевич", "Медаль \\"За оборону Сталинграда\\""], ["Соколова Ольга Ивановна", "Медаль \\"За оборону Москвы\\""], ["Иванов Алексей Петрович", "Медаль \\"За отвагу\\""], ["Смирнова Анна Васильевна", "Орден Отечественной войны"], ["Петров Дмитрий Иванович", "Медаль \\"За взятие Берлина\\""]], "columns": ["full_name", "medal_name"], "row_count": 13}	{easy}
+7	0	6	Семейная история	Выявите всех солдат с фамилией, начинающейся на «Иванов». Возможно, это представители одной семьи	Используйте оператор `LIKE` с шаблоном для поиска по началу строки	\N	{"data": [["Иванов Алексей Петрович"]], "columns": ["full_name"], "row_count": 1}	{easy}
+8	0	7	Элитные подразделения	Найдите все воинские части(подразделения), в названии которых встречается слово «гвардейская» (в любом регистре). Такие части часто были элитой армии	Регистронезависимый поиск через `ILIKE`	\N	{"data": [["1-я гвардейская танковая армия"], ["7-я гвардейская миномётная дивизия"], ["8-я гвардейская армия"]], "columns": ["unit_name"], "row_count": 3}	{easy}
+9	0	8	Артиллерийский учет	Составьте список снаряжения, в названии которого есть «пушка». Это поможет оценить наличие тяжелого вооружения	Используйте POSIX-оператор `~` для поиска по регулярному выражению	SELECT item_name FROM equipment WHERE item_name ~ 'пушка';	{"data": [["76-мм дивизионная пушка ЗИС-3"]], "columns": ["item_name"], "row_count": 1}	{easy,supply}
+10	0	9	Отцовские корни	Найдите солдат с отчеством «Петрович» или «Иванович». Данные могут быть полезны для генеалогических исследований	Примените POSIX-оператор `|` для выбора одного из двух вариантов	SELECT full_name FROM soldier WHERE full_name ~ '(Петрович|Иванович)$';	{"data": [["Иванов Алексей Петрович"], ["Петров Дмитрий Иванович"], ["Новиков Александр Иванович"], ["Ткаченко Григорий Петрович"], ["Смирнов Василий Иванович"], ["Гришин Алексей Петрович"]], "columns": ["full_name"], "row_count": 6}	{easy}
+13	0	12	Тип операции	Выявите бои, в названии которых есть слова «освобождение» или «оборона». Это поможет классифицировать сражения по их целям	Примените POSIX-оператор `|` для поиска по двум ключевым словам	SELECT battle_name FROM battle WHERE battle_name ~ '(Освобождение|Оборона)';	{"data": [["Оборона Брестской крепости"], ["Оборона Севастополя"], ["Оборона Заполярья"], ["Оборона Брестской крепости"], ["Оборона Тулы"]], "columns": ["battle_name"], "row_count": 5}	{easy}
+15	0	14	Средний возраст победителей	Рассчитайте средний возраст солдат на момент окончания войны (1945 год). Назовите столбец average_age. Это ключевой показатель для демографического анализа	Используйте арифметические операции с `AVG` и `birth_year`	\N	{"data": [[23.875]], "columns": ["average_age"], "row_count": 1}	{easy}
+41	1	9	Логистика Сталинградского фронта	Рассчитайте объем снаряжения на одного солдата в Сталинграде за период обороны. Это покажет, насколько войска были обеспечены ресурсами	Используйте `ROUND` и арифметические операции с группировкой по типам снаряжения	\N	{"data": [["артиллерия", 72, "24.00"]], "columns": ["equipment_type", "total", "per_soldier"], "row_count": 1}	{supply,stalingrad,medium}
+3	0	15	Логистика вооружений	Определите общее количество снаряжения каждого типа. Назовите вычисленное поле "total". Это основа для оценки обеспеченности войск	Группировка по типу снаряжения с применением `SUM`	\N	{"data": [["авиабомбы", 3200], ["боеприпасы", 310000], ["артиллерия", 24], ["миномёты", 2268], ["противотанковые", 68], ["связь", 15], ["медицина", 1330], ["самолёты", 45], ["инженерное", 850], ["реактивные снаряды", 1500], ["оружие", 1200], ["танки", 100]], "columns": ["equipment_type", "total"], "row_count": 12}	{window,easy}
+16	0	16	История формирования	Найдите самую раннюю и позднюю даты создания воинских частей. Это отразит этапы развития армии	Используйте агрегатные функции `MIN` и `MAX` для дат	\N	{"data": [["1939-04-20", "1944-01-10"]], "columns": ["min", "max"], "row_count": 1}	{easy}
+12	0	11	Короткие названия	Найдите снаряжение, название которого состоит ровно из 4 символов. Возможно, это кодированные обозначения	Используйте `LIKE` с четырьмя символами подчеркивания `____`	SELECT item_name FROM equipment WHERE item_name LIKE '____';	{"data": [["Т-34"], ["Ил-2"], ["М-31"], ["ИС-2"], ["ПТРД"]], "columns": ["item_name"], "row_count": 5}	{easy,like}
+17	0	17	Идентификация званий	Создайте строку, объединяющую имя солдата и его звание в формате "ФИО (звание)". Назовите получившееся поле soldier_info. Это упростит работу с архивными записями	Конкатенация строк с использованием `||`	\N	{"data": [["Иванов Алексей Петрович (рядовой)"], ["Смирнова Анна Васильевна (медсестра)"], ["Петров Дмитрий Иванович (сержант)"], ["Козлов Николай Семёнович (лейтенант)"], ["Фёдорова Мария Ивановна (санитар)"], ["Жуков Андрей Григорьевич (капитан)"], ["Павлов Яков Фёдорович (сержант)"], ["Зайцева Людмила Михайловна (снайпер)"], ["Громов Михаил Сергеевич (старшина)"], ["Орлова Вера Павловна (радист)"], ["Новиков Александр Иванович (ефрейтор)"], ["Васнецова Татьяна Дмитриевна (разведчик)"], ["Кузнецов Пётр Васильевич (майор)"], ["Белов Алексей Николаевич (рядовой)"], ["Соколова Ольга Ивановна (хирург)"], ["Морозов Иван Кузьмич (полковник)"], ["Волкова Елена Сергеевна (зенитчик)"], ["Ткаченко Григорий Петрович (рядовой)"], ["Беляев Павел Дмитриевич (подполковник)"], ["Семёнова Валентина Михайловна (связист)"], ["Ковалёв Сергей Николаевич (лейтенант)"], ["Мельникова Галина Ивановна (снайпер)"], ["Фёдоров Игорь Васильевич (полковник)"], ["Горбачёв Алексей Дмитриевич (рядовой)"], ["Сидорова Екатерина Петровна (радист)"], ["Смирнов Василий Иванович (генерал-майор)"], ["Крылова Надежда Фёдоровна (санитар)"], ["Орлов Денис Сергеевич (рядовой)"], ["Жукова Елена Викторовна (радист)"], ["Гришин Алексей Петрович (капитан)"], ["Ткаченко Иван Григорьевич (старший сержант)"], ["Воронцова Лидия Павловна (снайпер)"], ["Жуковский Виктор Михайлович (полковник)"], ["Морозова Анна Сергеевна (радист)"], ["Кузнецов Артём Игоревич (рядовой)"], ["Соколовская Надежда Викторовна (хирург)"], ["Белов Дмитрий Николаевич (капитан)"], ["Громова Екатерина Ивановна (зенитчик)"], ["Фролов Павел Сергеевич (рядовой)"], ["Ковалёва Ольга Дмитриевна (разведчик)"]], "columns": ["soldier_info"], "row_count": 40}	{easy}
+18	0	18	География призыва	Определите количество уникальных городов, откуда призывались солдаты. Это покажет масштаб мобилизации	Используйте `COUNT(DISTINCT ...)` для столбца с городами	\N	{"data": [[22]], "columns": ["count"], "row_count": 1}	{easy}
+19	0	19	Эффективность подразделений	Рассчитайте среднюю боевую эффективность для каждого типа частей. Вычисленное значение назовите avg_efficiency. Результат выведите в алфавитном порядке. Это поможет оценить их вклад в победу	Группировка по `unit_type` с функцией `AVG`	\N	{"data": [["авиация", 91.175], ["инженерные войска", 89.6], ["лыжные войска", 73.9], ["медицинская", 91.7], ["морская пехота", 85.65], ["общевойсковая", 83.75], ["пехота", 83.0125], ["противник", 88.1], ["реактивная артиллерия", 93.5], ["резерв", 68.3], ["связисты", 85.2], ["спецназ", 86.63333333333334], ["танковые войска", 96.75]], "columns": ["unit_type", "avg_efficiency"], "row_count": 13}	{easy}
+21	0	21	Анализ надежности	Вычислите дисперсию боевой эффективности для каждого типа частей. Назовите столбец variance и отсортируйте результат по алфавиту. Высокая дисперсия может указывать на нестабильность	Используйте `VAR_SAMP` для расчета дисперсии	\N	{"data": [["авиация", 27.4625], ["инженерные войска", 0.02], ["лыжные войска", null], ["медицинская", null], ["морская пехота", 21.125], ["общевойсковая", 146.205], ["пехота", 121.09553571428572], ["противник", null], ["реактивная артиллерия", 18.0], ["резерв", null], ["связисты", null], ["спецназ", 68.94333333333333], ["танковые войска", 6.125]], "columns": ["unit_type", "variance"], "row_count": 13}	{easy}
+67	1	10	Снаряжение героев	Найдите солдат, получивших снаряжение 12 января 1943 года. Это может быть связано с подготовкой к операции «Искра»	Примените вложенные запросы и фильтрацию по дате и ID снаряжения	\N	{"data": [["Смирнова Анна Васильевна"]], "columns": ["full_name"], "row_count": 1}	{medium}
+20	0	20	Статистика потерь	Подсчитайте количество солдат по каждому статусу (status). Это основа для анализа людских потерь	Группировка по статусу с использованием `CASE` в `COUNT`	\N	{"data": [["жив", 16], ["пропал без вести", 7], ["ранен", 8], ["убит", 9]], "columns": ["status", "count"], "row_count": 4}	{easy}
+22	0	22	Классификация эффективности	Разделите части на три категории: высокая, средняя и низкая эффективность. Столбец с категориями назовите efficiency_category. Это основа для стратегического планирования. Примечание: "Высокая" (КПД ≥ 90), "Средняя" (70 ≤ КПД < 90), "Низкая" (КПД < 70).	Примените `CASE` с диапазонами значений `combat_efficiency`	\N	{"data": [["316-я стрелковая дивизия", "Средняя"], ["62-я армия", "Высокая"], ["1-я гвардейская танковая армия", "Высокая"], ["150-я стрелковая дивизия", "Высокая"], ["16-я воздушная армия", "Средняя"], ["7-я гвардейская миномётная дивизия", "Высокая"], ["2-я ударная армия", "Средняя"], ["8-я гвардейская армия", "Высокая"], ["3-я воздушная армия", "Средняя"], ["106-я стрелковая дивизия", "Средняя"], ["14-я отдельная штрафная рота", "Низкая"], ["1-я морская бригада", "Средняя"], ["Отдельная медико-санитарная рота", "Высокая"], ["88-й отдельный лыжный батальон", "Средняя"], ["101-й полк НКВД", "Высокая"], ["369-й отдельный батальон морской пехоты", "Средняя"], ["1-й чехословацкий отдельный батальон", "Средняя"], ["585-й женский авиаполк", "Высокая"], ["28-я дивизия народного ополчения", "Низкая"], ["Отдельный отряд собак-истребителей танков", "Средняя"], ["37-й гвардейский миномётный полк", "Высокая"], ["Отдельный батальон связи №45", "Средняя"], ["225-й отдельный инженерный батальон", "Средняя"], ["18-я дивизия СС \\"Хорст Вессель\\"", "Средняя"], ["101-й учебный полк", "Низкая"], ["64-я стрелковая дивизия", "Высокая"], ["1-й отдельный чехословацкий батальон", "Средняя"], ["46-й гвардейский ночной бомбардировочный полк", "Высокая"], ["101-й инженерно-сапёрный батальон", "Средняя"], ["Отдельный отряд собак-миноискателей", "Средняя"]], "columns": ["unit_name", "efficiency_category"], "row_count": 30}	{easy}
+69	1	11	Возрастные категории	Посчитайте сколько солдат в каждой возрастной группе на момент начала войны(< 18, 18-25, > 25). Колонку с группой назовите age_group, а с количеством солдат — quantity. Результат отсортируйте по убыванию количества. Это поможет понять, какие возрастные группы преобладали в армии	Используйте `CASE` с диапазонами на основе года рождения	\N	{"data": [["18-25", 19], ["< 18", 15], ["> 25", 6]], "columns": ["age_group", "quantity"], "row_count": 3}	{medium}
+27	0	27	Долгие сражения	Найдите бои, длившиеся более 30 дней. Вычисленный столбец назовите duration_days. Результат отсортируйте по убыванию длительности. Такие операции часто становились переломными	Рассчитайте разницу между датами начала и окончания с использованием `HAVING`	\N	{"data": [["Оборона Заполярья", 1190], ["Блокада Ленинграда", 871], ["Ржевская битва", 447], ["Битва за Кавказ", 441], ["Оборона Севастополя", 247], ["Битва за Воронеж", 211], ["Битва за Москву", 202], ["Сталинградская битва", 200], ["Битва за Днепр", 119], ["Будапештская операция", 107], ["Восточно-Прусская операция", 102], ["Демянская операция", 89], ["Операция \\"Багратион\\"", 67], ["Смоленское сражение", 62], ["Курская битва", 49], ["Оборона Тулы", 42], ["Керченско-Эльтигенская операция", 41]], "columns": ["battle_name", "duration_days"], "row_count": 17}	{easy}
+29	0	29	Молодая кровь	Для каждой части определите самого молодого солдата. Выведите название части и год рождения самого молодого солдата. Назовите вычисленный столбец youngest_birth_year, а результат отсортируйте по убыванию годов рождения. Это может указывать на пополнение в критический момент	Используйте `MAX` с годом рождения и группировку по частям	\N	{"data": [["101-й инженерно-сапёрный батальон", 1928], ["Отдельная медико-санитарная рота", 1927], ["225-й отдельный инженерный батальон", 1927], ["1-я морская бригада", 1926], ["Отдельный отряд собак-миноискателей", 1926], ["28-я дивизия народного ополчения", 1926], ["Отдельный батальон связи №45", 1925], ["369-й отдельный батальон морской пехоты", 1925], ["62-я армия", 1925], ["46-й гвардейский ночной бомбардировочный полк", 1925], ["150-я стрелковая дивизия", 1925], ["1-й чехословацкий отдельный батальон", 1924], ["3-я воздушная армия", 1924], ["1-й отдельный чехословацкий батальон", 1924], ["18-я дивизия СС \\"Хорст Вессель\\"", 1923], ["64-я стрелковая дивизия", 1923], ["316-я стрелковая дивизия", 1923], ["106-я стрелковая дивизия", 1923], ["8-я гвардейская армия", 1921], ["Отдельный отряд собак-истребителей танков", 1921], ["101-й полк НКВД", 1920], ["16-я воздушная армия", 1920], ["1-я гвардейская танковая армия", 1920], ["2-я ударная армия", 1919], ["101-й учебный полк", 1918], ["14-я отдельная штрафная рота", 1914], ["585-й женский авиаполк", 1913], ["88-й отдельный лыжный батальон", 1912], ["37-й гвардейский миномётный полк", 1911]], "columns": ["unit_name", "youngest_birth_year"], "row_count": 29}	{easy}
+30	0	30	Танковые части	Найдите подразделения, оснащенные танками. Это важно для анализа бронетанковых сил	Используйте подзапрос с `EXISTS` для проверки наличия снаряжения	\N	{"data": [["1-я гвардейская танковая армия"], ["8-я гвардейская армия"]], "columns": ["unit_name"], "row_count": 2}	{easy}
+31	0	31	Ветераны частей	Определите солдат, которые были старше всех в своем подразделении. Возможно, это опытные командиры	Примените подзапрос с `ALL` для сравнения возрастов	\N	{"data": [["Фёдорова Мария Ивановна"], ["Жуков Андрей Григорьевич"], ["Павлов Яков Фёдорович"], ["Зайцева Людмила Михайловна"], ["Громов Михаил Сергеевич"], ["Орлова Вера Павловна"], ["Новиков Александр Иванович"], ["Васнецова Татьяна Дмитриевна"], ["Кузнецов Пётр Васильевич"], ["Морозов Иван Кузьмич"], ["Волкова Елена Сергеевна"], ["Ткаченко Григорий Петрович"], ["Беляев Павел Дмитриевич"], ["Семёнова Валентина Михайловна"], ["Ковалёв Сергей Николаевич"], ["Мельникова Галина Ивановна"], ["Фёдоров Игорь Васильевич"], ["Горбачёв Алексей Дмитриевич"], ["Сидорова Екатерина Петровна"], ["Смирнов Василий Иванович"], ["Крылова Надежда Фёдоровна"], ["Орлов Денис Сергеевич"], ["Жукова Елена Викторовна"], ["Гришин Алексей Петрович"], ["Ткаченко Иван Григорьевич"], ["Жуковский Виктор Михайлович"], ["Морозова Анна Сергеевна"], ["Белов Дмитрий Николаевич"], ["Ковалёва Ольга Дмитриевна"]], "columns": ["full_name"], "row_count": 29}	{easy}
+34	0	32	Неуничтоженные враги	Определите вражеские части, которые не были ликвидированы. Отсортируйте результат по убыванию. Это может указывать на сохранившиеся угрозы	Используйте `EXCEPT` для исключения уничтоженных частей	\N	{"data": [["Эскадра JG54 \\"Зелёное сердце\\""], ["Люфтваффе: эскадра JG52"]], "columns": ["unit_name"], "row_count": 2}	{easy}
+37	1	1	Логистика Сталинградской битвы	Определите общее количество боеприпасов, выделенных каждой части в Сталинграде. Выведите уникальный идентификатор части, а вычисленный столбец назовите total_ammo. Это поможет оценить обеспеченность войск в критический период обороны	Используйте оконную функцию `SUM` с группировкой по `unit_id` и подзапрос для фильтрации локации	\N	{"data": [[2, 50000], [13, 30000], [18, 40000], [21, 50000], [26, 70000]], "columns": ["unit_id", "total_ammo"], "row_count": 5}	{first_any_level,supply,window,stalingrad,medium}
+63	1	2	Снабжение перед операцией	Для воинских частей, у которых общее количество всего снаряжения на складе превышает 1000 единиц, необходимо вывести название части, а также суммарное количество находящихся в ней боеприпасов ammunition_total и медикаментов medicine_total. Это важно для планирования крупных наступлений	Сначала найдите подразделения, где общее количество снаряжения больше 1000, используя GROUP BY и HAVING SUM(quantity). Затем, для этих подразделений, посчитайте суммы по типам, применив условную агрегацию в основном запросе	\N	{"data": [["1-я морская бригада", 0, 250], ["3-я воздушная армия", 0, 0], ["316-я стрелковая дивизия", 50000, 0], ["37-й гвардейский миномётный полк", 50000, 0], ["585-й женский авиаполк", 40000, 0], ["62-я армия", 50000, 830], ["64-я стрелковая дивизия", 70000, 0], ["7-я гвардейская миномётная дивизия", 20000, 0], ["Отдельная медико-санитарная рота", 30000, 250]], "columns": ["unit_name", "ammunition_total", "medicine_total"], "row_count": 9}	{cte,medium}
+38	1	3	Поиск героев для награждения	Выявите 20 солдат, участвовавших в наибольшем количестве сражений, и присвойте им ранги. Вычисленные столбцы назовите battles_participated и hero_rank. Это основа для награждения орденами и медалями	Используйте `RANK()` с сортировкой по убыванию количества битв	\N	{"data": [["Жуков Андрей Григорьевич", 30, 1], ["Иванов Алексей Петрович", 28, 2], ["Громов Михаил Сергеевич", 23, 3], ["Жуковский Виктор Михайлович", 23, 3], ["Гришин Алексей Петрович", 21, 5], ["Семёнова Валентина Михайловна", 20, 6], ["Соколова Ольга Ивановна", 20, 6], ["Кузнецов Пётр Васильевич", 19, 8], ["Зайцева Людмила Михайловна", 17, 9], ["Орлова Вера Павловна", 17, 9], ["Фёдоров Игорь Васильевич", 16, 11], ["Кузнецов Артём Игоревич", 16, 11], ["Крылова Надежда Фёдоровна", 16, 11], ["Козлов Николай Семёнович", 16, 11], ["Фёдорова Мария Ивановна", 15, 15], ["Смирнов Василий Иванович", 15, 15], ["Соколовская Надежда Викторовна", 15, 15], ["Ковалёва Ольга Дмитриевна", 14, 18], ["Ткаченко Иван Григорьевич", 14, 18], ["Громова Екатерина Ивановна", 13, 20]], "columns": ["full_name", "battles_participated", "hero_rank"], "row_count": 20}	{window,medium}
+39	1	4	Анализ эффективности частей	Выведите для каждого военного подразделения его исходную и скорректированную боевую эффективность. Корректировка рассчитывается путем уменьшения исходного показателя (combat_efficiency) пропорционально доле безвозвратных потерь (статусы «убит» и «пропал без вести») от общей численности личного состава в данном подразделении. Результат должен содержать: название подразделения, исходную боевую эффективность initial_efficiency, процент потерь loss_percentage, скорректированную боевую эффективность adjusted_efficiency. Это покажет, как потери влияют на боеспособность	Сгруппируйте солдат по подразделениям (unit_id). Внутри каждой группы посчитайте общую численность и количество безвозвратных потерь, используя условную агрегацию (CASE). Затем соедините результат с таблицей military_unit и примените формулу для расчета скорректированной эффективности.	\N	{"data": [["8-я гвардейская армия", 98.5, 0.0, 98.5], ["150-я стрелковая дивизия", 97.8, 0.0, 97.8], ["46-й гвардейский ночной бомбардировочный полк", 96.7, 0.0, 96.7], ["37-й гвардейский миномётный полк", 96.5, 0.0, 96.5], ["101-й полк НКВД", 96.2, 0.0, 96.2], ["1-я гвардейская танковая армия", 95.0, 0.0, 95.0], ["585-й женский авиаполк", 94.1, 0.0, 94.1], ["64-я стрелковая дивизия", 92.4, 0.0, 92.4], ["62-я армия", 92.3, 0.0, 92.3], ["Отдельная медико-санитарная рота", 91.7, 0.0, 91.7], ["225-й отдельный инженерный батальон", 89.7, 0.0, 89.7], ["101-й инженерно-сапёрный батальон", 89.5, 0.0, 89.5], ["106-я стрелковая дивизия", 89.3, 0.0, 89.3], ["16-я воздушная армия", 88.9, 0.0, 88.9], ["369-й отдельный батальон морской пехоты", 88.9, 0.0, 88.9], ["18-я дивизия СС \\"Хорст Вессель\\"", 88.1, 0.0, 88.1], ["316-я стрелковая дивизия", 85.5, 0.0, 85.5], ["Отдельный батальон связи №45", 85.2, 0.0, 85.2], ["3-я воздушная армия", 85.0, 0.0, 85.0], ["1-й отдельный чехословацкий батальон", 85.0, 0.0, 85.0], ["Отдельный отряд собак-истребителей танков", 82.4, 0.0, 82.4], ["1-я морская бригада", 82.4, 0.0, 82.4], ["Отдельный отряд собак-миноискателей", 81.3, 0.0, 81.3], ["1-й чехословацкий отдельный батальон", 78.5, 0.0, 78.5], ["2-я ударная армия", 75.2, 0.0, 75.2], ["88-й отдельный лыжный батальон", 73.9, 0.0, 73.9], ["28-я дивизия народного ополчения", 69.8, 0.0, 69.8], ["101-й учебный полк", 68.3, 0.0, 68.3], ["14-я отдельная штрафная рота", 65.8, 0.0, 65.8]], "columns": ["unit_name", "initial_efficiency", "loss_percentage", "adjusted_efficiency"], "row_count": 29}	{cte,medium}
+40	1	5	Логистика Курской дуги	Определите рейтинг частей в Курске по объему снабжения. Выведите столбцы unit_name, equipment_type, total, supply_rank. Это ключевые данные для анализа подготовки к крупнейшему танковому сражению	Используйте `RANK()` с группировкой по типам снаряжения	\N	{"data": [["16-я воздушная армия", "самолёты", 45, 1], ["1-я гвардейская танковая армия", "танки", 58, 2]], "columns": ["unit_name", "equipment_type", "total", "supply_rank"], "row_count": 2}	{supply,window,medium}
+64	1	6	Снабжение морской пехоты	Проанализируйте снаряжение морских пехотинцев в Севастополе. Выведите столбцы equipment_type, total, items. Это необходимо для оценки их готовности к обороне прибрежных зон	Используйте `STRING_AGG` для объединения названий снаряжения и фильтрацию по типу части	\N	{"data": [["медицина", 250, "Аптечки полевые"], ["миномёты", 2256, "82-мм, 50-мм"]], "columns": ["equipment_type", "total", "items"], "row_count": 2}	{medium}
+75	1	7	Первый и последний	Определите первого и последнего солдата, вступившего в каждую часть. Выведите название части, ФИО первого first_enlisted и последнего last_enlisted вступившего солдата. Это может указывать на "костяк" подразделения	Примените `FIRST_VALUE()` и `LAST_VALUE()` с оконными функциями	\N	{"data": [["316-я стрелковая дивизия", "Иванов Алексей Петрович", "Фёдорова Мария Ивановна"], ["62-я армия", "Петров Дмитрий Иванович", "Павлов Яков Фёдорович"], ["1-я гвардейская танковая армия", "Козлов Николай Семёнович", "Кузнецов Пётр Васильевич"], ["150-я стрелковая дивизия", "Зайцева Людмила Михайловна", "Белов Алексей Николаевич"], ["16-я воздушная армия", "Жуков Андрей Григорьевич", "Соколова Ольга Ивановна"], ["2-я ударная армия", "Громов Михаил Сергеевич", "Громов Михаил Сергеевич"], ["8-я гвардейская армия", "Орлова Вера Павловна", "Орлова Вера Павловна"], ["3-я воздушная армия", "Новиков Александр Иванович", "Новиков Александр Иванович"], ["106-я стрелковая дивизия", "Васнецова Татьяна Дмитриевна", "Васнецова Татьяна Дмитриевна"], ["14-я отдельная штрафная рота", "Морозов Иван Кузьмич", "Морозов Иван Кузьмич"], ["1-я морская бригада", "Волкова Елена Сергеевна", "Волкова Елена Сергеевна"], ["Отдельная медико-санитарная рота", "Ткаченко Григорий Петрович", "Ткаченко Григорий Петрович"], ["88-й отдельный лыжный батальон", "Беляев Павел Дмитриевич", "Беляев Павел Дмитриевич"], ["101-й полк НКВД", "Семёнова Валентина Михайловна", "Семёнова Валентина Михайловна"], ["369-й отдельный батальон морской пехоты", "Ковалёв Сергей Николаевич", "Ковалёв Сергей Николаевич"], ["1-й чехословацкий отдельный батальон", "Мельникова Галина Ивановна", "Мельникова Галина Ивановна"], ["585-й женский авиаполк", "Фёдоров Игорь Васильевич", "Фёдоров Игорь Васильевич"], ["28-я дивизия народного ополчения", "Горбачёв Алексей Дмитриевич", "Горбачёв Алексей Дмитриевич"], ["Отдельный отряд собак-истребителей танков", "Сидорова Екатерина Петровна", "Сидорова Екатерина Петровна"], ["37-й гвардейский миномётный полк", "Смирнов Василий Иванович", "Смирнов Василий Иванович"], ["Отдельный батальон связи №45", "Крылова Надежда Фёдоровна", "Крылова Надежда Фёдоровна"], ["225-й отдельный инженерный батальон", "Орлов Денис Сергеевич", "Орлов Денис Сергеевич"], ["18-я дивизия СС \\"Хорст Вессель\\"", "Жукова Елена Викторовна", "Жукова Елена Викторовна"], ["101-й учебный полк", "Гришин Алексей Петрович", "Гришин Алексей Петрович"], ["64-я стрелковая дивизия", "Ткаченко Иван Григорьевич", "Соколовская Надежда Викторовна"], ["1-й отдельный чехословацкий батальон", "Белов Дмитрий Николаевич", "Воронцова Лидия Павловна"], ["46-й гвардейский ночной бомбардировочный полк", "Жуковский Виктор Михайлович", "Громова Екатерина Ивановна"], ["101-й инженерно-сапёрный батальон", "Морозова Анна Сергеевна", "Фролов Павел Сергеевич"], ["Отдельный отряд собак-миноискателей", "Ковалёва Ольга Дмитриевна", "Кузнецов Артём Игоревич"]], "columns": ["unit_name", "first_enlisted", "last_enlisted"], "row_count": 29}	{medium}
+55	2	1	Рейтинг героев	Ранжируйте солдат по количеству наград в их частях. Выведите имя солдата, название подразделения (unit_name),\tколичество медалей (medals_count) и вычисленный ранг (medal_rank). Фамилии солдат выведите в алфавитном порядке. Это основа для определения самых отличившихся бойцов	Используйте `DENSE_RANK()` с группировкой по частям и сортировкой по наградам	\N	{"data": [["Белов Алексей Николаевич", "150-я стрелковая дивизия", 1, 1], ["Белов Дмитрий Николаевич", "1-й отдельный чехословацкий батальон", 0, 1], ["Беляев Павел Дмитриевич", "88-й отдельный лыжный батальон", 0, 1], ["Васнецова Татьяна Дмитриевна", "106-я стрелковая дивизия", 1, 1], ["Волкова Елена Сергеевна", "1-я морская бригада", 0, 1], ["Воронцова Лидия Павловна", "1-й отдельный чехословацкий батальон", 0, 1], ["Горбачёв Алексей Дмитриевич", "28-я дивизия народного ополчения", 0, 1], ["Гришин Алексей Петрович", "101-й учебный полк", 0, 1], ["Громова Екатерина Ивановна", "46-й гвардейский ночной бомбардировочный полк", 0, 1], ["Громов Михаил Сергеевич", "2-я ударная армия", 1, 1], ["Жукова Елена Викторовна", "18-я дивизия СС \\"Хорст Вессель\\"", 0, 1], ["Жуков Андрей Григорьевич", "16-я воздушная армия", 1, 1], ["Жуковский Виктор Михайлович", "46-й гвардейский ночной бомбардировочный полк", 0, 1], ["Зайцева Людмила Михайловна", "150-я стрелковая дивизия", 1, 1], ["Иванов Алексей Петрович", "316-я стрелковая дивизия", 1, 1], ["Ковалёва Ольга Дмитриевна", "Отдельный отряд собак-миноискателей", 0, 1], ["Ковалёв Сергей Николаевич", "369-й отдельный батальон морской пехоты", 0, 1], ["Козлов Николай Семёнович", "1-я гвардейская танковая армия", 0, 2], ["Крылова Надежда Фёдоровна", "Отдельный батальон связи №45", 0, 1], ["Кузнецов Артём Игоревич", "Отдельный отряд собак-миноискателей", 0, 1], ["Кузнецов Пётр Васильевич", "1-я гвардейская танковая армия", 1, 1], ["Мельникова Галина Ивановна", "1-й чехословацкий отдельный батальон", 0, 1], ["Морозова Анна Сергеевна", "101-й инженерно-сапёрный батальон", 0, 1], ["Морозов Иван Кузьмич", "14-я отдельная штрафная рота", 0, 1], ["Новиков Александр Иванович", "3-я воздушная армия", 1, 1], ["Орлова Вера Павловна", "8-я гвардейская армия", 1, 1], ["Орлов Денис Сергеевич", "225-й отдельный инженерный батальон", 0, 1], ["Павлов Яков Фёдорович", "62-я армия", 1, 1], ["Петров Дмитрий Иванович", "62-я армия", 1, 1], ["Семёнова Валентина Михайловна", "101-й полк НКВД", 0, 1], ["Сидорова Екатерина Петровна", "Отдельный отряд собак-истребителей танков", 0, 1], ["Смирнова Анна Васильевна", "62-я армия", 1, 1], ["Смирнов Василий Иванович", "37-й гвардейский миномётный полк", 0, 1], ["Соколова Ольга Ивановна", "16-я воздушная армия", 1, 1], ["Соколовская Надежда Викторовна", "64-я стрелковая дивизия", 0, 1], ["Ткаченко Григорий Петрович", "Отдельная медико-санитарная рота", 0, 1], ["Ткаченко Иван Григорьевич", "64-я стрелковая дивизия", 0, 1], ["Фёдорова Мария Ивановна", "316-я стрелковая дивизия", 0, 2], ["Фёдоров Игорь Васильевич", "585-й женский авиаполк", 0, 1], ["Фролов Павел Сергеевич", "101-й инженерно-сапёрный батальон", 0, 1]], "columns": ["full_name", "unit_name", "medals_count", "medal_rank"], "row_count": 40}	{first_any_level,hard}
+77	1	8	Солдаты 1942 года	Выведите список солдат и их частей, где служба началась в 1942 году. Результат отсортируйте по первому столбцу. Это поможет анализировать мобилизацию в критический период	Используйте подзапросы для фильтрации дат и объединения таблиц	\N	{"data": [["Белов Дмитрий Николаевич", "1-й отдельный чехословацкий батальон"], ["Громов Михаил Сергеевич", "2-я ударная армия"], ["Жукова Елена Викторовна", "18-я дивизия СС \\"Хорст Вессель\\""], ["Жуковский Виктор Михайлович", "46-й гвардейский ночной бомбардировочный полк"], ["Ковалёва Ольга Дмитриевна", "Отдельный отряд собак-миноискателей"], ["Мельникова Галина Ивановна", "1-й чехословацкий отдельный батальон"], ["Морозова Анна Сергеевна", "101-й инженерно-сапёрный батальон"], ["Морозов Иван Кузьмич", "14-я отдельная штрафная рота"], ["Павлов Яков Фёдорович", "62-я армия"], ["Семёнова Валентина Михайловна", "101-й полк НКВД"], ["Смирнова Анна Васильевна", "62-я армия"], ["Соколова Ольга Ивановна", "16-я воздушная армия"], ["Фёдоров Игорь Васильевич", "585-й женский авиаполк"]], "columns": ["full_name", "unit_name"], "row_count": 13}	{medium}
+76	1	12	Скользящие потери	Проанализируйте динамику потерь среди солдат в 1942 году, используя данные о дате призыва. Для каждого месяца 1942 года рассчитайте количество солдат, погибших к этому моменту, и постройте трёхмесячное скользящее среднее для сглаживания временного ряда. Выведите номер месяца (month), количество потерь (killed) и скользящее среднее (moving_avg). Это покажет динамику снижения боеспособности	Используйте `AVG()` с окном `ROWS BETWEEN 2 PRECEDING AND CURRENT ROW`	\N	{"data": [[5.0, 1, 1.0]], "columns": ["month", "killed", "moving_avg"], "row_count": 1}	{medium}
+54	1	14	Накопленные ресурсы	Определите накопительный итог поставок боеприпасов в 1942 году. Выведите название подразделения, дату последнего пополнения, а вычисленный столбец назовите cumulative_ammo. Это отразит рост запасов перед ключевыми операциями	Примените `SUM() OVER` с сортировкой по дате пополнения	\N	{"data": [["316-я стрелковая дивизия", "1942-03-05", 50000], ["62-я армия", "1942-03-05", 50000], ["7-я гвардейская миномётная дивизия", "1942-12-01", 20000], ["Отдельная медико-санитарная рота", "1942-03-05", 30000], ["585-й женский авиаполк", "1942-03-05", 40000], ["37-й гвардейский миномётный полк", "1942-03-05", 50000], ["64-я стрелковая дивизия", "1942-03-05", 70000]], "columns": ["unit_name", "last_replenishment", "cumulative_ammo"], "row_count": 7}	{supply,window,medium}
+71	1	15	Боевые товарищи	Выявите пары солдат, призванных из одного города. Чтобы избежать дубликатов (А, Б) и (Б, А), добавьте условие `s1.id < s2.id` (где s1 и s2 - алиасы таблицы). Назовите столбцы soldier_name1, soldier_name2 и common_city. Отсортируйте результат по всем столбцам. Это может указывать на дружеские связи или совместную службу	Примените самосоединение таблицы `soldier` по городу призыва	\N	{"data": [["Белов Алексей Николаевич", "Фролов Павел Сергеевич", "Севастополь"], ["Васнецова Татьяна Дмитриевна", "Жукова Елена Викторовна", "Смоленск"], ["Васнецова Татьяна Дмитриевна", "Ковалёва Ольга Дмитриевна", "Смоленск"], ["Волкова Елена Сергеевна", "Громова Екатерина Ивановна", "Горький"], ["Гришин Алексей Петрович", "Ткаченко Иван Григорьевич", "Харьков"], ["Жуков Андрей Григорьевич", "Сидорова Екатерина Петровна", "Минск"], ["Жукова Елена Викторовна", "Ковалёва Ольга Дмитриевна", "Смоленск"], ["Зайцева Людмила Михайловна", "Воронцова Лидия Павловна", "Ленинград"], ["Иванов Алексей Петрович", "Соколовская Надежда Викторовна", "Москва"], ["Козлов Николай Семёнович", "Гришин Алексей Петрович", "Харьков"], ["Козлов Николай Семёнович", "Ткаченко Иван Григорьевич", "Харьков"], ["Крылова Надежда Фёдоровна", "Морозова Анна Сергеевна", "Одесса"], ["Мельникова Галина Ивановна", "Кузнецов Артём Игоревич", "Сталинград"], ["Орлова Вера Павловна", "Крылова Надежда Фёдоровна", "Одесса"], ["Орлова Вера Павловна", "Морозова Анна Сергеевна", "Одесса"], ["Петров Дмитрий Иванович", "Кузнецов Артём Игоревич", "Сталинград"], ["Петров Дмитрий Иванович", "Мельникова Галина Ивановна", "Сталинград"], ["Смирнов Василий Иванович", "Жуковский Виктор Михайлович", "Киев"], ["Смирнова Анна Васильевна", "Воронцова Лидия Павловна", "Ленинград"], ["Смирнова Анна Васильевна", "Зайцева Людмила Михайловна", "Ленинград"], ["Соколова Ольга Ивановна", "Жуковский Виктор Михайлович", "Киев"], ["Соколова Ольга Ивановна", "Смирнов Василий Иванович", "Киев"], ["Соколова Ольга Ивановна", "Ткаченко Григорий Петрович", "Киев"], ["Ткаченко Григорий Петрович", "Жуковский Виктор Михайлович", "Киев"], ["Ткаченко Григорий Петрович", "Смирнов Василий Иванович", "Киев"], ["Фёдорова Мария Ивановна", "Жуковский Виктор Михайлович", "Киев"], ["Фёдорова Мария Ивановна", "Смирнов Василий Иванович", "Киев"], ["Фёдорова Мария Ивановна", "Соколова Ольга Ивановна", "Киев"], ["Фёдорова Мария Ивановна", "Ткаченко Григорий Петрович", "Киев"]], "columns": ["soldier_name1", "soldier_name2", "common_city"], "row_count": 29}	{medium}
+43	1	16	Гендерный баланс	Определите части, где количество мужчин и женщин неравно. Выведите название части military_unit_name и отсортируйте результат в обратном порядке. Это отразит гендерные особенности мобилизации	Используйте `SUM` с `CASE` для подсчета и фильтрацию через `HAVING`	\N	{"data": [["Отдельный отряд собак-истребителей танков"], ["Отдельный батальон связи №45"], ["Отдельная медико-санитарная рота"], ["8-я гвардейская армия"], ["88-й отдельный лыжный батальон"], ["62-я армия"], ["585-й женский авиаполк"], ["3-я воздушная армия"], ["37-й гвардейский миномётный полк"], ["369-й отдельный батальон морской пехоты"], ["2-я ударная армия"], ["28-я дивизия народного ополчения"], ["225-й отдельный инженерный батальон"], ["1-я морская бригада"], ["1-я гвардейская танковая армия"], ["1-й чехословацкий отдельный батальон"], ["18-я дивизия СС \\"Хорст Вессель\\""], ["14-я отдельная штрафная рота"], ["106-я стрелковая дивизия"], ["101-й учебный полк"], ["101-й полк НКВД"]], "columns": ["military_unit_name"], "row_count": 21}	{window,medium}
+44	1	17	Участники Сталинграда	Найдите всех солдат, служивших в частях, участвовавших в Сталинградской битве. Это основа для создания мемориальных списков	Используйте вложенные запросы с `IN` для фильтрации по ID частей	\N	{"data": [["Иванов Алексей Петрович"], ["Смирнова Анна Васильевна"], ["Петров Дмитрий Иванович"], ["Козлов Николай Семёнович"], ["Фёдорова Мария Ивановна"], ["Жуков Андрей Григорьевич"], ["Павлов Яков Фёдорович"], ["Зайцева Людмила Михайловна"], ["Громов Михаил Сергеевич"], ["Орлова Вера Павловна"], ["Новиков Александр Иванович"], ["Васнецова Татьяна Дмитриевна"], ["Кузнецов Пётр Васильевич"], ["Белов Алексей Николаевич"], ["Соколова Ольга Ивановна"], ["Морозов Иван Кузьмич"], ["Волкова Елена Сергеевна"], ["Ткаченко Григорий Петрович"], ["Беляев Павел Дмитриевич"], ["Семёнова Валентина Михайловна"], ["Ковалёв Сергей Николаевич"], ["Мельникова Галина Ивановна"], ["Фёдоров Игорь Васильевич"], ["Горбачёв Алексей Дмитриевич"], ["Сидорова Екатерина Петровна"], ["Смирнов Василий Иванович"], ["Крылова Надежда Фёдоровна"], ["Орлов Денис Сергеевич"], ["Жукова Елена Викторовна"], ["Гришин Алексей Петрович"], ["Ткаченко Иван Григорьевич"], ["Воронцова Лидия Павловна"], ["Жуковский Виктор Михайлович"], ["Морозова Анна Сергеевна"], ["Кузнецов Артём Игоревич"], ["Соколовская Надежда Викторовна"], ["Белов Дмитрий Николаевич"], ["Громова Екатерина Ивановна"], ["Фролов Павел Сергеевич"], ["Ковалёва Ольга Дмитриевна"]], "columns": ["full_name"], "row_count": 40}	{stalingrad,medium}
+72	1	18	Чисто мужские/женские части	Выведите названия частей, состоящих исключительно из мужчин или женщин. Назовите столбец military_unit_name и отсортируйте результат по алфавиту. Это редкие случаи, характерные для отдельных родов войск	Примените `UNION` для объединения результатов двух подзапросов с `EXISTS` и `NOT EXISTS`	\N	{"data": [["101-й полк НКВД"], ["101-й учебный полк"], ["106-я стрелковая дивизия"], ["14-я отдельная штрафная рота"], ["18-я дивизия СС \\"Хорст Вессель\\""], ["1-й чехословацкий отдельный батальон"], ["1-я гвардейская танковая армия"], ["1-я морская бригада"], ["225-й отдельный инженерный батальон"], ["28-я дивизия народного ополчения"], ["2-я ударная армия"], ["369-й отдельный батальон морской пехоты"], ["37-й гвардейский миномётный полк"], ["3-я воздушная армия"], ["585-й женский авиаполк"], ["88-й отдельный лыжный батальон"], ["8-я гвардейская армия"], ["Отдельная медико-санитарная рота"], ["Отдельный батальон связи №45"], ["Отдельный отряд собак-истребителей танков"]], "columns": ["military_unit_name"], "row_count": 20}	{medium}
+73	1	21	Долгосрочная служба	Выявите солдат, чья служба длилась более трех лет. Выведите полное имя солдата и длительность службы в днях (days). Отсортируйте результат от меньшей длительности к большей. Это может указывать на ветеранов, участвовавших в ключевых операциях	Рассчитайте разницу между датами начала и окончания службы с помощью `AGE`	\N	{"data": [["Громов Михаил Сергеевич", 1126], ["Кузнецов Пётр Васильевич", 1153], ["Гришин Алексей Петрович", 1245]], "columns": ["full_name", "days"], "row_count": 3}	{medium}
+58	2	4	Снаряжение элитных частей	Определите, какие типы снаряжения чаще всего используются в частях с эффективностью выше среднего. Вычисленный столбец назовите total. Отсортируйте результат в алфавитном порядке. Это поможет понять, какие ресурсы влияют на успех	Примените подзапрос для вычисления средней эффективности и `GROUP BY` для типов снаряжения	\N	{"data": [["артиллерия", 1], ["боеприпасы", 6], ["медицина", 3], ["миномёты", 1], ["противотанковые", 1], ["реактивные снаряды", 1], ["самолёты", 1], ["танки", 2]], "columns": ["equipment_type", "total"], "row_count": 8}	{supply,hard}
+78	2	2	Сравнение стратегий	Сравните среднюю эффективность частей, участвовавших в стратегических и локальных операциях. Это покажет разницу в результативности. Назовите столбцы battle_group и avg_efficiency. Назовите средние эффективности "Стратегические битвы" и "Локальные операции"	Примените `CASE` для классификации битв и `AVG` для сравнения	\N	{"data": [["Локальные операции", 88.07142857142857], ["Стратегические битвы", 85.0875]], "columns": ["battle_group", "avg_efficiency"], "row_count": 2}	{hard}
+57	2	3	Анализ интервалов поставок	Определите среднее время между пополнениями снаряжения для каждой части. Выведите столбцы unit_name, equipment_type, last_replenishment, prev_replenishment (дата предыдущего пополнения), next_replenishment (дата следующего пополнения), days_between (интервал). Это поможет выявить логистические задержки или перебои	Примените `LAG()` для получения предыдущей даты пополнения и рассчитайте разницу между датами	\N	{"data": [["316-я стрелковая дивизия", "оружие", "1942-03-01", null, "1942-03-05", null], ["316-я стрелковая дивизия", "боеприпасы", "1942-03-05", "1942-03-01", "1942-05-10", 4], ["316-я стрелковая дивизия", "связь", "1942-05-10", "1942-03-05", null, 66], ["62-я армия", "боеприпасы", "1942-03-05", null, "1942-11-10", null], ["62-я армия", "артиллерия", "1942-11-10", "1942-03-05", "1943-01-10", 250], ["62-я армия", "медицина", "1943-01-10", "1942-11-10", "1943-12-01", 61], ["62-я армия", "медицина", "1943-12-01", "1943-01-10", null, 325], ["1-я гвардейская танковая армия", "танки", "1943-07-05", null, null, null], ["150-я стрелковая дивизия", "миномёты", "1944-01-15", null, null, null], ["16-я воздушная армия", "самолёты", "1943-05-01", null, null, null], ["7-я гвардейская миномётная дивизия", "боеприпасы", "1942-12-01", null, "1942-12-01", null], ["7-я гвардейская миномётная дивизия", "реактивные снаряды", "1942-12-01", "1942-12-01", null, 0], ["2-я ударная армия", "инженерное", "1943-08-14", null, null, null], ["8-я гвардейская армия", "танки", "1944-10-01", null, null, null], ["3-я воздушная армия", "авиабомбы", "1943-09-05", null, null, null], ["106-я стрелковая дивизия", "противотанковые", "1944-02-28", null, null, null], ["1-я морская бригада", "медицина", "1942-03-05", null, "1942-03-05", null], ["1-я морская бригада", "миномёты", "1942-03-05", "1942-03-05", "1942-06-06", 0], ["1-я морская бригада", "миномёты", "1942-06-06", "1942-03-05", null, 93], ["Отдельная медико-санитарная рота", "медицина", "1942-03-05", null, "1942-03-05", null], ["Отдельная медико-санитарная рота", "боеприпасы", "1942-03-05", "1942-03-05", null, 0], ["585-й женский авиаполк", "боеприпасы", "1942-03-05", null, null, null], ["37-й гвардейский миномётный полк", "боеприпасы", "1942-03-05", null, null, null], ["64-я стрелковая дивизия", "боеприпасы", "1942-03-05", null, null, null]], "columns": ["unit_name", "equipment_type", "last_replenishment", "prev_replenishment", "next_replenishment", "days_between"], "row_count": 24}	{window,hard}
+81	2	5	Живучесть подразделений	Для каждого воинского подразделения рассчитайте: общую продолжительность участия в боях (разница между датой последнего и первого боя), количество боёв, в которых оно участвовало, количество солдат с безвозвратными потерями («убит», «пропал без вести»). На основе этих данных вычислите среднее количество потерь на один бой, определите процентильное положение подразделения по продолжительности участия в боях (чем дольше, тем выше процентиль). Выведите название подразделения (unit_name), общую продолжительность участия в боях (total_duration), количество боёв (battles_count), количество потерь (losses), средние потери на бой (loss_per_battle_ratio), округлённые до 2 знаков, процентиль по продолжительности (survival_percentile), рассчитанный как PERCENT_RANK() по убыванию total_duration. Отсортируйте результат по убыванию общей продолжительности участия в боях. Это покажет, какие подразделения были наиболее устойчивыми. Необходимо вывести колонки unit_name, total_duration, battles_count, losses, loss_per_battle_ratio, survival_percentile по убыванию общей продолжительности сражений.	Используйте `MIN()` и `MAX()` для дат сражений, а также `ROUND` для расчета соотношения потерь	\N	{"data": [["14-я отдельная штрафная рота", 1190, 1, 0, 0.0, 0.0], ["Отдельный отряд собак-истребителей танков", 871, 1, 0, 0.0, 0.043478260869565216], ["3-я воздушная армия", 447, 1, 1, 1.0, 0.08695652173913043], ["101-й учебный полк", 441, 1, 0, 0.0, 0.13043478260869565], ["101-й инженерно-сапёрный батальон", 441, 1, 0, 0.0, 0.13043478260869565], ["46-й гвардейский ночной бомбардировочный полк", 247, 1, 0, 0.0, 0.21739130434782608], ["37-й гвардейский миномётный полк", 247, 1, 1, 1.0, 0.21739130434782608], ["18-я дивизия СС \\"Хорст Вессель\\"", 202, 1, 0, 0.0, 0.30434782608695654], ["28-я дивизия народного ополчения", 200, 1, 0, 0.0, 0.34782608695652173], ["316-я стрелковая дивизия", 200, 1, 0, 0.0, 0.34782608695652173], ["1-й чехословацкий отдельный батальон", 200, 1, 0, 0.0, 0.34782608695652173], ["225-й отдельный инженерный батальон", 200, 1, 0, 0.0, 0.34782608695652173], ["Отдельная медико-санитарная рота", 89, 1, 1, 1.0, 0.5217391304347826], ["1-й отдельный чехословацкий батальон", 89, 1, 2, 2.0, 0.5217391304347826], ["88-й отдельный лыжный батальон", 62, 1, 0, 0.0, 0.6086956521739131], ["64-я стрелковая дивизия", 62, 1, 0, 0.0, 0.6086956521739131], ["16-я воздушная армия", 62, 1, 0, 0.0, 0.6086956521739131], ["Отдельный отряд собак-миноискателей", 49, 1, 0, 0.0, 0.7391304347826086], ["585-й женский авиаполк", 49, 1, 1, 1.0, 0.7391304347826086], ["62-я армия", 49, 1, 1, 1.0, 0.7391304347826086], ["Отдельный батальон связи №45", 49, 1, 0, 0.0, 0.7391304347826086], ["106-я стрелковая дивизия", 24, 1, 0, 0.0, 0.9130434782608695], ["1-я гвардейская танковая армия", 22, 1, 1, 1.0, 0.9565217391304348], ["369-й отдельный батальон морской пехоты", 7, 1, 0, 0.0, 1.0]], "columns": ["unit_name", "total_duration", "battles_count", "losses", "loss_per_battle_ratio", "survival_percentile"], "row_count": 24}	{hard}
+80	2	6	Полный портрет части	Сформируйте сводку по каждой воинской части: количество солдат, снаряжения, участие в битвах и полученные награды. Это основа для комплексного анализа. Выведите колонки unit_name, soldiers_total, equipment_types, battles_participated, medals_received. Выведите результат по убыванию количества солдат.	Используйте `LEFT JOIN` для объединения таблиц и агрегатные функции (`COUNT`, `STRING_AGG`)	\N	{"data": [["62-я армия", 3, 4, 1, "Герой Советского Союза, Медаль \\"За взятие Берлина\\", Орден Отечественной войны"], ["Отдельный отряд собак-миноискателей", 2, 0, 1, null], ["150-я стрелковая дивизия", 2, 1, 0, "Медаль \\"За оборону Сталинграда\\", Медаль \\"За отвагу\\""], ["16-я воздушная армия", 2, 1, 1, "Медаль \\"За оборону Москвы\\", Орден Красной Звезды"], ["1-й отдельный чехословацкий батальон", 2, 0, 1, null], ["1-я гвардейская танковая армия", 2, 1, 1, "Герой Советского Союза"], ["316-я стрелковая дивизия", 2, 3, 1, "Медаль \\"За отвагу\\""], ["46-й гвардейский ночной бомбардировочный полк", 2, 0, 1, null], ["64-я стрелковая дивизия", 2, 1, 1, null], ["101-й инженерно-сапёрный батальон", 2, 0, 1, null], ["1-й чехословацкий отдельный батальон", 1, 0, 1, null], ["1-я морская бригада", 1, 3, 0, null], ["225-й отдельный инженерный батальон", 1, 0, 1, null], ["28-я дивизия народного ополчения", 1, 0, 1, null], ["2-я ударная армия", 1, 1, 0, "Орден Отечественной войны"], ["Отдельная медико-санитарная рота", 1, 2, 1, null], ["369-й отдельный батальон морской пехоты", 1, 0, 1, null], ["37-й гвардейский миномётный полк", 1, 1, 1, null], ["3-я воздушная армия", 1, 1, 1, "Орден Красной Звезды"], ["Отдельный батальон связи №45", 1, 0, 1, null], ["585-й женский авиаполк", 1, 1, 1, null], ["101-й полк НКВД", 1, 0, 0, null], ["101-й учебный полк", 1, 0, 1, null], ["106-я стрелковая дивизия", 1, 1, 1, "Медаль \\"Партизану Отечественной войны\\""], ["14-я отдельная штрафная рота", 1, 0, 1, null], ["Отдельный отряд собак-истребителей танков", 1, 0, 1, null], ["8-я гвардейская армия", 1, 1, 0, "Орден Славы"], ["18-я дивизия СС \\"Хорст Вессель\\"", 1, 0, 1, null], ["88-й отдельный лыжный батальон", 1, 0, 1, null], ["7-я гвардейская миномётная дивизия", 0, 2, 0, null]], "columns": ["unit_name", "soldiers_total", "equipment_types", "battles_participated", "medals_received"], "row_count": 30}	{hard}
+60	2	8	Топ вражеских частей	Для анализа тактики противника требуется определить три вражеских подразделения, одержавших наибольшее количество побед над советскими войсками. Для этого необходимо проанализировать все бои, в которых вражеские подразделения участвовали, и выявить те сражения, где результат не указывал на победу СССР. В каждом таком бою нужно подсчитать количество безвозвратных потерь среди советских солдат, проходивших службу в подразделениях, участвовавших в этом бою, и с помощью ранжирования определить, какое из вражеских подразделений нанесло наибольший урон, считая его победителем в случае, если в бою было несколько вражеских подразделений. Затем для каждого вражеского подразделения необходимо подсчитать общее количество таких побед (по числу боёв, где оно заняло первое место по урону) и суммарное количество советских потерь, понесённых в этих боях. В результате следует вывести названия трёх лучших по числу побед подразделений, а также количество их побед и общее число потерь среди советских солдат в этих сражениях, отсортировав сначала по убыванию числа побед, а затем — по убыванию суммарных потерь. Выведите unit_name, victories и total_soviet_losses по убыванию  victories и total_soviet_losses.	Используйте `RANK()`, `COUNT` с фильтрацией по результату битв и `LIMIT 3`	\N	{"data": [["17-я танковая дивизия", 1, 2.0], ["1-я танковая дивизия СС \\"Лейбштандарт Адольф Гитлер\\"", 1, 1.0], ["9-я армия", 1, 1.0]], "columns": ["unit_name", "victories", "total_soviet_losses"], "row_count": 3}	{window,hard}
+82	2	9	Прогноз износа техники	Для прогнозирования будущих потребностей в ремонте и замене снаряжения необходимо проанализировать его расход по годам с использованием сглаживающего алгоритма. Для каждого типа снаряжения (equipment_type) и каждого года (issue_date) требуется рассчитать коэффициент потерь как отношение количества снаряжения, выданного солдатам, к количеству солдат, проходивших службу в тот же год, чтобы учесть масштабы деятельности частей. Данный коэффициент следует сгладить с помощью трёхлетнего скользящего среднего (включая текущий год и два предыдущих), чтобы устранить случайные колебания и выявить общую тенденцию. Выведите тип снаряжения, год, исходный коэффициент потерь и сглаженное значение, отсортировав результат сначала по типу снаряжения, а затем по году в порядке возрастания	Используйте CTE для подсчёта примените AVG(...) OVER (ORDER BY year ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) для сглаживания	\N	{"data": [["авиабомбы", 1943.0, 2.1818, 2.1818], ["артиллерия", 1942.0, 0.0769, 0.0769], ["боеприпасы", 1942.0, 9.2308, 9.2308], ["инженерное", 1943.0, 0.0909, 0.0909], ["медицина", 1943.0, 0.7273, 0.7273], ["миномёты", 1944.0, 20.0, 20.0], ["оружие", 1942.0, 0.0769, 0.0769], ["противотанковые", 1944.0, 0.1667, 0.1667], ["самолёты", 1943.0, 0.0909, 0.0909], ["связь", 1942.0, 0.0769, 0.0769], ["танки", 1943.0, 0.0909, 0.0909], ["танки", 1944.0, 0.1667, 0.1288]], "columns": ["equipment_type", "year", "loss_ratio", "smoothed_ratio"], "row_count": 12}	{hard}
+61	2	10	Эффективность наград	Для оценки соответствия воинских наград реальным результатам в бою необходимо проанализировать подразделения, которые получили наибольшее количество наград. Для каждого такого подразделения следует определить, какие именно награды ему были присвоены, и подсчитать общее количество раз, когда они были вручены (всего наградовано солдат). Далее, для этих же подразделений необходимо подсчитать количество боёв, в которых они одержали победу (результат боя — «победа»), и общее число солдат с безвозвратными потерями («убит» и «пропал без вести»). На основе этих данных рассчитайте соотношение побед к числу наград (victory_per_medal) и потерь к числу наград (death_per_medal) для каждой награды, чтобы оценить, насколько боевые достижения и потери сопоставимы с полученным признанием. Выведите название подразделения, название награды, количество награждений, количество погибших, число побед и два расчётных показателя, отсортировав результат по убыванию соотношения побед к наградам, при этом строки с нулевым значением victory_per_medal должны располагаться в конце списка.	Используйте CTE. Объедините данные по unit_id и medal_id. Рассчитайте victory_per_medal и death_per_medal с округлением. В сортировке используйте CASE, чтобы вывести нули в victory_per_medal в конец	\N	{"data": [["3-я воздушная армия", "Орден Красной Звезды", 1, 0, 1, 1.0, 0.0], ["150-я стрелковая дивизия", "Медаль \\"За оборону Сталинграда\\"", 1, 0, 0, 0.0, 0.0], ["106-я стрелковая дивизия", "Медаль \\"Партизану Отечественной войны\\"", 1, 0, 0, 0.0, 0.0], ["16-я воздушная армия", "Орден Красной Звезды", 1, 0, 0, 0.0, 0.0], ["150-я стрелковая дивизия", "Медаль \\"За отвагу\\"", 1, 0, 0, 0.0, 0.0], ["8-я гвардейская армия", "Орден Славы", 1, 0, 0, 0.0, 0.0], ["62-я армия", "Медаль \\"За взятие Берлина\\"", 1, 0, 0, 0.0, 0.0], ["1-я гвардейская танковая армия", "Герой Советского Союза", 1, 0, 0, 0.0, 0.0], ["62-я армия", "Орден Отечественной войны", 1, 0, 0, 0.0, 0.0], ["62-я армия", "Герой Советского Союза", 1, 0, 0, 0.0, 0.0], ["316-я стрелковая дивизия", "Медаль \\"За отвагу\\"", 1, 0, 0, 0.0, 0.0], ["2-я ударная армия", "Орден Отечественной войны", 1, 0, 0, 0.0, 0.0], ["16-я воздушная армия", "Медаль \\"За оборону Москвы\\"", 1, 0, 0, 0.0, 0.0]], "columns": ["unit_name", "medal_name", "awarded", "deaths", "victories", "victory_per_medal", "death_per_medal"], "row_count": 13}	{window,hard}
+62	2	12	Стоимость победы	Для анализа ценности побед в боевых действиях требуется определить, какие битвы, несмотря на успех, были наиболее «дорогими» в терминах потерь среди солдат и затрат ресурсов. Для каждой битвы необходимо рассчитать общее количество безвозвратных потерь (солдаты со статусом «убит» или «пропал без вести»), участвовавших в ней, а также среднюю исходную боевую эффективность подразделений, принимавших в ней участие. Дополнительно нужно подсчитать количество единиц снаряжения, использованного солдатами, участвовавшими в битве, что отразит объём израсходованных материальных ресурсов. На основе этих данных следует вычислить условный «стоимостной коэффициент» битвы (cost_ratio) как отношение числа потерь к средней боевой эффективности — чем выше этот коэффициент, тем «дороже» победа. Затем необходимо проранжировать все битвы по убыванию числа потерь (loss_rank) и по убыванию средней эффективности (eff_rank), где ранг 1 присваивается наибольшему значению. В результате нужно вывести название битвы, количество потерь, среднюю боевую эффективность, объём использованного снаряжения, ранги по потерям и эффективности, а также стоимостной коэффициент, отсортировав итоговый список по убыванию cost_ratio	Используйте `RANK()` и арифметические операции с агрегатными функциями	\N	{"data": [["Оборона Севастополя", 0, 96.6, 0, 1, 1, 0.0], ["Битва за Берлин", 0, 95.0, 2, 1, 2, 0.0], ["Корсунь-Шевченковская операция", 0, 89.3, 1, 1, 3, 0.0], ["Оборона Брестской крепости", 0, 88.9, 0, 1, 4, 0.0], ["Демянская операция", 0, 88.35, 0, 1, 5, 0.0], ["Курская битва", 0, 88.23, 6, 1, 6, 0.0], ["Битва за Москву", 0, 88.1, 0, 1, 7, 0.0], ["Смоленское сражение", 0, 85.07, 4, 1, 8, 0.0], ["Ржевская битва", 0, 85.0, 24, 1, 9, 0.0], ["Блокада Ленинграда", 0, 82.4, 0, 1, 10, 0.0], ["Сталинградская битва", 0, 80.88, 121, 1, 11, 0.0], ["Битва за Кавказ", 0, 78.9, 0, 1, 12, 0.0], ["Оборона Заполярья", 0, 65.8, 0, 1, 13, 0.0], ["Оборона Тулы", 0, 0.0, 0, 1, 14, 0.0], ["Берлинская операция", 0, 0.0, 0, 1, 14, 0.0], ["Пражская операция", 0, 0.0, 0, 1, 14, 0.0], ["Оборона Брестской крепости", 0, 0.0, 0, 1, 14, 0.0], ["Битва при Дебрецене", 0, 0.0, 0, 1, 14, 0.0], ["Операция \\"Багратион\\"", 0, 0.0, 0, 1, 14, 0.0], ["Висло-Одерская операция", 0, 0.0, 0, 1, 14, 0.0], ["Будапештская операция", 0, 0.0, 0, 1, 14, 0.0], ["Харьковская операция", 0, 0.0, 0, 1, 14, 0.0], ["Битва за Днепр", 0, 0.0, 0, 1, 14, 0.0], ["Таллинский переход", 0, 0.0, 0, 1, 14, 0.0], ["Прорыв блокады Ленинграда", 0, 0.0, 0, 1, 14, 0.0], ["Битва за Воронеж", 0, 0.0, 0, 1, 14, 0.0], ["Керченско-Эльтигенская операция", 0, 0.0, 0, 1, 14, 0.0], ["Балатонская операция", 0, 0.0, 0, 1, 14, 0.0], ["Восточно-Прусская операция", 0, 0.0, 0, 1, 14, 0.0], ["Маньчжурская операция", 0, 0.0, 0, 1, 14, 0.0]], "columns": ["battle_name", "losses", "avg_efficiency", "equipment_used", "loss_rank", "eff_rank", "cost_ratio"], "row_count": 30}	{window,hard}
+84	3	1	Пространство имён	Отряд занял немецкий вычислительный узел; база пуста — ни одной таблицы, ни одного объекта. Прежде чем вносить разведданные, подпольному архиву нужно своё пространство имён, чтобы не смешаться с тем, что осталось от немцев.\r\n\r\nСоздайте схему podpolye — отдельное пространство имён для подпольной базы.	Пространство имён создаётся одним оператором: CREATE SCHEMA <имя>. Схема — это «папка» для таблиц; больше в этом задании ничего не требуется.	CREATE SCHEMA podpolye	{"mode": "model", "setup": [], "expect": [{"args": {"name": "podpolye"}, "probe": "schema_exists", "title": "схема подполья создана", "value": true}, {"args": {"name": "public"}, "probe": "schema_exists", "title": "схема public не тронута", "value": true}, {"args": {"schema": "podpolye", "grantee": "PUBLIC"}, "probe": "schema_privs", "title": "посторонним схему не открывали", "value": []}, {"args": {}, "probe": "all_roles", "title": "посторонних ролей не заводили", "value": []}], "reveal": "Что проверяется: схема подполья создана; схема public не тронута; посторонним схему не открывали; посторонних ролей не заводили."}	{ddl,schema}
+85	3	2	Настройка базы	Центр принимает донесения по единому времени, а набирать «podpolye.» перед каждым именем таблицы в полутьме — верный способ ошибиться. Семён требует настроить базу один раз и навсегда.\r\n\r\nНастройте базу quest_sandbox: часовой пояс по умолчанию — 'UTC', а путь поиска схем — сначала podpolye, затем public.	Параметры уровня базы задаются оператором изменения базы данных, а не правкой файла настроек: ALTER DATABASE <имя> SET <параметр> TO <значение>. Здесь таких оператора два — по одному на каждый параметр.	ALTER DATABASE quest_sandbox SET timezone TO 'UTC'; ALTER DATABASE quest_sandbox SET search_path TO podpolye, public	{"mode": "model", "setup": ["CREATE SCHEMA podpolye"], "expect": [{"args": {"db": "quest_sandbox"}, "probe": "db_settings", "title": "настройки базы", "value": [["search_path", "podpolye,public"], ["timezone", "UTC"]]}, {"args": {"name": "podpolye"}, "probe": "schema_exists", "title": "схема на месте", "value": true}], "reveal": "Что проверяется: настройки базы; схема на месте."}	{ddl,config}
+86	3	3	Таблица складов	Первое, что нужно Центру, — учёт немецких складов: номер, название, сектор города и вместимость. Номер — то, чем склад отличается от всех остальных; безымянный склад разведданными не является, а вот вместимость известна не всегда.\r\n\r\nСоздайте таблицу podpolye.depots: depot_id — целое число, первичный ключ; depot_name — строка не длиннее 40 символов, обязательная; sector — ровно один символ, обязательный; capacity_t — целое число, может оставаться пустым.	«Целое число» — тип integer, «строка не длиннее N» — varchar(N), «ровно один символ» — char(1). Обязательность — NOT NULL, а первичный ключ можно объявить прямо в определении столбца: depot_id integer PRIMARY KEY.	CREATE TABLE podpolye.depots(\r\n    depot_id   integer PRIMARY KEY,\r\n    depot_name varchar(40) NOT NULL,\r\n    sector     char(1) NOT NULL,\r\n    capacity_t integer)	{"mode": "model", "setup": ["CREATE SCHEMA podpolye"], "expect": [{"args": {"table": "podpolye.depots"}, "probe": "columns", "title": "столбцы таблицы складов", "value": [["depot_id", "integer", null, true, false], ["depot_name", "character varying", 40, true, false], ["sector", "character", 1, true, false], ["capacity_t", "integer", null, false, false]]}, {"args": {"table": "podpolye.depots"}, "probe": "primary_key", "title": "первичный ключ складов", "value": ["depot_id"]}, {"args": {"table": "podpolye.depots"}, "probe": "uniques", "title": "лишних ограничений уникальности нет", "value": []}, {"args": {"table": "podpolye.depots"}, "probe": "public_privs", "title": "права никому не раздавали", "value": []}], "reveal": "Что проверяется: столбцы таблицы складов; первичный ключ складов; лишних ограничений уникальности нет; права никому не раздавали."}	{ddl,table,constraint}
+87	3	4	Заплата на сектор	Наблюдатель при свече вывел «8» вместо «B» — и база приняла склад в несуществующем секторе. Город поделён ровно на четыре сектора: A, B, C и D. Дыра должна закрыться этой же ночью.\r\n\r\nДобавьте к таблице podpolye.depots ограничение-проверку, которое разрешает в столбце sector только значения 'A', 'B', 'C' и 'D'.	Ограничение добавляется к готовой таблице: ALTER TABLE ... ADD CONSTRAINT <имя> CHECK (условие). Условие «одно из перечисленных значений» короче всего записывается через IN: sector IN ('A','B','C','D').	ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN ('A','B','C','D'))	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)"], "expect": [{"args": {"cases": [{"row": {"sector": "A", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "A"}, {"row": {"sector": "B", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "B"}, {"row": {"sector": "C", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "C"}, {"row": {"sector": "D", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "D"}, {"row": {"sector": "E", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "E"}, {"row": {"sector": "X", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "X"}, {"row": {"sector": "Z", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "Z"}, {"row": {"sector": "a", "depot_id": 99, "capacity_t": 10, "depot_name": "Проба"}, "label": "строчная a"}, {"row": {"sector": "Z", "depot_id": 99, "depot_name": "Проба"}, "label": "Z без вместимости"}], "table": "podpolye.depots"}, "probe": "accepts", "title": "какие сектора база принимает", "value": [["A", true], ["B", true], ["C", true], ["D", true], ["E", false], ["X", false], ["Z", false], ["строчная a", false], ["Z без вместимости", false]]}, {"args": {"table": "podpolye.depots"}, "probe": "columns", "title": "столбцы складов не тронуты", "value": [["depot_id", "integer", null, true, false], ["depot_name", "character varying", 40, true, false], ["sector", "character", 1, true, false], ["capacity_t", "integer", null, false, false]]}, {"args": {"table": "podpolye.depots"}, "probe": "primary_key", "title": "первичный ключ на месте", "value": ["depot_id"]}], "reveal": "Что проверяется: какие сектора база принимает; столбцы складов не тронуты; первичный ключ на месте."}	{ddl,alter,constraint,check}
+88	3	5	Справочник секторов	Сектор — не буква, а самостоятельная вещь с названием: «Заречный», «Вокзальный». Склады должны ссылаться на справочник по-настоящему: сектор, за которым числятся склады, стереть нельзя.\r\n\r\nСоздайте справочник podpolye.sectors: sector — ровно один символ, первичный ключ; title — строка не длиннее 30 символов, обязательная. Затем свяжите с ним склады: добавьте к podpolye.depots внешний ключ из столбца sector на sectors.sector, запрещающий удалять сектор, пока на него ссылаются склады.	Справочник создаётся обычным CREATE TABLE, а связь добавляется к уже существующей таблице: ALTER TABLE ... ADD CONSTRAINT ... FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector). Запрет удаления «пока есть ссылки» — это ON DELETE RESTRICT.	CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL); ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN ('A','B','C','D'))"], "expect": [{"args": {"table": "podpolye.sectors"}, "probe": "columns", "title": "столбцы справочника секторов", "value": [["sector", "character", 1, true, false], ["title", "character varying", 30, true, false]]}, {"args": {"table": "podpolye.sectors"}, "probe": "primary_key", "title": "первичный ключ справочника", "value": ["sector"]}, {"args": {"table": "podpolye.depots"}, "probe": "foreign_keys", "title": "внешний ключ складов на сектора", "value": [["sector", "podpolye.sectors", "sector", "запрещает удаление"]]}, {"args": {"table": "podpolye.depots"}, "probe": "columns", "title": "склады остались прежними", "value": [["depot_id", "integer", null, true, false], ["depot_name", "character varying", 40, true, false], ["sector", "character", 1, true, false], ["capacity_t", "integer", null, false, false]]}, {"args": {"table": "podpolye.depots"}, "probe": "primary_key", "title": "первичный ключ складов на месте", "value": ["depot_id"]}], "reveal": "Что проверяется: столбцы справочника секторов; первичный ключ справочника; внешний ключ складов на сектора; склады остались прежними; первичный ключ складов на месте."}	{ddl,table,foreign_key}
+89	3	6	Первые донесения	Каркас готов, справочник заполнен, база пуста. Три первых склада должны попасть в базу без единой ошибки: что внесено неверно, Центр примет за правду.\r\n\r\nВнесите в podpolye.depots три склада: (1, 'Арсенал №1', 'A', 800), (2, 'Топливный склад', 'A', 450) и (3, 'Продовольственный', 'B', 300).	Несколько строк вносятся одним оператором: INSERT INTO <таблица>(столбцы) VALUES (...), (...), (...). Строковые значения — в одинарных кавычках, порядок значений должен совпадать с порядком перечисленных столбцов.	INSERT INTO podpolye.depots(depot_id, depot_name, sector, capacity_t) VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN ('A','B','C','D'))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES ('A','Заречный'),('B','Вокзальный'),('C','Старый город'),('D','Фабричный')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT"], "expect": [{"args": {"table": "podpolye.depots", "columns": ["depot_id", "depot_name", "sector", "capacity_t"], "order_by": "depot_id"}, "probe": "rows", "title": "содержимое таблицы складов", "value": [[1, "Арсенал №1", "A", 800], [2, "Топливный склад", "A", 450], [3, "Продовольственный", "B", 300]]}, {"args": {"table": "podpolye.depots"}, "probe": "columns", "title": "таблица осталась прежней", "value": [["depot_id", "integer", null, true, false], ["depot_name", "character varying", 40, true, false], ["sector", "character", 1, true, false], ["capacity_t", "integer", null, false, false]]}, {"args": {"table": "podpolye.depots"}, "probe": "primary_key", "title": "первичный ключ на месте", "value": ["depot_id"]}], "reveal": "Что проверяется: содержимое таблицы складов; таблица осталась прежней; первичный ключ на месте."}	{dml,insert}
+104	4	9	Передоверие	Отряд уходит, узел передаётся соседней группе. Их бойцы вам незнакомы — и не должны быть: раздавать доступ своим людям соседи будут сами. Для этого командованию нужно право передавать чтение дальше.\r\n\r\nВыдайте роли commanders право читать таблицу podpolye.safehouses так, чтобы она могла передавать это право другим ролям.	Возможность передавать право дальше добавляется к обычной выдаче: GRANT SELECT ON podpolye.safehouses TO commanders WITH GRANT OPTION. Именно WITH GRANT OPTION отличает передоверие от простого чтения.	GRANT SELECT ON podpolye.safehouses TO commanders WITH GRANT OPTION	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.safehouses(\\n    house_id  integer PRIMARY KEY,\\n    code_name varchar(20) NOT NULL,\\n    street    varchar(40) NOT NULL,\\n    keeper    varchar(20) NOT NULL,\\n    sector    char(1) NOT NULL,\\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,'Мельница','Заречная, 7','Прохор','A',false),(2,'Аптека','Соборная, 14','Вера','A',true),(3,'Сапожник','Кузнечная, 3','Пётр','B',false),(4,'Пекарня','Хлебный пер., 2','Дарья','B',false),(5,'Часовщик','Ратушная, 21','Артур','C',true),(6,'Прачечная','Луговая, 9','Клава','C',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)", "CREATE ROLE grisha LOGIN", "GRANT scouts TO grisha", "ALTER DEFAULT PRIVILEGES IN SCHEMA podpolye GRANT SELECT ON TABLES TO scouts"], "expect": [{"args": {"table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "grantable", "title": "право командования и возможность передачи", "value": [["DELETE", false], ["INSERT", false], ["REFERENCES", false], ["SELECT", true], ["TRIGGER", false], ["TRUNCATE", false], ["UPDATE", false]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "has_privs", "title": "состав прав командования не менялся", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", true], ["DELETE", true], ["TRUNCATE", true], ["REFERENCES", true], ["TRIGGER", true]]}, {"args": {"schema": "podpolye", "grantee": "commanders"}, "probe": "schema_privs", "title": "доступ командования к схеме сохранён", "value": ["USAGE"]}, {"args": {"privs": ["SELECT"], "table": "podpolye.safehouses", "grantees": ["spies", "PUBLIC"]}, "probe": "privs_matrix", "title": "посторонним явки не открывали", "value": [["spies", "SELECT", false], ["PUBLIC", "SELECT", false]]}, {"args": {}, "probe": "all_memberships", "title": "членство ролей не меняли", "value": [["grisha", "scouts"]]}], "reveal": "Что проверяется: право командования и возможность передачи; состав прав командования не менялся; доступ командования к схеме сохранён; посторонним явки не открывали; членство ролей не меняли."}	{dcl,grant,grant_option}
+90	3	7	Журнал рейсов	Наблюдатели приносят записки о вывозе: склад, дата, тоннаж. Дата почти всегда сегодняшняя — пусть база подставляет её сама. А рейсы склада, ушедшего из учёта, обязаны исчезнуть вместе с ним.\r\n\r\nСоздайте таблицу podpolye.movements: move_id — целое, первичный ключ; depot_id — целое, обязательное, внешний ключ на podpolye.depots(depot_id), причём вместе со складом должны удаляться и его рейсы; at_date — дата, обязательная, по умолчанию текущая; tons — целое.	Связь можно объявить прямо в столбце: depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE — каскад и означает «удалять рейсы вместе со складом». Текущая дата по умолчанию — DEFAULT current_date.	CREATE TABLE podpolye.movements(\r\n    move_id  integer PRIMARY KEY,\r\n    depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE,\r\n    at_date  date NOT NULL DEFAULT current_date,\r\n    tons     integer)	{"mode": "model", "post": ["INSERT INTO podpolye.movements(move_id, depot_id, tons) VALUES (1,1,60),(2,1,38),(3,2,52)"], "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN ('A','B','C','D'))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES ('A','Заречный'),('B','Вокзальный'),('C','Старый город'),('D','Фабричный')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)"], "expect": [{"args": {"table": "podpolye.movements"}, "probe": "columns", "title": "столбцы таблицы рейсов", "value": [["move_id", "integer", null, true, false], ["depot_id", "integer", null, true, false], ["at_date", "date", null, true, true], ["tons", "integer", null, false, false]]}, {"args": {"table": "podpolye.movements"}, "probe": "primary_key", "title": "первичный ключ рейсов", "value": ["move_id"]}, {"args": {"table": "podpolye.movements"}, "probe": "foreign_keys", "title": "внешний ключ рейсов на склады", "value": [["depot_id", "podpolye.depots", "depot_id", "удаляет следом"]]}, {"args": {"table": "podpolye.movements", "columns": ["at_date"]}, "probe": "default_kind", "title": "дата подставляется сама", "value": [["at_date", "текущий момент"]]}, {"args": {"table": "podpolye.depots", "value": 1, "column": "depot_id"}, "probe": "delete_allowed", "title": "склад удаляется вместе со своими рейсами", "value": true}, {"args": {"cases": [{"row": {"tons": 5, "move_id": 1, "depot_id": 2}, "label": "повтор номера"}, {"row": {"tons": 5, "move_id": 99, "depot_id": 2}, "label": "новый номер"}], "table": "podpolye.movements"}, "probe": "accepts", "title": "повтор номера рейса и новый номер", "value": [["повтор номера", false], ["новый номер", true]]}], "reveal": "Что проверяется: столбцы таблицы рейсов; первичный ключ рейсов; внешний ключ рейсов на склады; дата подставляется сама; склад удаляется вместе со своими рейсами; повтор номера рейса и новый номер."}	{ddl,table,foreign_key,default}
+91	3	8	Груз и вес	В таблице рейсов не хватает главного — что именно вывозят. Заодно в базу попал рейс с отрицательным весом: отрицательных тонн не бывает, и база должна знать это сама.\r\n\r\nВ таблицу podpolye.movements добавьте столбец cargo_ru — строка не длиннее 30 символов, и ограничение, требующее, чтобы значение tons было строго больше нуля.	Здесь два отдельных действия над готовой таблицей: ALTER TABLE ... ADD COLUMN cargo_ru varchar(30) и ALTER TABLE ... ADD CONSTRAINT ... CHECK (tons > 0). «Строго больше нуля» — именно >, а не >=.	ALTER TABLE podpolye.movements ADD COLUMN cargo_ru varchar(30); ALTER TABLE podpolye.movements ADD CONSTRAINT movements_tons_chk CHECK (tons > 0)	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN ('A','B','C','D'))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES ('A','Заречный'),('B','Вокзальный'),('C','Старый город'),('D','Фабричный')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.movements(\\n    move_id  integer PRIMARY KEY,\\n    depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE,\\n    at_date  date NOT NULL DEFAULT current_date,\\n    tons     integer)", "INSERT INTO podpolye.movements(move_id, depot_id, at_date, tons) VALUES (1,1,'1944-09-11',60),(2,1,'1944-09-15',38),(3,2,'1944-09-12',52),(4,3,'1944-09-14',22),(5,3,'1944-09-18',45)"], "expect": [{"args": {"table": "podpolye.movements"}, "probe": "columns", "title": "столбцы рейсов после правки", "value": [["move_id", "integer", null, true, false], ["depot_id", "integer", null, true, false], ["at_date", "date", null, true, true], ["tons", "integer", null, false, false], ["cargo_ru", "character varying", 30, false, false]]}, {"args": {"cases": [{"row": {"tons": 10, "move_id": 99, "depot_id": 1}, "label": "10 тонн"}, {"row": {"tons": 5, "move_id": 99, "depot_id": 1}, "label": "5 тонн"}, {"row": {"tons": 1, "move_id": 99, "depot_id": 1}, "label": "1 тонна"}, {"row": {"tons": 0, "move_id": 99, "depot_id": 1}, "label": "ноль"}, {"row": {"tons": -5, "move_id": 99, "depot_id": 1}, "label": "минус пять"}, {"row": {"tons": -100, "move_id": 99, "depot_id": 1}, "label": "минус сто"}], "table": "podpolye.movements"}, "probe": "accepts", "title": "какой вес база принимает", "value": [["10 тонн", true], ["5 тонн", true], ["1 тонна", true], ["ноль", false], ["минус пять", false], ["минус сто", false]]}, {"args": {"table": "podpolye.movements"}, "probe": "foreign_keys", "title": "связь со складами не потеряна", "value": [["depot_id", "podpolye.depots", "depot_id", "удаляет следом"]]}, {"args": {"table": "podpolye.movements"}, "probe": "primary_key", "title": "первичный ключ рейсов на месте", "value": ["move_id"]}, {"args": {"table": "podpolye.movements", "columns": ["move_id", "depot_id", "tons"], "order_by": "move_id"}, "probe": "rows", "title": "рейсы на месте", "value": [[1, 1, 60], [2, 1, 38], [3, 2, 52], [4, 3, 22], [5, 3, 45]]}], "reveal": "Что проверяется: столбцы рейсов после правки; какой вес база принимает; связь со складами не потеряна; первичный ключ рейсов на месте; рейсы на месте."}	{ddl,alter,constraint,check}
+92	3	9	Указатель	Счётная машина перебирает весь журнал рейсов ради одной сводки по складу. Нужен указатель по столбцу связи — и он не обязан быть уникальным: с одного склада рейсов много.\r\n\r\nПостройте по столбцу depot_id таблицы podpolye.movements обычный, не уникальный индекс.	Индекс создаётся оператором CREATE INDEX <имя> ON <таблица>(<столбец>). Слово UNIQUE добавлять не нужно — как раз потому, что значения в depot_id повторяются.	CREATE INDEX movements_depot_idx ON podpolye.movements(depot_id)	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN ('A','B','C','D'))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES ('A','Заречный'),('B','Вокзальный'),('C','Старый город'),('D','Фабричный')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.movements(\\n    move_id  integer PRIMARY KEY,\\n    depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE,\\n    at_date  date NOT NULL DEFAULT current_date,\\n    tons     integer)", "INSERT INTO podpolye.movements(move_id, depot_id, at_date, tons) VALUES (1,1,'1944-09-11',60),(2,1,'1944-09-15',38),(3,2,'1944-09-12',52),(4,3,'1944-09-14',22),(5,3,'1944-09-18',45)"], "expect": [{"args": {"table": "podpolye.movements"}, "probe": "indexes", "title": "индексы рейсов, кроме первичного ключа", "value": [["depot_id", false, "btree", false]]}, {"args": {"table": "podpolye.movements"}, "probe": "primary_key", "title": "первичный ключ не тронут", "value": ["move_id"]}, {"args": {"table": "podpolye.movements", "columns": ["move_id", "depot_id", "tons"], "order_by": "move_id"}, "probe": "rows", "title": "рейсы на месте", "value": [[1, 1, 60], [2, 1, 38], [3, 2, 52], [4, 3, 22], [5, 3, 45]]}], "reveal": "Что проверяется: индексы рейсов, кроме первичного ключа; первичный ключ не тронут; рейсы на месте."}	{ddl,index}
+93	3	10	Сводка одним словом	Семён требует, чтобы сводка вывоза по секторам собиралась сама, одним словом. Мелкие рейсы до 30 тонн — текучка гарнизона, в сводку они не идут.\r\n\r\nСоздайте представление podpolye.depot_load, явно объявив его столбцы: sector — сектор склада и tons — суммарный вывоз по этому сектору. Учитывайте только рейсы тяжелее 30 тонн, записав условие отбора именно как tons > 30. Имена столбцов укажите в скобках после имени представления: CREATE VIEW podpolye.depot_load(sector, tons) AS ...	Представление — это сохранённый запрос: CREATE VIEW <имя>(<столбцы>) AS SELECT ... Внутри — соединение depots и movements по depot_id, отбор WHERE tons > 30 и группировка по сектору с sum(tons).	CREATE VIEW podpolye.depot_load(sector, tons) AS SELECT d.sector, sum(m.tons) FROM podpolye.depots d JOIN podpolye.movements m ON m.depot_id = d.depot_id WHERE m.tons > 30 GROUP BY d.sector	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN ('A','B','C','D'))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES ('A','Заречный'),('B','Вокзальный'),('C','Старый город'),('D','Фабричный')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.movements(\\n    move_id  integer PRIMARY KEY,\\n    depot_id integer NOT NULL REFERENCES podpolye.depots(depot_id) ON DELETE CASCADE,\\n    at_date  date NOT NULL DEFAULT current_date,\\n    tons     integer)", "INSERT INTO podpolye.movements(move_id, depot_id, at_date, tons) VALUES (1,1,'1944-09-11',60),(2,1,'1944-09-15',38),(3,2,'1944-09-12',52),(4,3,'1944-09-14',22),(5,3,'1944-09-18',45)"], "expect": [{"args": {"name": "podpolye.depot_load"}, "probe": "view_columns", "title": "столбцы представления", "value": ["sector", "tons"]}, {"args": {"name": "podpolye.depot_load", "mentions": ["depots", "movements", "sum", "group", "sector", "30"]}, "probe": "view_shape", "title": "форма определения представления", "value": [["существует", true], ["упоминает depots", true], ["упоминает movements", true], ["упоминает sum", true], ["упоминает group", true], ["упоминает sector", true], ["упоминает 30", true]]}], "reveal": "Что проверяется: столбцы представления; форма определения представления."}	{ddl,view,select,where}
+94	3	11	Наблюдение за складами	За каждым складом закреплён свой человек. Один наблюдатель ведёт несколько складов, за одним складом могут следить двое — но пара «человек и склад» должна встречаться ровно один раз. Ключ здесь — именно пара.\r\n\r\nСоздайте таблицу podpolye.watch: spotter — строка не длиннее 20 символов; depot_id — целое, ссылающееся на podpolye.depots(depot_id). Первичный ключ должен быть составным: пара (spotter, depot_id).	Составной ключ нельзя объявить в одном столбце — он записывается отдельным элементом таблицы: PRIMARY KEY (spotter, depot_id). Ссылка на склады при этом остаётся обычным REFERENCES в определении depot_id.	CREATE TABLE podpolye.watch(spotter varchar(20), depot_id integer REFERENCES podpolye.depots(depot_id), PRIMARY KEY (spotter, depot_id))	{"mode": "model", "post": ["INSERT INTO podpolye.watch VALUES ('Гриша', 1)"], "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_chk CHECK (sector IN ('A','B','C','D'))", "CREATE TABLE podpolye.sectors(sector char(1) PRIMARY KEY, title varchar(30) NOT NULL)", "INSERT INTO podpolye.sectors VALUES ('A','Заречный'),('B','Вокзальный'),('C','Старый город'),('D','Фабричный')", "ALTER TABLE podpolye.depots ADD CONSTRAINT depots_sector_fk FOREIGN KEY (sector) REFERENCES podpolye.sectors(sector) ON DELETE RESTRICT", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)"], "expect": [{"args": {"table": "podpolye.watch"}, "probe": "primary_key", "title": "состав первичного ключа наблюдения", "value": ["spotter", "depot_id"]}, {"args": {"table": "podpolye.watch"}, "probe": "columns", "title": "столбцы наблюдения", "value": [["spotter", "character varying", 20, true, false], ["depot_id", "integer", null, true, false]]}, {"args": {"table": "podpolye.watch"}, "probe": "foreign_keys", "title": "ссылка на склады", "value": [["depot_id", "podpolye.depots", "depot_id", "запрещает удаление"]]}, {"args": {"cases": [{"row": {"spotter": "Гриша", "depot_id": 1}, "label": "та же пара"}, {"row": {"spotter": "Гриша", "depot_id": 2}, "label": "другой склад"}, {"row": {"spotter": "Гриша", "depot_id": 77}, "label": "несуществующий склад"}], "table": "podpolye.watch"}, "probe": "accepts", "title": "повтор пары и другая пара", "value": [["та же пара", false], ["другой склад", true], ["несуществующий склад", false]]}], "reveal": "Что проверяется: состав первичного ключа наблюдения; столбцы наблюдения; ссылка на склады; повтор пары и другая пара."}	{ddl,table,primary_key,foreign_key}
+95	3	12	Журнал радиограмм	Повтор донесения Центр считает подтверждением и удваивает оценку сил противника — одинаковых текстов быть не должно. Время отправки база ставит сама: радист в эфире на часы не смотрит.\r\n\r\nСоздайте таблицу podpolye.radiograms: radio_id — целое, первичный ключ; body — текст, обязательный, причём два донесения с одинаковым текстом в журнал попадать не должны; sent_at — отметка времени, обязательная, по умолчанию текущий момент.	«Одинаковых текстов быть не должно» — это ограничение UNIQUE на столбце body. «Отметка времени» — тип timestamp, а текущий момент по умолчанию — DEFAULT now().	CREATE TABLE podpolye.radiograms(radio_id integer PRIMARY KEY, body text NOT NULL UNIQUE, sent_at timestamp NOT NULL DEFAULT now())	{"mode": "model", "post": ["INSERT INTO podpolye.radiograms(radio_id, body) VALUES (1, 'связь установлена')"], "setup": ["CREATE SCHEMA podpolye"], "expect": [{"args": {"table": "podpolye.radiograms"}, "probe": "columns", "title": "столбцы журнала донесений", "value": [["radio_id", "integer", null, true, false], ["body", "text", null, true, false], ["sent_at", "timestamp without time zone", null, true, true]]}, {"args": {"table": "podpolye.radiograms"}, "probe": "primary_key", "title": "первичный ключ журнала", "value": ["radio_id"]}, {"args": {"table": "podpolye.radiograms"}, "probe": "uniques", "title": "уникальность в журнале", "value": ["body"]}, {"args": {"table": "podpolye.radiograms", "columns": ["sent_at"]}, "probe": "default_kind", "title": "время проставляется само", "value": [["sent_at", "текущий момент"]]}, {"args": {"table": "podpolye.radiograms", "column": "sent_at"}, "probe": "rows_filled", "title": "отметка времени заполнена", "value": true}, {"args": {"cases": [{"row": {"body": "связь установлена", "radio_id": 2}, "label": "повтор текста"}, {"row": {"body": "иное донесение", "radio_id": 1}, "label": "повтор номера"}, {"row": {"body": "эшелон на восток", "radio_id": 2}, "label": "новое"}], "table": "podpolye.radiograms"}, "probe": "accepts", "title": "повтор текста, повтор номера и новое донесение", "value": [["повтор текста", false], ["повтор номера", false], ["новое", true]]}], "reveal": "Что проверяется: столбцы журнала донесений; первичный ключ журнала; уникальность в журнале; время проставляется само; отметка времени заполнена; повтор текста, повтор номера и новое донесение."}	{ddl,table,unique,default}
+96	4	1	Роли отряда	Условное имя явки всплыло в немецкой сводке, а работали до сих пор все под одной учётной записью. Разграничение начинается с ролей: командование, разведка, агентура. Это группы, а не люди — входить под ними нельзя.\r\n\r\nЗаведите три роли: commanders, scouts и spies. Входить в систему непосредственно под ними нельзя.	Роль заводится оператором CREATE ROLE <имя> — по одному на каждую. Право входа по умолчанию выключено, поэтому дописывать ничего не нужно; главное — не написать CREATE USER, который как раз вход разрешает.	CREATE ROLE commanders; CREATE ROLE scouts; CREATE ROLE spies	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.safehouses(\\n    house_id  integer PRIMARY KEY,\\n    code_name varchar(20) NOT NULL,\\n    street    varchar(40) NOT NULL,\\n    keeper    varchar(20) NOT NULL,\\n    sector    char(1) NOT NULL,\\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,'Мельница','Заречная, 7','Прохор','A',false),(2,'Аптека','Соборная, 14','Вера','A',true),(3,'Сапожник','Кузнечная, 3','Пётр','B',false),(4,'Пекарня','Хлебный пер., 2','Дарья','B',false),(5,'Часовщик','Ратушная, 21','Артур','C',true),(6,'Прачечная','Луговая, 9','Клава','C',false)"], "expect": [{"args": {"names": ["commanders", "scouts", "spies"]}, "probe": "roles", "title": "роли отряда", "value": [["commanders", false, false], ["scouts", false, false], ["spies", false, false]]}, {"args": {}, "probe": "all_roles", "title": "посторонних ролей не заведено", "value": ["commanders", "scouts", "spies"]}, {"args": {}, "probe": "all_memberships", "title": "роли друг в друга не вложены", "value": []}], "reveal": "Что проверяется: роли отряда; посторонних ролей не заведено; роли друг в друга не вложены."}	{dcl,role}
+97	4	2	Полный доступ командованию	Семён отвечает за отряд целиком; урезать его в правах бессмысленно — он возьмёт их обратно окольным путём. Полный доступ начинается с права войти в саму схему.\r\n\r\nОткройте командованию полный доступ: роль commanders должна получить право пользоваться схемой podpolye и все привилегии на таблицы podpolye.depots и podpolye.safehouses.	Право войти в схему и права на таблицы выдаются разными операторами: GRANT USAGE ON SCHEMA podpolye TO commanders и GRANT ALL PRIVILEGES ON <таблицы> TO commanders. Слово ALL PRIVILEGES заменяет перечисление всех прав, а таблицы можно указать через запятую.	GRANT USAGE ON SCHEMA podpolye TO commanders; GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.safehouses(\\n    house_id  integer PRIMARY KEY,\\n    code_name varchar(20) NOT NULL,\\n    street    varchar(40) NOT NULL,\\n    keeper    varchar(20) NOT NULL,\\n    sector    char(1) NOT NULL,\\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,'Мельница','Заречная, 7','Прохор','A',false),(2,'Аптека','Соборная, 14','Вера','A',true),(3,'Сапожник','Кузнечная, 3','Пётр','B',false),(4,'Пекарня','Хлебный пер., 2','Дарья','B',false),(5,'Часовщик','Ратушная, 21','Артур','C',true),(6,'Прачечная','Луговая, 9','Клава','C',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies"], "expect": [{"args": {"schema": "podpolye", "grantee": "commanders"}, "probe": "schema_privs", "title": "права командования на схему", "value": ["USAGE"]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.depots", "grantee": "commanders"}, "probe": "has_privs", "title": "права командования на склады", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", true], ["DELETE", true], ["TRUNCATE", true], ["REFERENCES", true], ["TRIGGER", true]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "has_privs", "title": "права командования на явки", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", true], ["DELETE", true], ["TRUNCATE", true], ["REFERENCES", true], ["TRIGGER", true]]}, {"args": {"table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "grantable", "title": "передоверия не давали", "value": [["DELETE", false], ["INSERT", false], ["REFERENCES", false], ["SELECT", false], ["TRIGGER", false], ["TRUNCATE", false], ["UPDATE", false]]}, {"args": {"privs": ["SELECT", "UPDATE"], "table": "podpolye.safehouses", "grantees": ["scouts", "spies", "PUBLIC"]}, "probe": "privs_matrix", "title": "остальным ничего не открыли", "value": [["scouts", "SELECT", false], ["scouts", "UPDATE", false], ["spies", "SELECT", false], ["spies", "UPDATE", false], ["PUBLIC", "SELECT", false], ["PUBLIC", "UPDATE", false]]}], "reveal": "Что проверяется: права командования на схему; права командования на склады; права командования на явки; передоверия не давали; остальным ничего не открыли."}	{dcl,grant}
+98	4	3	Разведке — только перо	Разведчику нужно одно: принести новое. Увидел эшелон — вписал строку. Право править и стирать чужие записи в руках противника опаснее, чем право читать: тихо изменённые координаты уведут удар в жилой квартал.\r\n\r\nВыдайте роли scouts право пользоваться схемой podpolye и на таблицу podpolye.depots — только чтение и добавление строк. Права изменять и удалять записи у неё быть не должно.	Права перечисляются через запятую в одном операторе: GRANT SELECT, INSERT ON podpolye.depots TO scouts. Отдельным оператором — доступ к схеме: GRANT USAGE ON SCHEMA podpolye TO scouts. ALL здесь писать нельзя — это выдаст лишнее.	GRANT USAGE ON SCHEMA podpolye TO scouts; GRANT SELECT, INSERT ON podpolye.depots TO scouts	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.safehouses(\\n    house_id  integer PRIMARY KEY,\\n    code_name varchar(20) NOT NULL,\\n    street    varchar(40) NOT NULL,\\n    keeper    varchar(20) NOT NULL,\\n    sector    char(1) NOT NULL,\\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,'Мельница','Заречная, 7','Прохор','A',false),(2,'Аптека','Соборная, 14','Вера','A',true),(3,'Сапожник','Кузнечная, 3','Пётр','B',false),(4,'Пекарня','Хлебный пер., 2','Дарья','B',false),(5,'Часовщик','Ратушная, 21','Артур','C',true),(6,'Прачечная','Луговая, 9','Клава','C',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders"], "expect": [{"args": {"schema": "podpolye", "grantee": "scouts"}, "probe": "schema_privs", "title": "права разведки на схему", "value": ["USAGE"]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.depots", "grantee": "scouts"}, "probe": "has_privs", "title": "права разведки на склады", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"table": "podpolye.depots", "grantee": "scouts"}, "probe": "grantable", "title": "передоверия не давали", "value": [["INSERT", false], ["SELECT", false]]}, {"args": {"privs": ["SELECT"], "table": "podpolye.depots", "grantees": ["spies", "PUBLIC"]}, "probe": "privs_matrix", "title": "остальным складов не открывали", "value": [["spies", "SELECT", false], ["PUBLIC", "SELECT", false]]}, {"args": {}, "probe": "all_memberships", "title": "роли друг в друга не вложены", "value": []}, {"args": {"schema": "podpolye"}, "probe": "default_privs", "title": "прав по умолчанию не заводили", "value": []}], "reveal": "Что проверяется: права разведки на схему; права разведки на склады; передоверия не давали; остальным складов не открывали; роли друг в друга не вложены; прав по умолчанию не заводили."}	{dcl,grant}
+99	4	4	Явки по столбцам	В ночь спешки агентам открыли таблицу явок целиком: адреса, хозяева, всё. Агенту нужны только номер явки и сектор; улица и хозяин не должны быть доступны ему ни при каких условиях. Сначала отобрать всё — потом вернуть ровно необходимое.\r\n\r\nОтберите у роли spies все права на таблицу podpolye.safehouses, а затем выдайте ей право читать только два столбца — house_id и sector.	Сначала REVOKE ALL ON podpolye.safehouses FROM spies. Права на отдельные столбцы выдаются перечислением в скобках сразу после названия права: GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies.	REVOKE ALL ON podpolye.safehouses FROM spies; GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.safehouses(\\n    house_id  integer PRIMARY KEY,\\n    code_name varchar(20) NOT NULL,\\n    street    varchar(40) NOT NULL,\\n    keeper    varchar(20) NOT NULL,\\n    sector    char(1) NOT NULL,\\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,'Мельница','Заречная, 7','Прохор','A',false),(2,'Аптека','Соборная, 14','Вера','A',true),(3,'Сапожник','Кузнечная, 3','Пётр','B',false),(4,'Пекарня','Хлебный пер., 2','Дарья','B',false),(5,'Часовщик','Ратушная, 21','Артур','C',true),(6,'Прачечная','Луговая, 9','Клава','C',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT ON podpolye.safehouses TO spies"], "expect": [{"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "spies"}, "probe": "has_privs", "title": "права на таблицу явок целиком", "value": [["SELECT", false], ["INSERT", false], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"table": "podpolye.safehouses", "grantee": "spies"}, "probe": "column_grants_all", "title": "права на отдельные столбцы", "value": [["house_id", "SELECT", false], ["sector", "SELECT", false]]}, {"args": {"table": "podpolye.safehouses", "columns": ["house_id", "sector", "street", "keeper"], "grantee": "spies"}, "probe": "can_read_columns", "title": "что агент может прочитать", "value": [["house_id", true], ["sector", true], ["street", false], ["keeper", false]]}, {"args": {"table": "podpolye.safehouses", "grantee": "spies"}, "probe": "grantable", "title": "передоверия не давали", "value": []}, {"args": {"privs": ["SELECT"], "table": "podpolye.safehouses", "grantees": ["scouts", "PUBLIC"]}, "probe": "privs_matrix", "title": "посторонним явки не открывали", "value": [["scouts", "SELECT", false], ["PUBLIC", "SELECT", false]]}, {"args": {"schema": "podpolye"}, "probe": "default_privs", "title": "прав по умолчанию не заводили", "value": []}], "reveal": "Что проверяется: права на таблицу явок целиком; права на отдельные столбцы; что агент может прочитать; передоверия не давали; посторонним явки не открывали; прав по умолчанию не заводили."}	{dcl,revoke,column_privileges}
+100	4	5	Явки по строкам	Вторая линия обороны: проваленная явка опаснее незнания — агент придёт по адресу, который уже под наблюдением. Строки с провалом должны исчезнуть из его выборки на уровне правила самой таблицы.\r\n\r\nВключите на таблице podpolye.safehouses защиту строк и создайте политику с именем house_open, разрешающую роли spies читать только те строки, где is_burnt равно false.	Защита строк включается отдельным оператором: ALTER TABLE ... ENABLE ROW LEVEL SECURITY. Правило видимости — политикой: CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false). Пока защита не включена, политика не действует.	ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY; CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)	{"mode": "model", "post": ["INSERT INTO podpolye.safehouses VALUES (7,'Мост','Речная, 4','Игнат','D',false),(8,'Склеп','Тихая, 1','Ким','D',true)"], "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.safehouses(\\n    house_id  integer PRIMARY KEY,\\n    code_name varchar(20) NOT NULL,\\n    street    varchar(40) NOT NULL,\\n    keeper    varchar(20) NOT NULL,\\n    sector    char(1) NOT NULL,\\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,'Мельница','Заречная, 7','Прохор','A',false),(2,'Аптека','Соборная, 14','Вера','A',true),(3,'Сапожник','Кузнечная, 3','Пётр','B',false),(4,'Пекарня','Хлебный пер., 2','Дарья','B',false),(5,'Часовщик','Ратушная, 21','Артур','C',true),(6,'Прачечная','Луговая, 9','Клава','C',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies"], "expect": [{"args": {"table": "podpolye.safehouses"}, "probe": "rls", "title": "защита строк на таблице явок", "value": [true, false]}, {"args": {"table": "podpolye.safehouses"}, "probe": "policies", "title": "политика", "value": [["house_open", "SELECT", "spies"]]}, {"args": {"role": "spies", "table": "podpolye.safehouses", "columns": ["house_id"], "order_by": "house_id"}, "probe": "visible_rows", "title": "номера явок, видимых агенту", "value": [[1], [3], [4], [6], [7]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "spies"}, "probe": "has_privs", "title": "лишних прав агенту не выдали", "value": [["SELECT", false], ["INSERT", false], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"table": "podpolye.safehouses", "grantee": "spies"}, "probe": "column_grants_all", "title": "столбцовые права не расширяли", "value": [["house_id", "SELECT", false], ["sector", "SELECT", false]]}], "reveal": "Что проверяется: защита строк на таблице явок; политика; номера явок, видимых агенту; лишних прав агенту не выдали; столбцовые права не расширяли."}	{dcl,rls,policy}
+101	4	6	Боец Гриша	Пора заводить людей поимённо. Если Гришу возьмут, отключить надо будет именно его, не тронув остальных. Личных прав не выдавать ни одного: боец получает их только через роль.\r\n\r\nЗаведите учётную запись grisha, которая может входить в систему, и включите её в роль scouts. Никаких прав на таблицы непосредственно этой учётной записи выдавать не нужно.	Учётная запись с правом входа — CREATE ROLE grisha LOGIN (или CREATE USER grisha). Включение в роль — тем же словом, что и выдача прав: GRANT scouts TO grisha. На таблицы при этом не выдаётся ничего.	CREATE ROLE grisha LOGIN; GRANT scouts TO grisha	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.safehouses(\\n    house_id  integer PRIMARY KEY,\\n    code_name varchar(20) NOT NULL,\\n    street    varchar(40) NOT NULL,\\n    keeper    varchar(20) NOT NULL,\\n    sector    char(1) NOT NULL,\\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,'Мельница','Заречная, 7','Прохор','A',false),(2,'Аптека','Соборная, 14','Вера','A',true),(3,'Сапожник','Кузнечная, 3','Пётр','B',false),(4,'Пекарня','Хлебный пер., 2','Дарья','B',false),(5,'Часовщик','Ратушная, 21','Артур','C',true),(6,'Прачечная','Луговая, 9','Клава','C',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)"], "expect": [{"args": {"names": ["grisha"]}, "probe": "roles", "title": "учётная запись бойца", "value": [["grisha", true, false]]}, {"args": {"member": "grisha"}, "probe": "member_of", "title": "в какие роли включён боец", "value": ["scouts"]}, {"args": {"member": "grisha"}, "probe": "member_admin", "title": "раздавать членство боец не может", "value": [["scouts", false]]}, {"args": {"table": "podpolye.depots", "grantee": "grisha"}, "probe": "direct_table_grants", "title": "личных прав на таблицы нет", "value": []}, {"args": {"table": "podpolye.depots", "grantee": "grisha"}, "probe": "column_grants_all", "title": "личных прав на столбцы нет", "value": []}, {"args": {"privs": ["SELECT", "INSERT"], "table": "podpolye.depots", "grantee": "grisha"}, "probe": "has_privs", "title": "права пришли через роль", "value": [["SELECT", true], ["INSERT", true]]}, {"args": {"table": "podpolye.depots"}, "probe": "public_privs", "title": "посторонним ничего не открыли", "value": []}, {"args": {"schema": "podpolye"}, "probe": "default_privs", "title": "прав по умолчанию не заводили", "value": []}], "reveal": "Что проверяется: учётная запись бойца; в какие роли включён боец; раздавать членство боец не может; личных прав на таблицы нет; личных прав на столбцы нет; права пришли через роль; посторонним ничего не открыли; прав по умолчанию не заводили."}	{dcl,role,membership}
+102	4	7	Отзыв у PUBLIC	Права на таблицу явок в спешке выдали PUBLIC — всем, кто сумеет подключиться. Вот почему имя явки оказалось в немецкой сводке: взламывать ничего не пришлось.\r\n\r\nОтберите у PUBLIC все права на таблицу podpolye.safehouses. Права, выданные роли commanders отдельно, при этом трогать нельзя.	PUBLIC в операторе отзыва пишется как обычное имя роли: REVOKE ALL ON podpolye.safehouses FROM PUBLIC. Отзыв у PUBLIC не трогает права, выданные ролям поимённо, — их отбирать не нужно.	REVOKE ALL ON podpolye.safehouses FROM PUBLIC	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.safehouses(\\n    house_id  integer PRIMARY KEY,\\n    code_name varchar(20) NOT NULL,\\n    street    varchar(40) NOT NULL,\\n    keeper    varchar(20) NOT NULL,\\n    sector    char(1) NOT NULL,\\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,'Мельница','Заречная, 7','Прохор','A',false),(2,'Аптека','Соборная, 14','Вера','A',true),(3,'Сапожник','Кузнечная, 3','Пётр','B',false),(4,'Пекарня','Хлебный пер., 2','Дарья','B',false),(5,'Часовщик','Ратушная, 21','Артур','C',true),(6,'Прачечная','Луговая, 9','Клава','C',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)", "CREATE ROLE grisha LOGIN", "GRANT scouts TO grisha", "GRANT SELECT ON podpolye.safehouses TO PUBLIC"], "expect": [{"args": {"table": "podpolye.safehouses"}, "probe": "public_privs", "title": "права PUBLIC на явки", "value": []}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "commanders"}, "probe": "has_privs", "title": "права командования не тронуты", "value": [["SELECT", true], ["INSERT", true], ["UPDATE", true], ["DELETE", true], ["TRUNCATE", true], ["REFERENCES", true], ["TRIGGER", true]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "spies"}, "probe": "has_privs", "title": "агентура сверх столбцов ничего не получила", "value": [["SELECT", false], ["INSERT", false], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"privs": ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE", "REFERENCES", "TRIGGER"], "table": "podpolye.safehouses", "grantee": "scouts"}, "probe": "has_privs", "title": "разведке явки не открывали", "value": [["SELECT", false], ["INSERT", false], ["UPDATE", false], ["DELETE", false], ["TRUNCATE", false], ["REFERENCES", false], ["TRIGGER", false]]}, {"args": {"table": "podpolye.safehouses"}, "probe": "columns", "title": "таблица явок цела", "value": [["house_id", "integer", null, true, false], ["code_name", "character varying", 20, true, false], ["street", "character varying", 40, true, false], ["keeper", "character varying", 20, true, false], ["sector", "character", 1, true, false], ["is_burnt", "boolean", null, true, true]]}], "reveal": "Что проверяется: права PUBLIC на явки; права командования не тронуты; агентура сверх столбцов ничего не получила; разведке явки не открывали; таблица явок цела."}	{dcl,revoke,public}
+103	4	8	Права наперёд	Каждая новая таблица появляется закрытой, и разведка узнаёт о ней, когда кто-нибудь вспомнит выдать права. Правило должно действовать наперёд: всё, что появится в схеме, разведка видит сразу.\r\n\r\nЗадайте право по умолчанию: все таблицы, которые впредь будут создаваться в схеме podpolye, должны становиться доступными роли scouts на чтение.	Права по умолчанию задаются оператором ALTER DEFAULT PRIVILEGES IN SCHEMA podpolye GRANT SELECT ON TABLES TO scouts. Он не трогает существующие таблицы, а описывает, что произойдёт с будущими.	ALTER DEFAULT PRIVILEGES IN SCHEMA podpolye GRANT SELECT ON TABLES TO scouts	{"mode": "model", "post": ["CREATE TABLE podpolye.trains(train_id integer PRIMARY KEY, cargo_ru text)"], "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.safehouses(\\n    house_id  integer PRIMARY KEY,\\n    code_name varchar(20) NOT NULL,\\n    street    varchar(40) NOT NULL,\\n    keeper    varchar(20) NOT NULL,\\n    sector    char(1) NOT NULL,\\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,'Мельница','Заречная, 7','Прохор','A',false),(2,'Аптека','Соборная, 14','Вера','A',true),(3,'Сапожник','Кузнечная, 3','Пётр','B',false),(4,'Пекарня','Хлебный пер., 2','Дарья','B',false),(5,'Часовщик','Ратушная, 21','Артур','C',true),(6,'Прачечная','Луговая, 9','Клава','C',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)", "CREATE ROLE grisha LOGIN", "GRANT scouts TO grisha"], "expect": [{"args": {"schema": "podpolye"}, "probe": "default_privs", "title": "правило по умолчанию в схеме подполья", "value": [["r", "scouts", "SELECT"]]}, {"args": {"schema": "public"}, "probe": "default_privs", "title": "в других схемах правил не заводили", "value": []}, {"args": {"privs": ["SELECT"], "table": "podpolye.trains", "grantee": "scouts"}, "probe": "has_privs", "title": "новая таблица сразу доступна разведке", "value": [["SELECT", true]]}, {"args": {"privs": ["SELECT"], "table": "podpolye.trains", "grantees": ["spies", "PUBLIC"]}, "probe": "privs_matrix", "title": "посторонним она недоступна", "value": [["spies", "SELECT", false], ["PUBLIC", "SELECT", false]]}, {"args": {"schema": "podpolye", "grantee": "scouts"}, "probe": "schema_privs", "title": "доступ разведки к схеме не тронут", "value": ["USAGE"]}, {"args": {}, "probe": "all_memberships", "title": "членство ролей не меняли", "value": [["grisha", "scouts"]]}], "reveal": "Что проверяется: правило по умолчанию в схеме подполья; в других схемах правил не заводили; новая таблица сразу доступна разведке; посторонним она недоступна; доступ разведки к схеме не тронут; членство ролей не меняли."}	{dcl,default_privileges}
+105	4	10	Защита от владельца	Политика защиты строк не действует на владельца таблицы: тот, кто доберётся до учётной записи узла, увидит все явки разом. Правило надо сделать обязательным и для владельца — пусть узел, оставшись без хозяев, не выдаст никого.\r\n\r\nВключите для таблицы podpolye.safehouses принудительную защиту строк, чтобы действующие политики распространялись и на владельца таблицы.	Принудительный режим включается оператором ALTER TABLE podpolye.safehouses FORCE ROW LEVEL SECURITY. Обычный ENABLE уже включён раньше — FORCE добавляется поверх него и распространяет правила на владельца.	ALTER TABLE podpolye.safehouses FORCE ROW LEVEL SECURITY	{"mode": "model", "setup": ["CREATE SCHEMA podpolye", "CREATE TABLE podpolye.depots(\\n    depot_id   integer PRIMARY KEY,\\n    depot_name varchar(40) NOT NULL,\\n    sector     char(1) NOT NULL,\\n    capacity_t integer)", "INSERT INTO podpolye.depots VALUES (1,'Арсенал №1','A',800),(2,'Топливный склад','A',450),(3,'Продовольственный','B',300)", "CREATE TABLE podpolye.safehouses(\\n    house_id  integer PRIMARY KEY,\\n    code_name varchar(20) NOT NULL,\\n    street    varchar(40) NOT NULL,\\n    keeper    varchar(20) NOT NULL,\\n    sector    char(1) NOT NULL,\\n    is_burnt  boolean NOT NULL DEFAULT false)", "INSERT INTO podpolye.safehouses VALUES (1,'Мельница','Заречная, 7','Прохор','A',false),(2,'Аптека','Соборная, 14','Вера','A',true),(3,'Сапожник','Кузнечная, 3','Пётр','B',false),(4,'Пекарня','Хлебный пер., 2','Дарья','B',false),(5,'Часовщик','Ратушная, 21','Артур','C',true),(6,'Прачечная','Луговая, 9','Клава','C',false)", "CREATE ROLE commanders", "CREATE ROLE scouts", "CREATE ROLE spies", "GRANT USAGE ON SCHEMA podpolye TO commanders", "GRANT ALL PRIVILEGES ON podpolye.depots, podpolye.safehouses TO commanders", "GRANT USAGE ON SCHEMA podpolye TO scouts", "GRANT SELECT, INSERT ON podpolye.depots TO scouts", "GRANT USAGE ON SCHEMA podpolye TO spies", "GRANT SELECT (house_id, sector) ON podpolye.safehouses TO spies", "ALTER TABLE podpolye.safehouses ENABLE ROW LEVEL SECURITY", "CREATE POLICY house_open ON podpolye.safehouses FOR SELECT TO spies USING (is_burnt = false)", "CREATE ROLE grisha LOGIN", "GRANT scouts TO grisha", "ALTER DEFAULT PRIVILEGES IN SCHEMA podpolye GRANT SELECT ON TABLES TO scouts", "GRANT SELECT ON podpolye.safehouses TO commanders WITH GRANT OPTION"], "expect": [{"args": {"table": "podpolye.safehouses"}, "probe": "rls", "title": "принудительная защита строк", "value": [true, true]}, {"args": {"table": "podpolye.safehouses"}, "probe": "policies", "title": "политика на месте", "value": [["house_open", "SELECT", "spies"]]}, {"args": {"role": "owner", "table": "podpolye.safehouses", "columns": ["house_id"], "order_by": "house_id"}, "probe": "visible_rows", "title": "владелец больше не видит ни одной явки", "value": []}, {"args": {"table": "podpolye.safehouses"}, "probe": "public_privs", "title": "посторонним прав не раздавали", "value": []}], "reveal": "Что проверяется: принудительная защита строк; политика на месте; владелец больше не видит ни одной явки; посторонним прав не раздавали."}	{dcl,rls,force}
+14	0	13	Сила в единстве	Подсчитайте количество солдат в каждой воинской части и выведите названия этих частей. Названия частей выведите в алфавитном порядке. Это покажет, какие подразделения были наиболее многочисленными	Группировка по `unit_id` с использованием `COUNT(*)`	\N	{"data": [["1-й отдельный чехословацкий батальон", 2], ["1-й чехословацкий отдельный батальон", 1], ["1-я гвардейская танковая армия", 2], ["1-я морская бригада", 1], ["101-й инженерно-сапёрный батальон", 2], ["101-й полк НКВД", 1], ["101-й учебный полк", 1], ["106-я стрелковая дивизия", 1], ["14-я отдельная штрафная рота", 1], ["150-я стрелковая дивизия", 2], ["16-я воздушная армия", 2], ["18-я дивизия СС \\"Хорст Вессель\\"", 1], ["2-я ударная армия", 1], ["225-й отдельный инженерный батальон", 1], ["28-я дивизия народного ополчения", 1], ["3-я воздушная армия", 1], ["316-я стрелковая дивизия", 2], ["369-й отдельный батальон морской пехоты", 1], ["37-й гвардейский миномётный полк", 1], ["46-й гвардейский ночной бомбардировочный полк", 2], ["585-й женский авиаполк", 1], ["62-я армия", 3], ["64-я стрелковая дивизия", 2], ["8-я гвардейская армия", 1], ["88-й отдельный лыжный батальон", 1], ["Отдельная медико-санитарная рота", 1], ["Отдельный батальон связи №45", 1], ["Отдельный отряд собак-истребителей танков", 1], ["Отдельный отряд собак-миноискателей", 2]], "columns": ["unit_name", "total_soldiers"], "row_count": 29}	{easy}
+23	0	23	Годовой отчет сражений	Определите, в какие годы начинались боевые операции, и подсчитайте их количество. Выведите год начала (как year) и количество (как battles_count). Отсортируйте по году. (Учитывайте только год начала start_date)	Извлеките год из даты с помощью `EXTRACT` и сгруппируйте по нему	\N	{"data": [[1941.0, 9], [1942.0, 6], [1943.0, 4], [1944.0, 4], [1945.0, 7]], "columns": ["year", "battles_count"], "row_count": 5}	{easy}
+24	0	24	Возраст призывника	Рассчитайте возраст солдат на момент призыва (год призыва минус год рождения). Назовите колонку enlistment_age. Выведите ФИО и возраст.	Используйте функцию `AGE` для расчета разницы между датами	\N	{"data": [["Иванов Алексей Петрович", 18.0], ["Смирнова Анна Васильевна", 17.0], ["Петров Дмитрий Иванович", 23.0], ["Козлов Николай Семёнович", 21.0], ["Фёдорова Мария Ивановна", 21.0], ["Жуков Андрей Григорьевич", 26.0], ["Павлов Яков Фёдорович", 25.0], ["Зайцева Людмила Михайловна", 19.0], ["Громов Михаил Сергеевич", 23.0], ["Орлова Вера Павловна", 22.0], ["Новиков Александр Иванович", 20.0], ["Васнецова Татьяна Дмитриевна", 20.0], ["Кузнецов Пётр Васильевич", 25.0], ["Белов Алексей Николаевич", 19.0], ["Соколова Ольга Ивановна", 22.0], ["Морозов Иван Кузьмич", 27.0], ["Волкова Елена Сергеевна", 17.0], ["Ткаченко Григорий Петрович", 17.0], ["Беляев Павел Дмитриевич", 29.0], ["Семёнова Валентина Михайловна", 22.0], ["Ковалёв Сергей Николаевич", 18.0], ["Мельникова Галина Ивановна", 18.0], ["Фёдоров Игорь Васильевич", 28.0], ["Горбачёв Алексей Дмитриевич", 17.0], ["Сидорова Екатерина Петровна", 23.0], ["Смирнов Василий Иванович", 30.0], ["Крылова Надежда Фёдоровна", 18.0], ["Орлов Денис Сергеевич", 17.0], ["Жукова Елена Викторовна", 19.0], ["Гришин Алексей Петрович", 23.0], ["Ткаченко Иван Григорьевич", 21.0], ["Воронцова Лидия Павловна", 19.0], ["Жуковский Виктор Михайлович", 26.0], ["Морозова Анна Сергеевна", 20.0], ["Кузнецов Артём Игоревич", 17.0], ["Соколовская Надежда Викторовна", 18.0], ["Белов Дмитрий Николаевич", 25.0], ["Громова Екатерина Ивановна", 18.0], ["Фролов Павел Сергеевич", 16.0], ["Ковалёва Ольга Дмитриевна", 21.0]], "columns": ["full_name", "enlistment_age"], "row_count": 40}	{easy}
+25	0	25	Демография частей	Определите минимальный и максимальный возраст солдат на момент призыва в каждой части. Выведите название частей и минимальные (min) и максимальные (max) возраста. Отсортируйте по названию части по алфавиту.	Примените `MIN` и `MAX` к году рождения с группировкой по частям	\N	{"data": [["1-й отдельный чехословацкий батальон", 19.0, 25.0], ["1-й чехословацкий отдельный батальон", 18.0, 18.0], ["1-я гвардейская танковая армия", 21.0, 25.0], ["1-я морская бригада", 17.0, 17.0], ["101-й инженерно-сапёрный батальон", 16.0, 20.0], ["101-й полк НКВД", 22.0, 22.0], ["101-й учебный полк", 23.0, 23.0], ["106-я стрелковая дивизия", 20.0, 20.0], ["14-я отдельная штрафная рота", 27.0, 27.0], ["150-я стрелковая дивизия", 19.0, 19.0], ["16-я воздушная армия", 22.0, 26.0], ["18-я дивизия СС \\"Хорст Вессель\\"", 19.0, 19.0], ["2-я ударная армия", 23.0, 23.0], ["225-й отдельный инженерный батальон", 17.0, 17.0], ["28-я дивизия народного ополчения", 17.0, 17.0], ["3-я воздушная армия", 20.0, 20.0], ["316-я стрелковая дивизия", 18.0, 21.0], ["369-й отдельный батальон морской пехоты", 18.0, 18.0], ["37-й гвардейский миномётный полк", 30.0, 30.0], ["46-й гвардейский ночной бомбардировочный полк", 18.0, 26.0], ["585-й женский авиаполк", 28.0, 28.0], ["62-я армия", 17.0, 25.0], ["64-я стрелковая дивизия", 18.0, 21.0], ["8-я гвардейская армия", 22.0, 22.0], ["88-й отдельный лыжный батальон", 29.0, 29.0], ["Отдельная медико-санитарная рота", 17.0, 17.0], ["Отдельный батальон связи №45", 18.0, 18.0], ["Отдельный отряд собак-истребителей танков", 23.0, 23.0], ["Отдельный отряд собак-миноискателей", 17.0, 21.0]], "columns": ["unit_name", "min", "max"], "row_count": 29}	{easy}
+26	0	26	Городская аналитика	Вычислите средний возраст солдат на момент призыва по городам призыва. Выведите название города и средний возраст как avg_age. Результат округлите до целого, а города выведите в обратном алфавитном порядке.	Группировка по городам с использованием `AVG` и арифметических операций. Округление с помощью `ROUND`	\N	{"data": [["Челябинск", 18.0], ["Харьков", 22.0], ["Тула", 27.0], ["Сталинград", 19.0], ["Смоленск", 20.0], ["Севастополь", 18.0], ["Свердловск", 23.0], ["Самара", 29.0], ["Ростов-на-Дону", 20.0], ["Омск", 22.0], ["Одесса", 20.0], ["Новосибирск", 25.0], ["Мурманск", 25.0], ["Москва", 18.0], ["Минск", 25.0], ["Ленинград", 18.0], ["Киев", 23.0], ["Казань", 28.0], ["Горький", 18.0], ["Воронеж", 17.0], ["Волгоград", 25.0], ["Брянск", 17.0]], "columns": ["enlistment_city", "avg_age"], "row_count": 22}	{easy}
+53	1	26	Циклы снабжения подразделений	Для анализа регулярности поставок снаряжения в части определите предыдущую и следующую даты поступления имущества. Выведите наименование подразделения (unit_name), название снаряжения (item_name), дату текущей поставки (last_replenishment), а также предыдущую дату (prev_replenishment) с помощью LAG() и следующую дату (next_replenishment) с помощью LEAD() с разбиением по подразделению и упорядочиванием по дате поставки и названию предмета. Отсортируйте результат по unit_name, last_replenishment и item_name.	Примените LAG(e.last_replenishment) и LEAD(e.last_replenishment) с OVER (PARTITION BY u.id ORDER BY e.last_replenishment, e.item_name).	SELECT u.unit_name,\r\n       e.item_name,\r\n       e.last_replenishment,\r\n       LAG(e.last_replenishment) OVER (PARTITION BY u.id ORDER BY e.last_replenishment, e.item_name) AS prev_replenishment,\r\n       LEAD(e.last_replenishment) OVER (PARTITION BY u.id ORDER BY e.last_replenishment, e.item_name) AS next_replenishment\r\nFROM equipment e\r\nJOIN military_unit u ON e.unit_id = u.id\r\nORDER BY u.unit_name, e.last_replenishment, e.item_name;	{"data": [["1-я гвардейская танковая армия", "Т-34", "1943-07-05", null, null], ["1-я морская бригада", "82-мм", "1942-03-05", null, "1942-03-05"], ["1-я морская бригада", "Аптечки полевые", "1942-03-05", "1942-03-05", "1942-06-06"], ["1-я морская бригада", "50-мм", "1942-06-06", "1942-03-05", null], ["106-я стрелковая дивизия", "ПТРД", "1944-02-28", null, null], ["150-я стрелковая дивизия", "БМ-13 \\"Катюша\\"", "1944-01-15", null, null], ["16-я воздушная армия", "Ил-2", "1943-05-01", null, null], ["2-я ударная армия", "Сапёрная лопатка", "1943-08-14", null, null], ["3-я воздушная армия", "ФАБ-100", "1943-09-05", null, null], ["316-я стрелковая дивизия", "Винтовка Мосина", "1942-03-01", null, "1942-03-05"], ["316-я стрелковая дивизия", "Патроны 7.62 мм", "1942-03-05", "1942-03-01", "1942-05-10"], ["316-я стрелковая дивизия", "Радиостанция РБМ", "1942-05-10", "1942-03-05", null], ["37-й гвардейский миномётный полк", "Патроны 7.62 мм", "1942-03-05", null, null], ["585-й женский авиаполк", "Патроны 7.62 мм", "1942-03-05", null, null], ["62-я армия", "Патроны 7.62 мм", "1942-03-05", null, "1942-11-10"], ["62-я армия", "76-мм дивизионная пушка ЗИС-3", "1942-11-10", "1942-03-05", "1943-01-10"], ["62-я армия", "Аптечки полевые", "1943-01-10", "1942-11-10", "1943-12-01"], ["62-я армия", "Плазменные флаконы", "1943-12-01", "1943-01-10", null], ["64-я стрелковая дивизия", "Патроны 7.62 мм", "1942-03-05", null, null], ["7-я гвардейская миномётная дивизия", "М-31", "1942-12-01", null, "1942-12-01"], ["7-я гвардейская миномётная дивизия", "Патроны 7.62 мм", "1942-12-01", "1942-12-01", null], ["8-я гвардейская армия", "ИС-2", "1944-10-01", null, null], ["Отдельная медико-санитарная рота", "Аптечки полевые", "1942-03-05", null, "1942-03-05"], ["Отдельная медико-санитарная рота", "Патроны 7.62 мм", "1942-03-05", "1942-03-05", null]], "columns": ["unit_name", "item_name", "last_replenishment", "prev_replenishment", "next_replenishment"], "row_count": 24}	{window,navigation,medium}
+28	0	28	История воинских частей	Сгруппируйте части по году формирования и подсчитайте их количество. Выведите год формирования (как formation_year) и количество частей (как units_count). Отсортируйте по году формирования.	Извлеките год из `formation_date` с помощью `EXTRACT`	\N	{"data": [[1939.0, 1], [1941.0, 8], [1942.0, 12], [1943.0, 8], [1944.0, 1]], "columns": ["formation_year", "units_count"], "row_count": 5}	{easy}
+106	5	1	Возраст призыва	Напишите скалярную функцию get_enlistment_age(p_soldier_id INT), возвращающую возраст солдата на момент призыва (год призыва из enlistment_date минус birth_year).	Используйте CREATE OR REPLACE FUNCTION get_enlistment_age(p_soldier_id INT) RETURNS INT AS $$ ... $$ LANGUAGE plpgsql;	CREATE OR REPLACE FUNCTION get_enlistment_age(p_soldier_id INT) RETURNS INT AS $$ DECLARE v_age INT; BEGIN SELECT (EXTRACT(YEAR FROM enlistment_date) - birth_year)::INT INTO v_age FROM soldier WHERE id = p_soldier_id; RETURN v_age; END; $$ LANGUAGE plpgsql;	{"data": [[18]], "mode": "ddl", "columns": ["get_enlistment_age"], "test_query": "SELECT get_enlistment_age(1);"}	{plpgsql,function,scalar,mission5}
+107	5	2	Бойцы подразделения	Напишите табличную функцию get_unit_soldiers(p_unit_name VARCHAR), возвращающую таблицу (full_name VARCHAR, enlistment_city VARCHAR) с бойцами, служившими в указанной части.	Используйте RETURNS TABLE (full_name VARCHAR, enlistment_city VARCHAR) и RETURN QUERY SELECT s.full_name, s.enlistment_city FROM soldier s JOIN military_service ms ON s.id = ms.soldier_id JOIN military_unit mu ON ms.unit_id = mu.id WHERE mu.unit_name = p_unit_name;	CREATE OR REPLACE FUNCTION get_unit_soldiers(p_unit_name VARCHAR) RETURNS TABLE (full_name VARCHAR, enlistment_city VARCHAR) AS $$ BEGIN RETURN QUERY SELECT s.full_name, s.enlistment_city FROM soldier s JOIN military_service ms ON s.id = ms.soldier_id JOIN military_unit mu ON ms.unit_id = mu.id WHERE mu.unit_name = p_unit_name; END; $$ LANGUAGE plpgsql;	{"data": [["Волкова Елена Сергеевна", "Ленинград"]], "mode": "ddl", "columns": ["full_name", "enlistment_city"], "test_query": "SELECT * FROM get_unit_soldiers('1-я морская бригада') ORDER BY full_name;"}	{plpgsql,function,table_function,mission5}
+108	5	3	Перевод военнослужащего	Напишите хранимую процедуру transfer_soldier(p_soldier_id INT, p_new_unit_id INT), которая переводит солдата в новую часть: закрывает текущую службу (end_date = CURRENT_DATE, где end_date IS NULL) и создает новую запись о службе с unit_id = p_new_unit_id и start_date = CURRENT_DATE.	Используйте CREATE OR REPLACE PROCEDURE transfer_soldier(p_soldier_id INT, p_new_unit_id INT) AS $$ BEGIN UPDATE military_service SET end_date = CURRENT_DATE WHERE soldier_id = p_soldier_id AND end_date IS NULL; INSERT INTO military_service (soldier_id, unit_id, start_date) VALUES (p_soldier_id, p_new_unit_id, CURRENT_DATE); END; $$ LANGUAGE plpgsql;	CREATE OR REPLACE PROCEDURE transfer_soldier(p_soldier_id INT, p_new_unit_id INT) AS $$ BEGIN UPDATE military_service SET end_date = CURRENT_DATE WHERE soldier_id = p_soldier_id AND end_date IS NULL; INSERT INTO military_service (soldier_id, unit_id, start_date) VALUES (p_soldier_id, p_new_unit_id, CURRENT_DATE); END; $$ LANGUAGE plpgsql;	{"data": [[2]], "mode": "ddl", "columns": ["unit_id"], "test_query": "CALL transfer_soldier(1, 2); SELECT unit_id FROM military_service WHERE soldier_id = 1 ORDER BY id DESC LIMIT 1;"}	{plpgsql,procedure,mission5}
+109	5	4	Аудит поступления техники	Создайте триггерную функцию log_equipment_addition() и триггер trg_after_equipment_insert на таблице equipment (AFTER INSERT FOR EACH ROW), который при добавлении новой техники записывает в таблицу equipment_audit строку с item_name (NEW.item_name) и added_at (CURRENT_DATE).	Триггерная функция должна иметь RETURNS TRIGGER, выполнять INSERT INTO equipment_audit (item_name, added_at) VALUES (NEW.item_name, CURRENT_DATE); RETURN NEW; а триггер: CREATE TRIGGER trg_after_equipment_insert AFTER INSERT ON equipment FOR EACH ROW EXECUTE FUNCTION log_equipment_addition();	CREATE OR REPLACE FUNCTION log_equipment_addition() RETURNS TRIGGER AS $$ BEGIN INSERT INTO equipment_audit (item_name, added_at) VALUES (NEW.item_name, CURRENT_DATE); RETURN NEW; END; $$ LANGUAGE plpgsql; CREATE TRIGGER trg_after_equipment_insert AFTER INSERT ON equipment FOR EACH ROW EXECUTE FUNCTION log_equipment_addition();	{"data": [["Тестовый образец"]], "mode": "ddl", "columns": ["item_name"], "test_query": "INSERT INTO equipment (id, unit_id, equipment_type, item_name, quantity, last_replenishment) VALUES (9999, 1, 'тест', 'Тестовый образец', 1, CURRENT_DATE); SELECT item_name FROM equipment_audit WHERE item_name = 'Тестовый образец';"}	{plpgsql,trigger,audit,mission5}
+110	5	5	Контроль возраста призыва	Создайте триггерную функцию validate_soldier_age() и триггер trg_before_soldier_insert на таблице soldier (BEFORE INSERT FOR EACH ROW), который проверяет возраст бойца: если EXTRACT(YEAR FROM NEW.enlistment_date) - NEW.birth_year < 16, вызывается ошибка RAISE EXCEPTION 'Возраст призывника не может быть меньше 16 лет'. В остальных случаях возвращается NEW.	В теле триггерной функции проверьте IF (EXTRACT(YEAR FROM NEW.enlistment_date) - NEW.birth_year) < 16 THEN RAISE EXCEPTION 'Возраст призывника не может быть меньше 16 лет'; END IF; RETURN NEW;	CREATE OR REPLACE FUNCTION validate_soldier_age() RETURNS TRIGGER AS $$ BEGIN IF (EXTRACT(YEAR FROM NEW.enlistment_date) - NEW.birth_year) < 16 THEN RAISE EXCEPTION 'Возраст призывника не может быть меньше 16 лет'; END IF; RETURN NEW; END; $$ LANGUAGE plpgsql; CREATE TRIGGER trg_before_soldier_insert BEFORE INSERT ON soldier FOR EACH ROW EXECUTE FUNCTION validate_soldier_age();	{"mode": "ddl", "test_query": "INSERT INTO soldier (id, full_name, birth_year, rank, branch, enlistment_city, enlistment_date) VALUES (9999, 'Малолетний боец', 1930, 'рядовой', 'пехота', 'Москва', '1941-01-01');", "expect_error": true}	{plpgsql,trigger,validation,mission5}
+51	1	23	Категории потерь под Сталинградом	Оцените потери советских войск в Сталинградской битве (с 17 июля 1942 по 2 февраля 1943 года). С помощью CTE выделите бойцов, проходивших службу в этот период, разделите потери на две категории: «Безвозвратные потери» (статус «убит» или «пропал без вести») и «Санитарные потери» (статус «ранен»), и объедините результаты через UNION ALL. Выведите категорию потерь (loss_category) и число солдат (soldiers_count).	Используйте CTE для выборки солдат, служивших в период Сталинградской битвы, и UNION ALL для объединения двух веток подсчёта.	WITH stalingrad_soldiers AS (\r\n    SELECT s.id, s.status\r\n    FROM soldier s\r\n    JOIN military_service ms ON s.id = ms.soldier_id\r\n    WHERE ms.start_date <= '1943-02-02'\r\n      AND (ms.end_date IS NULL OR ms.end_date >= '1942-07-17')\r\n),\r\nirrecoverable AS (\r\n    SELECT 'Безвозвратные потери' AS loss_category, COUNT(*) AS soldiers_count\r\n    FROM stalingrad_soldiers\r\n    WHERE status IN ('убит', 'пропал без вести')\r\n),\r\nsanitary AS (\r\n    SELECT 'Санитарные потери' AS loss_category, COUNT(*) AS soldiers_count\r\n    FROM stalingrad_soldiers\r\n    WHERE status = 'ранен'\r\n)\r\nSELECT loss_category, soldiers_count FROM irrecoverable\r\nUNION ALL\r\nSELECT loss_category, soldiers_count FROM sanitary;	{"data": [["Безвозвратные потери", 8], ["Санитарные потери", 6]], "columns": ["loss_category", "soldiers_count"], "row_count": 2}	{cte,union,medium}
+70	1	13	Путь солдата	Для проведения комплексного аудита материально-технического обеспечения выведите список выданного снаряжения с привязкой к бойцу и его воинской части. Выведите полное имя солдата (full_name), название подразделения (unit_name), наименование снаряжения (item_name), выданное количество (quantity) и дату выдачи (issue_date). Отсортируйте результат по ФИО солдата, а затем по дате выдачи.	Используйте цепочку INNER JOIN для 5 таблиц: soldier -> military_service -> military_unit, а также soldier -> equipment_assignment -> equipment.	SELECT s.full_name, u.unit_name, e.item_name, ea.quantity, ea.issue_date\r\nFROM soldier s\r\nJOIN military_service ms ON s.id = ms.soldier_id\r\nJOIN military_unit u ON ms.unit_id = u.id\r\nJOIN equipment_assignment ea ON s.id = ea.soldier_id\r\nJOIN equipment e ON ea.equipment_id = e.id\r\nORDER BY s.full_name, ea.issue_date;	{"data": [["Васнецова Татьяна Дмитриевна", "106-я стрелковая дивизия", "ПТРД", 1, "1944-03-01"], ["Громов Михаил Сергеевич", "2-я ударная армия", "Сапёрная лопатка", 1, "1943-08-15"], ["Жуков Андрей Григорьевич", "16-я воздушная армия", "Ил-2", 1, "1943-05-05"], ["Зайцева Людмила Михайловна", "150-я стрелковая дивизия", "БМ-13 \\"Катюша\\"", 120, "1944-01-20"], ["Иванов Алексей Петрович", "316-я стрелковая дивизия", "Винтовка Мосина", 1, "1942-03-02"], ["Иванов Алексей Петрович", "316-я стрелковая дивизия", "Патроны 7.62 мм", 120, "1942-03-02"], ["Козлов Николай Семёнович", "1-я гвардейская танковая армия", "Т-34", 1, "1943-07-10"], ["Кузнецов Пётр Васильевич", "1-я гвардейская танковая армия", "Радиостанция РБМ", 1, "1942-05-12"], ["Новиков Александр Иванович", "3-я воздушная армия", "ФАБ-100", 24, "1943-09-06"], ["Орлова Вера Павловна", "8-я гвардейская армия", "ИС-2", 1, "1944-10-02"], ["Павлов Яков Фёдорович", "62-я армия", "76-мм дивизионная пушка ЗИС-3", 1, "1942-11-15"], ["Смирнова Анна Васильевна", "62-я армия", "Аптечки полевые", 5, "1943-01-12"], ["Соколова Ольга Ивановна", "16-я воздушная армия", "Плазменные флаконы", 3, "1943-12-05"]], "columns": ["full_name", "unit_name", "item_name", "quantity", "issue_date"], "row_count": 13}	{join,medium}
+52	1	24	Рейтинг эффективности подразделений	Составьте рейтинг боевой эффективности воинских подразделений. Выведите название подразделения (unit_name), показатель боевой эффективности (combat_efficiency), а также два ранга: eff_rank с помощью функции RANK() и eff_dense_rank с помощью функции DENSE_RANK(), упорядоченные по убыванию эффективности. Исключите подразделения с неопределённой эффективностью. Отсортируйте результат по убыванию combat_efficiency, а при равенстве — по unit_name.	Примените RANK() OVER (ORDER BY combat_efficiency DESC) и DENSE_RANK() OVER (ORDER BY combat_efficiency DESC).	SELECT unit_name,\r\n       combat_efficiency,\r\n       RANK() OVER (ORDER BY combat_efficiency DESC) AS eff_rank,\r\n       DENSE_RANK() OVER (ORDER BY combat_efficiency DESC) AS eff_dense_rank\r\nFROM military_unit\r\nWHERE combat_efficiency IS NOT NULL\r\nORDER BY combat_efficiency DESC, unit_name;	{"data": [["8-я гвардейская армия", 98.5, 1, 1], ["150-я стрелковая дивизия", 97.8, 2, 2], ["46-й гвардейский ночной бомбардировочный полк", 96.7, 3, 3], ["37-й гвардейский миномётный полк", 96.5, 4, 4], ["101-й полк НКВД", 96.2, 5, 5], ["1-я гвардейская танковая армия", 95.0, 6, 6], ["585-й женский авиаполк", 94.1, 7, 7], ["64-я стрелковая дивизия", 92.4, 8, 8], ["62-я армия", 92.3, 9, 9], ["Отдельная медико-санитарная рота", 91.7, 10, 10], ["7-я гвардейская миномётная дивизия", 90.5, 11, 11], ["225-й отдельный инженерный батальон", 89.7, 12, 12], ["101-й инженерно-сапёрный батальон", 89.5, 13, 13], ["106-я стрелковая дивизия", 89.3, 14, 14], ["16-я воздушная армия", 88.9, 15, 15], ["369-й отдельный батальон морской пехоты", 88.9, 15, 15], ["18-я дивизия СС \\"Хорст Вессель\\"", 88.1, 17, 16], ["316-я стрелковая дивизия", 85.5, 18, 17], ["Отдельный батальон связи №45", 85.2, 19, 18], ["1-й отдельный чехословацкий батальон", 85.0, 20, 19], ["3-я воздушная армия", 85.0, 20, 19], ["1-я морская бригада", 82.4, 22, 20], ["Отдельный отряд собак-истребителей танков", 82.4, 22, 20], ["Отдельный отряд собак-миноискателей", 81.3, 24, 21], ["1-й чехословацкий отдельный батальон", 78.5, 25, 22], ["2-я ударная армия", 75.2, 26, 23], ["88-й отдельный лыжный батальон", 73.9, 27, 24], ["28-я дивизия народного ополчения", 69.8, 28, 25], ["101-й учебный полк", 68.3, 29, 26], ["14-я отдельная штрафная рота", 65.8, 30, 27]], "columns": ["unit_name", "combat_efficiency", "eff_rank", "eff_dense_rank"], "row_count": 30}	{window,ranking,medium}
+74	1	25	Хронология призыва в подразделения	Для каждого воинского подразделения определите порядок прибытия новобранцев. Выведите наименование подразделения (unit_name), ФИО солдата (full_name), дату начала службы (start_date) и порядковый номер бойца в части (recruit_order), вычисленный с помощью ROW_NUMBER() с разбиением по подразделению и упорядочиванием по дате службы (и s.id при совпадении). Отсортируйте итоговый результат по unit_name и recruit_order.	Используйте ROW_NUMBER() OVER (PARTITION BY u.id ORDER BY ms.start_date, s.id).	SELECT u.unit_name,\r\n       s.full_name,\r\n       ms.start_date,\r\n       ROW_NUMBER() OVER (PARTITION BY u.id ORDER BY ms.start_date, s.id) AS recruit_order\r\nFROM military_unit u\r\nJOIN military_service ms ON u.id = ms.unit_id\r\nJOIN soldier s ON ms.soldier_id = s.id\r\nORDER BY u.unit_name, recruit_order;	{"data": [["1-й отдельный чехословацкий батальон", "Белов Дмитрий Николаевич", "1942-05-25", 1], ["1-й отдельный чехословацкий батальон", "Воронцова Лидия Павловна", "1943-02-01", 2], ["1-й чехословацкий отдельный батальон", "Мельникова Галина Ивановна", "1942-10-01", 1], ["1-я гвардейская танковая армия", "Козлов Николай Семёнович", "1941-09-15", 1], ["1-я гвардейская танковая армия", "Кузнецов Пётр Васильевич", "1941-10-05", 2], ["1-я морская бригада", "Волкова Елена Сергеевна", "1943-09-20", 1], ["101-й инженерно-сапёрный батальон", "Морозова Анна Сергеевна", "1942-07-15", 1], ["101-й инженерно-сапёрный батальон", "Фролов Павел Сергеевич", "1944-06-15", 2], ["101-й полк НКВД", "Семёнова Валентина Михайловна", "1942-11-15", 1], ["101-й учебный полк", "Гришин Алексей Петрович", "1941-07-05", 1], ["106-я стрелковая дивизия", "Васнецова Татьяна Дмитриевна", "1943-11-10", 1], ["14-я отдельная штрафная рота", "Морозов Иван Кузьмич", "1942-08-05", 1], ["150-я стрелковая дивизия", "Зайцева Людмила Михайловна", "1943-02-01", 1], ["150-я стрелковая дивизия", "Белов Алексей Николаевич", "1944-05-01", 2], ["16-я воздушная армия", "Жуков Андрей Григорьевич", "1941-06-25", 1], ["16-я воздушная армия", "Соколова Ольга Ивановна", "1942-06-20", 2], ["18-я дивизия СС \\"Хорст Вессель\\"", "Жукова Елена Викторовна", "1942-11-15", 1], ["2-я ударная армия", "Громов Михаил Сергеевич", "1942-04-01", 1], ["225-й отдельный инженерный батальон", "Орлов Денис Сергеевич", "1944-08-10", 1], ["28-я дивизия народного ополчения", "Горбачёв Алексей Дмитриевич", "1943-08-01", 1], ["3-я воздушная армия", "Новиков Александр Иванович", "1944-09-01", 1], ["316-я стрелковая дивизия", "Иванов Алексей Петрович", "1941-08-05", 1], ["316-я стрелковая дивизия", "Фёдорова Мария Ивановна", "1943-09-01", 2], ["369-й отдельный батальон морской пехоты", "Ковалёв Сергей Николаевич", "1943-02-15", 1], ["37-й гвардейский миномётный полк", "Смирнов Василий Иванович", "1941-09-25", 1], ["46-й гвардейский ночной бомбардировочный полк", "Жуковский Виктор Михайлович", "1942-05-15", 1], ["46-й гвардейский ночной бомбардировочный полк", "Громова Екатерина Ивановна", "1943-03-05", 2], ["585-й женский авиаполк", "Фёдоров Игорь Васильевич", "1942-01-01", 1], ["62-я армия", "Петров Дмитрий Иванович", "1941-10-15", 1], ["62-я армия", "Смирнова Анна Васильевна", "1942-02-01", 2], ["62-я армия", "Павлов Яков Фёдорович", "1942-09-05", 3], ["64-я стрелковая дивизия", "Ткаченко Иван Григорьевич", "1941-08-20", 1], ["64-я стрелковая дивизия", "Соколовская Надежда Викторовна", "1941-10-20", 2], ["8-я гвардейская армия", "Орлова Вера Павловна", "1943-07-05", 1], ["88-й отдельный лыжный батальон", "Беляев Павел Дмитриевич", "1941-12-10", 1], ["Отдельная медико-санитарная рота", "Ткаченко Григорий Петрович", "1944-03-01", 1], ["Отдельный батальон связи №45", "Крылова Надежда Фёдоровна", "1943-04-20", 1], ["Отдельный отряд собак-истребителей танков", "Сидорова Екатерина Петровна", "1944-02-01", 1], ["Отдельный отряд собак-миноискателей", "Ковалёва Ольга Дмитриевна", "1942-09-10", 1], ["Отдельный отряд собак-миноискателей", "Кузнецов Артём Игоревич", "1943-02-10", 2]], "columns": ["unit_name", "full_name", "start_date", "recruit_order"], "row_count": 40}	{window,numbering,medium}
+59	2	7	Критический дефицит снаряжения	Для анализа состояния снабжения воинских подразделений необходимо выявить снаряжение, количество которого значительно отклоняется от среднего уровня по каждому типу. Для этого требуется рассчитать среднее количество и стандартное отклонение для каждого типа снаряжения (equipment_type) по всем подразделениям, а затем определить, в каких именно частях и какие конкретно предметы снаряжения находятся в дефиците. Каждая единица снаряжения должна быть классифицирована как «Критический дефицит», если её количество ниже среднего на полторы стандартные девиации (при наличии вариации STDDEV > 0), как «Дефицит», если количество ниже среднего, но не достигает уровня критического дефицита, и как «Норма» в остальных случаях. В результате должен быть выведен список всего снаряжения с указанием его типа (equipment_type), названия (item_name), названия подразделения (unit_name), количества (quantity) и статуса (status), отсортированный по типу снаряжения, возрастанию количества и названию предмета.	Примените оконные функции AVG(e.quantity) OVER (PARTITION BY e.equipment_type) и STDDEV(e.quantity) OVER (PARTITION BY e.equipment_type) в конструкции CASE.	SELECT e.equipment_type,\r\n       e.item_name,\r\n       mu.unit_name,\r\n       e.quantity,\r\n       CASE\r\n           WHEN STDDEV(e.quantity) OVER (PARTITION BY e.equipment_type) > 0 \r\n                AND e.quantity < AVG(e.quantity) OVER (PARTITION BY e.equipment_type) - 1.5 * STDDEV(e.quantity) OVER (PARTITION BY e.equipment_type) \r\n           THEN 'Критический дефицит'\r\n           WHEN e.quantity < AVG(e.quantity) OVER (PARTITION BY e.equipment_type) \r\n           THEN 'Дефицит'\r\n           ELSE 'Норма'\r\n       END AS status\r\nFROM equipment e\r\nLEFT JOIN military_unit mu ON e.unit_id = mu.id\r\nORDER BY e.equipment_type, e.quantity, e.item_name;	{"data": [["авиабомбы", "ФАБ-100", "3-я воздушная армия", 3200, "Норма"], ["артиллерия", "76-мм дивизионная пушка ЗИС-3", "62-я армия", 24, "Норма"], ["боеприпасы", "Патроны 7.62 мм", "7-я гвардейская миномётная дивизия", 20000, "Критический дефицит"], ["боеприпасы", "Патроны 7.62 мм", "Отдельная медико-санитарная рота", 30000, "Дефицит"], ["боеприпасы", "Патроны 7.62 мм", "585-й женский авиаполк", 40000, "Дефицит"], ["боеприпасы", "Патроны 7.62 мм", "316-я стрелковая дивизия", 50000, "Норма"], ["боеприпасы", "Патроны 7.62 мм", "37-й гвардейский миномётный полк", 50000, "Норма"], ["боеприпасы", "Патроны 7.62 мм", "62-я армия", 50000, "Норма"], ["боеприпасы", "Патроны 7.62 мм", "64-я стрелковая дивизия", 70000, "Норма"], ["инженерное", "Сапёрная лопатка", "2-я ударная армия", 850, "Норма"], ["медицина", "Аптечки полевые", "1-я морская бригада", 250, "Дефицит"], ["медицина", "Аптечки полевые", "Отдельная медико-санитарная рота", 250, "Дефицит"], ["медицина", "Аптечки полевые", "62-я армия", 350, "Норма"], ["медицина", "Плазменные флаконы", "62-я армия", 480, "Норма"], ["миномёты", "БМ-13 \\"Катюша\\"", "150-я стрелковая дивизия", 12, "Дефицит"], ["миномёты", "82-мм", "1-я морская бригада", 930, "Норма"], ["миномёты", "50-мм", "1-я морская бригада", 1326, "Норма"], ["оружие", "Винтовка Мосина", "316-я стрелковая дивизия", 1200, "Норма"], ["противотанковые", "ПТРД", "106-я стрелковая дивизия", 68, "Норма"], ["реактивные снаряды", "М-31", "7-я гвардейская миномётная дивизия", 1500, "Норма"], ["самолёты", "Ил-2", "16-я воздушная армия", 45, "Норма"], ["связь", "Радиостанция РБМ", "316-я стрелковая дивизия", 15, "Норма"], ["танки", "ИС-2", "8-я гвардейская армия", 42, "Дефицит"], ["танки", "Т-34", "1-я гвардейская танковая армия", 58, "Норма"]], "columns": ["equipment_type", "item_name", "unit_name", "quantity", "status"], "row_count": 24}	{window,statistics,hard}
+11	0	10	Исключение стрелковых частей	Выведите названия подразделений, не относящихся к стрелковым (не содержащих слово «стрелков» в названии). Это важно для анализа структуры войск	Используйте `NOT LIKE '%стрелков%'` для исключения стрелковых частей	SELECT unit_name FROM military_unit WHERE unit_name NOT LIKE '%стрелков%';	{"data": [["62-я армия"], ["1-я гвардейская танковая армия"], ["16-я воздушная армия"], ["7-я гвардейская миномётная дивизия"], ["2-я ударная армия"], ["8-я гвардейская армия"], ["3-я воздушная армия"], ["14-я отдельная штрафная рота"], ["1-я морская бригада"], ["Отдельная медико-санитарная рота"], ["88-й отдельный лыжный батальон"], ["101-й полк НКВД"], ["369-й отдельный батальон морской пехоты"], ["1-й чехословацкий отдельный батальон"], ["585-й женский авиаполк"], ["28-я дивизия народного ополчения"], ["Отдельный отряд собак-истребителей танков"], ["37-й гвардейский миномётный полк"], ["Отдельный батальон связи №45"], ["225-й отдельный инженерный батальон"], ["18-я дивизия СС \\"Хорст Вессель\\""], ["101-й учебный полк"], ["1-й отдельный чехословацкий батальон"], ["46-й гвардейский ночной бомбардировочный полк"], ["101-й инженерно-сапёрный батальон"], ["Отдельный отряд собак-миноискателей"]], "columns": ["unit_name"], "row_count": 26}	{easy,like}
+48	1	20	Годовая динамика ранений	Проанализируйте динамику ранений бойцов по годам окончания службы. С помощью CTE определите год окончания службы (year) и количество раненых солдат (wounded_count, статус «ранен»), а затем с помощью оконной функции рассчитайте общее среднее число раненых в год (avg_wounded, округлите до 2 знаков). Отсортируйте результат по году.	Сначала сформируйте CTE с группировкой раненых бойцов по годам ms.end_date, затем примените ROUND(AVG(wounded_count) OVER (), 2)::float в основном запросе.	WITH yearly_wounded AS (\r\n    SELECT EXTRACT(YEAR FROM ms.end_date)::int AS year,\r\n           COUNT(*) AS wounded_count\r\n    FROM soldier s\r\n    JOIN military_service ms ON s.id = ms.soldier_id\r\n    WHERE s.status = 'ранен' AND ms.end_date IS NOT NULL\r\n    GROUP BY EXTRACT(YEAR FROM ms.end_date)\r\n)\r\nSELECT year,\r\n       wounded_count,\r\n       ROUND(AVG(wounded_count) OVER (), 2)::float AS avg_wounded\r\nFROM yearly_wounded\r\nORDER BY year;	{"data": [[1943, 3, 2.33], [1944, 3, 2.33], [1945, 1, 2.33]], "columns": ["year", "wounded_count", "avg_wounded"], "row_count": 3}	{cte,window,medium}
+50	1	22	Силы противника на Курской дуге	Определите подразделения противника, принимавшие участие в сражении на Курской дуге. Для этого с помощью CTE найдите идентификатор битвы, содержащей в названии «Курск», соедините таблицы enemy_unit и battle_enemy_unit и выведите наименования частей противника (unit_name). Отсортируйте по названию части.	Используйте CTE для поиска битвы Курской дуги по названию (battle_name ILIKE '%Курск%') и свяжите с battle_enemy_unit и enemy_unit.	WITH target_battle AS (\r\n    SELECT id FROM battle WHERE battle_name ILIKE '%Курск%'\r\n)\r\nSELECT eu.unit_name\r\nFROM enemy_unit eu\r\nJOIN battle_enemy_unit beu ON eu.id = beu.enemy_unit_id\r\nWHERE beu.battle_id IN (SELECT id FROM target_battle)\r\nORDER BY eu.unit_name;	{"data": [["12-я танковая дивизия"], ["337-я пехотная дивизия"], ["503-й тяжёлый танковый батальон"], ["505-й инженерный батальон"], ["505-й тяжёлый танковый батальон"], ["Танковая группа \\"Кемпф\\""], ["Эскадра KG27 \\"Бёльке\\""], ["Эскадра SG2 \\"Иммельман\\""]], "columns": ["unit_name"], "row_count": 8}	{cte,join,medium}
+83	2	11	Сезонность боевых действий	Для выявления сезонных закономерностей в боевых действиях проанализируйте все 12 месяцев года. Сгенерируйте календарь месяцев от 1 до 12 с их названиями. Подсчитайте общее количество завершившихся сражений (total_battles по end_date) и долю побед советских войск (win_percentage, округлённую до 1 знака после запятой) для каждого месяца. Победами считаются битвы с исходами, свидетельствующими об успехе СССР (содержащими корни «побед», «успеш», «освобожд», «разгром», «взятие», «капитуляц» и не относящимися к победам вермахта). Если в месяце не было боев, выведите 0 боев и 0.0% побед. Выведите month_num, month_name, total_battles, win_percentage с сортировкой по номеру месяца.	Используйте generate_series(1, 12) для создания сетки месяцев и объедините через LEFT JOIN с группировкой битв по EXTRACT(MONTH FROM end_date).	WITH all_months AS (\r\n    SELECT m AS month_num,\r\n           TRIM(TO_CHAR(TO_DATE(m::text, 'MM'), 'Month')) AS month_name\r\n    FROM generate_series(1, 12) m\r\n),\r\nmonthly_battles AS (\r\n    SELECT EXTRACT(MONTH FROM end_date)::int AS month_num,\r\n           COUNT(*) AS total_battles,\r\n           COUNT(*) FILTER (WHERE result ~* '(побед|успеш|освобожд|разгром|взятие|капитуляц)' AND result !~* 'вермахт') AS victories\r\n    FROM battle\r\n    GROUP BY EXTRACT(MONTH FROM end_date)::int\r\n)\r\nSELECT am.month_num,\r\n       am.month_name,\r\n       COALESCE(mb.total_battles, 0)::int AS total_battles,\r\n       COALESCE(ROUND(mb.victories * 100.0 / NULLIF(mb.total_battles, 0), 1)::float, 0.0) AS win_percentage\r\nFROM all_months am\r\nLEFT JOIN monthly_battles mb ON am.month_num = mb.month_num\r\nORDER BY am.month_num;	{"data": [[1, "January", 3, 33.3], [2, "February", 4, 50.0], [3, "March", 2, 0.0], [4, "April", 2, 50.0], [5, "May", 5, 60.0], [6, "June", 2, 0.0], [7, "July", 1, 0.0], [8, "August", 3, 66.7], [9, "September", 2, 50.0], [10, "October", 3, 33.3], [11, "November", 0, 0.0], [12, "December", 3, 33.3]], "columns": ["month_num", "month_name", "total_battles", "win_percentage"], "row_count": 12}	{cte,calendar,hard}
+46	1	19	Накопление резервов призыва	Для оценки темпов мобилизации рассчитайте общее количество призывников по годам и нарастающий итог призыва по годам. Выведите год призыва (year), число призванных в этом году (yearly_enlisted) и накопленный итог призыва за все предшествующие и текущий годы (cumulative_enlisted). Отсортируйте по году.	Используйте оконную агрегацию SUM(COUNT(*)) OVER (ORDER BY EXTRACT(YEAR FROM enlistment_date)) поверх группировки по годам.	SELECT EXTRACT(YEAR FROM enlistment_date)::int AS year,\r\n       COUNT(*) AS yearly_enlisted,\r\n       SUM(COUNT(*)) OVER (ORDER BY EXTRACT(YEAR FROM enlistment_date))::int AS cumulative_enlisted\r\nFROM soldier\r\nGROUP BY EXTRACT(YEAR FROM enlistment_date)\r\nORDER BY year;	{"data": [[1941, 13, 13], [1942, 10, 23], [1943, 11, 34], [1944, 6, 40]], "columns": ["year", "yearly_enlisted", "cumulative_enlisted"], "row_count": 4}	{window,aggregation,medium}
+\.
+
+
+--
+-- Data for Name: tasks_solved; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.tasks_solved (user_id, task_global_id, solved_at) FROM stdin;
+5	1	2026-09-08
+5	2	2026-09-08
+7	1	2026-09-08
+7	2	2026-09-08
+5	4	2026-09-08
+7	4	2026-09-08
+5	5	2026-09-08
+7	5	2026-09-08
+5	7	2026-09-08
+5	8	2026-09-08
+5	9	2026-09-08
+5	10	2026-09-08
+5	11	2026-09-08
+5	12	2026-09-08
+5	13	2026-09-08
+9	1	2026-09-08
+9	2	2026-09-08
+9	4	2026-09-08
+9	5	2026-09-08
+9	7	2026-09-08
+9	8	2026-09-08
+9	9	2026-09-08
+9	10	2026-09-08
+9	11	2026-09-08
+9	12	2026-09-08
+9	13	2026-09-08
+9	15	2026-09-08
+9	3	2026-09-08
+9	17	2026-09-08
+9	14	2026-09-08
+9	27	2026-09-08
+9	30	2026-09-08
+9	34	2026-09-08
+9	19	2026-09-08
+9	21	2026-09-08
+9	22	2026-09-08
+9	26	2026-09-08
+9	31	2026-09-08
+9	16	2026-09-08
+9	18	2026-09-08
+9	24	2026-09-08
+9	28	2026-09-08
+9	25	2026-09-08
+9	29	2026-09-08
+9	23	2026-09-08
+9	20	2026-09-08
+7	7	2026-09-08
+7	8	2026-09-08
+9	6	2026-09-08
+7	9	2026-09-08
+7	10	2026-09-08
+7	11	2026-09-08
+7	12	2026-09-08
+7	13	2026-09-08
+7	15	2026-09-08
+7	3	2026-09-08
+7	16	2026-09-08
+7	17	2026-09-08
+7	18	2026-09-08
+7	19	2026-09-08
+7	20	2026-09-08
+7	21	2026-09-08
+7	22	2026-09-08
+7	23	2026-09-08
+7	26	2026-09-09
+7	27	2026-09-09
+7	28	2026-09-09
+7	29	2026-09-09
+12	1	2026-09-09
+10	1	2026-09-09
+10	2	2026-09-09
+11	1	2026-09-09
+16	1	2026-09-09
+17	1	2026-09-09
+11	2	2026-09-09
+15	1	2026-09-09
+13	1	2026-09-09
+16	4	2026-09-09
+19	1	2026-09-09
+18	1	2026-09-09
+16	5	2026-09-09
+13	2	2026-09-09
+17	4	2026-09-09
+12	4	2026-09-09
+12	5	2026-09-09
+17	5	2026-09-09
+19	2	2026-09-09
+18	2	2026-09-09
+15	2	2026-09-09
+16	7	2026-09-09
+14	1	2026-09-09
+12	7	2026-09-09
+16	8	2026-09-09
+12	8	2026-09-09
+16	9	2026-09-09
+17	7	2026-09-09
+12	9	2026-09-09
+16	10	2026-09-09
+12	10	2026-09-09
+16	11	2026-09-09
+12	11	2026-09-09
+17	8	2026-09-09
+16	12	2026-09-09
+12	12	2026-09-09
+17	9	2026-09-09
+15	4	2026-09-09
+17	10	2026-09-09
+17	11	2026-09-09
+17	12	2026-09-09
+14	2	2026-09-09
+13	5	2026-09-09
+17	13	2026-09-09
+15	5	2026-09-09
+16	15	2026-09-09
+17	15	2026-09-09
+12	15	2026-09-09
+16	16	2026-09-09
+20	1	2026-09-09
+17	18	2026-09-09
+12	18	2026-09-09
+18	4	2026-09-09
+16	21	2026-09-09
+19	4	2026-09-09
+12	19	2026-09-09
+17	19	2026-09-09
+16	22	2026-09-09
+20	2	2026-09-09
+14	4	2026-09-09
+18	5	2026-09-09
+13	4	2026-09-09
+16	18	2026-09-09
+16	17	2026-09-09
+19	5	2026-09-09
+15	7	2026-09-09
+12	21	2026-09-09
+12	13	2026-09-09
+17	21	2026-09-09
+16	13	2026-09-09
+12	16	2026-09-09
+17	16	2026-09-09
+16	19	2026-09-09
+14	5	2026-09-09
+13	7	2026-09-09
+12	17	2026-09-09
+17	17	2026-09-09
+15	8	2026-09-09
+16	3	2026-09-09
+15	9	2026-09-09
+17	3	2026-09-09
+12	3	2026-09-09
+16	2	2026-09-09
+15	10	2026-09-09
+13	8	2026-09-09
+12	2	2026-09-09
+17	2	2026-09-09
+13	10	2026-09-09
+13	9	2026-09-09
+13	11	2026-09-09
+15	11	2026-09-09
+15	12	2026-09-09
+15	13	2026-09-09
+20	4	2026-09-09
+10	4	2026-09-09
+11	4	2026-09-09
+10	5	2026-09-09
+20	5	2026-09-09
+14	7	2026-09-09
+15	15	2026-09-09
+14	8	2026-09-09
+14	9	2026-09-09
+15	3	2026-09-09
+14	10	2026-09-09
+15	16	2026-09-09
+15	17	2026-09-09
+14	11	2026-09-09
+15	18	2026-09-09
+14	12	2026-09-09
+16	20	2026-09-09
+5	15	2026-09-09
+15	19	2026-09-09
+12	20	2026-09-09
+14	13	2026-09-09
+5	3	2026-09-09
+5	16	2026-09-09
+17	20	2026-09-09
+20	7	2026-09-09
+5	17	2026-09-09
+5	18	2026-09-09
+16	34	2026-09-09
+12	22	2026-09-09
+17	22	2026-09-09
+11	5	2026-09-09
+16	23	2026-09-09
+15	21	2026-09-09
+12	23	2026-09-09
+17	23	2026-09-09
+10	7	2026-09-09
+14	15	2026-09-09
+10	8	2026-09-09
+10	9	2026-09-09
+20	8	2026-09-09
+10	10	2026-09-09
+10	11	2026-09-09
+10	12	2026-09-09
+20	9	2026-09-09
+12	26	2026-09-09
+16	26	2026-09-09
+17	26	2026-09-09
+16	27	2026-09-09
+12	27	2026-09-09
+10	13	2026-09-09
+17	27	2026-09-09
+16	28	2026-09-09
+12	28	2026-09-09
+20	10	2026-09-09
+17	28	2026-09-09
+20	11	2026-09-09
+15	27	2026-09-09
+21	1	2026-09-09
+21	2	2026-09-09
+13	12	2026-09-09
+13	13	2026-09-09
+5	19	2026-09-09
+5	20	2026-09-09
+21	4	2026-09-09
+22	1	2026-09-09
+21	5	2026-09-09
+22	2	2026-09-09
+14	16	2026-09-09
+14	17	2026-09-09
+14	18	2026-09-09
+14	19	2026-09-09
+22	4	2026-09-09
+19	6	2026-09-09
+19	7	2026-09-09
+14	22	2026-09-09
+14	20	2026-09-09
+14	23	2026-09-09
+5	21	2026-09-09
+5	22	2026-09-09
+5	23	2026-09-09
+15	29	2026-09-10
+15	30	2026-09-10
+24	1	2026-09-10
+24	2	2026-09-10
+26	1	2026-09-10
+28	1	2026-09-10
+27	1	2026-09-10
+28	2	2026-09-10
+25	1	2026-09-10
+24	5	2026-09-10
+26	2	2026-09-10
+27	2	2026-09-10
+25	2	2026-09-10
+24	7	2026-09-10
+24	8	2026-09-10
+24	9	2026-09-10
+28	5	2026-09-10
+24	10	2026-09-10
+24	11	2026-09-10
+24	12	2026-09-10
+28	7	2026-09-10
+28	8	2026-09-10
+28	9	2026-09-10
+28	10	2026-09-10
+25	4	2026-09-10
+26	4	2026-09-10
+28	11	2026-09-10
+12	30	2026-09-10
+12	31	2026-09-10
+12	34	2026-09-10
+12	37	2026-09-10
+13	15	2026-09-10
+13	3	2026-09-10
+13	16	2026-09-10
+13	17	2026-09-10
+13	18	2026-09-10
+13	19	2026-09-10
+13	22	2026-09-10
+13	21	2026-09-10
+14	27	2026-09-10
+14	28	2026-09-10
+20	12	2026-09-10
+20	13	2026-09-10
+14	30	2026-09-10
+21	7	2026-09-10
+21	8	2026-09-10
+14	34	2026-09-10
+21	9	2026-09-10
+21	10	2026-09-10
+21	11	2026-09-10
+21	12	2026-09-10
+21	13	2026-09-10
+7	30	2026-09-10
+21	15	2026-09-10
+21	17	2026-09-10
+21	18	2026-09-10
+21	19	2026-09-10
+21	27	2026-09-10
+7	31	2026-09-10
+7	34	2026-09-10
+30	1	2026-09-10
+30	2	2026-09-10
+7	37	2026-09-10
+30	4	2026-09-10
+30	5	2026-09-10
+5	6	2026-09-10
+30	6	2026-09-10
+30	7	2026-09-10
+30	8	2026-09-10
+30	9	2026-09-10
+30	10	2026-09-10
+30	11	2026-09-10
+30	12	2026-09-10
+30	13	2026-09-10
+30	15	2026-09-10
+5	14	2026-09-10
+30	3	2026-09-10
+30	16	2026-09-10
+30	17	2026-09-10
+30	18	2026-09-10
+30	19	2026-09-10
+5	24	2026-09-10
+5	25	2026-09-10
+22	5	2026-09-10
+5	26	2026-09-10
+14	37	2026-09-10
+5	27	2026-09-10
+5	28	2026-09-10
+5	29	2026-09-10
+5	30	2026-09-10
+14	63	2026-09-10
+14	40	2026-09-10
+14	64	2026-09-11
+32	1	2026-09-11
+32	2	2026-09-11
+32	4	2026-09-11
+14	77	2026-09-11
+5	31	2026-09-11
+5	34	2026-09-11
+19	8	2026-09-11
+19	9	2026-09-11
+19	10	2026-09-11
+19	11	2026-09-11
+19	12	2026-09-11
+19	13	2026-09-11
+20	15	2026-09-11
+20	3	2026-09-11
+20	16	2026-09-11
+20	17	2026-09-11
+20	19	2026-09-11
+17	30	2026-09-11
+17	31	2026-09-11
+17	34	2026-09-11
+20	21	2026-09-11
+20	26	2026-09-11
+20	27	2026-09-11
+20	34	2026-09-12
+36	1	2026-09-12
+37	1	2026-09-12
+35	1	2026-09-12
+35	2	2026-09-12
+36	2	2026-09-12
+37	2	2026-09-12
+35	5	2026-09-12
+38	1	2026-09-12
+39	1	2026-09-12
+36	4	2026-09-12
+38	2	2026-09-12
+39	2	2026-09-12
+39	5	2026-09-12
+37	4	2026-09-12
+38	4	2026-09-12
+35	7	2026-09-12
+35	8	2026-09-12
+35	9	2026-09-12
+38	5	2026-09-12
+35	10	2026-09-12
+36	5	2026-09-12
+37	5	2026-09-12
+35	11	2026-09-12
+39	4	2026-09-12
+35	12	2026-09-12
+35	13	2026-09-12
+35	15	2026-09-12
+35	3	2026-09-12
+35	17	2026-09-12
+35	18	2026-09-12
+40	1	2026-09-12
+35	19	2026-09-12
+38	7	2026-09-12
+40	2	2026-09-12
+38	8	2026-09-12
+41	1	2026-09-12
+38	9	2026-09-12
+38	10	2026-09-12
+41	2	2026-09-12
+39	7	2026-09-12
+38	11	2026-09-12
+39	8	2026-09-12
+37	7	2026-09-12
+36	7	2026-09-12
+38	12	2026-09-12
+39	9	2026-09-12
+40	4	2026-09-12
+38	13	2026-09-12
+36	8	2026-09-12
+39	10	2026-09-12
+37	8	2026-09-12
+36	9	2026-09-12
+37	9	2026-09-12
+36	10	2026-09-12
+37	10	2026-09-12
+37	11	2026-09-12
+36	11	2026-09-12
+40	5	2026-09-12
+37	12	2026-09-12
+36	12	2026-09-12
+37	13	2026-09-12
+39	11	2026-09-12
+36	13	2026-09-12
+35	22	2026-09-12
+38	15	2026-09-12
+39	12	2026-09-12
+39	13	2026-09-12
+7	63	2026-09-12
+41	4	2026-09-12
+39	15	2026-09-12
+39	3	2026-09-12
+38	16	2026-09-12
+39	16	2026-09-12
+38	17	2026-09-12
+39	17	2026-09-12
+41	5	2026-09-12
+41	7	2026-09-12
+41	8	2026-09-12
+41	9	2026-09-12
+38	18	2026-09-12
+38	19	2026-09-12
+32	5	2026-09-12
+38	20	2026-09-12
+38	23	2026-09-12
+32	7	2026-09-12
+32	8	2026-09-12
+32	9	2026-09-12
+32	10	2026-09-12
+32	11	2026-09-12
+32	12	2026-09-12
+32	13	2026-09-12
+14	6	2026-09-12
+40	7	2026-09-12
+40	8	2026-09-12
+40	9	2026-09-12
+14	3	2026-09-12
+14	21	2026-09-12
+14	24	2026-09-12
+42	1	2026-09-12
+42	2	2026-09-12
+32	15	2026-09-12
+32	3	2026-09-12
+18	6	2026-09-12
+32	16	2026-09-12
+18	7	2026-09-12
+42	4	2026-09-12
+42	5	2026-09-12
+18	8	2026-09-12
+18	9	2026-09-12
+18	10	2026-09-12
+42	7	2026-09-12
+42	8	2026-09-12
+18	11	2026-09-12
+42	9	2026-09-12
+42	10	2026-09-12
+42	11	2026-09-12
+18	12	2026-09-12
+42	12	2026-09-12
+16	58	2026-09-12
+42	13	2026-09-12
+18	13	2026-09-12
+42	15	2026-09-12
+43	1	2026-09-12
+42	3	2026-09-12
+42	17	2026-09-12
+42	18	2026-09-12
+18	14	2026-09-12
+42	20	2026-09-12
+43	2	2026-09-12
+32	17	2026-09-13
+32	18	2026-09-13
+32	19	2026-09-13
+32	20	2026-09-13
+32	22	2026-09-13
+32	28	2026-09-13
+34	1	2026-09-13
+42	21	2026-09-13
+42	22	2026-09-13
+34	2	2026-09-13
+42	23	2026-09-13
+34	4	2026-09-13
+34	5	2026-09-13
+42	27	2026-09-13
+42	28	2026-09-13
+42	30	2026-09-13
+34	7	2026-09-13
+34	8	2026-09-13
+34	9	2026-09-13
+34	10	2026-09-13
+32	23	2026-09-13
+34	11	2026-09-13
+34	12	2026-09-13
+32	27	2026-09-13
+34	13	2026-09-13
+19	14	2026-09-13
+19	15	2026-09-13
+19	3	2026-09-13
+19	16	2026-09-13
+19	17	2026-09-13
+19	18	2026-09-13
+19	19	2026-09-13
+34	15	2026-09-13
+34	3	2026-09-13
+34	16	2026-09-13
+34	17	2026-09-13
+34	18	2026-09-13
+34	19	2026-09-13
+44	1	2026-09-13
+34	20	2026-09-13
+34	22	2026-09-13
+39	18	2026-09-14
+39	19	2026-09-14
+39	20	2026-09-14
+41	10	2026-09-14
+39	21	2026-09-14
+39	22	2026-09-14
+41	11	2026-09-14
+41	12	2026-09-14
+41	13	2026-09-14
+41	14	2026-09-14
+41	15	2026-09-14
+39	23	2026-09-14
+10	15	2026-09-14
+10	3	2026-09-14
+10	16	2026-09-14
+10	17	2026-09-14
+10	18	2026-09-14
+10	19	2026-09-14
+10	21	2026-09-14
+11	7	2026-09-14
+11	8	2026-09-14
+11	9	2026-09-14
+11	10	2026-09-14
+11	12	2026-09-14
+11	11	2026-09-14
+10	22	2026-09-14
+11	13	2026-09-14
+10	23	2026-09-14
+11	15	2026-09-14
+11	3	2026-09-14
+11	16	2026-09-14
+11	17	2026-09-14
+11	18	2026-09-14
+10	26	2026-09-14
+11	19	2026-09-14
+10	27	2026-09-14
+10	28	2026-09-14
+11	20	2026-09-14
+10	30	2026-09-14
+11	21	2026-09-14
+10	34	2026-09-14
+14	41	2026-09-14
+14	67	2026-09-14
+14	69	2026-09-14
+14	76	2026-09-14
+14	70	2026-09-14
+14	71	2026-09-14
+48	1	2026-09-15
+48	2	2026-09-15
+14	43	2026-09-15
+35	30	2026-09-15
+48	4	2026-09-15
+48	5	2026-09-15
+35	34	2026-09-15
+14	44	2026-09-15
+48	7	2026-09-15
+48	8	2026-09-15
+48	9	2026-09-15
+48	10	2026-09-15
+48	11	2026-09-15
+14	72	2026-09-15
+41	3	2026-09-15
+41	16	2026-09-15
+41	17	2026-09-15
+13	27	2026-09-15
+41	18	2026-09-15
+41	19	2026-09-15
+13	29	2026-09-15
+13	30	2026-09-15
+13	34	2026-09-15
+43	5	2026-09-15
+41	21	2026-09-15
+41	22	2026-09-15
+49	1	2026-09-15
+49	2	2026-09-15
+43	7	2026-09-15
+49	4	2026-09-15
+43	8	2026-09-15
+43	9	2026-09-15
+43	10	2026-09-15
+43	11	2026-09-15
+43	12	2026-09-15
+43	13	2026-09-15
+43	15	2026-09-15
+43	16	2026-09-15
+43	17	2026-09-15
+43	21	2026-09-15
+47	1	2026-09-16
+47	2	2026-09-16
+33	1	2026-09-16
+33	2	2026-09-16
+33	4	2026-09-16
+33	5	2026-09-16
+33	7	2026-09-16
+33	8	2026-09-16
+33	9	2026-09-16
+33	10	2026-09-16
+55	1	2026-09-16
+62	1	2026-09-16
+33	11	2026-09-16
+62	2	2026-09-16
+33	12	2026-09-16
+47	4	2026-09-16
+55	2	2026-09-16
+33	13	2026-09-16
+53	1	2026-09-16
+47	5	2026-09-16
+33	15	2026-09-16
+33	3	2026-09-16
+33	16	2026-09-16
+18	15	2026-09-16
+53	2	2026-09-16
+18	3	2026-09-16
+33	17	2026-09-16
+18	16	2026-09-16
+53	4	2026-09-16
+34	23	2026-09-16
+18	17	2026-09-16
+33	18	2026-09-16
+53	5	2026-09-16
+18	18	2026-09-16
+18	19	2026-09-16
+34	27	2026-09-16
+43	18	2026-09-16
+34	28	2026-09-16
+43	19	2026-09-16
+18	20	2026-09-16
+18	21	2026-09-16
+18	22	2026-09-16
+43	27	2026-09-16
+43	26	2026-09-16
+43	3	2026-09-16
+43	22	2026-09-16
+55	5	2026-09-16
+55	7	2026-09-16
+45	1	2026-09-16
+45	2	2026-09-16
+45	5	2026-09-16
+45	7	2026-09-16
+45	8	2026-09-16
+45	9	2026-09-16
+45	10	2026-09-16
+45	11	2026-09-16
+45	12	2026-09-16
+45	13	2026-09-16
+25	5	2026-09-16
+45	15	2026-09-16
+26	5	2026-09-16
+45	3	2026-09-16
+45	16	2026-09-16
+45	17	2026-09-16
+45	18	2026-09-16
+45	19	2026-09-16
+26	8	2026-09-16
+26	7	2026-09-16
+26	9	2026-09-16
+26	10	2026-09-16
+26	11	2026-09-16
+26	12	2026-09-16
+26	13	2026-09-16
+25	7	2026-09-16
+25	8	2026-09-16
+25	9	2026-09-16
+25	10	2026-09-16
+25	11	2026-09-16
+25	12	2026-09-16
+25	13	2026-09-16
+25	15	2026-09-17
+22	7	2026-09-17
+26	15	2026-09-17
+26	3	2026-09-17
+25	3	2026-09-17
+26	16	2026-09-17
+22	8	2026-09-17
+22	9	2026-09-17
+22	10	2026-09-17
+25	16	2026-09-17
+38	3	2026-09-17
+38	21	2026-09-17
+26	18	2026-09-17
+25	18	2026-09-17
+62	5	2026-09-17
+39	26	2026-09-17
+38	22	2026-09-17
+39	27	2026-09-17
+25	19	2026-09-17
+47	7	2026-09-17
+26	19	2026-09-17
+62	7	2026-09-17
+47	8	2026-09-17
+62	8	2026-09-17
+39	28	2026-09-17
+47	9	2026-09-17
+62	9	2026-09-17
+62	10	2026-09-17
+47	10	2026-09-17
+7	64	2026-09-17
+22	12	2026-09-17
+47	11	2026-09-17
+62	11	2026-09-17
+64	1	2026-09-17
+39	34	2026-09-17
+38	26	2026-09-17
+47	12	2026-09-17
+62	12	2026-09-17
+64	2	2026-09-17
+64	4	2026-09-17
+38	27	2026-09-17
+64	5	2026-09-17
+65	1	2026-09-17
+24	13	2026-09-17
+64	7	2026-09-17
+22	15	2026-09-17
+64	8	2026-09-17
+38	28	2026-09-17
+66	1	2026-09-17
+26	21	2026-09-17
+25	21	2026-09-17
+65	2	2026-09-17
+64	9	2026-09-17
+47	15	2026-09-17
+62	15	2026-09-17
+66	2	2026-09-17
+22	3	2026-09-17
+24	15	2026-09-17
+64	10	2026-09-17
+47	3	2026-09-17
+62	3	2026-09-17
+22	16	2026-09-17
+24	17	2026-09-17
+47	16	2026-09-17
+38	34	2026-09-17
+65	5	2026-09-17
+48	12	2026-09-17
+22	17	2026-09-17
+22	18	2026-09-17
+36	15	2026-09-17
+48	13	2026-09-17
+64	12	2026-09-17
+64	13	2026-09-17
+24	18	2026-09-17
+65	7	2026-09-17
+64	15	2026-09-17
+45	21	2026-09-17
+64	3	2026-09-17
+65	8	2026-09-17
+48	14	2026-09-17
+68	1	2026-09-17
+48	15	2026-09-17
+67	1	2026-09-17
+65	9	2026-09-17
+47	17	2026-09-17
+48	3	2026-09-17
+48	16	2026-09-17
+68	2	2026-09-17
+64	17	2026-09-17
+66	5	2026-09-17
+47	18	2026-09-17
+48	17	2026-09-17
+65	10	2026-09-17
+48	18	2026-09-17
+24	16	2026-09-17
+48	19	2026-09-17
+45	22	2026-09-17
+24	3	2026-09-17
+33	19	2026-09-17
+47	19	2026-09-17
+64	16	2026-09-17
+64	18	2026-09-17
+67	2	2026-09-17
+48	20	2026-09-17
+65	11	2026-09-17
+68	4	2026-09-17
+64	19	2026-09-17
+65	12	2026-09-17
+48	21	2026-09-17
+48	22	2026-09-17
+35	16	2026-09-17
+65	15	2026-09-17
+48	23	2026-09-17
+36	16	2026-09-17
+68	5	2026-09-17
+48	24	2026-09-17
+65	3	2026-09-17
+33	21	2026-09-17
+48	25	2026-09-17
+65	16	2026-09-17
+41	25	2026-09-17
+48	26	2026-09-17
+48	27	2026-09-17
+33	20	2026-09-17
+48	28	2026-09-17
+41	26	2026-09-17
+41	27	2026-09-17
+65	17	2026-09-17
+65	4	2026-09-17
+65	13	2026-09-17
+65	14	2026-09-17
+62	16	2026-09-17
+67	4	2026-09-17
+48	29	2026-09-17
+65	18	2026-09-17
+41	28	2026-09-17
+62	17	2026-09-17
+67	5	2026-09-17
+33	22	2026-09-17
+62	18	2026-09-17
+48	30	2026-09-17
+65	19	2026-09-17
+48	31	2026-09-17
+41	29	2026-09-17
+48	34	2026-09-17
+62	19	2026-09-17
+33	23	2026-09-17
+22	19	2026-09-17
+22	21	2026-09-17
+7	70	2026-09-17
+48	6	2026-09-17
+65	21	2026-09-17
+41	30	2026-09-17
+41	31	2026-09-17
+65	22	2026-09-17
+41	34	2026-09-17
+47	21	2026-09-17
+22	22	2026-09-17
+33	26	2026-09-17
+33	27	2026-09-17
+32	30	2026-09-17
+33	28	2026-09-17
+47	22	2026-09-17
+67	6	2026-09-17
+33	30	2026-09-17
+33	31	2026-09-17
+33	34	2026-09-17
+53	6	2026-09-17
+67	7	2026-09-17
+53	7	2026-09-17
+62	20	2026-09-17
+53	8	2026-09-17
+49	5	2026-09-17
+67	8	2026-09-17
+53	9	2026-09-17
+67	9	2026-09-17
+53	10	2026-09-17
+53	11	2026-09-17
+32	34	2026-09-17
+67	10	2026-09-17
+53	12	2026-09-17
+34	30	2026-09-17
+67	11	2026-09-17
+34	34	2026-09-17
+67	12	2026-09-17
+53	13	2026-09-17
+15	22	2026-09-17
+67	13	2026-09-17
+22	27	2026-09-17
+53	14	2026-09-17
+22	23	2026-09-17
+22	28	2026-09-17
+53	15	2026-09-17
+53	3	2026-09-17
+53	16	2026-09-17
+53	17	2026-09-17
+53	18	2026-09-17
+15	31	2026-09-17
+15	34	2026-09-17
+55	8	2026-09-17
+55	9	2026-09-17
+55	10	2026-09-17
+63	1	2026-09-17
+55	11	2026-09-17
+63	2	2026-09-17
+55	12	2026-09-17
+63	5	2026-09-17
+55	13	2026-09-17
+34	31	2026-09-17
+63	7	2026-09-17
+63	8	2026-09-17
+63	9	2026-09-17
+63	10	2026-09-17
+55	15	2026-09-17
+63	11	2026-09-17
+45	25	2026-09-17
+63	12	2026-09-17
+63	15	2026-09-17
+63	3	2026-09-17
+63	16	2026-09-17
+63	17	2026-09-17
+63	18	2026-09-17
+45	26	2026-09-17
+55	3	2026-09-17
+63	19	2026-09-17
+55	16	2026-09-17
+45	27	2026-09-17
+55	17	2026-09-17
+45	28	2026-09-17
+63	20	2026-09-17
+63	21	2026-09-17
+63	22	2026-09-17
+55	18	2026-09-17
+63	23	2026-09-17
+63	27	2026-09-17
+63	28	2026-09-17
+63	31	2026-09-17
+63	34	2026-09-17
+55	19	2026-09-17
+45	29	2026-09-17
+45	30	2026-09-17
+14	46	2026-09-17
+63	30	2026-09-17
+45	31	2026-09-17
+45	34	2026-09-17
+45	4	2026-09-17
+45	14	2026-09-17
+14	48	2026-09-17
+62	21	2026-09-17
+14	73	2026-09-17
+14	50	2026-09-17
+62	22	2026-09-17
+47	23	2026-09-17
+62	23	2026-09-17
+14	74	2026-09-17
+62	25	2026-09-17
+47	25	2026-09-17
+62	26	2026-09-17
+47	26	2026-09-17
+22	30	2026-09-17
+14	53	2026-09-17
+62	27	2026-09-17
+47	27	2026-09-17
+47	28	2026-09-17
+62	28	2026-09-17
+65	29	2026-09-17
+65	34	2026-09-17
+65	30	2026-09-17
+62	29	2026-09-17
+47	29	2026-09-17
+65	28	2026-09-17
+65	27	2026-09-17
+65	26	2026-09-17
+65	25	2026-09-17
+65	20	2026-09-17
+47	30	2026-09-17
+62	30	2026-09-17
+62	34	2026-09-17
+47	34	2026-09-17
+32	31	2026-09-17
+30	14	2026-09-17
+32	21	2026-09-17
+20	18	2026-09-17
+30	20	2026-09-17
+30	21	2026-09-17
+30	22	2026-09-17
+68	7	2026-09-17
+68	8	2026-09-17
+68	9	2026-09-17
+68	10	2026-09-17
+68	11	2026-09-17
+22	34	2026-09-17
+68	12	2026-09-17
+68	15	2026-09-18
+68	3	2026-09-18
+68	16	2026-09-18
+68	17	2026-09-18
+68	18	2026-09-18
+68	19	2026-09-18
+68	21	2026-09-18
+68	22	2026-09-18
+68	23	2026-09-18
+68	26	2026-09-18
+70	1	2026-09-18
+70	2	2026-09-18
+70	5	2026-09-18
+70	7	2026-09-18
+70	8	2026-09-18
+70	9	2026-09-18
+70	10	2026-09-18
+70	11	2026-09-18
+70	12	2026-09-18
+70	13	2026-09-18
+70	15	2026-09-18
+68	27	2026-09-18
+68	28	2026-09-18
+70	3	2026-09-18
+68	29	2026-09-18
+70	16	2026-09-18
+32	29	2026-09-18
+32	25	2026-09-18
+70	17	2026-09-18
+70	18	2026-09-18
+68	30	2026-09-18
+70	19	2026-09-18
+68	31	2026-09-18
+68	34	2026-09-18
+68	13	2026-09-18
+32	26	2026-09-18
+70	20	2026-09-18
+70	21	2026-09-18
+70	22	2026-09-18
+70	23	2026-09-18
+14	55	2026-09-18
+30	26	2026-09-18
+28	12	2026-09-18
+30	27	2026-09-18
+30	23	2026-09-18
+30	25	2026-09-18
+30	28	2026-09-18
+22	26	2026-09-18
+52	1	2026-09-18
+52	2	2026-09-18
+66	7	2026-09-18
+22	31	2026-09-18
+25	27	2026-09-18
+34	14	2026-09-18
+34	21	2026-09-18
+25	34	2026-09-18
+34	24	2026-09-18
+34	25	2026-09-18
+65	31	2026-09-18
+52	5	2026-09-18
+52	7	2026-09-18
+52	8	2026-09-18
+71	1	2026-09-18
+52	9	2026-09-18
+71	2	2026-09-18
+52	10	2026-09-18
+52	11	2026-09-18
+72	1	2026-09-18
+71	4	2026-09-18
+71	5	2026-09-18
+14	58	2026-09-18
+71	7	2026-09-18
+71	8	2026-09-18
+71	9	2026-09-18
+71	10	2026-09-18
+71	11	2026-09-18
+71	12	2026-09-18
+72	5	2026-09-18
+71	13	2026-09-18
+52	12	2026-09-18
+52	15	2026-09-18
+71	15	2026-09-18
+72	2	2026-09-18
+71	3	2026-09-18
+52	3	2026-09-18
+71	16	2026-09-18
+52	16	2026-09-18
+71	17	2026-09-18
+52	17	2026-09-18
+52	18	2026-09-18
+52	19	2026-09-18
+71	18	2026-09-18
+72	7	2026-09-18
+72	8	2026-09-18
+72	9	2026-09-18
+72	10	2026-09-18
+72	11	2026-09-18
+72	12	2026-09-18
+72	13	2026-09-18
+14	26	2026-09-18
+71	19	2026-09-18
+71	20	2026-09-18
+72	15	2026-09-18
+71	21	2026-09-18
+72	3	2026-09-18
+71	22	2026-09-18
+14	31	2026-09-18
+72	16	2026-09-18
+72	17	2026-09-18
+72	18	2026-09-18
+14	25	2026-09-18
+72	19	2026-09-18
+14	14	2026-09-18
+72	20	2026-09-18
+74	1	2026-09-19
+74	2	2026-09-19
+74	4	2026-09-19
+74	5	2026-09-19
+74	7	2026-09-19
+74	8	2026-09-19
+74	9	2026-09-19
+74	10	2026-09-19
+74	11	2026-09-19
+74	12	2026-09-19
+74	13	2026-09-19
+74	15	2026-09-19
+74	3	2026-09-19
+74	16	2026-09-19
+74	17	2026-09-19
+74	18	2026-09-19
+74	19	2026-09-19
+74	20	2026-09-19
+74	21	2026-09-19
+74	22	2026-09-19
+74	23	2026-09-19
+74	26	2026-09-19
+74	27	2026-09-19
+74	28	2026-09-19
+69	1	2026-09-19
+74	29	2026-09-19
+69	2	2026-09-19
+74	30	2026-09-19
+74	31	2026-09-19
+69	4	2026-09-19
+74	34	2026-09-19
+69	5	2026-09-19
+69	7	2026-09-19
+69	8	2026-09-19
+69	9	2026-09-19
+69	10	2026-09-19
+69	11	2026-09-19
+69	12	2026-09-19
+69	13	2026-09-19
+69	15	2026-09-19
+69	3	2026-09-19
+69	16	2026-09-19
+69	17	2026-09-19
+69	18	2026-09-19
+69	19	2026-09-19
+69	21	2026-09-19
+69	22	2026-09-19
+69	24	2026-09-19
+69	26	2026-09-19
+69	27	2026-09-19
+71	23	2026-09-19
+71	24	2026-09-19
+69	29	2026-09-19
+69	30	2026-09-19
+42	16	2026-09-19
+42	19	2026-09-19
+69	31	2026-09-19
+69	34	2026-09-19
+36	18	2026-09-19
+73	1	2026-09-19
+36	19	2026-09-19
+73	2	2026-09-19
+42	26	2026-09-19
+37	15	2026-09-19
+37	16	2026-09-19
+37	17	2026-09-19
+37	18	2026-09-19
+73	5	2026-09-19
+73	7	2026-09-19
+73	8	2026-09-19
+73	9	2026-09-19
+73	10	2026-09-19
+73	11	2026-09-19
+73	12	2026-09-19
+73	15	2026-09-19
+73	3	2026-09-19
+73	16	2026-09-19
+55	21	2026-09-19
+7	24	2026-09-19
+73	17	2026-09-19
+55	22	2026-09-19
+73	18	2026-09-19
+55	23	2026-09-19
+44	2	2026-09-19
+73	19	2026-09-19
+44	5	2026-09-19
+72	21	2026-09-19
+44	7	2026-09-19
+44	8	2026-09-19
+44	9	2026-09-19
+72	22	2026-09-19
+44	10	2026-09-19
+71	26	2026-09-19
+44	11	2026-09-19
+71	27	2026-09-19
+73	20	2026-09-19
+73	21	2026-09-19
+42	34	2026-09-19
+71	28	2026-09-19
+43	23	2026-09-19
+44	12	2026-09-19
+72	23	2026-09-19
+4	1	2026-09-19
+71	34	2026-09-19
+73	22	2026-09-19
+44	13	2026-09-19
+75	1	2026-09-19
+71	30	2026-09-19
+73	23	2026-09-19
+44	15	2026-09-19
+44	3	2026-09-19
+73	25	2026-09-19
+75	2	2026-09-19
+21	3	2026-09-19
+21	16	2026-09-19
+21	21	2026-09-19
+44	17	2026-09-19
+21	22	2026-09-19
+21	23	2026-09-19
+42	31	2026-09-19
+44	18	2026-09-19
+73	26	2026-09-19
+73	27	2026-09-19
+72	26	2026-09-19
+44	19	2026-09-19
+73	28	2026-09-19
+21	26	2026-09-19
+72	27	2026-09-19
+42	24	2026-09-19
+21	28	2026-09-19
+73	29	2026-09-19
+73	30	2026-09-19
+21	30	2026-09-19
+72	28	2026-09-19
+73	31	2026-09-19
+73	34	2026-09-19
+21	34	2026-09-19
+21	37	2026-09-19
+44	21	2026-09-19
+44	22	2026-09-19
+26	27	2026-09-19
+21	40	2026-09-19
+26	28	2026-09-19
+21	64	2026-09-19
+75	4	2026-09-19
+44	23	2026-09-19
+26	31	2026-09-19
+75	5	2026-09-19
+21	69	2026-09-19
+21	70	2026-09-19
+21	46	2026-09-19
+21	73	2026-09-19
+21	50	2026-09-19
+21	58	2026-09-19
+37	19	2026-09-19
+21	71	2026-09-19
+37	20	2026-09-19
+37	21	2026-09-19
+72	30	2026-09-19
+72	31	2026-09-19
+72	34	2026-09-19
+30	30	2026-09-19
+37	26	2026-09-19
+30	34	2026-09-19
+37	27	2026-09-19
+52	30	2026-09-19
+52	34	2026-09-19
+25	31	2026-09-19
+25	28	2026-09-19
+37	28	2026-09-19
+37	22	2026-09-19
+37	23	2026-09-19
+37	3	2026-09-19
+37	34	2026-09-19
+37	31	2026-09-19
+67	15	2026-09-20
+67	3	2026-09-20
+67	16	2026-09-20
+67	17	2026-09-20
+67	18	2026-09-20
+67	19	2026-09-20
+67	20	2026-09-20
+44	26	2026-09-20
+44	27	2026-09-20
+44	28	2026-09-20
+44	30	2026-09-20
+52	22	2026-09-20
+52	23	2026-09-20
+10	31	2026-09-20
+52	27	2026-09-20
+66	10	2026-09-20
+66	9	2026-09-20
+66	11	2026-09-20
+66	12	2026-09-20
+66	13	2026-09-20
+14	29	2026-09-20
+16	30	2026-09-20
+16	31	2026-09-20
+16	29	2026-09-20
+55	26	2026-09-20
+55	27	2026-09-20
+55	28	2026-09-20
+11	22	2026-09-20
+11	23	2026-09-20
+71	31	2026-09-20
+71	29	2026-09-20
+8	1	2026-09-20
+8	2	2026-09-20
+78	1	2026-09-20
+19	20	2026-09-20
+75	7	2026-09-20
+36	30	2026-09-20
+66	14	2026-09-20
+37	30	2026-09-20
+66	3	2026-09-20
+66	16	2026-09-20
+11	26	2026-09-20
+8	5	2026-09-20
+75	8	2026-09-20
+8	7	2026-09-20
+66	17	2026-09-20
+75	9	2026-09-20
+66	18	2026-09-20
+19	21	2026-09-20
+8	8	2026-09-20
+75	10	2026-09-20
+8	9	2026-09-20
+11	27	2026-09-20
+19	22	2026-09-20
+66	8	2026-09-20
+75	11	2026-09-20
+8	10	2026-09-20
+75	12	2026-09-20
+75	13	2026-09-20
+11	28	2026-09-20
+75	15	2026-09-20
+75	3	2026-09-20
+8	11	2026-09-20
+75	16	2026-09-20
+19	23	2026-09-20
+8	12	2026-09-20
+75	17	2026-09-20
+11	30	2026-09-20
+75	18	2026-09-20
+19	24	2026-09-20
+75	19	2026-09-20
+75	20	2026-09-20
+75	21	2026-09-20
+19	25	2026-09-20
+75	22	2026-09-20
+66	15	2026-09-20
+19	26	2026-09-20
+11	31	2026-09-20
+11	34	2026-09-20
+19	27	2026-09-20
+8	15	2026-09-20
+79	1	2026-09-20
+18	23	2026-09-20
+79	2	2026-09-20
+8	3	2026-09-20
+75	26	2026-09-20
+79	4	2026-09-20
+18	24	2026-09-20
+4	2	2026-09-20
+66	19	2026-09-20
+19	28	2026-09-20
+73	4	2026-09-20
+75	27	2026-09-20
+8	16	2026-09-20
+75	28	2026-09-20
+79	5	2026-09-20
+73	13	2026-09-20
+18	25	2026-09-20
+75	31	2026-09-20
+66	21	2026-09-20
+75	34	2026-09-20
+8	17	2026-09-20
+18	26	2026-09-20
+19	29	2026-09-20
+19	30	2026-09-20
+8	18	2026-09-20
+18	27	2026-09-20
+73	24	2026-09-20
+55	30	2026-09-20
+18	28	2026-09-20
+8	19	2026-09-20
+19	31	2026-09-20
+79	7	2026-09-20
+18	29	2026-09-20
+8	20	2026-09-20
+79	8	2026-09-20
+19	34	2026-09-20
+79	9	2026-09-20
+79	10	2026-09-20
+18	30	2026-09-20
+79	12	2026-09-20
+66	22	2026-09-20
+66	20	2026-09-20
+8	21	2026-09-20
+79	13	2026-09-20
+4	4	2026-09-20
+79	15	2026-09-20
+55	31	2026-09-20
+4	5	2026-09-20
+79	3	2026-09-20
+18	31	2026-09-20
+55	34	2026-09-20
+18	34	2026-09-20
+79	17	2026-09-20
+79	18	2026-09-20
+8	22	2026-09-20
+79	19	2026-09-20
+79	21	2026-09-20
+79	22	2026-09-20
+66	23	2026-09-20
+4	7	2026-09-20
+4	8	2026-09-20
+4	9	2026-09-20
+4	10	2026-09-20
+79	27	2026-09-20
+79	28	2026-09-20
+4	11	2026-09-20
+4	12	2026-09-20
+70	25	2026-09-20
+66	25	2026-09-20
+79	34	2026-09-20
+79	34	2026-09-20
+4	13	2026-09-20
+80	1	2026-09-20
+79	31	2026-09-20
+80	2	2026-09-20
+80	4	2026-09-20
+70	26	2026-09-20
+80	5	2026-09-20
+70	27	2026-09-20
+79	11	2026-09-20
+66	27	2026-09-20
+79	16	2026-09-20
+80	7	2026-09-20
+53	19	2026-09-20
+80	8	2026-09-20
+80	9	2026-09-20
+80	10	2026-09-20
+66	28	2026-09-20
+80	11	2026-09-20
+80	12	2026-09-20
+80	13	2026-09-20
+80	15	2026-09-20
+80	3	2026-09-20
+80	16	2026-09-20
+80	17	2026-09-20
+80	18	2026-09-20
+80	19	2026-09-20
+80	21	2026-09-20
+80	22	2026-09-20
+53	20	2026-09-20
+70	28	2026-09-20
+53	21	2026-09-20
+80	26	2026-09-20
+80	27	2026-09-20
+66	29	2026-09-20
+53	22	2026-09-20
+4	15	2026-09-20
+66	30	2026-09-20
+53	23	2026-09-20
+66	26	2026-09-20
+53	24	2026-09-20
+53	25	2026-09-20
+53	26	2026-09-20
+53	27	2026-09-20
+53	28	2026-09-20
+53	29	2026-09-20
+70	29	2026-09-20
+66	31	2026-09-20
+4	3	2026-09-20
+53	30	2026-09-20
+70	30	2026-09-20
+4	16	2026-09-20
+53	31	2026-09-20
+17	29	2026-09-20
+66	34	2026-09-20
+53	34	2026-09-20
+4	17	2026-09-20
+70	31	2026-09-20
+4	18	2026-09-20
+70	34	2026-09-20
+4	19	2026-09-20
+4	20	2026-09-20
+4	21	2026-09-20
+4	22	2026-09-20
+14	39	2026-09-21
+14	75	2026-09-21
+14	54	2026-09-21
+71	37	2026-09-22
+26	34	2026-09-22
+71	63	2026-09-23
+13	37	2026-09-23
+16	37	2026-09-23
+16	40	2026-09-23
+16	64	2026-09-23
+16	75	2026-09-23
+12	40	2026-09-23
+15	63	2026-09-23
+15	40	2026-09-23
+17	37	2026-09-24
+17	63	2026-09-24
+17	40	2026-09-24
+22	37	2026-09-24
+65	37	2026-09-24
+65	67	2026-09-24
+65	69	2026-09-24
+65	70	2026-09-24
+17	64	2026-09-25
+17	41	2026-09-25
+17	67	2026-09-25
+17	69	2026-09-25
+17	76	2026-09-25
+17	70	2026-09-25
+17	71	2026-09-26
+17	46	2026-09-26
+17	48	2026-09-26
+17	73	2026-09-26
+17	50	2026-09-26
+17	74	2026-09-26
+17	53	2026-09-26
+35	20	2026-09-26
+35	23	2026-09-26
+71	40	2026-09-26
+71	64	2026-09-26
+42	37	2026-09-26
+42	63	2026-09-26
+49	7	2026-09-26
+49	8	2026-09-26
+49	9	2026-09-26
+49	10	2026-09-26
+49	11	2026-09-26
+49	12	2026-09-26
+49	15	2026-09-26
+49	3	2026-09-26
+71	70	2026-09-27
+6	1	2026-09-27
+19	37	2026-09-27
+6	2	2026-09-27
+15	75	2026-09-27
+15	67	2026-09-27
+15	69	2026-09-27
+15	76	2026-09-27
+15	70	2026-09-27
+15	54	2026-09-27
+15	71	2026-09-27
+49	16	2026-09-27
+49	17	2026-09-27
+49	18	2026-09-27
+49	19	2026-09-27
+15	46	2026-09-27
+15	48	2026-09-27
+15	73	2026-09-27
+15	50	2026-09-27
+15	74	2026-09-27
+15	53	2026-09-27
+49	20	2026-09-27
+49	21	2026-09-27
+49	22	2026-09-27
+49	23	2026-09-27
+15	37	2026-09-28
+49	27	2026-09-28
+49	28	2026-09-28
+49	30	2026-09-28
+49	31	2026-09-28
+49	34	2026-09-28
+49	29	2026-09-28
+19	63	2026-09-28
+5	37	2026-09-28
+13	63	2026-09-29
+62	37	2026-09-30
+47	37	2026-09-30
+9	37	2026-09-30
+9	63	2026-09-30
+9	38	2026-09-30
+9	39	2026-09-30
+9	40	2026-09-30
+9	64	2026-09-30
+9	75	2026-09-30
+9	77	2026-09-30
+9	41	2026-09-30
+9	67	2026-09-30
+9	69	2026-09-30
+9	76	2026-09-30
+9	70	2026-09-30
+9	54	2026-09-30
+9	71	2026-09-30
+9	43	2026-09-30
+9	44	2026-09-30
+9	72	2026-09-30
+9	46	2026-09-30
+9	48	2026-09-30
+9	73	2026-09-30
+9	50	2026-09-30
+9	51	2026-09-30
+9	74	2026-09-30
+9	53	2026-09-30
+9	58	2026-09-30
+9	55	2026-09-30
+9	57	2026-09-30
+9	81	2026-09-30
+9	78	2026-09-30
+9	80	2026-09-30
+9	59	2026-09-30
+9	60	2026-09-30
+9	82	2026-09-30
+9	61	2026-09-30
+9	83	2026-09-30
+9	62	2026-09-30
+62	63	2026-09-30
+47	63	2026-09-30
+18	37	2026-09-30
+18	63	2026-09-30
+28	4	2026-09-30
+28	15	2026-09-30
+28	3	2026-09-30
+28	17	2026-09-30
+28	19	2026-09-30
+28	21	2026-09-30
+26	37	2026-10-01
+25	37	2026-10-01
+5	63	2026-10-01
+70	37	2026-10-04
+48	37	2026-10-04
+48	63	2026-10-04
+48	38	2026-10-04
+48	39	2026-10-04
+48	40	2026-10-04
+33	37	2026-10-05
+33	63	2026-10-05
+16	67	2026-10-07
+16	69	2026-10-07
+15	58	2026-10-07
+48	64	2026-10-07
+48	75	2026-10-07
+48	77	2026-10-07
+15	82	2026-10-07
+24	19	2026-10-08
+24	4	2026-10-08
+24	21	2026-10-08
+16	70	2026-10-08
+24	22	2026-10-08
+24	23	2026-10-08
+16	54	2026-10-08
+16	46	2026-10-09
+16	71	2026-10-10
+16	48	2026-10-11
+16	73	2026-10-11
+16	50	2026-10-11
+16	74	2026-10-11
+16	53	2026-10-11
+64	22	2026-10-11
+64	27	2026-10-11
+\.
+
+
+--
+-- Data for Name: user_achievement_progress; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_achievement_progress (user_id, achievement_id, current_count) FROM stdin;
+28	8	2
+75	8	2
+75	5	1
+17	3	16
+8	5	1
+80	7	1
+15	7	2
+62	8	3
+40	8	2
+19	6	1
+9	4	12
+47	3	2
+12	7	2
+40	2	7
+35	8	2
+4	8	2
+79	5	1
+10	8	2
+22	8	3
+4	5	1
+42	8	3
+32	5	1
+20	8	2
+42	5	2
+63	5	1
+30	7	1
+10	7	1
+35	5	1
+71	7	2
+47	6	1
+71	6	1
+18	8	3
+11	7	1
+7	8	3
+18	5	2
+7	5	2
+7	7	2
+14	7	4
+40	7	1
+53	7	1
+13	8	3
+26	8	3
+13	5	2
+20	7	1
+13	7	2
+38	8	2
+33	8	3
+30	8	2
+41	7	1
+68	7	1
+18	7	2
+24	7	1
+30	5	1
+12	3	2
+16	7	2
+27	8	1
+12	8	4
+28	7	1
+41	5	1
+12	5	3
+16	3	15
+42	3	2
+27	7	1
+27	2	2
+22	5	2
+18	6	1
+24	8	2
+49	7	1
+43	5	1
+39	8	2
+22	7	2
+71	8	4
+16	4	1
+32	7	1
+71	5	3
+65	8	3
+19	3	2
+43	7	1
+36	8	2
+20	5	1
+42	7	2
+37	8	2
+22	3	1
+65	5	2
+34	7	1
+35	7	1
+55	5	1
+36	7	1
+37	7	1
+43	8	2
+65	7	2
+49	8	2
+34	8	2
+45	7	1
+17	7	3
+38	7	1
+39	7	1
+19	8	3
+34	5	1
+49	5	1
+19	5	2
+7	6	1
+19	7	2
+39	5	1
+38	5	1
+10	5	1
+41	8	2
+5	8	3
+5	5	2
+11	8	2
+32	8	2
+52	8	2
+45	8	2
+64	8	2
+11	5	1
+5	7	2
+24	5	1
+66	7	1
+26	3	1
+63	7	1
+47	8	3
+13	6	1
+62	5	2
+62	7	2
+47	5	2
+45	5	1
+67	7	1
+55	7	1
+25	8	3
+53	8	2
+26	5	2
+67	8	2
+68	5	1
+47	7	2
+70	8	3
+26	7	2
+25	5	2
+25	7	2
+64	7	1
+64	5	1
+70	5	2
+70	7	2
+33	5	2
+48	8	4
+48	7	2
+53	5	1
+7	3	4
+63	8	2
+48	5	4
+33	7	2
+55	8	2
+52	7	1
+66	8	2
+68	8	2
+72	8	2
+72	5	1
+14	4	2
+52	5	1
+72	7	1
+74	7	1
+74	8	2
+69	7	1
+74	5	1
+69	8	2
+73	7	1
+69	5	1
+73	8	2
+44	8	2
+73	5	1
+44	7	1
+21	7	2
+44	5	1
+75	7	1
+8	8	2
+62	6	1
+62	3	2
+21	5	4
+21	6	1
+21	4	1
+21	3	9
+37	5	1
+67	5	1
+18	3	2
+28	5	1
+8	7	1
+79	7	1
+78	8	1
+25	3	1
+78	2	1
+5	6	1
+66	5	1
+4	7	1
+5	3	2
+70	3	1
+79	8	2
+48	6	2
+33	6	1
+33	3	2
+48	3	8
+80	8	2
+15	4	2
+16	6	2
+80	5	1
+65	3	4
+42	6	1
+71	3	5
+6	8	1
+6	7	1
+6	2	2
+15	3	16
+13	3	2
+\.
+
+
+--
+-- Data for Name: user_events; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_events (id, "timestamp", user_id, task_id, event_type, payload) FROM stdin;
+\.
 
 
 --
@@ -31924,10 +32498,73 @@ COPY public.users_quest (user_id, quest_id, current_scene_id, created_at, comple
 
 
 --
+-- Name: bgw_job_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+SELECT pg_catalog.setval('_timescaledb_catalog.bgw_job_id_seq', 1000, false);
+
+
+--
+-- Name: chunk_column_stats_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+SELECT pg_catalog.setval('_timescaledb_catalog.chunk_column_stats_id_seq', 1, false);
+
+
+--
+-- Name: chunk_constraint_name; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+SELECT pg_catalog.setval('_timescaledb_catalog.chunk_constraint_name', 1, false);
+
+
+--
+-- Name: chunk_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+SELECT pg_catalog.setval('_timescaledb_catalog.chunk_id_seq', 6, true);
+
+
+--
+-- Name: dimension_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+SELECT pg_catalog.setval('_timescaledb_catalog.dimension_id_seq', 1, true);
+
+
+--
+-- Name: dimension_slice_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+SELECT pg_catalog.setval('_timescaledb_catalog.dimension_slice_id_seq', 6, true);
+
+
+--
+-- Name: hypertable_id_seq; Type: SEQUENCE SET; Schema: _timescaledb_catalog; Owner: postgres
+--
+
+SELECT pg_catalog.setval('_timescaledb_catalog.hypertable_id_seq', 1, true);
+
+
+--
 -- Name: achievements_achievement_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
 SELECT pg_catalog.setval('public.achievements_achievement_id_seq', 1, false);
+
+
+--
+-- Name: quest_tasks_solved_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.quest_tasks_solved_id_seq', 1, false);
+
+
+--
+-- Name: schema_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.schema_migrations_id_seq', 2, true);
 
 
 --
@@ -31968,6 +32605,30 @@ ALTER TABLE ONLY public.password_hashes
 
 
 --
+-- Name: quest_tasks_solved quest_tasks_solved_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.quest_tasks_solved
+    ADD CONSTRAINT quest_tasks_solved_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schema_migrations
+    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schema_migrations schema_migrations_version_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schema_migrations
+    ADD CONSTRAINT schema_migrations_version_key UNIQUE (version);
+
+
+--
 -- Name: tasks tasks_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -31981,13 +32642,6 @@ ALTER TABLE ONLY public.tasks
 
 ALTER TABLE ONLY public.user_achievement_progress
     ADD CONSTRAINT user_achievement_progress_pk PRIMARY KEY (user_id, achievement_id);
-
-
---
--- Name: user_events user_events_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-
 
 
 --
@@ -32052,6 +32706,223 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users_quest
     ADD CONSTRAINT users_quest_pkey PRIMARY KEY (user_id, quest_id);
+
+
+--
+-- Name: _hyper_1_1_chunk_idx_user_events_task; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_1_chunk_idx_user_events_task ON _timescaledb_internal._hyper_1_1_chunk USING btree (task_id) WHERE (task_id IS NOT NULL);
+
+
+--
+-- Name: _hyper_1_1_chunk_idx_user_events_time; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_1_chunk_idx_user_events_time ON _timescaledb_internal._hyper_1_1_chunk USING btree ("timestamp" DESC);
+
+
+--
+-- Name: _hyper_1_1_chunk_idx_user_events_type; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_1_chunk_idx_user_events_type ON _timescaledb_internal._hyper_1_1_chunk USING btree (event_type);
+
+
+--
+-- Name: _hyper_1_1_chunk_idx_user_events_user; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_1_chunk_idx_user_events_user ON _timescaledb_internal._hyper_1_1_chunk USING btree (user_id);
+
+
+--
+-- Name: _hyper_1_1_chunk_user_events_timestamp_idx; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_1_chunk_user_events_timestamp_idx ON _timescaledb_internal._hyper_1_1_chunk USING btree ("timestamp" DESC);
+
+
+--
+-- Name: _hyper_1_2_chunk_idx_user_events_task; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_2_chunk_idx_user_events_task ON _timescaledb_internal._hyper_1_2_chunk USING btree (task_id) WHERE (task_id IS NOT NULL);
+
+
+--
+-- Name: _hyper_1_2_chunk_idx_user_events_time; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_2_chunk_idx_user_events_time ON _timescaledb_internal._hyper_1_2_chunk USING btree ("timestamp" DESC);
+
+
+--
+-- Name: _hyper_1_2_chunk_idx_user_events_type; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_2_chunk_idx_user_events_type ON _timescaledb_internal._hyper_1_2_chunk USING btree (event_type);
+
+
+--
+-- Name: _hyper_1_2_chunk_idx_user_events_user; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_2_chunk_idx_user_events_user ON _timescaledb_internal._hyper_1_2_chunk USING btree (user_id);
+
+
+--
+-- Name: _hyper_1_2_chunk_user_events_timestamp_idx; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_2_chunk_user_events_timestamp_idx ON _timescaledb_internal._hyper_1_2_chunk USING btree ("timestamp" DESC);
+
+
+--
+-- Name: _hyper_1_3_chunk_idx_user_events_task; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_3_chunk_idx_user_events_task ON _timescaledb_internal._hyper_1_3_chunk USING btree (task_id) WHERE (task_id IS NOT NULL);
+
+
+--
+-- Name: _hyper_1_3_chunk_idx_user_events_time; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_3_chunk_idx_user_events_time ON _timescaledb_internal._hyper_1_3_chunk USING btree ("timestamp" DESC);
+
+
+--
+-- Name: _hyper_1_3_chunk_idx_user_events_type; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_3_chunk_idx_user_events_type ON _timescaledb_internal._hyper_1_3_chunk USING btree (event_type);
+
+
+--
+-- Name: _hyper_1_3_chunk_idx_user_events_user; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_3_chunk_idx_user_events_user ON _timescaledb_internal._hyper_1_3_chunk USING btree (user_id);
+
+
+--
+-- Name: _hyper_1_3_chunk_user_events_timestamp_idx; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_3_chunk_user_events_timestamp_idx ON _timescaledb_internal._hyper_1_3_chunk USING btree ("timestamp" DESC);
+
+
+--
+-- Name: _hyper_1_4_chunk_idx_user_events_task; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_4_chunk_idx_user_events_task ON _timescaledb_internal._hyper_1_4_chunk USING btree (task_id) WHERE (task_id IS NOT NULL);
+
+
+--
+-- Name: _hyper_1_4_chunk_idx_user_events_time; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_4_chunk_idx_user_events_time ON _timescaledb_internal._hyper_1_4_chunk USING btree ("timestamp" DESC);
+
+
+--
+-- Name: _hyper_1_4_chunk_idx_user_events_type; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_4_chunk_idx_user_events_type ON _timescaledb_internal._hyper_1_4_chunk USING btree (event_type);
+
+
+--
+-- Name: _hyper_1_4_chunk_idx_user_events_user; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_4_chunk_idx_user_events_user ON _timescaledb_internal._hyper_1_4_chunk USING btree (user_id);
+
+
+--
+-- Name: _hyper_1_4_chunk_user_events_timestamp_idx; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_4_chunk_user_events_timestamp_idx ON _timescaledb_internal._hyper_1_4_chunk USING btree ("timestamp" DESC);
+
+
+--
+-- Name: _hyper_1_5_chunk_idx_user_events_task; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_5_chunk_idx_user_events_task ON _timescaledb_internal._hyper_1_5_chunk USING btree (task_id) WHERE (task_id IS NOT NULL);
+
+
+--
+-- Name: _hyper_1_5_chunk_idx_user_events_time; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_5_chunk_idx_user_events_time ON _timescaledb_internal._hyper_1_5_chunk USING btree ("timestamp" DESC);
+
+
+--
+-- Name: _hyper_1_5_chunk_idx_user_events_type; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_5_chunk_idx_user_events_type ON _timescaledb_internal._hyper_1_5_chunk USING btree (event_type);
+
+
+--
+-- Name: _hyper_1_5_chunk_idx_user_events_user; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_5_chunk_idx_user_events_user ON _timescaledb_internal._hyper_1_5_chunk USING btree (user_id);
+
+
+--
+-- Name: _hyper_1_5_chunk_user_events_timestamp_idx; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_5_chunk_user_events_timestamp_idx ON _timescaledb_internal._hyper_1_5_chunk USING btree ("timestamp" DESC);
+
+
+--
+-- Name: _hyper_1_6_chunk_idx_user_events_task; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_6_chunk_idx_user_events_task ON _timescaledb_internal._hyper_1_6_chunk USING btree (task_id) WHERE (task_id IS NOT NULL);
+
+
+--
+-- Name: _hyper_1_6_chunk_idx_user_events_time; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_6_chunk_idx_user_events_time ON _timescaledb_internal._hyper_1_6_chunk USING btree ("timestamp" DESC);
+
+
+--
+-- Name: _hyper_1_6_chunk_idx_user_events_type; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_6_chunk_idx_user_events_type ON _timescaledb_internal._hyper_1_6_chunk USING btree (event_type);
+
+
+--
+-- Name: _hyper_1_6_chunk_idx_user_events_user; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_6_chunk_idx_user_events_user ON _timescaledb_internal._hyper_1_6_chunk USING btree (user_id);
+
+
+--
+-- Name: _hyper_1_6_chunk_user_events_timestamp_idx; Type: INDEX; Schema: _timescaledb_internal; Owner: postgres
+--
+
+CREATE INDEX _hyper_1_6_chunk_user_events_timestamp_idx ON _timescaledb_internal._hyper_1_6_chunk USING btree ("timestamp" DESC);
+
+
+--
+-- Name: idx_quest_tasks_solved_user; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_quest_tasks_solved_user ON public.quest_tasks_solved USING btree (user_id);
 
 
 --
@@ -32145,6 +33016,14 @@ ALTER TABLE ONLY public.users_achievements
 
 
 --
+-- Name: quest_tasks_solved quest_tasks_solved_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.quest_tasks_solved
+    ADD CONSTRAINT quest_tasks_solved_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
 -- Name: user_achievement_progress user_achievement_progress_achievements_achievement_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -32188,21 +33067,3 @@ ALTER TABLE ONLY public.users_clues
 -- PostgreSQL database dump complete
 --
 
-
-
-
---
--- Name: quest_tasks_solved; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE IF NOT EXISTS public.quest_tasks_solved (
-    id SERIAL PRIMARY KEY,
-    user_id integer NOT NULL REFERENCES public.users(user_id),
-    quest_id character varying NOT NULL,
-    scene_id character varying NOT NULL,
-    user_query text,
-    created_at timestamp with time zone DEFAULT now()
-);
-
-ALTER TABLE public.quest_tasks_solved OWNER TO postgres;
-CREATE INDEX IF NOT EXISTS idx_quest_tasks_solved_user ON public.quest_tasks_solved(user_id);
