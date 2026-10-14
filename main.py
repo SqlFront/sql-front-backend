@@ -19,6 +19,7 @@ from src.api.rating import router as rating_router
 from src.api.task import router as task_router
 from src.api.user_activity import router as activity_router
 from src.api.quests import router as quests_router
+from src.admin import setup_admin
 
 
 @asynccontextmanager
@@ -115,6 +116,9 @@ app.include_router(task_router)
 app.include_router(rating_router)
 app.include_router(activity_router)
 app.include_router(quests_router)
+
+# Initialize SQLAdmin administration panel
+admin = setup_admin(app)
 
 
 async def run_server(app, port):
