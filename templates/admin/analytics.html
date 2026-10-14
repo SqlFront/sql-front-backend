@@ -1,0 +1,39 @@
+{% extends "sqladmin/layout.html" %}
+
+{% block content %}
+<div class="container-xl">
+  <div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+      <div class="col">
+        <h2 class="page-title">
+          <i class="fa-solid fa-chart-line me-2"></i>Аналитика и телеметрия
+        </h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="row row-cards">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Образовательная активность студентов</h3>
+        </div>
+        <div class="card-body">
+          {% if has_data and graph_html %}
+            <div class="plotly-chart-wrapper">
+              {{ graph_html | safe }}
+            </div>
+          {% else %}
+            <div class="alert alert-info d-flex align-items-center" role="alert">
+              <div>
+                <p class="mb-0"><strong>Нет данных для отображения</strong></p>
+                <small class="text-muted">События активности пользователей в TimescaleDB пока не зафиксированы.</small>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
