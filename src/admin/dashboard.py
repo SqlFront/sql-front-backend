@@ -112,10 +112,14 @@ class AnalyticsDashboardView(BaseView):
     @expose("/analytics", methods=["GET"], identity="analytics")
     async def dashboard_page(self, request: Request):
         session_maker = getattr(self._admin_ref, "session_maker", None) or AsyncSessionLocal
-        async with session_maker() as session:
-            stmt = select(UserEvent).order_by(UserEvent.timestamp.desc()).limit(5000)
-            result = await session.execute(stmt)
-            events = result.scalars().all()
+        events = []
+        try:
+            async with session_maker() as session:
+                stmt = select(UserEvent).order_by(UserEvent.timestamp.desc()).limit(5000)
+                result = await session.execute(stmt)
+                events = result.scalars().all()
+        except Exception:
+            events = []
 
         has_data, graph_html = build_analytics_figure(events)
 
