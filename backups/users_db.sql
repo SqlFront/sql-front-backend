@@ -43,7 +43,7 @@ CREATE TABLE public.user_events (
     id bigint NOT NULL,
     "timestamp" timestamp with time zone DEFAULT now() NOT NULL,
     user_id integer NOT NULL,
-    task_id integer NOT NULL,
+    task_id integer,
     event_type text NOT NULL,
     payload jsonb DEFAULT '{}'::jsonb
 );
@@ -120,7 +120,7 @@ ALTER TABLE public.tasks_task_global_id_seq OWNER TO postgres;
 CREATE TABLE public.tasks (
     task_global_id integer DEFAULT nextval('public.tasks_task_global_id_seq'::regclass) NOT NULL,
     mission_id integer NOT NULL,
-    task_id integer NOT NULL,
+    task_id integer,
     title character varying NOT NULL,
     description character varying NOT NULL,
     clue character varying NOT NULL,

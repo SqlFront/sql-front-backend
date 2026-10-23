@@ -62,6 +62,31 @@ class UserRepository:
             password.encode("utf-8"), db_password_hash.encode("utf-8")
         )
 
+    async def reset_password(self, login: str, email: str, new_password: str) -> User | None:
+        user = await self.get_user_by_login(login)
+        if not user or not user.email:
+            return None
+        if user.email.strip().lower() != email.strip().lower():
+            return None
+
+        hashed_password = bcrypt.hashpw(
+            new_password.encode("utf-8"), bcrypt.gensalt()
+        ).decode("utf-8")
+
+        result = await self.session.execute(
+            select(PasswordHash).where(PasswordHash.user_id == user.user_id)
+        )
+        pwd_record = result.scalars().first()
+        if pwd_record:
+            pwd_record.password_hash = hashed_password
+        else:
+            self.session.add(
+                PasswordHash(user_id=user.user_id, password_hash=hashed_password)
+            )
+
+        await self.session.commit()
+        return user
+
     async def get_top_users(self, limit: int = 10) -> list[dict]:
         achievements_subq = (
             select(UsersAchievements.user_id, Achievement.icon)

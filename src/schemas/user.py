@@ -33,3 +33,9 @@ class UserPublic(UserBase):
 class UserLogin(BaseModel):
     login: str
     password: str
+
+
+class PasswordResetRequest(BaseModel):
+    login: str
+    email: EmailStr
+    new_password: Annotated[str, StringConstraints(min_length=8)]
