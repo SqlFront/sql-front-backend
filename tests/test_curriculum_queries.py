@@ -133,10 +133,17 @@ def serialize_record_val(val):
 
 class TestCurriculumQueries(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
-        self.conn = await asyncpg.connect("postgresql://sql_runner:secret@localhost:5430/game_db")
+        try:
+            self.conn = await asyncio.wait_for(
+                asyncpg.connect("postgresql://sql_runner:secret@localhost:5430/game_db"),
+                timeout=1.5
+            )
+        except Exception as e:
+            self.skipTest(f"Database at localhost:5430 is not reachable ({e})")
 
     async def asyncTearDown(self):
-        await self.conn.close()
+        if hasattr(self, "conn") and self.conn:
+            await self.conn.close()
 
     async def test_all_target_queries_execute_and_serialize(self):
         for task_code, query in TARGET_QUERIES.items():
