@@ -14,6 +14,18 @@ from src.models.user import User
 from src.models.user_event import UserEvent
 
 
+def is_test_group(name: str) -> bool:
+    if not name or name == "Без группы":
+        return True
+    lower = name.lower().strip()
+    junk = ["тест", "test", "445", "абвг", "6666", "уууу", "фффф", "игор"]
+    if any(p in lower for p in junk):
+        return True
+    if name.isdigit() or len(name) < 4:
+        return True
+    return False
+
+
 def build_analytics_dashboard_data(
     events: Sequence[UserEvent],
     users: Optional[Sequence[User]] = None,
@@ -79,23 +91,27 @@ def build_analytics_dashboard_data(
             is_correct = bool(payload.get("is_correct", False))
             if is_correct:
                 successful_submissions += 1
-            else:
+            elif tid is not None:
                 task_failures[tid] += 1
-            task_submissions[tid] += 1
+            if tid is not None:
+                task_submissions[tid] += 1
 
         elif "error" in etype or "fail" in etype:
             total_submissions += 1
-            task_failures[tid] += 1
-            task_submissions[tid] += 1
+            if tid is not None:
+                task_failures[tid] += 1
+                task_submissions[tid] += 1
 
         elif etype == "purchase_clue":
-            clue_type = payload.get("clue_type", 1)
-            clue_purchases[tid][clue_type] += 1
+            if tid is not None:
+                clue_type = payload.get("clue_type", 1)
+                clue_purchases[tid][clue_type] += 1
 
     # ---------------------------------------------------------
     # 2. Time & Velocity per task & Mission metrics
     # ---------------------------------------------------------
     task_durations = []  # list of durations in seconds
+    task_time_stats = defaultdict(list)  # task_id -> [durations_min]
     mission_user_times = defaultdict(lambda: defaultdict(list))  # mission_id -> user_id -> [timestamps]
     ai_candidates = []
 
@@ -106,6 +122,7 @@ def build_analytics_dashboard_data(
         first_success_time = None
         attempts_before_success = 0
         inactivities_count = 0
+        pastes_count = 0
         clues_count = 0
         mission_id = None
 
@@ -124,6 +141,8 @@ def build_analytics_dashboard_data(
 
             if etype == "user_inactive":
                 inactivities_count += 1
+            if etype == "code_pasted":
+                pastes_count += 1
 
             if etype == "purchase_clue":
                 clues_count += 1
@@ -142,6 +161,8 @@ def build_analytics_dashboard_data(
             dur = (first_success_time - start_time).total_seconds()
             if 0 < dur < 86400:  # exclude unrealistic outliers (> 24 hours)
                 task_durations.append(dur)
+                if tid is not None:
+                    task_time_stats[tid].append(dur / 60.0)
 
                 # Track mission timestamps
                 if mission_id is not None:
@@ -151,7 +172,7 @@ def build_analytics_dashboard_data(
                 # 1) Solved under 30s on attempt 0-1 without clues (direct copy-paste / solution leak), OR
                 # 2) Solved under 60s on attempt 0-1 with tab switching (user_inactive >= 1) without clues
                 is_suspicious = (attempts_before_success <= 1) and (clues_count == 0) and (
-                    (dur < 30) or (dur < 60 and inactivities_count >= 1)
+                    (dur < 30) or (dur < 60 and inactivities_count >= 1) or (pastes_count >= 1)
                 )
                 u = user_map.get(uid)
                 login_label = u.login if u else f"User #{uid}"
@@ -168,6 +189,7 @@ def build_analytics_dashboard_data(
                     "duration_sec": round(dur, 1),
                     "attempts": attempts_before_success,
                     "inactivities": inactivities_count,
+                    "pastes": pastes_count,
                     "timestamp": first_success_time.strftime("%Y-%m-%d %H:%M:%S") if hasattr(first_success_time, "strftime") else str(first_success_time),
                     "suspicious": is_suspicious,
                 })
@@ -175,6 +197,25 @@ def build_analytics_dashboard_data(
     # Sort AI candidates (suspicious first, then shortest duration)
     ai_candidates.sort(key=lambda x: (not x["suspicious"], x["duration_sec"]))
     suspicious_solutions = [c for c in ai_candidates if c["suspicious"]]
+
+    # Group suspicious solutions by student for accordion view
+    students_ai = defaultdict(lambda: {"solutions": [], "min_duration": float("inf")})
+    for sol in suspicious_solutions:
+        uid = sol["user_id"]
+        students_ai[uid]["user_id"] = uid
+        students_ai[uid]["login"] = sol["login"]
+        students_ai[uid]["group"] = sol["group"]
+        students_ai[uid]["solutions"].append(sol)
+        if sol["duration_sec"] < students_ai[uid]["min_duration"]:
+            students_ai[uid]["min_duration"] = sol["duration_sec"]
+
+    grouped_ai_candidates = []
+    for uid, sdata in students_ai.items():
+        sdata["solutions"].sort(key=lambda x: x["duration_sec"])
+        sdata["suspicious_count"] = len(sdata["solutions"])
+        grouped_ai_candidates.append(sdata)
+
+    grouped_ai_candidates.sort(key=lambda x: (-x["suspicious_count"], x["min_duration"]))
 
     # ---------------------------------------------------------
     # 3. Mission durations (Min / Avg / Max)
@@ -213,10 +254,10 @@ def build_analytics_dashboard_data(
     # 5. Build Interactive Plotly Charts
     # ---------------------------------------------------------
 
-    # --- Chart 1: Time & Velocity (Mission box/bar + Task histogram) ---
+    # --- Chart 1: Time & Velocity (Mission box/bar + Top Slowest Tasks) ---
     fig_time = make_subplots(
         rows=1, cols=2,
-        subplot_titles=("Время прохождения миссий (Мин / Среднее / Макс, мин)", "Распределение времени решения задач (мин)"),
+        subplot_titles=("Время прохождения миссий (Мин / Среднее / Макс, мин)", "Топ трудоемких задач (среднее время решения, мин)"),
     )
 
     if mission_stats:
@@ -231,11 +272,37 @@ def build_analytics_dashboard_data(
     else:
         fig_time.add_trace(go.Bar(x=["Миссии 0-5"], y=[0], name="Нет данных"), row=1, col=1)
 
-    if task_durations:
-        durations_min = [d / 60.0 for d in task_durations if d <= 3600]
-        fig_time.add_trace(go.Histogram(x=durations_min, nbinsx=25, marker_color="#4299e1", name="Задачи"), row=1, col=2)
+    task_avg_times = []
+    for tid, d_list in task_time_stats.items():
+        if tid is None or not d_list:
+            continue
+        avg_m = round(sum(d_list) / len(d_list), 1)
+        t_obj = task_map.get(tid)
+        t_num = getattr(t_obj, "task_id", getattr(t_obj, "task_number", tid))
+        lbl = f"{t_obj.mission_id}.{t_num}" if t_obj else f"#{tid}"
+        title = t_obj.title if t_obj else ""
+        task_avg_times.append((lbl, avg_m, len(d_list), title))
+
+    task_avg_times.sort(key=lambda x: x[1], reverse=True)
+    top_slowest = task_avg_times[:12]
+
+    if top_slowest:
+        hover_slowest = [f"Задание {t[0]}: {t[3]}<br>Среднее время: {t[1]} мин<br>Решений: {t[2]}" for t in top_slowest]
+        fig_time.add_trace(
+            go.Bar(
+                x=[t[0] for t in top_slowest],
+                y=[t[1] for t in top_slowest],
+                marker_color="#4263eb",
+                name="Среднее время (мин)",
+                text=[f"{t[1]}м" for t in top_slowest],
+                textposition="auto",
+                hovertext=hover_slowest,
+                hoverinfo="text",
+            ),
+            row=1, col=2
+        )
     else:
-        fig_time.add_trace(go.Histogram(x=[0], name="Задачи"), row=1, col=2)
+        fig_time.add_trace(go.Bar(x=["Нет данных"], y=[0]), row=1, col=2)
 
     fig_time.update_layout(template="plotly_white", height=420, margin=dict(l=30, r=30, t=50, b=40))
 
@@ -303,13 +370,14 @@ def build_analytics_dashboard_data(
 
     task_rates = []
     for tid, tot in task_submissions.items():
-        if tot >= 1:
-            fails = task_failures[tid]
-            rate = round((fails / tot) * 100.0, 1)
-            t_obj = task_map.get(tid)
-            t_num = getattr(t_obj, "task_id", getattr(t_obj, "task_number", tid))
-            lbl = f"{t_obj.mission_id}.{t_num}" if t_obj else f"#{tid}"
-            task_rates.append((lbl, rate, tot))
+        if tid is None or tot < 1:
+            continue
+        fails = task_failures[tid]
+        rate = round((fails / tot) * 100.0, 1)
+        t_obj = task_map.get(tid)
+        t_num = getattr(t_obj, "task_id", getattr(t_obj, "task_number", tid))
+        lbl = f"{t_obj.mission_id}.{t_num}" if t_obj else f"#{tid}"
+        task_rates.append((lbl, rate, tot))
 
     task_rates.sort(key=lambda x: x[1], reverse=True)
     top_diff = task_rates[:12]
@@ -327,9 +395,17 @@ def build_analytics_dashboard_data(
     else:
         fig_diff.add_trace(go.Bar(x=["Нет данных"], y=[0]), row=1, col=1)
 
-    top_clue_tids = sorted(clue_purchases.keys(), key=lambda t: sum(clue_purchases[t].values()), reverse=True)[:10]
+    valid_clue_tids = [tid for tid in clue_purchases.keys() if tid is not None and sum(clue_purchases[tid].values()) > 0]
+    top_clue_tids = sorted(valid_clue_tids, key=lambda t: sum(clue_purchases[t].values()), reverse=True)[:10]
     if top_clue_tids:
-        clue_labels = [f"#{tid}" for tid in top_clue_tids]
+        clue_labels = []
+        for tid in top_clue_tids:
+            t_obj = task_map.get(tid)
+            if t_obj:
+                t_num = getattr(t_obj, "task_id", getattr(t_obj, "task_number", tid))
+                clue_labels.append(f"{t_obj.mission_id}.{t_num}")
+            else:
+                clue_labels.append(f"#{tid}")
         clue1 = [clue_purchases[tid][1] for tid in top_clue_tids]
         clue2 = [clue_purchases[tid][2] for tid in top_clue_tids]
         fig_diff.add_trace(go.Bar(x=clue_labels, y=clue1, name="Подсказка 1", marker_color="#f59f00"), row=1, col=2)
@@ -345,9 +421,22 @@ def build_analytics_dashboard_data(
         subplot_titles=("Средний балл по учебным группам", "Активность сабмитов по группам"),
     )
 
-    group_names = [g for g in sorted(group_stats.keys()) if g != "Без группы"]
+    all_group_names = [g for g in sorted(group_stats.keys()) if g != "Без группы"]
+    real_group_names = [g for g in all_group_names if not is_test_group(g)]
+    group_names = real_group_names if real_group_names else all_group_names
     if not group_names and "Без группы" in group_stats:
         group_names = ["Без группы"]
+
+    groups_payload = []
+    for g in all_group_names:
+        avg_s = round(sum(group_stats[g]["scores"]) / len(group_stats[g]["scores"]), 1) if group_stats[g]["scores"] else 0
+        sub_c = group_stats[g]["submissions"]
+        groups_payload.append({
+            "name": g,
+            "avg_score": avg_s,
+            "submissions": sub_c,
+            "is_test": is_test_group(g),
+        })
 
     if group_names:
         avg_scores = [
@@ -405,7 +494,9 @@ def build_analytics_dashboard_data(
             "ai_suspicions_count": len(suspicious_solutions),
         },
         "charts": charts_html,
-        "ai_suspicious_solutions": suspicious_solutions[:15],
+        "grouped_ai_candidates": grouped_ai_candidates,
+        "ai_suspicious_solutions": suspicious_solutions,
+        "groups_payload": groups_payload,
     }
 
 
@@ -465,7 +556,9 @@ class AnalyticsDashboardView(BaseView):
                 "has_data": dashboard_data["has_data"],
                 "kpis": dashboard_data["kpis"],
                 "charts": dashboard_data["charts"],
+                "grouped_ai_candidates": dashboard_data.get("grouped_ai_candidates", []),
                 "ai_suspicious_solutions": dashboard_data["ai_suspicious_solutions"],
+                "groups_payload": dashboard_data.get("groups_payload", []),
                 # Backward compatibility
                 "graph_html": dashboard_data["charts"].get("overview"),
             },

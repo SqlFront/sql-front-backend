@@ -119,6 +119,7 @@ app.include_router(profile_router)
 app.include_router(task_router)
 app.include_router(rating_router)
 app.include_router(activity_router)
+app.include_router(activity_router, prefix="/api")
 app.include_router(quests_router)
 
 @app.get("/")
