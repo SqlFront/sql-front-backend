@@ -148,8 +148,11 @@ def build_analytics_dashboard_data(
                     mission_user_times[mission_id][uid].extend([start_time, first_success_time])
 
                 # AI / Fast-solution anomaly heuristic:
-                # Solved in under 45 seconds, on attempt 0 or 1, with page switching, without buying hints
-                is_suspicious = (dur < 45) and (attempts_before_success <= 1) and (inactivities_count >= 1) and (clues_count == 0)
+                # 1) Solved under 30s on attempt 0-1 without clues (direct copy-paste / solution leak), OR
+                # 2) Solved under 60s on attempt 0-1 with tab switching (user_inactive >= 1) without clues
+                is_suspicious = (attempts_before_success <= 1) and (clues_count == 0) and (
+                    (dur < 30) or (dur < 60 and inactivities_count >= 1)
+                )
                 u = user_map.get(uid)
                 login_label = u.login if u else f"User #{uid}"
                 group_label = getattr(u, "group", None) or "—"
@@ -380,7 +383,7 @@ def build_analytics_dashboard_data(
     # Render all figures to HTML
     # ---------------------------------------------------------
     charts_html = {
-        "overview": fig_overview.to_html(full_html=False, include_plotlyjs="cdn"),
+        "overview": fig_overview.to_html(full_html=False, include_plotlyjs=False),
         "time_velocity": fig_time.to_html(full_html=False, include_plotlyjs=False),
         "ai_integrity": fig_ai.to_html(full_html=False, include_plotlyjs=False),
         "difficulty": fig_diff.to_html(full_html=False, include_plotlyjs=False),
