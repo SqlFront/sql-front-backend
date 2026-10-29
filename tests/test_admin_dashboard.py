@@ -10,6 +10,7 @@ from database import Base
 from src.models.user_event import UserEvent
 from src.models.user import User
 from src.models.task import Task
+from src.admin import TEMPLATES_DIR
 from src.admin.dashboard import (
     AnalyticsDashboardView,
     build_analytics_figure,
@@ -92,6 +93,7 @@ async def test_analytics_dashboard_http_endpoint():
     # Setup in-memory SQLite database
     test_engine = create_async_engine("sqlite+aiosqlite:///:memory:")
     async with test_engine.begin() as conn:
+        await conn.run_sync(User.__table__.create)
         await conn.run_sync(UserEvent.__table__.create)
 
     test_session_maker = sessionmaker(
@@ -104,7 +106,7 @@ async def test_analytics_dashboard_http_endpoint():
         test_engine,
         session_maker=test_session_maker,
         base_url="/admin",
-        templates_dir="templates",
+        templates_dir=TEMPLATES_DIR,
     )
     admin.add_view(AnalyticsDashboardView)
 

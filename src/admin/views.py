@@ -1,5 +1,7 @@
 from sqladmin import ModelView
+from sqladmin.filters import AllUniqueStringValuesFilter
 
+from src.admin.filters import EventTimestampFilter, UserNicknameFilter
 from src.models.achievement import Achievement
 from src.models.task import Task
 from src.models.user import User
@@ -118,10 +120,40 @@ class UserEventView(ModelView, model=UserEvent):
         UserEvent.event_type,
         UserEvent.payload,
     ]
-    column_searchable_list = [
+    column_labels = {
+        UserEvent.id: "ID",
+        UserEvent.timestamp: "Время (UTC)",
+        UserEvent.user_id: "Пользователь (ник)",
+        UserEvent.task_id: "ID задачи",
+        UserEvent.event_type: "Тип события",
+        UserEvent.payload: "Данные (JSON)",
+    }
+    column_formatters = {
+        UserEvent.user_id: lambda m, a: f"{m.user.login} ({m.user.group})" if getattr(m, "user", None) and m.user and m.user.login else f"ID: {m.user_id}",
+    }
+    column_details_list = [
+        UserEvent.id,
+        UserEvent.timestamp,
         UserEvent.user_id,
+        UserEvent.task_id,
         UserEvent.event_type,
+        UserEvent.payload,
     ]
+    column_searchable_list = [
+        "user.login",
+        "user.fullname",
+        "user.email",
+        UserEvent.event_type,
+        UserEvent.user_id,
+    ]
+    search_placeholder = "Поиск по нику, ФИО, email, типу события, user_id..."
+
+    column_filters = [
+        EventTimestampFilter(title="Период времени"),
+        UserNicknameFilter(title="Ник пользователя"),
+        AllUniqueStringValuesFilter(UserEvent.event_type, title="Тип события"),
+    ]
+
     column_sortable_list = [
         UserEvent.id,
         UserEvent.timestamp,
@@ -130,6 +162,9 @@ class UserEventView(ModelView, model=UserEvent):
         UserEvent.event_type,
     ]
     column_default_sort = (UserEvent.timestamp, True)
+
+    page_size = 25
+    page_size_options = [10, 25, 50, 100]
 
     # Режим read-only для защиты аудита
     can_create = False

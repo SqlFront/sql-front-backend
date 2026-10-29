@@ -1,0 +1,43 @@
+{% extends "sqladmin/filters/base_filter.html" %}
+
+{% block filter_title_classes %}fw-bold text-truncate fs-4 mb-2 text-primary{% endblock %}
+
+{% block filter_body %}
+{% set current_val = request.query_params.get(filter.parameter_name, '') %}
+
+{% if current_val %}
+<div class="mb-2 p-2 bg-light-lt rounded border d-flex align-items-center justify-content-between">
+  <span class="small fw-bold text-truncate">
+    <i class="fa-solid fa-user me-1 text-primary"></i>Ник: &laquo;{{ current_val }}&raquo;
+  </span>
+  <a href="{{ request.url.remove_query_params(filter.parameter_name) }}" class="text-danger ms-2" title="Сбросить фильтр по нику">
+    <i class="fa-solid fa-times"></i>
+  </a>
+</div>
+{% endif %}
+
+<form method="get" class="d-flex flex-column gap-1">
+  {% for key, value in request.query_params.items() %}
+    {% if key != filter.parameter_name and key != 'error' %}
+    <input type="hidden" name="{{ key }}" value="{{ value }}">
+    {% endif %}
+  {% endfor %}
+
+  <div class="input-group input-group-sm">
+    <input
+      type="text"
+      name="{{ filter.parameter_name }}"
+      placeholder="Введите ник или логин..."
+      class="form-control form-control-sm"
+      value="{{ current_val }}">
+    <button type="submit" class="btn btn-outline-primary" title="Применить фильтр">
+      <i class="fa-solid fa-search"></i>
+    </button>
+  </div>
+  {% if current_val %}
+  <a href="{{ request.url.remove_query_params(filter.parameter_name) }}" class="small text-muted text-decoration-none mt-1">
+    <i class="fa-solid fa-rotate-left me-1"></i>Сбросить ник
+  </a>
+  {% endif %}
+</form>
+{% endblock %}

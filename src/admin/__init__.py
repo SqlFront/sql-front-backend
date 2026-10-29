@@ -1,6 +1,7 @@
 """
 Admin module for SQL-Front platform.
 """
+import os
 from fastapi import FastAPI
 from sqladmin import Admin
 
@@ -19,6 +20,11 @@ __all__ = [
     "AnalyticsDashboardView",
 ]
 
+TEMPLATES_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    "templates",
+)
+
 
 def setup_admin(app: FastAPI, engine=None, authentication_backend=None) -> Admin:
     """
@@ -33,7 +39,7 @@ def setup_admin(app: FastAPI, engine=None, authentication_backend=None) -> Admin
         authentication_backend=auth,
         base_url="/admin",
         title="SQL-Front Admin",
-        templates_dir="templates",
+        templates_dir=TEMPLATES_DIR,
     )
 
     admin.add_view(UserView)

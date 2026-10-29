@@ -435,6 +435,7 @@ def build_analytics_dashboard_data(
             "name": g,
             "avg_score": avg_s,
             "submissions": sub_c,
+            "students_count": len(group_stats[g]["students"]),
             "is_test": is_test_group(g),
         })
 

@@ -1,0 +1,90 @@
+{% extends "sqladmin/filters/base_filter.html" %}
+
+{% block filter_title_classes %}fw-bold text-truncate fs-4 mb-2 text-primary{% endblock %}
+
+{% block filter_body %}
+{% set current_val = request.query_params.get(filter.parameter_name, '') %}
+
+{% if current_val %}
+<div class="mb-2 p-2 bg-light-lt rounded border d-flex align-items-center justify-content-between">
+  <span class="small fw-bold text-truncate">
+    <i class="fa-solid fa-clock me-1 text-primary"></i>
+    {% if current_val == 'today' %}
+      Сегодня (UTC)
+    {% elif current_val == '24h' %}
+      Последние 24 часа
+    {% elif current_val == '7d' %}
+      За 7 дней
+    {% elif current_val == '30d' %}
+      За 30 дней
+    {% elif '__' in current_val %}
+      {% set parts = current_val.split('__') %}
+      {{ parts[0] or '...' }} &mdash; {{ parts[1] or '...' }}
+    {% else %}
+      {{ current_val }}
+    {% endif %}
+  </span>
+  <a href="{{ request.url.remove_query_params(filter.parameter_name) }}" class="text-danger ms-2" title="Сбросить фильтр времени">
+    <i class="fa-solid fa-times"></i>
+  </a>
+</div>
+{% endif %}
+
+<!-- Quick Preset Pills -->
+<div class="d-flex flex-wrap gap-1 mb-2">
+  <a href="{{ request.url.include_query_params(**{filter.parameter_name: 'today'}) }}"
+     class="btn btn-xs btn-sm {% if current_val == 'today' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+    Сегодня
+  </a>
+  <a href="{{ request.url.include_query_params(**{filter.parameter_name: '24h'}) }}"
+     class="btn btn-xs btn-sm {% if current_val == '24h' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+    24 ч
+  </a>
+  <a href="{{ request.url.include_query_params(**{filter.parameter_name: '7d'}) }}"
+     class="btn btn-xs btn-sm {% if current_val == '7d' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+    7 дн
+  </a>
+  <a href="{{ request.url.include_query_params(**{filter.parameter_name: '30d'}) }}"
+     class="btn btn-xs btn-sm {% if current_val == '30d' %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+    30 дн
+  </a>
+</div>
+
+<!-- Custom Date Range Form -->
+<form method="get" class="d-flex flex-column gap-1" onsubmit="
+  const start = this.querySelector('[name=custom_start]').value;
+  const end = this.querySelector('[name=custom_end]').value;
+  if (!start && !end) { return false; }
+  this.querySelector('[name={{ filter.parameter_name }}]').value = (start || '') + '__' + (end || '');
+  return true;
+">
+  {% for key, value in request.query_params.items() %}
+    {% if key != filter.parameter_name and key != 'custom_start' and key != 'custom_end' and key != 'error' %}
+    <input type="hidden" name="{{ key }}" value="{{ value }}">
+    {% endif %}
+  {% endfor %}
+
+  <input type="hidden" name="{{ filter.parameter_name }}" value="">
+
+  {% set range_start = '' %}
+  {% set range_end = '' %}
+  {% if '__' in current_val %}
+    {% set parts = current_val.split('__') %}
+    {% set range_start = parts[0] %}
+    {% if parts|length > 1 %}{% set range_end = parts[1] %}{% endif %}
+  {% endif %}
+
+  <div class="input-group input-group-sm">
+    <span class="input-group-text py-0" style="font-size: 0.75rem;">С</span>
+    <input type="date" name="custom_start" class="form-control form-control-sm" value="{{ range_start }}">
+  </div>
+  <div class="input-group input-group-sm">
+    <span class="input-group-text py-0" style="font-size: 0.75rem;">По</span>
+    <input type="date" name="custom_end" class="form-control form-control-sm" value="{{ range_end }}">
+  </div>
+
+  <button type="submit" class="btn btn-sm btn-outline-primary mt-1">
+    <i class="fa-solid fa-filter me-1"></i>Применить диапазон
+  </button>
+</form>
+{% endblock %}

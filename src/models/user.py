@@ -32,6 +32,12 @@ class User(Base):
     solved_tasks = relationship("TaskSolved", back_populates="user")
     quest_progress = relationship("UserQuestProgress", back_populates="user")
 
+    def __str__(self) -> str:
+        if self.login:
+            grp = f" [{self.group}]" if self.group else ""
+            return f"{self.login}{grp}"
+        return f"User #{self.user_id}"
+
 
 class PasswordHash(Base):
     __tablename__ = "password_hashes"

@@ -270,16 +270,53 @@
 
         <!-- TAB 4: GROUPS -->
         <div class="tab-pane" id="tab-groups" role="tabpanel">
-          <div class="d-flex justify-content-between align-items-center mb-3 p-2 bg-light rounded border flex-wrap gap-2">
-            <div class="d-flex align-items-center gap-2">
-              <span class="fw-bold text-muted"><i class="fa-solid fa-filter me-1"></i>Фильтр когорт:</span>
-              <div class="form-check form-switch mb-0">
-                <input class="form-check-input" type="checkbox" id="toggleCleanGroups" checked>
-                <label class="form-check-label fw-bold" for="toggleCleanGroups">Скрыть тестовые группы (ТЕСТ, 445, АБВГ...)</label>
+          <div class="card mb-3 border shadow-sm">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center flex-wrap gap-2 py-2">
+              <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-sliders text-primary"></i>
+                <span class="fw-bold">Гибкая фильтрация когорт и учебных групп:</span>
+                <span id="groupsCountBadge" class="badge bg-primary-lt">Отображено: 0 из 0</span>
+              </div>
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <div class="input-group input-group-sm" style="max-width: 220px;">
+                  <span class="input-group-text"><i class="fa-solid fa-search"></i></span>
+                  <input type="text" id="groupSearchInput" class="form-control" placeholder="Поиск группы...">
+                </div>
+                <div class="btn-group btn-group-sm">
+                  <button type="button" class="btn btn-outline-primary" id="btnSelectAllGroups" title="Включить все группы">
+                    <i class="fa-solid fa-check-double me-1"></i>Все
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary" id="btnDeselectAllGroups" title="Выключить все группы">
+                    <i class="fa-solid fa-xmark me-1"></i>Снять все
+                  </button>
+                  <button type="button" class="btn btn-outline-warning" id="btnHideTestGroups" title="Исключить группы с тестовыми названиями">
+                    <i class="fa-solid fa-shield-halved me-1"></i>Без тестовых
+                  </button>
+                  <button type="button" class="btn btn-outline-info" id="btnInvertGroups" title="Инвертировать выбор">
+                    <i class="fa-solid fa-arrow-right-arrow-left me-1"></i>Инверт
+                  </button>
+                </div>
               </div>
             </div>
-            <div id="groupsCountBadge" class="badge bg-blue-lt"></div>
+            <div class="card-body p-2 bg-light-lt">
+              <div class="small text-muted mb-2">
+                <i class="fa-solid fa-hand-pointer me-1"></i>Нажимайте на группы, чтобы включать или исключать их из диаграммы. Выбор сохраняется автоматически.
+              </div>
+              <div id="groupPillsContainer" class="d-flex flex-wrap gap-1 align-items-center" style="max-height: 180px; overflow-y: auto;">
+                <!-- Динамически формируемые чипы групп -->
+              </div>
+            </div>
           </div>
+
+          <div id="groupsEmptyAlert" class="alert alert-warning d-none text-center py-4">
+            <i class="fa-solid fa-circle-exclamation fs-2 text-warning mb-2 d-block"></i>
+            <strong>Все группы отключены в фильтре</strong>
+            <p class="text-muted small mb-3">Включите одну или несколько групп в блоке выше, либо нажмите кнопку &laquo;Все&raquo;.</p>
+            <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('btnSelectAllGroups').click();">
+              <i class="fa-solid fa-check-double me-1"></i>Включить все группы
+            </button>
+          </div>
+
           <div class="plotly-chart-wrapper" id="groups-chart-wrapper">
             {{ charts.groups | safe }}
           </div>
@@ -513,21 +550,101 @@ document.addEventListener("DOMContentLoaded", function() {
   applyReviewedState();
 
   // -------------------------------------------------------------
-  // 4. Live Groups Filtering (Hide test/junk groups)
+  // 4. Live Flexible Groups Filtering (Any group toggleable, persistent)
   // -------------------------------------------------------------
-  const GROUPS_DATA = {{ groups_payload | tojson | safe }};
-  const toggleClean = document.getElementById('toggleCleanGroups');
+  const GROUPS_DATA = {{ groups_payload | tojson | safe }} || [];
+  const pillsContainer = document.getElementById('groupPillsContainer');
   const groupsBadge = document.getElementById('groupsCountBadge');
+  const searchInput = document.getElementById('groupSearchInput');
+  const emptyAlert = document.getElementById('groupsEmptyAlert');
+  const chartWrapper = document.getElementById('groups-chart-wrapper');
+
+  const STORAGE_KEY = 'sqladmin_selected_groups_v1';
+  let selectedGroupNames = new Set();
+
+  function loadInitialSelection() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const arr = JSON.parse(saved);
+        if (Array.isArray(arr)) {
+          selectedGroupNames = new Set(arr);
+          return;
+        }
+      }
+    } catch(e) {}
+    // Default: all non-test groups (or all if all are test)
+    const nonTest = GROUPS_DATA.filter(function(g) { return !g.is_test; });
+    const defaults = nonTest.length > 0 ? nonTest : GROUPS_DATA;
+    selectedGroupNames = new Set(defaults.map(function(g) { return g.name; }));
+  }
+
+  function saveSelection() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(selectedGroupNames)));
+    } catch(e) {}
+  }
+
+  function renderGroupPills() {
+    if (!pillsContainer) return;
+    pillsContainer.innerHTML = '';
+    const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+    GROUPS_DATA.forEach(function(g) {
+      const isVisible = !query || g.name.toLowerCase().includes(query);
+      if (!isVisible) return;
+
+      const isSelected = selectedGroupNames.has(g.name);
+      const pill = document.createElement('button');
+      pill.type = 'button';
+      pill.className = 'btn btn-xs ' + (isSelected ? 'btn-primary' : 'btn-outline-secondary') + ' text-truncate m-1';
+      pill.style.fontSize = '0.8rem';
+      pill.style.padding = '3px 8px';
+      pill.dataset.group = g.name;
+
+      const icon = isSelected ? '<i class="fa-solid fa-check me-1"></i>' : '<i class="fa-solid fa-plus me-1 text-muted"></i>';
+      const testTag = g.is_test ? ' <span class="badge bg-warning text-dark py-0 px-1 ms-1" style="font-size: 0.65rem;">тест</span>' : '';
+      const studInfo = (g.students_count ? g.students_count + ' ст.' : (g.submissions + ' сбм.'));
+
+      pill.innerHTML = icon + '<strong>' + escapeHtml(g.name) + '</strong> <span class="badge bg-white text-dark ms-1">' + studInfo + '</span>' + testTag;
+
+      pill.addEventListener('click', function() {
+        if (selectedGroupNames.has(g.name)) {
+          selectedGroupNames.delete(g.name);
+        } else {
+          selectedGroupNames.add(g.name);
+        }
+        saveSelection();
+        renderGroupPills();
+        updateGroupsChart();
+      });
+
+      pillsContainer.appendChild(pill);
+    });
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
 
   function updateGroupsChart() {
     if (!GROUPS_DATA || !window.Plotly) return;
-    const hideTest = toggleClean ? toggleClean.checked : true;
     const filtered = GROUPS_DATA.filter(function(g) {
-      return !hideTest || !g.is_test;
+      return selectedGroupNames.has(g.name);
     });
 
     if (groupsBadge) {
-      groupsBadge.textContent = 'Отображено групп: ' + filtered.length + ' из ' + GROUPS_DATA.length;
+      groupsBadge.textContent = 'Отображено: ' + filtered.length + ' из ' + GROUPS_DATA.length;
+    }
+
+    if (filtered.length === 0) {
+      if (emptyAlert) emptyAlert.classList.remove('d-none');
+      if (chartWrapper) chartWrapper.classList.add('opacity-25');
+    } else {
+      if (emptyAlert) emptyAlert.classList.add('d-none');
+      if (chartWrapper) chartWrapper.classList.remove('opacity-25');
     }
 
     const xNames = filtered.map(function(g) { return g.name; });
@@ -540,9 +657,59 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  if (toggleClean) {
-    toggleClean.addEventListener('change', updateGroupsChart);
+  // Buttons handlers
+  const btnAll = document.getElementById('btnSelectAllGroups');
+  if (btnAll) {
+    btnAll.addEventListener('click', function() {
+      selectedGroupNames = new Set(GROUPS_DATA.map(function(g) { return g.name; }));
+      saveSelection();
+      renderGroupPills();
+      updateGroupsChart();
+    });
   }
+
+  const btnNone = document.getElementById('btnDeselectAllGroups');
+  if (btnNone) {
+    btnNone.addEventListener('click', function() {
+      selectedGroupNames.clear();
+      saveSelection();
+      renderGroupPills();
+      updateGroupsChart();
+    });
+  }
+
+  const btnClean = document.getElementById('btnHideTestGroups');
+  if (btnClean) {
+    btnClean.addEventListener('click', function() {
+      selectedGroupNames = new Set(
+        GROUPS_DATA.filter(function(g) { return !g.is_test; }).map(function(g) { return g.name; })
+      );
+      saveSelection();
+      renderGroupPills();
+      updateGroupsChart();
+    });
+  }
+
+  const btnInvert = document.getElementById('btnInvertGroups');
+  if (btnInvert) {
+    btnInvert.addEventListener('click', function() {
+      const inverted = new Set();
+      GROUPS_DATA.forEach(function(g) {
+        if (!selectedGroupNames.has(g.name)) inverted.add(g.name);
+      });
+      selectedGroupNames = inverted;
+      saveSelection();
+      renderGroupPills();
+      updateGroupsChart();
+    });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', renderGroupPills);
+  }
+
+  loadInitialSelection();
+  renderGroupPills();
   setTimeout(updateGroupsChart, 200);
 });
 </script>
