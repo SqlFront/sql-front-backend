@@ -12,6 +12,21 @@ on:
         required: false
         type: boolean
         default: false
+      set_admin_username:
+        description: 'Set ADMIN_USERNAME in .env (leave blank to keep current)'
+        required: false
+        type: string
+        default: ''
+      set_admin_password:
+        description: 'Set ADMIN_PASSWORD in .env (leave blank to keep current)'
+        required: false
+        type: string
+        default: ''
+      reset_admin_creds:
+        description: 'Reset ADMIN_USERNAME=admin and ADMIN_PASSWORD=admin in .env'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   deploy:
@@ -33,6 +48,29 @@ jobs:
             git reset --hard origin/main
             cd /home/admin/sqlfront/sql-backend
           fi
+          
+          # Manage .env admin credentials via workflow inputs or defaults
+          if [ "${{ github.event.inputs.reset_admin_creds }}" = "true" ]; then
+            echo "Resetting admin credentials to standard admin/admin in .env..."
+            grep -q "^ADMIN_USERNAME=" .env && sed -i "s/^ADMIN_USERNAME=.*/ADMIN_USERNAME=admin/" .env || echo "ADMIN_USERNAME=admin" >> .env
+            grep -q "^ADMIN_PASSWORD=" .env && sed -i "s/^ADMIN_PASSWORD=.*/ADMIN_PASSWORD=admin/" .env || echo "ADMIN_PASSWORD=admin" >> .env
+          fi
+
+          if [ -n "${{ github.event.inputs.set_admin_username }}" ]; then
+            echo "Updating ADMIN_USERNAME in .env..."
+            grep -q "^ADMIN_USERNAME=" .env && sed -i "s/^ADMIN_USERNAME=.*/ADMIN_USERNAME=${{ github.event.inputs.set_admin_username }}/" .env || echo "ADMIN_USERNAME=${{ github.event.inputs.set_admin_username }}" >> .env
+          fi
+
+          if [ -n "${{ github.event.inputs.set_admin_password }}" ]; then
+            echo "Updating ADMIN_PASSWORD in .env..."
+            grep -q "^ADMIN_PASSWORD=" .env && sed -i "s/^ADMIN_PASSWORD=.*/ADMIN_PASSWORD=${{ github.event.inputs.set_admin_password }}/" .env || echo "ADMIN_PASSWORD=${{ github.event.inputs.set_admin_password }}" >> .env
+          fi
+
+          # Ensure standard admin credentials exist in .env if completely absent
+          grep -q "^ADMIN_USERNAME=" .env || echo "ADMIN_USERNAME=admin" >> .env
+          grep -q "^ADMIN_PASSWORD=" .env || echo "ADMIN_PASSWORD=admin" >> .env
+
+          echo "Admin configuration verified in .env: ADMIN_USERNAME=$(grep '^ADMIN_USERNAME=' .env | cut -d= -f2-)"
           
           echo "Rebuilding and restarting containers..."
           docker compose down || docker-compose down

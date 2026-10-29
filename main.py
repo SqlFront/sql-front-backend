@@ -7,6 +7,7 @@ import time
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 from contextlib import asynccontextmanager
 import logging
@@ -34,6 +35,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+# Trust X-Forwarded-Proto, X-Forwarded-For from reverse proxies (fixes HTTPS mixed-content and form action)
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 # # Добавьте Prometheus middleware
 # metrics_app = make_asgi_app()
