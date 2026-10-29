@@ -55,7 +55,7 @@ USER appuser
 
 # Health check (adjust the port if needed)
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8000/ || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:8000/health || exit 1
 
 # Run the application
 CMD ["python3", "main.py"]

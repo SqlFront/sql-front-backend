@@ -121,6 +121,12 @@ app.include_router(rating_router)
 app.include_router(activity_router)
 app.include_router(quests_router)
 
+@app.get("/")
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
+
+
 # Initialize SQLAdmin administration panel
 admin = setup_admin(app)
 
