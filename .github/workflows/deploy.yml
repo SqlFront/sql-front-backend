@@ -72,9 +72,49 @@ jobs:
 
           echo "Admin configuration verified in .env: ADMIN_USERNAME=$(grep '^ADMIN_USERNAME=' .env | cut -d= -f2-)"
           
-          echo "Rebuilding and restarting containers..."
-          docker compose down || docker-compose down
-          docker compose up -d --build || docker-compose up -d --build
+          # 1. Immediately ensure containers are running to prevent 502 Bad Gateway
+          echo "Ensuring existing containers are up..."
+          docker compose up -d || true
+
+          # 2. Try setting reliable Docker registry mirrors if sudo is available
+          if command -v sudo >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
+            if ! grep -q "timeweb.cloud" /etc/docker/daemon.json 2>/dev/null; then
+              echo "Configuring Docker registry mirrors in /etc/docker/daemon.json..."
+              sudo mkdir -p /etc/docker
+              cat << 'EOF' | sudo tee /etc/docker/daemon.json >/dev/null
+{
+  "registry-mirrors": [
+    "https://mirror.gcr.io",
+    "https://dockerhub.timeweb.cloud"
+  ]
+}
+EOF
+              sudo systemctl reload docker 2>/dev/null || sudo systemctl restart docker 2>/dev/null || true
+              sleep 2
+            fi
+          fi
+
+          # 3. Build containers without dropping old ones first
+          echo "Building containers (with retry and fallback)..."
+          BUILD_SUCCESS=false
+          for i in 1 2 3; do
+            echo "Build attempt $i of 3..."
+            if docker compose build; then
+              BUILD_SUCCESS=true
+              break
+            fi
+            echo "Build attempt $i encountered an issue, retrying in 5 seconds..."
+            sleep 5
+          done
+
+          if [ "$BUILD_SUCCESS" != "true" ]; then
+            echo "Standard BuildKit build failed (likely Docker Hub timeout). Attempting legacy builder DOCKER_BUILDKIT=0..."
+            DOCKER_BUILDKIT=0 docker compose build || echo "Warning: build with DOCKER_BUILDKIT=0 failed, proceeding with current images"
+          fi
+
+          # 4. Restart containers with newly built images
+          echo "Restarting containers..."
+          docker compose up -d --remove-orphans
           
           echo "Waiting 10 seconds for services to initialize..."
           sleep 10
