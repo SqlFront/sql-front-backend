@@ -32,6 +32,16 @@ class TestMigrations(unittest.TestCase):
         game_content = game_mig.read_text(encoding="utf-8")
         self.assertIn("equipment_audit", game_content)
 
+        users_mig2 = MIGRATIONS_DIR / "users_db" / "002_user_events_task_id_nullable.sql"
+        self.assertTrue(users_mig2.exists(), "users_db migration 002 must exist")
+
+        users_mig3 = MIGRATIONS_DIR / "users_db" / "003_fix_curriculum_duplicates.sql"
+        self.assertTrue(users_mig3.exists(), "users_db migration 003 must exist")
+        users3_content = users_mig3.read_text(encoding="utf-8")
+        self.assertIn("003_fix_curriculum_duplicates.sql", users3_content)
+        self.assertIn("Сезонность боевых действий", users3_content)
+        self.assertIn("Критический дефицит снаряжения", users3_content)
+
 
 if __name__ == "__main__":
     unittest.main()
