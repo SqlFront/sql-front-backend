@@ -35,6 +35,17 @@ JOIN equipment e ON mu.id = e.unit_id
 WHERE mu.location = 'Сталинград' AND e.equipment_type = 'боеприпасы'
 GROUP BY mu.id
 ORDER BY mu.id;""",
+    "1.03": """SELECT s.full_name,
+       COUNT(DISTINCT b.id) AS battles_participated,
+       DENSE_RANK() OVER (ORDER BY COUNT(DISTINCT b.id) DESC, s.full_name) AS hero_rank
+FROM soldier s
+JOIN military_service ms ON s.id = ms.soldier_id
+JOIN battle_military_unit bmu ON ms.unit_id = bmu.unit_id
+JOIN battle b ON bmu.battle_id = b.id
+WHERE ms.start_date <= b.end_date AND (ms.end_date IS NULL OR ms.end_date >= b.start_date)
+GROUP BY s.full_name
+ORDER BY hero_rank
+LIMIT 20;""",
     "1.04": """SELECT mu.unit_name,
        mu.combat_efficiency AS initial_efficiency,
        ROUND(100.0 * COUNT(CASE WHEN s.status IN ('убит', 'пропал без вести') THEN 1 END) / COUNT(s.id), 2)::float AS loss_percentage,
@@ -137,6 +148,42 @@ ORDER BY u.unit_name, recruit_order;""",
 FROM equipment e
 JOIN military_unit u ON e.unit_id = u.id
 ORDER BY u.unit_name, e.last_replenishment, e.item_name;""",
+    "2.02": """SELECT CASE 
+           WHEN b.importance_level = 'стратегическая' THEN 'Стратегические битвы' 
+           ELSE 'Локальные операции' 
+       END AS battle_group,
+       ROUND(AVG(mu.combat_efficiency)::numeric, 2)::float AS avg_efficiency
+FROM battle b
+JOIN battle_military_unit bmu ON b.id = bmu.battle_id
+JOIN military_unit mu ON bmu.unit_id = mu.id
+GROUP BY battle_group
+ORDER BY battle_group DESC;""",
+    "2.05": """SELECT mu.unit_name,
+       (MAX(b.end_date) - MIN(b.start_date))::int AS total_duration,
+       COUNT(DISTINCT b.id)::int AS battles_count,
+       COUNT(DISTINCT s.id) FILTER (WHERE s.status IN ('убит', 'пропал без вести'))::int AS losses,
+       ROUND((COUNT(DISTINCT s.id) FILTER (WHERE s.status IN ('убит', 'пропал без вести')))::numeric / NULLIF(COUNT(DISTINCT b.id), 0), 2)::float AS loss_per_battle_ratio,
+       PERCENT_RANK() OVER (ORDER BY (MAX(b.end_date) - MIN(b.start_date)) DESC)::float AS survival_percentile
+FROM military_unit mu
+JOIN battle_military_unit bmu ON mu.id = bmu.unit_id
+JOIN battle b ON bmu.battle_id = b.id
+LEFT JOIN military_service ms ON mu.id = ms.unit_id
+LEFT JOIN soldier s ON ms.soldier_id = s.id
+GROUP BY mu.id, mu.unit_name
+ORDER BY total_duration DESC, mu.unit_name;""",
+    "2.06": """SELECT mu.unit_name,
+       COUNT(DISTINCT ms.soldier_id)::int AS soldiers_total,
+       COUNT(DISTINCT e.equipment_type)::int AS equipment_types,
+       COUNT(DISTINCT bmu.battle_id)::int AS battles_participated,
+       COALESCE(STRING_AGG(DISTINCT m.medal_name, ', ' ORDER BY m.medal_name), 'Нет') AS medals_received
+FROM military_unit mu
+LEFT JOIN military_service ms ON mu.id = ms.unit_id
+LEFT JOIN equipment e ON mu.id = e.unit_id
+LEFT JOIN battle_military_unit bmu ON mu.id = bmu.unit_id
+LEFT JOIN soldier_medal sm ON ms.soldier_id = sm.soldier_id
+LEFT JOIN medal m ON sm.medal_id = m.id
+GROUP BY mu.id, mu.unit_name
+ORDER BY soldiers_total DESC, mu.unit_name;""",
     "2.07": """SELECT e.equipment_type,
        e.item_name,
        mu.unit_name,
@@ -152,6 +199,56 @@ ORDER BY u.unit_name, e.last_replenishment, e.item_name;""",
 FROM equipment e
 LEFT JOIN military_unit mu ON e.unit_id = mu.id
 ORDER BY e.equipment_type, e.quantity, e.item_name;""",
+    "2.08": """WITH enemy_battles AS (
+    SELECT eu.unit_name,
+           COUNT(DISTINCT b.id)::int AS victories,
+           COUNT(DISTINCT s.id) FILTER (WHERE s.status IN ('убит', 'пропал без вести'))::float AS total_soviet_losses
+    FROM enemy_unit eu
+    JOIN battle_enemy_unit beu ON eu.id = beu.enemy_unit_id
+    JOIN battle b ON beu.battle_id = b.id
+    JOIN battle_military_unit bmu ON b.id = bmu.battle_id
+    LEFT JOIN military_service ms ON bmu.unit_id = ms.unit_id 
+         AND ms.start_date <= b.end_date AND (ms.end_date IS NULL OR ms.end_date >= b.start_date)
+    LEFT JOIN soldier s ON ms.soldier_id = s.id
+    WHERE b.result ~* '(победа вермахта|потеря города)'
+    GROUP BY eu.id, eu.unit_name
+)
+SELECT unit_name, victories, total_soviet_losses
+FROM enemy_battles
+ORDER BY victories DESC, total_soviet_losses DESC, unit_name
+LIMIT 3;""",
+    "2.10": """WITH unit_stats AS (
+    SELECT mu.id AS unit_id,
+           mu.unit_name,
+           COUNT(DISTINCT b.id) FILTER (WHERE b.result ~* '(побед|успеш|освобожд|разгром|взятие|капитуляц)' AND b.result !~* 'вермахт')::int AS victories,
+           COUNT(DISTINCT s.id) FILTER (WHERE s.status IN ('убит', 'пропал без вести'))::int AS deaths
+    FROM military_unit mu
+    LEFT JOIN battle_military_unit bmu ON mu.id = bmu.unit_id
+    LEFT JOIN battle b ON bmu.battle_id = b.id
+    LEFT JOIN military_service ms ON mu.id = ms.unit_id
+    LEFT JOIN soldier s ON ms.soldier_id = s.id
+    GROUP BY mu.id, mu.unit_name
+),
+unit_medals AS (
+    SELECT mu.id AS unit_id,
+           m.medal_name,
+           COUNT(sm.medal_id)::int AS awarded
+    FROM military_unit mu
+    JOIN military_service ms ON mu.id = ms.unit_id
+    JOIN soldier_medal sm ON ms.soldier_id = sm.soldier_id
+    JOIN medal m ON sm.medal_id = m.id
+    GROUP BY mu.id, m.medal_name
+)
+SELECT us.unit_name,
+       um.medal_name,
+       um.awarded,
+       us.deaths,
+       us.victories,
+       ROUND(us.victories::numeric / NULLIF(um.awarded, 0), 2)::float AS victory_per_medal,
+       ROUND(us.deaths::numeric / NULLIF(um.awarded, 0), 2)::float AS death_per_medal
+FROM unit_medals um
+JOIN unit_stats us ON um.unit_id = us.unit_id
+ORDER BY CASE WHEN us.victories = 0 THEN 1 ELSE 0 END, victory_per_medal DESC, us.unit_name, um.medal_name;""",
     "2.11": """WITH all_months AS (
     SELECT m AS month_num,
            TRIM(TO_CHAR(TO_DATE(m::text, 'MM'), 'Month')) AS month_name
@@ -171,6 +268,30 @@ SELECT am.month_num,
 FROM all_months am
 LEFT JOIN monthly_battles mb ON am.month_num = mb.month_num
 ORDER BY am.month_num;""",
+    "2.12": """WITH battle_stats AS (
+    SELECT b.id AS battle_id,
+           b.battle_name,
+           COUNT(DISTINCT s.id) FILTER (WHERE s.status IN ('убит', 'пропал без вести'))::int AS losses,
+           ROUND(AVG(mu.combat_efficiency)::numeric, 1)::float AS avg_efficiency,
+           COALESCE(SUM(ea.quantity), 0)::int AS equipment_used
+    FROM battle b
+    JOIN battle_military_unit bmu ON b.id = bmu.battle_id
+    JOIN military_unit mu ON bmu.unit_id = mu.id
+    LEFT JOIN military_service ms ON mu.id = ms.unit_id
+         AND ms.start_date <= b.end_date AND (ms.end_date IS NULL OR ms.end_date >= b.start_date)
+    LEFT JOIN soldier s ON ms.soldier_id = s.id
+    LEFT JOIN equipment_assignment ea ON s.id = ea.soldier_id
+    GROUP BY b.id, b.battle_name
+)
+SELECT battle_name,
+       losses,
+       avg_efficiency,
+       equipment_used,
+       DENSE_RANK() OVER (ORDER BY losses DESC)::int AS loss_rank,
+       DENSE_RANK() OVER (ORDER BY avg_efficiency DESC)::int AS eff_rank,
+       ROUND((losses / NULLIF(avg_efficiency, 0))::numeric, 2)::float AS cost_ratio
+FROM battle_stats
+ORDER BY cost_ratio DESC, battle_name;""",
 }
 
 
@@ -243,6 +364,53 @@ class TestCurriculumQueries(unittest.IsolatedAsyncioTestCase):
 
             self.assertEqual(expected_data, user_data, "Task 0.25 expected_result data must match actual query execution")
             self.assertEqual(sorted(expected_data), sorted(user_data))
+        finally:
+            await users_conn.close()
+
+    async def test_mission_2_and_task_1_3_match_users_db_expected_results(self):
+        users_dsn = get_db_dsn("DATABASE_URL", "postgresql://postgres:postgres@localhost:5430/users_db")
+        try:
+            users_conn = await asyncio.wait_for(asyncpg.connect(users_dsn), timeout=10.0)
+        except Exception as e:
+            self.skipTest(f"users_db not reachable at {users_dsn} ({e})")
+
+        test_tasks = [
+            ("1.03", 1, 3),
+            ("2.02", 2, 2),
+            ("2.05", 2, 5),
+            ("2.06", 2, 6),
+            ("2.08", 2, 8),
+            ("2.10", 2, 10),
+            ("2.12", 2, 12),
+        ]
+
+        try:
+            for task_code, mission_id, task_id in test_tasks:
+                with self.subTest(task=task_code):
+                    row = await users_conn.fetchrow(
+                        "SELECT correct_query, expected_result FROM tasks WHERE mission_id = $1 AND task_id = $2;",
+                        mission_id, task_id
+                    )
+                    self.assertIsNotNone(row, f"Task {task_code} should exist in tasks table")
+                    self.assertIsNotNone(row["correct_query"], f"correct_query should not be NULL for task {task_code}")
+
+                    expected_payload = json.loads(row["expected_result"]) if isinstance(row["expected_result"], str) else row["expected_result"]
+                    expected_columns = expected_payload.get("columns", [])
+                    expected_data = expected_payload.get("data", [])
+                    expected_count = expected_payload.get("row_count", len(expected_data))
+
+                    query = TARGET_QUERIES[task_code]
+                    stmt = await self.conn.prepare(query)
+                    columns = [attr.name for attr in stmt.get_attributes()]
+                    records = await stmt.fetch()
+
+                    user_data = []
+                    for r in records:
+                        user_data.append([serialize_record_val(r[col]) for col in columns])
+
+                    self.assertEqual(columns, expected_columns, f"{task_code} columns mismatch")
+                    self.assertEqual(user_data, expected_data, f"{task_code} data mismatch")
+                    self.assertEqual(len(user_data), expected_count, f"{task_code} row count mismatch")
         finally:
             await users_conn.close()
 

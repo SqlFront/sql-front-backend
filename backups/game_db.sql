@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.8 (Debian 16.8-1.pgdg120+1)
--- Dumped by pg_dump version 16.9 (Homebrew)
+-- Dumped from database version 15.13
+-- Dumped by pg_dump version 15.13
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -55,6 +55,25 @@ ALTER TABLE public.battle_enemy_unit OWNER TO postgres;
 --
 
 COMMENT ON COLUMN public.battle_enemy_unit.battle_id IS 'Связь между боями и участвовавшими немецкими частями';
+
+
+--
+-- Name: battle_military_unit; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.battle_military_unit (
+    battle_id bigint NOT NULL,
+    unit_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.battle_military_unit OWNER TO postgres;
+
+--
+-- Name: TABLE battle_military_unit; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON TABLE public.battle_military_unit IS 'Связь между сражениями и участвовавшими советскими частями';
 
 
 --
@@ -113,19 +132,6 @@ CREATE TABLE public.equipment (
 ALTER TABLE public.equipment OWNER TO postgres;
 
 --
--- Name: equipment_audit; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.equipment_audit (
-    id SERIAL PRIMARY KEY,
-    item_name character varying NOT NULL,
-    added_at date DEFAULT CURRENT_DATE
-);
-
-
-ALTER TABLE public.equipment_audit OWNER TO postgres;
-
---
 -- Name: equipment_assignment; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -139,6 +145,41 @@ CREATE TABLE public.equipment_assignment (
 
 
 ALTER TABLE public.equipment_assignment OWNER TO postgres;
+
+--
+-- Name: equipment_audit; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.equipment_audit (
+    id integer NOT NULL,
+    item_name character varying NOT NULL,
+    added_at date DEFAULT CURRENT_DATE
+);
+
+
+ALTER TABLE public.equipment_audit OWNER TO postgres;
+
+--
+-- Name: equipment_audit_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.equipment_audit_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.equipment_audit_id_seq OWNER TO postgres;
+
+--
+-- Name: equipment_audit_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.equipment_audit_id_seq OWNED BY public.equipment_audit.id;
+
 
 --
 -- Name: medal; Type: TABLE; Schema: public; Owner: postgres
@@ -186,6 +227,41 @@ CREATE TABLE public.military_unit (
 ALTER TABLE public.military_unit OWNER TO postgres;
 
 --
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.schema_migrations (
+    id integer NOT NULL,
+    version character varying(255) NOT NULL,
+    applied_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.schema_migrations OWNER TO postgres;
+
+--
+-- Name: schema_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.schema_migrations_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.schema_migrations_id_seq OWNER TO postgres;
+
+--
+-- Name: schema_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.schema_migrations_id_seq OWNED BY public.schema_migrations.id;
+
+
+--
 -- Name: soldier; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -218,6 +294,20 @@ CREATE TABLE public.soldier_medal (
 
 
 ALTER TABLE public.soldier_medal OWNER TO postgres;
+
+--
+-- Name: equipment_audit id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipment_audit ALTER COLUMN id SET DEFAULT nextval('public.equipment_audit_id_seq'::regclass);
+
+
+--
+-- Name: schema_migrations id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schema_migrations ALTER COLUMN id SET DEFAULT nextval('public.schema_migrations_id_seq'::regclass);
+
 
 --
 -- Data for Name: battle; Type: TABLE DATA; Schema: public; Owner: postgres
@@ -312,6 +402,67 @@ INSERT INTO public.battle_enemy_unit VALUES (5, 46);
 INSERT INTO public.battle_enemy_unit VALUES (8, 48);
 INSERT INTO public.battle_enemy_unit VALUES (5, 49);
 INSERT INTO public.battle_enemy_unit VALUES (26, 41);
+
+
+--
+-- Data for Name: battle_military_unit; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.battle_military_unit VALUES (1, 15);
+INSERT INTO public.battle_military_unit VALUES (2, 1);
+INSERT INTO public.battle_military_unit VALUES (2, 6);
+INSERT INTO public.battle_military_unit VALUES (3, 2);
+INSERT INTO public.battle_military_unit VALUES (3, 13);
+INSERT INTO public.battle_military_unit VALUES (3, 18);
+INSERT INTO public.battle_military_unit VALUES (3, 26);
+INSERT INTO public.battle_military_unit VALUES (4, 5);
+INSERT INTO public.battle_military_unit VALUES (4, 20);
+INSERT INTO public.battle_military_unit VALUES (4, 23);
+INSERT INTO public.battle_military_unit VALUES (4, 24);
+INSERT INTO public.battle_military_unit VALUES (4, 29);
+INSERT INTO public.battle_military_unit VALUES (5, 3);
+INSERT INTO public.battle_military_unit VALUES (5, 8);
+INSERT INTO public.battle_military_unit VALUES (5, 9);
+INSERT INTO public.battle_military_unit VALUES (6, 14);
+INSERT INTO public.battle_military_unit VALUES (6, 19);
+INSERT INTO public.battle_military_unit VALUES (6, 30);
+INSERT INTO public.battle_military_unit VALUES (7, 12);
+INSERT INTO public.battle_military_unit VALUES (8, 4);
+INSERT INTO public.battle_military_unit VALUES (8, 8);
+INSERT INTO public.battle_military_unit VALUES (9, 3);
+INSERT INTO public.battle_military_unit VALUES (9, 4);
+INSERT INTO public.battle_military_unit VALUES (10, 28);
+INSERT INTO public.battle_military_unit VALUES (11, 1);
+INSERT INTO public.battle_military_unit VALUES (11, 11);
+INSERT INTO public.battle_military_unit VALUES (11, 15);
+INSERT INTO public.battle_military_unit VALUES (12, 14);
+INSERT INTO public.battle_military_unit VALUES (13, 17);
+INSERT INTO public.battle_military_unit VALUES (13, 27);
+INSERT INTO public.battle_military_unit VALUES (14, 1);
+INSERT INTO public.battle_military_unit VALUES (14, 19);
+INSERT INTO public.battle_military_unit VALUES (15, 2);
+INSERT INTO public.battle_military_unit VALUES (15, 21);
+INSERT INTO public.battle_military_unit VALUES (16, 15);
+INSERT INTO public.battle_military_unit VALUES (17, 15);
+INSERT INTO public.battle_military_unit VALUES (18, 7);
+INSERT INTO public.battle_military_unit VALUES (18, 14);
+INSERT INTO public.battle_military_unit VALUES (18, 27);
+INSERT INTO public.battle_military_unit VALUES (19, 7);
+INSERT INTO public.battle_military_unit VALUES (20, 3);
+INSERT INTO public.battle_military_unit VALUES (20, 17);
+INSERT INTO public.battle_military_unit VALUES (21, 2);
+INSERT INTO public.battle_military_unit VALUES (22, 16);
+INSERT INTO public.battle_military_unit VALUES (23, 8);
+INSERT INTO public.battle_military_unit VALUES (23, 28);
+INSERT INTO public.battle_military_unit VALUES (24, 9);
+INSERT INTO public.battle_military_unit VALUES (24, 10);
+INSERT INTO public.battle_military_unit VALUES (25, 25);
+INSERT INTO public.battle_military_unit VALUES (26, 28);
+INSERT INTO public.battle_military_unit VALUES (27, 22);
+INSERT INTO public.battle_military_unit VALUES (28, 8);
+INSERT INTO public.battle_military_unit VALUES (29, 3);
+INSERT INTO public.battle_military_unit VALUES (29, 27);
+INSERT INTO public.battle_military_unit VALUES (30, 28);
 
 
 --
@@ -430,6 +581,12 @@ INSERT INTO public.equipment_assignment VALUES (13, 15, 14, '1943-12-05', 3);
 
 
 --
+-- Data for Name: equipment_audit; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
 -- Data for Name: medal; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -528,6 +685,13 @@ INSERT INTO public.military_unit VALUES (30, 'Отдельный отряд со
 
 
 --
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.schema_migrations VALUES (1, '001_equipment_audit.sql', '2026-10-13 07:17:08.016423+00');
+
+
+--
 -- Data for Name: soldier; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -593,11 +757,33 @@ INSERT INTO public.soldier_medal VALUES (3, 10, '1945-06-12');
 
 
 --
+-- Name: equipment_audit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.equipment_audit_id_seq', 1, false);
+
+
+--
+-- Name: schema_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.schema_migrations_id_seq', 1, true);
+
+
+--
 -- Name: battle_enemy_unit battle_enemy_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.battle_enemy_unit
     ADD CONSTRAINT battle_enemy_unit_pkey PRIMARY KEY (battle_id, enemy_unit_id);
+
+
+--
+-- Name: battle_military_unit battle_military_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.battle_military_unit
+    ADD CONSTRAINT battle_military_unit_pkey PRIMARY KEY (battle_id, unit_id);
 
 
 --
@@ -622,6 +808,14 @@ ALTER TABLE ONLY public.enemy_unit
 
 ALTER TABLE ONLY public.equipment_assignment
     ADD CONSTRAINT equipment_assignment_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: equipment_audit equipment_audit_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipment_audit
+    ADD CONSTRAINT equipment_audit_pkey PRIMARY KEY (id);
 
 
 --
@@ -654,6 +848,22 @@ ALTER TABLE ONLY public.military_service
 
 ALTER TABLE ONLY public.military_unit
     ADD CONSTRAINT military_unit_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schema_migrations
+    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schema_migrations schema_migrations_version_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.schema_migrations
+    ADD CONSTRAINT schema_migrations_version_key UNIQUE (version);
 
 
 --
@@ -731,6 +941,22 @@ ALTER TABLE ONLY public.battle_enemy_unit
 
 
 --
+-- Name: battle_military_unit battle_military_unit_battle_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.battle_military_unit
+    ADD CONSTRAINT battle_military_unit_battle_id_fkey FOREIGN KEY (battle_id) REFERENCES public.battle(id) ON DELETE CASCADE;
+
+
+--
+-- Name: battle_military_unit battle_military_unit_unit_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.battle_military_unit
+    ADD CONSTRAINT battle_military_unit_unit_id_fkey FOREIGN KEY (unit_id) REFERENCES public.military_unit(id) ON DELETE CASCADE;
+
+
+--
 -- Name: equipment_assignment equipment_assignment_equipment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -787,73 +1013,129 @@ ALTER TABLE ONLY public.soldier_medal
 
 
 --
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: pg_database_owner
+--
+
+GRANT ALL ON SCHEMA public TO sql_runner;
+
+
+--
 -- Name: TABLE battle; Type: ACL; Schema: public; Owner: postgres
 --
 
-GRANT SELECT ON TABLE public.battle TO sql_runner;
+GRANT ALL ON TABLE public.battle TO sql_runner;
 
 
 --
 -- Name: TABLE battle_enemy_unit; Type: ACL; Schema: public; Owner: postgres
 --
 
-GRANT SELECT ON TABLE public.battle_enemy_unit TO sql_runner;
+GRANT ALL ON TABLE public.battle_enemy_unit TO sql_runner;
+
+
+--
+-- Name: TABLE battle_military_unit; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.battle_military_unit TO sql_runner;
 
 
 --
 -- Name: TABLE enemy_unit; Type: ACL; Schema: public; Owner: postgres
 --
 
-GRANT SELECT ON TABLE public.enemy_unit TO sql_runner;
+GRANT ALL ON TABLE public.enemy_unit TO sql_runner;
 
 
 --
 -- Name: TABLE equipment; Type: ACL; Schema: public; Owner: postgres
 --
 
-GRANT SELECT ON TABLE public.equipment TO sql_runner;
+GRANT ALL ON TABLE public.equipment TO sql_runner;
 
 
 --
 -- Name: TABLE equipment_assignment; Type: ACL; Schema: public; Owner: postgres
 --
 
-GRANT SELECT ON TABLE public.equipment_assignment TO sql_runner;
+GRANT ALL ON TABLE public.equipment_assignment TO sql_runner;
+
+
+--
+-- Name: TABLE equipment_audit; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.equipment_audit TO sql_runner;
+
+
+--
+-- Name: SEQUENCE equipment_audit_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.equipment_audit_id_seq TO sql_runner;
 
 
 --
 -- Name: TABLE medal; Type: ACL; Schema: public; Owner: postgres
 --
 
-GRANT SELECT ON TABLE public.medal TO sql_runner;
+GRANT ALL ON TABLE public.medal TO sql_runner;
 
 
 --
 -- Name: TABLE military_service; Type: ACL; Schema: public; Owner: postgres
 --
 
-GRANT SELECT ON TABLE public.military_service TO sql_runner;
+GRANT ALL ON TABLE public.military_service TO sql_runner;
 
 
 --
 -- Name: TABLE military_unit; Type: ACL; Schema: public; Owner: postgres
 --
 
-GRANT SELECT ON TABLE public.military_unit TO sql_runner;
+GRANT ALL ON TABLE public.military_unit TO sql_runner;
+
+
+--
+-- Name: TABLE schema_migrations; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.schema_migrations TO sql_runner;
+
+
+--
+-- Name: SEQUENCE schema_migrations_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.schema_migrations_id_seq TO sql_runner;
 
 
 --
 -- Name: TABLE soldier; Type: ACL; Schema: public; Owner: postgres
 --
 
-GRANT SELECT ON TABLE public.soldier TO sql_runner;
+GRANT ALL ON TABLE public.soldier TO sql_runner;
 
 
 --
 -- Name: TABLE soldier_medal; Type: ACL; Schema: public; Owner: postgres
 --
 
-GRANT SELECT ON TABLE public.soldier_medal TO sql_runner;
+GRANT ALL ON TABLE public.soldier_medal TO sql_runner;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: postgres
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON SEQUENCES  TO sql_runner;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: postgres
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON TABLES  TO sql_runner;
 
 
 --
