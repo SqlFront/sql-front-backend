@@ -9,6 +9,35 @@ import asyncpg
 TARGET_QUERIES = {
     "0.10": """SELECT unit_name FROM military_unit WHERE unit_name NOT LIKE '%стрелков%';""",
     "0.11": """SELECT item_name FROM equipment WHERE item_name LIKE '____';""",
+    "0.13": """SELECT mu.unit_name, COUNT(ms.soldier_id)::int AS total_soldiers
+FROM military_unit mu
+JOIN military_service ms ON mu.id = ms.unit_id
+GROUP BY mu.unit_name
+ORDER BY mu.unit_name;""",
+    "1.01": """SELECT mu.id AS unit_id, SUM(e.quantity)::int AS total_ammo
+FROM military_unit mu
+JOIN equipment e ON mu.id = e.unit_id
+WHERE mu.location = 'Сталинград' AND e.equipment_type = 'боеприпасы'
+GROUP BY mu.id
+ORDER BY mu.id;""",
+    "1.04": """SELECT mu.unit_name,
+       mu.combat_efficiency AS initial_efficiency,
+       ROUND(100.0 * COUNT(CASE WHEN s.status IN ('убит', 'пропал без вести') THEN 1 END) / COUNT(s.id), 2)::float AS loss_percentage,
+       ROUND(mu.combat_efficiency * (1.0 - 1.0 * COUNT(CASE WHEN s.status IN ('убит', 'пропал без вести') THEN 1 END) / COUNT(s.id)), 2)::float AS adjusted_efficiency
+FROM military_unit mu
+JOIN military_service ms ON ms.unit_id = mu.id
+JOIN soldier s ON s.id = ms.soldier_id
+GROUP BY mu.id, mu.unit_name, mu.combat_efficiency
+ORDER BY mu.combat_efficiency DESC, mu.unit_name;""",
+    "1.09": """SELECT e.equipment_type,
+       SUM(e.quantity)::int AS total,
+       ROUND(AVG(e.quantity), 2)::float AS per_soldier
+FROM military_unit mu
+JOIN equipment e ON mu.id = e.unit_id
+JOIN military_service ms ON mu.id = ms.unit_id
+JOIN soldier s ON ms.soldier_id = s.id
+WHERE mu.location = 'Сталинград' AND e.equipment_type = 'артиллерия'
+GROUP BY e.equipment_type;""",
     "1.13": """SELECT s.full_name, u.unit_name, e.item_name, ea.quantity, ea.issue_date
 FROM soldier s
 JOIN military_service ms ON s.id = ms.soldier_id
@@ -16,6 +45,13 @@ JOIN military_unit u ON ms.unit_id = u.id
 JOIN equipment_assignment ea ON s.id = ea.soldier_id
 JOIN equipment e ON ea.equipment_id = e.id
 ORDER BY s.full_name, ea.issue_date;""",
+    "1.17": """SELECT DISTINCT s.full_name
+FROM soldier s
+JOIN military_service ms ON s.id = ms.soldier_id
+WHERE ms.unit_id IN (
+    SELECT id FROM military_unit WHERE location = 'Сталинград'
+)
+ORDER BY s.full_name;""",
     "1.19": """SELECT EXTRACT(YEAR FROM enlistment_date)::int AS year,
        COUNT(*) AS yearly_enlisted,
        SUM(COUNT(*)) OVER (ORDER BY EXTRACT(YEAR FROM enlistment_date))::int AS cumulative_enlisted
@@ -136,7 +172,7 @@ class TestCurriculumQueries(unittest.IsolatedAsyncioTestCase):
         try:
             self.conn = await asyncio.wait_for(
                 asyncpg.connect("postgresql://sql_runner:secret@localhost:5430/game_db"),
-                timeout=1.5
+                timeout=10.0
             )
         except Exception as e:
             self.skipTest(f"Database at localhost:5430 is not reachable ({e})")

@@ -42,6 +42,23 @@ class TestMigrations(unittest.TestCase):
         self.assertIn("Сезонность боевых действий", users3_content)
         self.assertIn("Критический дефицит снаряжения", users3_content)
 
+        users_mig4 = MIGRATIONS_DIR / "users_db" / "004_feedback_fixes.sql"
+        self.assertTrue(users_mig4.exists(), "users_db migration 004 must exist")
+        users4_content = users_mig4.read_text(encoding="utf-8")
+        self.assertIn("004_feedback_fixes.sql", users4_content)
+        self.assertIn("Сила в единстве", users4_content)
+        self.assertIn("Логистика Сталинградской битвы", users4_content)
+        self.assertIn("Анализ эффективности частей", users4_content)
+        self.assertIn("Логистика артиллерии Сталинградского фронта", users4_content)
+        self.assertIn("Участники Сталинграда", users4_content)
+        self.assertIn("Бойцы подразделения", users4_content)
+        self.assertIn("task_global_id = 14", users4_content)
+        self.assertIn("task_global_id = 37", users4_content)
+        self.assertIn("task_global_id = 39", users4_content)
+        self.assertIn("task_global_id = 41", users4_content)
+        self.assertIn("task_global_id = 44", users4_content)
+        self.assertIn("task_global_id = 107", users4_content)
+
 
 if __name__ == "__main__":
     unittest.main()
