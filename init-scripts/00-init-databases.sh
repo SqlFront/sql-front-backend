@@ -115,3 +115,11 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
 EOSQL
 
 restore_backup_if_exists "quest_db"
+
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" -d quest_db <<-EOSQL
+    GRANT USAGE ON SCHEMA public TO sql_runner;
+    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO sql_runner;
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO sql_runner;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO sql_runner;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO sql_runner;
+EOSQL
