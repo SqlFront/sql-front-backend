@@ -143,5 +143,158 @@ class TestCatalogModelMultilineDDL(unittest.TestCase):
         self.assertEqual(len(stmts), 1)
 
 
+
+
+class TestCatalogModelTypeEquivalenceAndSerial(unittest.TestCase):
+    def setUp(self):
+        self.spec = {
+            "mode": "model",
+            "setup": ["CREATE SCHEMA podpolye"],
+            "expect": [
+                {
+                    "args": {"table": "podpolye.depots"},
+                    "probe": "columns",
+                    "title": "столбцы таблицы складов",
+                    "value": [
+                        ["depot_id", "integer", None, True, False],
+                        ["depot_name", "character varying", 40, True, False],
+                        ["sector", "character", 1, True, False],
+                        ["capacity_t", "integer", None, False, False],
+                    ],
+                },
+                {
+                    "args": {"table": "podpolye.depots"},
+                    "probe": "primary_key",
+                    "title": "первичный ключ складов",
+                    "value": ["depot_id"],
+                },
+            ],
+            "reveal": "Что проверяется: столбцы таблицы складов; первичный ключ складов.",
+        }
+
+    def test_verify_integer_primary_key(self):
+        from src.utils.catalog_model import verify
+        sql = (
+            "CREATE TABLE podpolye.depots(\n"
+            "    depot_id integer PRIMARY KEY,\n"
+            "    depot_name varchar(40) NOT NULL,\n"
+            "    sector char(1) NOT NULL,\n"
+            "    capacity_t integer\n"
+            ");"
+        )
+        ok, msg = verify(sql, self.spec)
+        self.assertTrue(ok, f"Expected verify() with INTEGER PRIMARY KEY to pass, got: {msg}")
+
+    def test_verify_serial_primary_key(self):
+        from src.utils.catalog_model import verify
+        sql = (
+            "CREATE TABLE podpolye.depots(\n"
+            "    depot_id serial PRIMARY KEY,\n"
+            "    depot_name varchar(40) NOT NULL,\n"
+            "    sector char(1) NOT NULL,\n"
+            "    capacity_t integer\n"
+            ");"
+        )
+        ok, msg = verify(sql, self.spec)
+        self.assertTrue(ok, f"Expected verify() with SERIAL PRIMARY KEY to pass, got: {msg}")
+
+    def test_verify_int_and_int4_primary_key(self):
+        from src.utils.catalog_model import verify
+        for type_name in ("int", "int4"):
+            sql = (
+                f"CREATE TABLE podpolye.depots(\n"
+                f"    depot_id {type_name} PRIMARY KEY,\n"
+                f"    depot_name varchar(40) NOT NULL,\n"
+                f"    sector char(1) NOT NULL,\n"
+                f"    capacity_t integer\n"
+                f");"
+            )
+            ok, msg = verify(sql, self.spec)
+            self.assertTrue(ok, f"Expected verify() with {type_name} PRIMARY KEY to pass, got: {msg}")
+
+    def test_verify_smallserial_and_smallint_primary_key(self):
+        from src.utils.catalog_model import verify
+        for type_name in ("smallserial", "smallint"):
+            sql = (
+                f"CREATE TABLE podpolye.depots(\n"
+                f"    depot_id {type_name} PRIMARY KEY,\n"
+                f"    depot_name varchar(40) NOT NULL,\n"
+                f"    sector char(1) NOT NULL,\n"
+                f"    capacity_t integer\n"
+                f");"
+            )
+            ok, msg = verify(sql, self.spec)
+            self.assertTrue(ok, f"Expected verify() with {type_name} PRIMARY KEY to pass, got: {msg}")
+
+    def test_verify_bigint_spec_equivalences(self):
+        from src.utils.catalog_model import verify
+        bigint_spec = {
+            "mode": "model",
+            "setup": ["CREATE SCHEMA podpolye"],
+            "expect": [
+                {
+                    "args": {"table": "podpolye.events"},
+                    "probe": "columns",
+                    "title": "столбцы таблицы событий",
+                    "value": [
+                        ["id", "bigint", None, True, False],
+                        ["title", "text", None, True, False],
+                    ],
+                },
+                {
+                    "args": {"table": "podpolye.events"},
+                    "probe": "primary_key",
+                    "title": "первичный ключ",
+                    "value": ["id"],
+                },
+            ],
+        }
+        for type_name in ("bigint", "bigserial", "int8"):
+            sql = f"CREATE TABLE podpolye.events(id {type_name} PRIMARY KEY, title text NOT NULL);"
+            ok, msg = verify(sql, bigint_spec)
+            self.assertTrue(ok, f"Expected verify() with {type_name} to pass for bigint spec, got: {msg}")
+
+    def test_verify_incompatible_type_rejected(self):
+        from src.utils.catalog_model import verify
+        sql = (
+            "CREATE TABLE podpolye.depots(\n"
+            "    depot_id text PRIMARY KEY,\n"
+            "    depot_name varchar(40) NOT NULL,\n"
+            "    sector char(1) NOT NULL,\n"
+            "    capacity_t integer\n"
+            ");"
+        )
+        ok, msg = verify(sql, self.spec)
+        self.assertFalse(ok, "Expected verify() with text PRIMARY KEY to fail when integer is expected")
+
+    def test_verify_explicit_default_without_serial_rejected(self):
+        from src.utils.catalog_model import verify
+        sql = (
+            "CREATE TABLE podpolye.depots(\n"
+            "    depot_id integer DEFAULT 42 PRIMARY KEY,\n"
+            "    depot_name varchar(40) NOT NULL,\n"
+            "    sector char(1) NOT NULL,\n"
+            "    capacity_t integer\n"
+            ");"
+        )
+        ok, msg = verify(sql, self.spec)
+        self.assertFalse(ok, "Expected verify() with unexpected explicit DEFAULT to fail")
+
+    def test_types_compatible_helper(self):
+        from src.utils.catalog_model import types_compatible
+        # Integer group
+        for t in ("integer", "int", "serial", "int4", "smallserial", "smallint", "int2"):
+            self.assertTrue(types_compatible(t, "integer"))
+            self.assertTrue(types_compatible(t, "int"))
+        # Bigint group
+        for t in ("bigint", "bigserial", "int8"):
+            self.assertTrue(types_compatible(t, "bigint"))
+            self.assertTrue(types_compatible(t, "int8"))
+        # Incompatibilities
+        self.assertFalse(types_compatible("bigint", "integer"))
+        self.assertFalse(types_compatible("integer", "bigint"))
+        self.assertFalse(types_compatible("text", "integer"))
+
+
 if __name__ == "__main__":
     unittest.main()

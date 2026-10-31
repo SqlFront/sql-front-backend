@@ -492,7 +492,7 @@ def _predicate(c: Cursor) -> Expr:
 TYPE_MAP = {
     "int": "integer", "integer": "integer", "int4": "integer", "serial": "integer",
     "bigint": "bigint", "int8": "bigint", "bigserial": "bigint",
-    "smallint": "smallint", "int2": "smallint",
+    "smallint": "smallint", "int2": "smallint", "smallserial": "smallint",
     "varchar": "character varying", "character varying": "character varying",
     "char": "character", "character": "character", "bpchar": "character",
     "text": "text", "date": "date",
@@ -513,13 +513,14 @@ _COL_STOP = {"NOT", "NULL", "PRIMARY", "UNIQUE", "REFERENCES", "CHECK",
 
 
 class Column:
-    __slots__ = ("name", "type", "length", "not_null", "has_default", "default_text")
+    __slots__ = ("name", "type", "length", "not_null", "has_default", "default_text", "is_serial")
 
     def __init__(self, name, type_, length):
         self.name, self.type, self.length = name, type_, length
         self.not_null = False
         self.has_default = False
         self.default_text = ""
+        self.is_serial = False
 
 
 class Table:
@@ -769,6 +770,7 @@ class Model:
             # serial — это целое со счётчиком: значение по умолчанию есть.
             col.has_default = True
             col.default_text = "nextval"
+            col.is_serial = True
             col.not_null = True
         t.columns.append(col)
 
@@ -1682,6 +1684,79 @@ def _sortable(v):
 #  Проверка ответа студента
 # =====================================================================
 
+def types_compatible(got_type: str, exp_type: str) -> bool:
+    """Проверка эквивалентности типов для валидации каталога.
+
+    - Если ожидается integer / int, считать валидным также: serial, int4, smallserial, smallint, int2.
+    - Если ожидается bigint / int8, считать валидным также: bigserial, int8.
+    - Если ожидается smallint / int2, считать валидным также: smallserial, int2.
+    - Для остальных типов — равенство с учётом алиасов TYPE_MAP.
+    """
+    if not got_type or not exp_type:
+        return got_type == exp_type
+    gt = str(got_type).lower()
+    et = str(exp_type).lower()
+    if gt == et:
+        return True
+    g_canon = TYPE_MAP.get(gt, gt)
+    e_canon = TYPE_MAP.get(et, et)
+    if g_canon == e_canon:
+        return True
+
+    int_compat = {"integer", "int", "int4", "serial", "smallserial", "smallint", "int2"}
+    if (et in ("integer", "int") or e_canon == "integer") and (gt in int_compat or g_canon in int_compat):
+        return True
+
+    bigint_compat = {"bigint", "bigserial", "int8"}
+    if (et in ("bigint", "int8") or e_canon == "bigint") and (gt in bigint_compat or g_canon in bigint_compat):
+        return True
+
+    smallint_compat = {"smallint", "int2", "smallserial"}
+    if (et in ("smallint", "int2") or e_canon == "smallint") and (gt in smallint_compat or g_canon in smallint_compat):
+        return True
+
+    return False
+
+
+def _matches_columns(got, expected, table=None) -> bool:
+    """Сравнивает фактические столбцы (got) со спецификацией (expected).
+
+    Не реджектит валидный синтаксис SERIAL PRIMARY KEY:
+    если ожидается integer PRIMARY KEY без default (has_default=False),
+    а студент указал SERIAL (has_default=True, nextval),
+    считать это допустимым.
+    """
+    if not isinstance(got, list) or not isinstance(expected, list):
+        return got == expected
+    if len(got) != len(expected):
+        return False
+    for g, e in zip(got, expected):
+        if not (isinstance(g, (list, tuple)) and isinstance(e, (list, tuple)) and len(g) == 5 and len(e) == 5):
+            if g != e:
+                return False
+            continue
+        g_name, g_type, g_len, g_nn, g_def = g
+        e_name, e_type, e_len, e_nn, e_def = e
+
+        if str(g_name).lower() != str(e_name).lower():
+            return False
+        if not types_compatible(g_type, e_type):
+            return False
+        if g_len != e_len:
+            return False
+        if g_nn != e_nn:
+            return False
+
+        if g_def != e_def:
+            col = table.column(g_name) if table else None
+            is_serial = getattr(col, "is_serial", False) if col else False
+            if g_def and not e_def and is_serial:
+                pass
+            else:
+                return False
+    return True
+
+
 def verify(student_sql, spec):
     """Возвращает (верно ли, пояснение).
 
@@ -1716,7 +1791,17 @@ def verify(student_sql, spec):
             got = probe(model, item["probe"], item.get("args"))
         except ModelError as exc:
             return False, "Проверка «%s» не удалась: %s" % (item.get("title", ""), exc)
-        if got != item["value"]:
+        matched = False
+        if item["probe"] == "columns":
+            tbl = None
+            args = item.get("args")
+            if args and "table" in args:
+                tbl = model.tables.get(model.qualify(args["table"]))
+            matched = _matches_columns(got, item["value"], tbl)
+        else:
+            matched = (got == item["value"])
+
+        if not matched:
             return False, "Не совпало: %s." % (item.get("title") or item["probe"])
     return True, "Проверка пройдена."
 
@@ -1732,5 +1817,5 @@ def capture(spec, answer):
     return [probe(model, item["probe"], item.get("args")) for item in spec["expect"]]
 
 
-__all__ = ["Model", "ModelError", "verify", "capture", "probe",
+__all__ = ["Model", "ModelError", "verify", "capture", "probe", "types_compatible",
            "split_statements", "tokenize", "parse_expr", "SUPPORTED"]
