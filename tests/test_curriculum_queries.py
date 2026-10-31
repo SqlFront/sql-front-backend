@@ -1,9 +1,16 @@
 import asyncio
 import json
+import os
+import re
 from datetime import date, datetime
 from decimal import Decimal
 import unittest
 import asyncpg
+
+
+def get_db_dsn(env_var: str, default_url: str) -> str:
+    url = os.getenv(env_var, default_url)
+    return re.sub(r"^postgresql\+[a-zA-Z0-9_]+:", "postgresql:", url)
 
 
 TARGET_QUERIES = {
@@ -12,6 +19,14 @@ TARGET_QUERIES = {
     "0.13": """SELECT mu.unit_name, COUNT(ms.soldier_id)::int AS total_soldiers
 FROM military_unit mu
 JOIN military_service ms ON mu.id = ms.unit_id
+GROUP BY mu.unit_name
+ORDER BY mu.unit_name;""",
+    "0.25": """SELECT mu.unit_name,
+       MIN(EXTRACT(YEAR FROM ms.start_date) - s.birth_year)::float AS min,
+       MAX(EXTRACT(YEAR FROM ms.start_date) - s.birth_year)::float AS max
+FROM military_unit mu
+JOIN military_service ms ON mu.id = ms.unit_id
+JOIN soldier s ON ms.soldier_id = s.id
 GROUP BY mu.unit_name
 ORDER BY mu.unit_name;""",
     "1.01": """SELECT mu.id AS unit_id, SUM(e.quantity)::int AS total_ammo
@@ -169,13 +184,14 @@ def serialize_record_val(val):
 
 class TestCurriculumQueries(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
+        dsn = get_db_dsn("GAME_DATABASE_URL", "postgresql://sql_runner:secret@localhost:5430/game_db")
         try:
             self.conn = await asyncio.wait_for(
-                asyncpg.connect("postgresql://sql_runner:secret@localhost:5430/game_db"),
+                asyncpg.connect(dsn),
                 timeout=10.0
             )
         except Exception as e:
-            self.skipTest(f"Database at localhost:5430 is not reachable ({e})")
+            self.skipTest(f"Database at {dsn} is not reachable ({e})")
 
     async def asyncTearDown(self):
         if hasattr(self, "conn") and self.conn:
@@ -198,6 +214,37 @@ class TestCurriculumQueries(unittest.IsolatedAsyncioTestCase):
 
                 result_json = json.dumps({"columns": columns, "data": data, "row_count": len(data)}, ensure_ascii=False)
                 self.assertTrue(len(result_json) > 0)
+
+    async def test_task_0_25_matches_users_db_expected_result(self):
+        users_dsn = get_db_dsn("DATABASE_URL", "postgresql://postgres:postgres@localhost:5430/users_db")
+        try:
+            users_conn = await asyncio.wait_for(asyncpg.connect(users_dsn), timeout=10.0)
+        except Exception as e:
+            self.skipTest(f"users_db not reachable at {users_dsn} ({e})")
+
+        try:
+            row = await users_conn.fetchrow(
+                "SELECT correct_query, expected_result FROM tasks WHERE mission_id = 0 AND task_id = 25;"
+            )
+            self.assertIsNotNone(row, "Task 0.25 should exist in tasks table")
+            self.assertIsNotNone(row["correct_query"], "correct_query should not be NULL for task 0.25")
+            self.assertIn("ORDER BY mu.unit_name", row["correct_query"])
+
+            expected_payload = json.loads(row["expected_result"]) if isinstance(row["expected_result"], str) else row["expected_result"]
+            expected_data = expected_payload.get("data", [])
+
+            stmt = await self.conn.prepare(TARGET_QUERIES["0.25"])
+            columns = [attr.name for attr in stmt.get_attributes()]
+            records = await stmt.fetch()
+
+            user_data = []
+            for r in records:
+                user_data.append([serialize_record_val(r[col]) for col in columns])
+
+            self.assertEqual(expected_data, user_data, "Task 0.25 expected_result data must match actual query execution")
+            self.assertEqual(sorted(expected_data), sorted(user_data))
+        finally:
+            await users_conn.close()
 
 
 if __name__ == "__main__":
