@@ -343,6 +343,11 @@ async def submit_sql_query(
     try:
         if expected_result.get("mode") == "model":
             is_correct, hint = catalog_model.verify(request.sql_query, expected_result)
+            user_result = {
+                "columns": ["Статус операции"],
+                "data": [[hint if hint else "Решение успешно проверено"]],
+                "row_count": 1,
+            }
         elif expected_result.get("mode") in ("ddl", "plpgsql"):
             test_query = expected_result.get("test_query", "")
             expect_error = expected_result.get("expect_error", False)

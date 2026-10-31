@@ -78,12 +78,22 @@ class TestMigrations(unittest.TestCase):
         self.assertTrue(users_mig7.exists(), "users_db migration 007 must exist")
         users7_content = users_mig7.read_text(encoding="utf-8")
         self.assertIn("007_standardize_output_columns.sql", users7_content)
-        self.assertIn("Формат результата (столбцы строго в указанном порядке):", users7_content)
         self.assertIn("task_global_id = 1", users7_content)
-        self.assertIn("task_global_id = 25", users7_content)
-        self.assertIn("task_global_id = 59", users7_content)
-        self.assertIn("task_global_id = 62", users7_content)
-        self.assertIn("task_global_id = 83", users7_content)
+
+        game_mig2 = MIGRATIONS_DIR / "game_db" / "002_battle_military_unit.sql"
+        self.assertTrue(game_mig2.exists(), "game_db migration 002 must exist")
+        game2_content = game_mig2.read_text(encoding="utf-8")
+        self.assertIn("battle_military_unit", game2_content)
+
+        users_mig8 = MIGRATIONS_DIR / "users_db" / "008_fix_mission_2_and_task_1_3.sql"
+        self.assertTrue(users_mig8.exists(), "users_db migration 008 must exist")
+        users8_content = users_mig8.read_text(encoding="utf-8")
+        self.assertIn("battle_military_unit", users8_content)
+
+        users_mig9 = MIGRATIONS_DIR / "users_db" / "009_compact_output_column_hints.sql"
+        self.assertTrue(users_mig9.exists(), "users_db migration 009 must exist")
+        users9_content = users_mig9.read_text(encoding="utf-8")
+        self.assertIn("Поля в результирующей таблице:", users9_content)
 
 
 if __name__ == "__main__":
