@@ -74,6 +74,17 @@ class TestMigrations(unittest.TestCase):
         self.assertIn("ALTER DATABASE <имя> SET <параметр> TO <значение>", users6_content)
         self.assertIn("task_global_id = 85", users6_content)
 
+        users_mig7 = MIGRATIONS_DIR / "users_db" / "007_standardize_output_columns.sql"
+        self.assertTrue(users_mig7.exists(), "users_db migration 007 must exist")
+        users7_content = users_mig7.read_text(encoding="utf-8")
+        self.assertIn("007_standardize_output_columns.sql", users7_content)
+        self.assertIn("Формат результата (столбцы строго в указанном порядке):", users7_content)
+        self.assertIn("task_global_id = 1", users7_content)
+        self.assertIn("task_global_id = 25", users7_content)
+        self.assertIn("task_global_id = 59", users7_content)
+        self.assertIn("task_global_id = 62", users7_content)
+        self.assertIn("task_global_id = 83", users7_content)
+
 
 if __name__ == "__main__":
     unittest.main()
