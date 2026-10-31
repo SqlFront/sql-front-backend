@@ -32,9 +32,89 @@ class SQLExecutor:
             cleaned = cleaned.rstrip("; \n\r\t").strip()
         return cleaned
 
-    async def execute_sql(self, sql_query: str, allow_star: bool = False) -> dict:
+    @staticmethod
+    def _extract_operation_type(sql: str) -> str:
+        if not sql:
+            return "DDL"
+        clean = sql.strip().lstrip(";").strip()
+        patterns = [
+            (
+                r"^\s*CREATE\s+OR\s+REPLACE\s+(TABLE|VIEW|INDEX|SCHEMA|ROLE|USER|TYPE|SEQUENCE|FUNCTION|PROCEDURE|TRIGGER)\b",
+                r"CREATE OR REPLACE \1",
+            ),
+            (
+                r"^\s*CREATE\s+(?:UNIQUE\s+)?(TABLE|VIEW|INDEX|SCHEMA|ROLE|USER|TYPE|SEQUENCE|FUNCTION|PROCEDURE|TRIGGER|DATABASE)\b",
+                r"CREATE \1",
+            ),
+            (
+                r"^\s*ALTER\s+(TABLE|DATABASE|SCHEMA|ROLE|USER|SEQUENCE|SYSTEM)\b",
+                r"ALTER \1",
+            ),
+            (
+                r"^\s*DROP\s+(TABLE|VIEW|INDEX|SCHEMA|ROLE|USER|SEQUENCE|DATABASE|TRIGGER|FUNCTION|PROCEDURE)\b",
+                r"DROP \1",
+            ),
+            (r"^\s*GRANT\b", "GRANT"),
+            (r"^\s*REVOKE\b", "REVOKE"),
+            (r"^\s*COMMENT\b", "COMMENT"),
+            (r"^\s*INSERT\b", "INSERT"),
+        ]
+        import re
+
+        for pat, repl in patterns:
+            m = re.match(pat, clean, re.IGNORECASE)
+            if m:
+                if "\\" in repl:
+                    return re.sub(pat, repl, m.group(0), flags=re.IGNORECASE).strip().upper()
+                return repl.upper()
+        words = clean.split()
+        if len(words) >= 2 and words[0].upper() in ("CREATE", "ALTER", "DROP"):
+            return f"{words[0].upper()} {words[1].upper()}"
+        elif words:
+            return words[0].upper()
+        return "DDL"
+
+    async def execute_sql(
+        self,
+        sql_query: str,
+        allow_star: bool = False,
+        allow_ddl_simulation: bool = False,
+    ) -> dict:
         sql_query = self._clean_query(sql_query)
-        self._validate_sql(sql_query, allow_star=allow_star)
+        self._validate_sql(
+            sql_query, allow_star=allow_star, allow_ddl=allow_ddl_simulation
+        )
+        if allow_ddl_simulation:
+            try:
+                async with self.transaction_engine.begin() as conn:
+                    await conn.execute(text("SET statement_timeout TO 5000"))
+                    result = await conn.execute(text(sql_query))
+                    op_type = self._extract_operation_type(sql_query)
+                    await conn.rollback()
+                    return {
+                        "columns": ["Статус операции"],
+                        "data": [
+                            [
+                                f"Команда успешно выполнена: {op_type} (симуляция завершена успешно)"
+                            ]
+                        ],
+                        "row_count": 1,
+                    }
+            except QueryCanceledError:
+                raise HTTPException(
+                    status_code=400, detail="Время выполнения запроса превышено"
+                )
+            except StatementError as e:
+                raise HTTPException(
+                    status_code=400, detail=f"Ошибка выполнения: {str(e.orig)}"
+                )
+            except HTTPException:
+                raise
+            except Exception as e:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Непредвиденная ошибка базы данных: {str(e)}",
+                )
         try:
             async with self.engine.connect() as conn:
                 await conn.execute(text("SET statement_timeout TO 5000"))
@@ -139,7 +219,16 @@ class SQLExecutor:
                 elif last_result:
                     res = {"columns": [], "data": [], "row_count": last_result.rowcount}
                 else:
-                    res = {"columns": [], "data": [], "row_count": 0}
+                    op_type = self._extract_operation_type(ddl_query)
+                    res = {
+                        "columns": ["Статус операции"],
+                        "data": [
+                            [
+                                f"Команда успешно выполнена: {op_type} (симуляция завершена успешно)"
+                            ]
+                        ],
+                        "row_count": 1,
+                    }
 
                 await conn.rollback()
                 return res
@@ -191,8 +280,8 @@ class SQLExecutor:
 
         # Check for forbidden system/admin operations
         forbidden_patterns = [
-            r"\bdrop\s+(database|schema|role|user)\b",
-            r"\balter\s+(system|database|role|user)\b",
+            r"\bdrop\s+database\b",
+            r"\balter\s+system\b",
             r"\bpg_shadow\b",
             r"\bpg_authid\b",
             r"\bpg_user\b",
@@ -217,7 +306,7 @@ class SQLExecutor:
 
         if allow_ddl:
             ddl_match = re.match(
-                r"^\s*CREATE\s+(?:OR\s+REPLACE\s+)?(?:FUNCTION|PROCEDURE|TRIGGER)\b",
+                r"^\s*(?:CREATE|ALTER|DROP|GRANT|REVOKE|COMMENT)\b",
                 clean_query,
                 re.IGNORECASE,
             )

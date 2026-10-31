@@ -24,6 +24,7 @@ from src.utils.auth import get_current_user
 from src.utils.sql_executor import SQLExecutor
 from src.utils import catalog_model
 import logging
+import re
 
 logger = logging.getLogger("api.task")
 
@@ -252,18 +253,61 @@ async def run_sql_query(
             task_id=task.task_global_id,
             payload={"mission_id": mission_id, "task_id": task_id},
         )
+        sql_query = (request.sql_query or "").strip()
+        if not sql_query:
+            raise HTTPException(status_code=400, detail="Пустой запрос")
+
         exp_res = task.expected_result or {}
-        if exp_res.get("mode") == "model":
-            ok, message = catalog_model.verify(
-                request.sql_query, exp_res
-            )
-            return {"columns": ["Результат:"], "data": [[message]], "row_count": 1}
-        elif exp_res.get("mode") in ("ddl", "plpgsql"):
-            test_query = exp_res.get("test_query", "")
-            expect_error = exp_res.get("expect_error", False)
-            return await sql_executor.simulate_ddl(
-                request.sql_query, test_query, expect_error=expect_error
-            )
+        tags = task.tags or []
+        is_ddl = (
+            mission_id == 3
+            or exp_res.get("mode") in ("model", "ddl")
+            or "ddl" in tags
+        )
+
+        if is_ddl:
+            for pat in (r"\bdrop\s+database\b", r"\balter\s+system\b"):
+                if re.search(pat, sql_query, re.IGNORECASE):
+                    raise HTTPException(
+                        status_code=400,
+                        detail="Запрещенная системная операция (DROP DATABASE / ALTER SYSTEM запрещены)",
+                    )
+
+            if exp_res.get("mode") == "model":
+                model = catalog_model.Model(exp_res.get("database", "quest_sandbox"))
+                try:
+                    for stmt in exp_res.get("setup", []):
+                        model.execute(stmt)
+                    model.execute(sql_query)
+                except catalog_model.ModelError as exc:
+                    raise HTTPException(
+                        status_code=400, detail=f"Ошибка выполнения: {str(exc)}"
+                    )
+                op_type = SQLExecutor._extract_operation_type(sql_query)
+                return {
+                    "columns": ["Статус операции"],
+                    "data": [
+                        [
+                            f"Команда успешно выполнена: {op_type} (симуляция завершена успешно)"
+                        ]
+                    ],
+                    "row_count": 1,
+                }
+            elif exp_res.get("mode") in ("ddl", "plpgsql"):
+                test_query = exp_res.get("test_query", "")
+                expect_error = exp_res.get("expect_error", False)
+                if test_query:
+                    return await sql_executor.simulate_ddl(
+                        sql_query, test_query, expect_error=expect_error
+                    )
+                return await sql_executor.execute_sql(
+                    sql_query, allow_ddl_simulation=True
+                )
+            else:
+                return await sql_executor.execute_sql(
+                    sql_query, allow_ddl_simulation=True
+                )
+
         return await sql_executor.execute_sql(request.sql_query, allow_star=True)
     except HTTPException as e:
         raise HTTPException(status_code=400, detail=f"Runtime error: {str(e.detail)}")
