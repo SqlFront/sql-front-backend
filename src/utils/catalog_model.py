@@ -61,19 +61,23 @@ class ModelError(Exception):
 #  Разбор текста на операторы и лексемы
 # =====================================================================
 
+_STMT_STARTERS = {'alter', 'create', 'drop', 'grant', 'revoke', 'insert', 'comment'}
+
+
 def split_statements(sql: str) -> List[str]:
-    """Режет текст на операторы по точкам с запятой верхнего уровня.
+    """Режет текст на операторы по точкам с запятой верхнего уровня или переводам строк.
 
     Пропускает строковые литералы, идентификаторы в кавычках, долларовые
     кавычки и комментарии обоих видов.
     """
     out, buf = [], []
     i, n = 0, len(sql)
+    paren_depth = 0
     while i < n:
         ch = sql[i]
         if ch == "-" and sql.startswith("--", i):
             j = sql.find("\n", i)
-            i = n if j == -1 else j + 1
+            i = n if j == -1 else j
             buf.append(" ")
             continue
         if ch == "/" and sql.startswith("/*", i):
@@ -111,11 +115,44 @@ def split_statements(sql: str) -> List[str]:
                 buf.append(sql[i:end])
                 i = end
                 continue
-        if ch == ";":
+        if ch == "(":
+            paren_depth += 1
+        elif ch == ")":
+            paren_depth = max(0, paren_depth - 1)
+        elif ch == ";":
             out.append("".join(buf))
             buf = []
             i += 1
             continue
+        elif ch == "\n" and paren_depth == 0:
+            cur_text = "".join(buf).strip()
+            if cur_text and not cur_text.endswith((",", "(", "=", "+", "-")):
+                k = i + 1
+                while k < n:
+                    if sql[k] in " \t\r\n":
+                        k += 1
+                    elif sql.startswith("--", k):
+                        j = sql.find("\n", k)
+                        k = n if j == -1 else j + 1
+                    elif sql.startswith("/*", k):
+                        close = sql.find("*/", k + 2)
+                        k = n if close == -1 else close + 2
+                    else:
+                        break
+                m = re.match(r"([A-Za-z_]+)", sql[k:])
+                if m and m.group(1).lower() in _STMT_STARTERS:
+                    words = re.findall(r"[A-Za-z_]+", sql[k:k+40])
+                    first = words[0].lower() if words else ""
+                    second = words[1].lower() if len(words) > 1 else ""
+                    if first == "alter" and second == "column":
+                        pass
+                    elif first == "drop" and second in ("column", "constraint", "not", "default"):
+                        pass
+                    else:
+                        out.append("".join(buf))
+                        buf = []
+                        i += 1
+                        continue
         buf.append(ch)
         i += 1
     out.append("".join(buf))

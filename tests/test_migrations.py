@@ -59,6 +59,21 @@ class TestMigrations(unittest.TestCase):
         self.assertIn("task_global_id = 44", users4_content)
         self.assertIn("task_global_id = 107", users4_content)
 
+        users_mig5 = MIGRATIONS_DIR / "users_db" / "005_fix_task_0_25.sql"
+        self.assertTrue(users_mig5.exists(), "users_db migration 005 must exist")
+        users5_content = users_mig5.read_text(encoding="utf-8")
+        self.assertIn("005_fix_task_0_25.sql", users5_content)
+        self.assertIn("Демография частей", users5_content)
+        self.assertIn("task_global_id = 25", users5_content)
+        self.assertIn("ORDER BY mu.unit_name", users5_content)
+
+        users_mig6 = MIGRATIONS_DIR / "users_db" / "006_mission_3_clue_syntax.sql"
+        self.assertTrue(users_mig6.exists(), "users_db migration 006 must exist")
+        users6_content = users_mig6.read_text(encoding="utf-8")
+        self.assertIn("006_mission_3_clue_syntax.sql", users6_content)
+        self.assertIn("ALTER DATABASE <имя> SET <параметр> TO <значение>", users6_content)
+        self.assertIn("task_global_id = 85", users6_content)
+
 
 if __name__ == "__main__":
     unittest.main()
