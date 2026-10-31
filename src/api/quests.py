@@ -27,14 +27,45 @@ def get_quest_repository(db: AsyncSession = Depends(get_db)) -> QuestRepository:
     return QuestRepository(db)
 
 
+def sanitize_quest_query(query: str) -> str:
+    """Нормализация и очистка SQL-запроса перед валидацией и выполнением.
+    Удаляет хвостовые точки с запятой, пробелы, символы табуляции и переводы строк.
+    """
+    if not query:
+        return ""
+    cleaned = query.strip()
+    while cleaned and (
+        cleaned.endswith(";")
+        or cleaned.endswith(" ")
+        or cleaned.endswith("\n")
+        or cleaned.endswith("\r")
+        or cleaned.endswith("\t")
+    ):
+        cleaned = cleaned.rstrip("; \n\r\t").strip()
+    return cleaned
+
+
 def _extract_update_value(sql_query: str) -> str:
-    """Упрощенный парсер для извлечения значения из UPDATE запроса."""
+    """Извлечение значения из UPDATE запроса (поддержка чисел, строк в одинарных и двойных кавычках)."""
+    cleaned = sanitize_quest_query(sql_query)
     match = re.search(
-        r"SET\s+\w+\s*=\s*'?(.*?)'?\s*(?:WHERE|$|;)", sql_query, re.IGNORECASE
+        r"SET\s+[\w.]+\s*=\s*(?:'([^']*)'|\"([^\"]*)\"|([^\s;]+))",
+        cleaned,
+        re.IGNORECASE,
     )
     if match:
-        return match.group(1).strip()
+        val = (
+            match.group(1)
+            if match.group(1) is not None
+            else (
+                match.group(2)
+                if match.group(2) is not None
+                else (match.group(3) if match.group(3) is not None else "")
+            )
+        )
+        return val.strip().strip("'\"")
     return ""
+
 
 @router.get(
     "",
@@ -138,9 +169,10 @@ async def run_quest_sql(
     try:
         if scene_data["is_branching"]:
             raise HTTPException(
-            status_code=403, detail=f"Пока низя"
+                status_code=403, detail="Пока низя"
             )
-        return await sql_executor.execute_sql(request.sql_query, allow_star=True)
+        cleaned_query = sanitize_quest_query(request.sql_query)
+        return await sql_executor.execute_sql(cleaned_query, allow_star=True)
     except HTTPException as e:
         raise HTTPException(
             status_code=400, detail=f"Ошибка выполнения: {str(e.detail)}"
@@ -175,20 +207,25 @@ async def submit_quest_solution(
             "message": "Задача уже решена"
         }
 
+    cleaned_query = sanitize_quest_query(request.sql_query)
     user_answer_value = ""
     is_correct = False
 
     try:
         if scene["is_branching"]:
-            user_answer_value = _extract_update_value(request.sql_query)
+            user_answer_value = _extract_update_value(cleaned_query)
             target_table = scene.get("expected_result", {}).get("target_table")
             if target_table:
                 # Check safely via transaction rollback
-                await sql_executor.simulate_update(request.sql_query, allowed_tables=[target_table])
-            is_correct = user_answer_value in scene.get("branches", {})
+                await sql_executor.simulate_update(cleaned_query, allowed_tables=[target_table])
+            branches = scene.get("branches", {})
+            is_correct = (
+                user_answer_value in branches
+                or str(user_answer_value) in [str(k) for k in branches.keys()]
+            )
         else:
             if scene.get("expected_result"):
-                user_result = await sql_executor.execute_sql(request.sql_query)
+                user_result = await sql_executor.execute_sql(cleaned_query, allow_star=True)
                 expected = scene["expected_result"]
                 user_data = user_result.get("data", [])
                 expected_data = expected.get("data", [])
@@ -212,7 +249,7 @@ async def submit_quest_solution(
                 user_answer=user_answer_value,
                 is_correct=is_correct,
             )
-            await repo.mark_task_solved(current_user.user_id, quest_id, scene_id, request.sql_query)
+            await repo.mark_task_solved(current_user.user_id, quest_id, scene_id, cleaned_query)
             await scoring_service.add_points(current_user.user_id, 100)
             is_quest_completed = result.get("status") == "completed"
             

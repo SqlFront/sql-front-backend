@@ -17,8 +17,23 @@ class SQLExecutor:
         self.engine = create_async_engine(db_url, isolation_level="AUTOCOMMIT")
         self.transaction_engine = create_async_engine(db_url) # For simulating updates
 
+    @staticmethod
+    def _clean_query(query: str) -> str:
+        if not query:
+            return ""
+        cleaned = query.strip()
+        while cleaned and (
+            cleaned.endswith(";")
+            or cleaned.endswith(" ")
+            or cleaned.endswith("\n")
+            or cleaned.endswith("\r")
+            or cleaned.endswith("\t")
+        ):
+            cleaned = cleaned.rstrip("; \n\r\t").strip()
+        return cleaned
+
     async def execute_sql(self, sql_query: str, allow_star: bool = False) -> dict:
-        sql_query = sql_query.rstrip(";").strip()
+        sql_query = self._clean_query(sql_query)
         self._validate_sql(sql_query, allow_star=allow_star)
         try:
             async with self.engine.connect() as conn:
@@ -54,7 +69,7 @@ class SQLExecutor:
 
     async def simulate_update(self, sql_query: str, allowed_tables: list[str] = None) -> int:
         """Безопасное выполнение UPDATE с помощью транзакции и отката"""
-        sql_query = sql_query.rstrip(";").strip()
+        sql_query = self._clean_query(sql_query)
         self._validate_sql(sql_query, allow_update=True, allowed_tables=allowed_tables)
         try:
             async with self.transaction_engine.begin() as conn:
@@ -83,7 +98,7 @@ class SQLExecutor:
         expect_error: bool = False,
     ) -> dict:
         """Безопасное выполнение DDL (функции/процедуры/триггеры) и тестового запроса в изолированной транзакции с ROLLBACK"""
-        ddl_query = ddl_query.rstrip(";").strip()
+        ddl_query = self._clean_query(ddl_query)
         self._validate_sql(ddl_query, allow_ddl=True)
 
         if isinstance(test_query, str):
