@@ -55,15 +55,26 @@ JOIN military_service ms ON ms.unit_id = mu.id
 JOIN soldier s ON s.id = ms.soldier_id
 GROUP BY mu.id, mu.unit_name, mu.combat_efficiency
 ORDER BY mu.combat_efficiency DESC, mu.unit_name;""",
-    "1.09": """SELECT e.equipment_type,
-       SUM(e.quantity)::int AS total,
-       ROUND(AVG(e.quantity), 2)::float AS per_soldier
-FROM military_unit mu
-JOIN equipment e ON mu.id = e.unit_id
-JOIN military_service ms ON mu.id = ms.unit_id
-JOIN soldier s ON ms.soldier_id = s.id
-WHERE mu.location = 'Сталинград' AND e.equipment_type = 'артиллерия'
-GROUP BY e.equipment_type;""",
+    "1.09": """WITH stalingrad_artillery AS (
+    SELECT e.equipment_type,
+           SUM(e.quantity) AS total_qty
+    FROM military_unit mu
+    JOIN equipment e ON mu.id = e.unit_id
+    WHERE mu.location = 'Сталинград' AND e.equipment_type = 'артиллерия'
+    GROUP BY e.equipment_type
+),
+stalingrad_soldiers AS (
+    SELECT COUNT(DISTINCT ms.soldier_id) AS soldiers_count
+    FROM military_service ms
+    JOIN military_unit mu ON ms.unit_id = mu.id
+    JOIN equipment e ON mu.id = e.unit_id
+    WHERE mu.location = 'Сталинград' AND e.equipment_type = 'артиллерия'
+)
+SELECT sa.equipment_type,
+       sa.total_qty::int AS total,
+       ROUND(sa.total_qty::numeric / NULLIF(ss.soldiers_count, 0), 2)::float AS per_soldier
+FROM stalingrad_artillery sa
+CROSS JOIN stalingrad_soldiers ss;""",
     "1.13": """SELECT s.full_name, u.unit_name, e.item_name, ea.quantity, ea.issue_date
 FROM soldier s
 JOIN military_service ms ON s.id = ms.soldier_id
@@ -106,19 +117,22 @@ JOIN battle_enemy_unit beu ON eu.id = beu.enemy_unit_id
 WHERE beu.battle_id IN (SELECT id FROM target_battle)
 ORDER BY eu.unit_name;""",
     "1.23": """WITH stalingrad_soldiers AS (
-    SELECT s.id, s.status
+    SELECT DISTINCT s.id, s.status
     FROM soldier s
     JOIN military_service ms ON s.id = ms.soldier_id
-    WHERE ms.start_date <= '1943-02-02'
-      AND (ms.end_date IS NULL OR ms.end_date >= '1942-07-17')
+    JOIN battle_military_unit bmu ON ms.unit_id = bmu.unit_id
+    JOIN battle b ON bmu.battle_id = b.id
+    WHERE b.battle_name = 'Сталинградская битва'
+      AND ms.start_date <= b.end_date
+      AND (ms.end_date IS NULL OR ms.end_date >= b.start_date)
 ),
 irrecoverable AS (
-    SELECT 'Безвозвратные потери' AS loss_category, COUNT(*) AS soldiers_count
+    SELECT 'Безвозвратные потери' AS loss_category, COUNT(*)::int AS soldiers_count
     FROM stalingrad_soldiers
     WHERE status IN ('убит', 'пропал без вести')
 ),
 sanitary AS (
-    SELECT 'Санитарные потери' AS loss_category, COUNT(*) AS soldiers_count
+    SELECT 'Санитарные потери' AS loss_category, COUNT(*)::int AS soldiers_count
     FROM stalingrad_soldiers
     WHERE status = 'ранен'
 )
@@ -376,6 +390,8 @@ class TestCurriculumQueries(unittest.IsolatedAsyncioTestCase):
 
         test_tasks = [
             ("1.03", 1, 3),
+            ("1.09", 1, 9),
+            ("1.23", 1, 23),
             ("2.02", 2, 2),
             ("2.05", 2, 5),
             ("2.06", 2, 6),

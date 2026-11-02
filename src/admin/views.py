@@ -146,7 +146,8 @@ class UserEventView(ModelView, model=UserEvent):
         UserEvent.event_type,
         UserEvent.user_id,
     ]
-    search_placeholder = "Поиск по нику, ФИО, email, типу события, user_id..."
+    def search_placeholder(self) -> str:
+        return "Поиск по нику, ФИО, email, типу события, user_id..."
 
     column_filters = [
         EventTimestampFilter(title="Период времени"),

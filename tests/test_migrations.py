@@ -96,5 +96,14 @@ class TestMigrations(unittest.TestCase):
         self.assertIn("Поля в результирующей таблице:", users9_content)
 
 
+        users_mig10 = MIGRATIONS_DIR / "users_db" / "010_fix_tasks_1_9_and_1_23.sql"
+        self.assertTrue(users_mig10.exists(), "users_db migration 010 must exist")
+        users10_content = users_mig10.read_text(encoding="utf-8")
+        self.assertIn("010_fix_tasks_1_9_and_1_23.sql", users10_content)
+        self.assertIn("task_global_id = 41", users10_content)
+        self.assertIn("task_global_id = 51", users10_content)
+        self.assertIn("stalingrad_artillery", users10_content)
+        self.assertIn("battle_military_unit", users10_content)
+
 if __name__ == "__main__":
     unittest.main()
