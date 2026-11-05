@@ -45,12 +45,30 @@ class TaskRepository:
         )
         return result.scalars().first()
 
-    async def add_solved_task(self, user_id: int, task_id: int) -> TaskSolved:
-        """Добавляет запись о решенной задаче"""
-        solved_task = TaskSolved(
-            user_id=user_id, task_global_id=task_id, solved_at=datetime.now()
+    async def add_solved_task(
+        self, user_id: int, task_id: int, user_query: str | None = None
+    ) -> TaskSolved:
+        """Добавляет или обновляет запись о решенной задаче (upsert)"""
+        result = await self.session.execute(
+            select(TaskSolved).where(
+                (TaskSolved.user_id == user_id)
+                & (TaskSolved.task_global_id == task_id)
+            )
         )
-        self.session.add(solved_task)
+        solved_task = result.scalars().first()
+        if solved_task:
+            if user_query is not None:
+                solved_task.user_query = user_query
+            solved_task.updated_at = datetime.now()
+        else:
+            solved_task = TaskSolved(
+                user_id=user_id,
+                task_global_id=task_id,
+                solved_at=datetime.now(),
+                user_query=user_query,
+                updated_at=datetime.now(),
+            )
+            self.session.add(solved_task)
         await self.session.commit()
         return solved_task
 
@@ -157,8 +175,8 @@ class TaskRepository:
 
     async def get_task_info_with_status(
         self, mission_id: int, task_id: int, user_id: int
-    ) -> tuple[Task, bool]:
-        """Возвращает задачу и статус решения пользователем"""
+    ) -> tuple[Task | None, bool, str | None]:
+        """Возвращает задачу, статус решения и сохраненное решение пользователя"""
         task_result = await self.session.execute(
             select(Task).where(
                 (Task.mission_id == mission_id) & (Task.task_id == task_id)
@@ -166,21 +184,49 @@ class TaskRepository:
         )
         task = task_result.scalars().first()
         if not task:
-            return None, False
+            return None, False, None
         solved_result = await self.session.execute(
-            select(
-                exists().where(
-                    (TaskSolved.task_global_id == task.task_global_id)
-                    & (TaskSolved.user_id == user_id)
-                )
+            select(TaskSolved).where(
+                (TaskSolved.task_global_id == task.task_global_id)
+                & (TaskSolved.user_id == user_id)
             )
         )
-        is_solved = solved_result.scalar()
+        solved_record = solved_result.scalars().first()
+        is_solved = solved_record is not None
+        user_solution = solved_record.user_query if solved_record else None
 
-        return task, is_solved
+        return task, is_solved, user_solution
+
+    async def get_task_by_id(
+        self, task_global_id: int, user_id: int | None = None
+    ) -> tuple[Task | None, bool, str | None]:
+        """Возвращает задачу по глобальному ID, статус решения и решение пользователя"""
+        result = await self.session.execute(
+            select(Task).where(Task.task_global_id == task_global_id)
+        )
+        task = result.scalars().first()
+        if not task:
+            return None, False, None
+        if user_id is None:
+            return task, False, None
+        solved_result = await self.session.execute(
+            select(TaskSolved).where(
+                (TaskSolved.task_global_id == task_global_id)
+                & (TaskSolved.user_id == user_id)
+            )
+        )
+        solved_record = solved_result.scalars().first()
+        is_solved = solved_record is not None
+        user_solution = solved_record.user_query if solved_record else None
+        return task, is_solved, user_solution
 
     async def check_and_reward_task(
-        self, user_id: int, mission_id: int, task_id: int, is_correct: bool
+        self,
+        user_id: int,
+        mission_id: int,
+        task_id: int,
+        is_correct: bool,
+        user_query: str | None = None,
     ) -> dict:
 
         task_data = await self._get_task_data(mission_id, task_id)
@@ -205,7 +251,7 @@ class TaskRepository:
             if not already_solved:
                 points_earned = self._get_base_points(mission_id)
                 await scoring_service.add_points(user_id, points_earned)
-                await self.add_solved_task(user_id, task_global_id)
+                await self.add_solved_task(user_id, task_global_id, user_query=user_query)
                 
                 # Update progress
                 if user_progress:
@@ -218,6 +264,7 @@ class TaskRepository:
                         
                 message = f"Правильно! Заработано {points_earned} баллов"
             else:
+                await self.add_solved_task(user_id, task_global_id, user_query=user_query)
                 message = "Правильно! За повторное решение баллы не начисляются"
         else:
             if not already_solved:

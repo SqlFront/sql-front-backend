@@ -45,6 +45,8 @@ class TaskSolved(Base):
         Integer, ForeignKey("tasks.task_global_id"), primary_key=True
     )
     solved_at = Column(DateTime, default=func.now())
+    user_query = Column(Text, nullable=True)
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     user = relationship("User", back_populates="solved_tasks")
     task = relationship("Task", back_populates="solved_by")

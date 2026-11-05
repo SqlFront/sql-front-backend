@@ -74,7 +74,7 @@ async def get_task_info(
     db: AsyncSession = Depends(get_db),
 ):
     repo = TaskRepository(db)
-    task, is_solved = await repo.get_task_info_with_status(
+    task, is_solved, user_solution = await repo.get_task_info_with_status(
         mission_id, task_id, current_user.user_id
     )
     if not task:
@@ -125,6 +125,7 @@ async def get_task_info(
         "previous": {"mission_id": prev_mission_id, "task_id": prev_task_id},
         "next": {"mission_id": next_mission_id, "task_id": next_task_id},
         "difficulty": difficulty,
+        "user_solution": user_solution,
     }
 
 
@@ -379,12 +380,26 @@ async def submit_sql_query(
         is_correct = False
         hint = f"Ошибка выполнения запроса: {str(e)}"
     try:
-        result = await repo.check_and_reward_task(
-            user_id=current_user.user_id,
-            mission_id=mission_id,
-            task_id=task_id,
-            is_correct=is_correct,
-        )
+        if is_correct:
+            result = await repo.check_and_reward_task(
+                user_id=current_user.user_id,
+                mission_id=mission_id,
+                task_id=task_id,
+                is_correct=is_correct,
+                user_query=request.sql_query,
+            )
+            await repo.add_solved_task(
+                user_id=current_user.user_id,
+                task_id=task.task_global_id,
+                user_query=request.sql_query,
+            )
+        else:
+            result = await repo.check_and_reward_task(
+                user_id=current_user.user_id,
+                mission_id=mission_id,
+                task_id=task_id,
+                is_correct=is_correct,
+            )
         await log_user_event(
             session=db,
             user_id=current_user.user_id,

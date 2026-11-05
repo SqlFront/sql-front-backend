@@ -21,6 +21,7 @@ class TaskInfo(TaskBase):
     task_id: int
     title: str
     is_solved: bool
+    user_solution: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -77,6 +78,7 @@ class TaskShortInfo(BaseModel):
     task_global_id: int
     title: str
     is_solved: bool
+    user_solution: Optional[str] = None
 
 
 class MissionsResponse(BaseModel):
@@ -99,6 +101,7 @@ class TaskWithStatusResponse(BaseModel):
     title: str
     description: str
     is_solved: bool
+    user_solution: Optional[str] = None
     has_clue1: bool
     has_clue2: bool
     previous: dict
