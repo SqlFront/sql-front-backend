@@ -282,20 +282,33 @@ SELECT am.month_num,
 FROM all_months am
 LEFT JOIN monthly_battles mb ON am.month_num = mb.month_num
 ORDER BY am.month_num;""",
-    "2.12": """WITH battle_stats AS (
+    "2.12": """WITH battle_units AS (
+    SELECT bmu.battle_id,
+           ROUND(AVG(mu.combat_efficiency)::numeric, 1)::float AS avg_efficiency
+    FROM battle_military_unit bmu
+    JOIN military_unit mu ON bmu.unit_id = mu.id
+    GROUP BY bmu.battle_id
+),
+battle_soldiers AS (
     SELECT b.id AS battle_id,
            b.battle_name,
            COUNT(DISTINCT s.id) FILTER (WHERE s.status IN ('убит', 'пропал без вести'))::int AS losses,
-           ROUND(AVG(mu.combat_efficiency)::numeric, 1)::float AS avg_efficiency,
            COALESCE(SUM(ea.quantity), 0)::int AS equipment_used
     FROM battle b
     JOIN battle_military_unit bmu ON b.id = bmu.battle_id
-    JOIN military_unit mu ON bmu.unit_id = mu.id
-    LEFT JOIN military_service ms ON mu.id = ms.unit_id
+    LEFT JOIN military_service ms ON bmu.unit_id = ms.unit_id
          AND ms.start_date <= b.end_date AND (ms.end_date IS NULL OR ms.end_date >= b.start_date)
     LEFT JOIN soldier s ON ms.soldier_id = s.id
     LEFT JOIN equipment_assignment ea ON s.id = ea.soldier_id
     GROUP BY b.id, b.battle_name
+),
+battle_stats AS (
+    SELECT bs.battle_name,
+           bs.losses,
+           bu.avg_efficiency,
+           bs.equipment_used
+    FROM battle_soldiers bs
+    JOIN battle_units bu ON bs.battle_id = bu.battle_id
 )
 SELECT battle_name,
        losses,
@@ -397,6 +410,7 @@ class TestCurriculumQueries(unittest.IsolatedAsyncioTestCase):
             ("2.06", 2, 6),
             ("2.08", 2, 8),
             ("2.10", 2, 10),
+            ("2.11", 2, 11),
             ("2.12", 2, 12),
         ]
 

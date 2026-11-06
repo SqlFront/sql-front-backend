@@ -113,5 +113,14 @@ class TestMigrations(unittest.TestCase):
         self.assertIn("user_query", users11_content)
         self.assertIn("updated_at", users11_content)
 
+        users_mig12 = MIGRATIONS_DIR / "users_db" / "012_fix_tasks_2_11_and_2_12.sql"
+        self.assertTrue(users_mig12.exists(), "users_db migration 012 must exist")
+        users12_content = users_mig12.read_text(encoding="utf-8")
+        self.assertIn("012_fix_tasks_2_11_and_2_12.sql", users12_content)
+        self.assertIn("task_global_id = 83", users12_content)
+        self.assertIn("task_global_id = 62", users12_content)
+        self.assertIn("FMMonth", users12_content)
+        self.assertIn("battle_units", users12_content)
+
 if __name__ == "__main__":
     unittest.main()
