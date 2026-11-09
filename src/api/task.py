@@ -18,7 +18,9 @@ from src.schemas.task import (
     TasksCount,
     TaskSubmissionResult,
     TaskWithStatusResponse,
+    DatabaseSchemaResponse,
 )
+from src.utils.schema_inspector import schema_inspector
 from src.utils.analytics import log_user_event
 from src.utils.auth import get_current_user
 from src.utils.sql_executor import SQLExecutor
@@ -50,6 +52,20 @@ def _reveal_expected(task):
             }
     return payload
 
+
+
+@router.get(
+    "/schema",
+    summary="Динамическая схема базы данных (ER-диаграмма)",
+    description="Возвращает актуальный граф таблиц, колонок и связей из системного каталога PostgreSQL для отображения в ER-диаграмме",
+    response_model=DatabaseSchemaResponse,
+)
+async def get_database_schema(refresh: bool = False):
+    try:
+        return await schema_inspector.get_schema(refresh=refresh)
+    except Exception as e:
+        logger.error(f"Error fetching database schema: {e}")
+        raise HTTPException(status_code=500, detail="Не удалось получить схему базы данных")
 
 @router.get(
     "/get_info",

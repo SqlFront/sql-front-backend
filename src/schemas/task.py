@@ -127,3 +127,40 @@ class TaskSubmissionResult(BaseModel):
     hint: str = ""
     columns: Optional[list] = None
     data: Optional[list] = None
+
+class DatabaseSchemaNodeColumn(BaseModel):
+    title: str
+    type: str
+    description: Optional[str] = None
+
+
+class DatabaseSchemaNodeData(BaseModel):
+    label: str
+    description: str
+    columns: List[DatabaseSchemaNodeColumn]
+
+
+class DatabaseSchemaNodePosition(BaseModel):
+    x: float
+    y: float
+
+
+class DatabaseSchemaNode(BaseModel):
+    id: str
+    position: DatabaseSchemaNodePosition
+    type: str = "databaseSchema"
+    data: DatabaseSchemaNodeData
+
+
+class DatabaseSchemaEdge(BaseModel):
+    id: str
+    source: str
+    target: str
+    sourceHandle: str
+    targetHandle: str
+
+
+class DatabaseSchemaResponse(BaseModel):
+    nodes: List[DatabaseSchemaNode]
+    edges: List[DatabaseSchemaEdge]
+
