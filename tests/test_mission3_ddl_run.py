@@ -209,7 +209,7 @@ class TestMission3RunEndpoint(unittest.IsolatedAsyncioTestCase):
                 db=self.mock_db,
             )
         self.assertEqual(ctx.exception.status_code, 400)
-        self.assertIn("Runtime error", ctx.exception.detail)
+        self.assertIn("Ошибка выполнения", ctx.exception.detail)
 
     @patch("src.api.task.log_user_event", new_callable=AsyncMock)
     @patch("src.api.task.TaskRepository")

@@ -232,20 +232,27 @@ class TestTaskApiSolutionPersistence(unittest.IsolatedAsyncioTestCase):
         db_session = AsyncMock()
 
         submitted_query = "SELECT name FROM units WHERE id = 1;"
-        result = await submit_sql_query(
-            mission_id=0,
-            task_id=5,
-            request=SQLRequest(sql_query=submitted_query),
-            current_user=current_user,
-            db=db_session,
-        )
+        with patch("src.api.task.sql_validation_service") as validation_service:
+            validation_service.validate = AsyncMock(return_value=SimpleNamespace(
+                is_correct=True,
+                analysis=SimpleNamespace(findings=()),
+                execution=None,
+                feedback=(),
+            ))
+            result = await submit_sql_query(
+                mission_id=0,
+                task_id=5,
+                request=SQLRequest(sql_query=submitted_query),
+                current_user=current_user,
+                db=db_session,
+            )
 
         self.assertTrue(result["is_correct"])
-        mock_repo.add_solved_task.assert_awaited_once_with(
-            user_id=7,
-            task_id=15,
-            user_query=submitted_query,
+        self.assertEqual(
+            mock_repo.check_and_reward_task.await_args.kwargs["user_query"],
+            submitted_query,
         )
+        mock_repo.add_solved_task.assert_not_awaited()
 
     @patch("src.api.task.sql_executor")
     @patch("src.api.task.TaskRepository")
