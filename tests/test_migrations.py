@@ -1,5 +1,6 @@
 import unittest
 from pathlib import Path
+import re
 
 from src.migrations.runner import to_asyncpg_dsn, MIGRATIONS_DIR
 
@@ -31,6 +32,7 @@ class TestMigrations(unittest.TestCase):
 
         game_content = game_mig.read_text(encoding="utf-8")
         self.assertIn("equipment_audit", game_content)
+
 
         users_mig2 = MIGRATIONS_DIR / "users_db" / "002_user_events_task_id_nullable.sql"
         self.assertTrue(users_mig2.exists(), "users_db migration 002 must exist")
@@ -121,6 +123,64 @@ class TestMigrations(unittest.TestCase):
         self.assertIn("task_global_id = 62", users12_content)
         self.assertIn("FMMonth", users12_content)
         self.assertIn("battle_units", users12_content)
+
+    def test_analysis_grading_migration_configures_real_tasks(self):
+        path = MIGRATIONS_DIR / "users_db" / "013_add_analysis_grading_config.sql"
+        content = path.read_text(encoding="utf-8")
+
+        self.assertGreaterEqual(content.count("WHERE task_global_id"), 10)
+        self.assertIn("analysis_requirements", content)
+        self.assertIn("analysis_context", content)
+        self.assertIn("quality_policy", content)
+
+    def test_ddl_verification_migration_uses_multiple_inputs(self):
+        path = MIGRATIONS_DIR / "users_db" / "014_expand_ddl_verification.sql"
+        content = path.read_text(encoding="utf-8")
+
+        self.assertIn("verification_cases", content)
+        self.assertIn("get_enlistment_age(1)", content)
+        self.assertIn("get_enlistment_age(2)", content)
+        self.assertIn("get_enlistment_age(3)", content)
+
+    def test_every_select_task_has_individual_analysis_configuration(self):
+        base_content = (
+            MIGRATIONS_DIR / "users_db" / "001_sync_tasks_and_tables.sql"
+        ).read_text(encoding="utf-8")
+        initial_content = (
+            MIGRATIONS_DIR / "users_db" / "013_add_analysis_grading_config.sql"
+        ).read_text(encoding="utf-8")
+        remaining_content = (
+            MIGRATIONS_DIR / "users_db" / "015_configure_remaining_select_tasks.sql"
+        ).read_text(encoding="utf-8")
+
+        select_task_ids = {
+            int(match.group(1))
+            for match in re.finditer(
+                r"VALUES \((\d+), ([012]), \d+,",
+                base_content,
+            )
+        }
+        initially_configured = {
+            int(match.group(1))
+            for match in re.finditer(
+                r"WHERE task_global_id = (\d+);",
+                initial_content,
+            )
+        }
+        newly_configured = {
+            int(match.group(1))
+            for match in re.finditer(
+                r"^\s*\((\d+),\s+ARRAY\[",
+                remaining_content,
+                re.MULTILINE,
+            )
+        }
+
+        self.assertEqual(len(select_task_ids), 70)
+        self.assertEqual(len(initially_configured), 10)
+        self.assertEqual(len(newly_configured), 60)
+        self.assertEqual(initially_configured | newly_configured, select_task_ids)
+
 
 if __name__ == "__main__":
     unittest.main()

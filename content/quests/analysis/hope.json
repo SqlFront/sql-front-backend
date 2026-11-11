@@ -1,0 +1,184 @@
+{
+  "chapter_1": {
+    "analysis_context": {
+      "difficulty": "easy",
+      "strict_schema": true,
+      "schema": {
+        "map": ["id", "name", "description", "coordinates", "status"]
+      }
+    },
+    "analysis_requirements": {
+      "required_tables": ["map"],
+      "required_selected_columns": ["id", "name", "description", "coordinates"]
+    },
+    "quality_policy": {"max_penalty_rate": 0.25}
+  },
+  "chapter_2": {
+    "analysis_context": {
+      "difficulty": "medium",
+      "strict_schema": true,
+      "schema": {
+        "map": ["id", "name", "description", "coordinates", "status"],
+        "is_sensitive": ["id", "importance"]
+      }
+    },
+    "analysis_requirements": {
+      "required_tables": ["map", "is_sensitive"],
+      "required_features": ["join", "order_by", "limit"],
+      "required_selected_columns": ["id", "name", "description", "coordinates", "importance"]
+    },
+    "quality_policy": {"max_penalty_rate": 0.30}
+  },
+  "chapter_3": {
+    "analysis_context": {
+      "difficulty": "medium",
+      "strict_schema": true,
+      "schema": {
+        "map": ["id", "name", "description", "coordinates", "status"],
+        "critical_objects": ["id", "description"]
+      }
+    },
+    "analysis_requirements": {
+      "required_tables": ["map", "critical_objects"],
+      "required_features": ["join"],
+      "required_selected_columns": ["id", "name", "description"]
+    },
+    "quality_policy": {"max_penalty_rate": 0.30}
+  },
+  "chapter_4": {
+    "analysis_context": {
+      "difficulty": "easy",
+      "strict_schema": true,
+      "schema": {"decision": ["result"]}
+    },
+    "analysis_requirements": {"required_tables": ["decision"]},
+    "quality_policy": {"max_penalty_rate": 0.25},
+    "max_statement_count": 1
+  },
+  "chapter_5_1": {
+    "analysis_context": {
+      "difficulty": "easy",
+      "strict_schema": true,
+      "schema": {"decision_factory": ["result"]}
+    },
+    "analysis_requirements": {"required_tables": ["decision_factory"]},
+    "quality_policy": {"max_penalty_rate": 0.25},
+    "max_statement_count": 1
+  },
+  "chapter_5_1_10_1": {
+    "analysis_context": {
+      "difficulty": "medium",
+      "strict_schema": true,
+      "schema": {
+        "guards": ["guard_id", "name", "age", "shift_id"],
+        "shifts": ["shift_id", "start_time", "end_time", "sector", "status"]
+      }
+    },
+    "analysis_requirements": {
+      "required_tables": ["guards", "shifts"],
+      "required_features": ["join", "group_by", "aggregate_function"],
+      "required_functions": ["count"],
+      "required_selected_columns": ["shift_id"],
+      "required_output_aliases": ["guard_count"]
+    },
+    "quality_policy": {"max_penalty_rate": 0.30}
+  },
+  "chapter_5_1_10_2": {
+    "analysis_context": {
+      "difficulty": "medium",
+      "strict_schema": true,
+      "schema": {
+        "explosives": ["item_id", "name", "type", "weight", "storage_id", "volatile"],
+        "storages": ["storage_id", "name", "sector", "security_level"]
+      }
+    },
+    "analysis_requirements": {
+      "required_tables": ["explosives", "storages"],
+      "required_features": ["join"],
+      "required_selected_columns": ["item_id", "name", "weight"]
+    },
+    "quality_policy": {"max_penalty_rate": 0.30}
+  },
+  "chapter_5_1_10_3": {
+    "analysis_context": {
+      "difficulty": "hard",
+      "strict_schema": true,
+      "schema": {
+        "routes": ["route_id", "start_sector", "end_sector", "distance_km", "risk_level"],
+        "checkpoints": ["checkpoint_id", "sector", "status", "guard_strength"]
+      }
+    },
+    "analysis_requirements": {
+      "required_tables": ["routes", "checkpoints"],
+      "required_features": ["join", "order_by", "limit"],
+      "required_selected_columns": ["route_id", "start_sector", "distance_km"]
+    },
+    "quality_policy": {"max_penalty_rate": 0.35}
+  },
+  "chapter_5_1_10_5": {
+    "analysis_context": {
+      "difficulty": "medium",
+      "strict_schema": true,
+      "schema": {
+        "disguise_templates": ["template_id", "name", "uniform_type", "origin_country"],
+        "disguises": ["disguise_id", "template_id", "status", "activation_date"]
+      }
+    },
+    "analysis_requirements": {
+      "required_tables": ["disguise_templates", "disguises"],
+      "required_features": ["join"],
+      "required_selected_columns": ["template_id", "name", "activation_date"]
+    },
+    "quality_policy": {"max_penalty_rate": 0.30}
+  },
+  "chapter_5_1_20_1": {
+    "analysis_context": {
+      "difficulty": "hard",
+      "strict_schema": true,
+      "schema": {
+        "items": ["item_id", "name", "weight", "is_self_defense", "assigned_to"]
+      }
+    },
+    "analysis_requirements": {"required_tables": ["items"]},
+    "quality_policy": {"max_penalty_rate": 0.35},
+    "max_statement_count": 2,
+    "verification_query": "SELECT bool_and(assigned_to = CASE WHEN weight <= 2 THEN 'Sasha' ELSE 'Grisha' END) AS assignment_correct FROM items",
+    "verification_result": {
+      "columns": ["assignment_correct"],
+      "data": [[true]],
+      "row_count": 1
+    }
+  },
+  "chapter_5_2_1": {
+    "analysis_context": {
+      "difficulty": "easy",
+      "strict_schema": true,
+      "schema": {
+        "train_schedule": ["train_id", "arrival_time", "cargo_type", "status"]
+      }
+    },
+    "analysis_requirements": {
+      "required_tables": ["train_schedule"],
+      "required_selected_columns": ["train_id", "arrival_time"]
+    },
+    "quality_policy": {"max_penalty_rate": 0.25}
+  },
+  "chapter_5_2_2": {
+    "analysis_context": {
+      "difficulty": "medium",
+      "strict_schema": true,
+      "schema": {
+        "track_segments": ["segment_id", "bridge", "km_marker", "status"]
+      }
+    },
+    "analysis_requirements": {"required_tables": ["track_segments"]},
+    "quality_policy": {"max_penalty_rate": 0.30},
+    "max_statement_count": 1,
+    "verification_query": "SELECT bool_and(status = CASE WHEN bridge = 'NorthBridge' AND km_marker BETWEEN 120 AND 122 THEN 'damaged' ELSE 'intact' END) AS update_correct FROM track_segments",
+    "verification_result": {
+      "columns": ["update_correct"],
+      "data": [[true]],
+      "row_count": 1
+    }
+  }
+}

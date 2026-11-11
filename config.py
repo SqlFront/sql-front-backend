@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 load_dotenv()
 
@@ -15,6 +15,8 @@ def get_env(*names: str):
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
     DATABASE_URL: str = get_env("DATABASE_URL", "DB_URL")
     GAME_DATABASE_URL: str = get_env("GAME_DATABASE_URL")
     QUEST_DATABASE_URL: str = get_env("QUEST_DATABASE_URL")
@@ -27,10 +29,5 @@ class Settings(BaseSettings):
     FRONTEND_URL: str = get_env("FRONTEND_URL")
     BACKEND_URL: str = get_env("BACKEND_URL")
     CORS_ORIGINS: str = get_env("CORS_ORIGINS") or ""
-
-    class Config:
-        env_file = ".env"
-        extra = "ignore"
-
 
 settings = Settings()

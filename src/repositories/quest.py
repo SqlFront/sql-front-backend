@@ -128,6 +128,7 @@ class QuestRepository:
             "legend": scene_data.get("legend", ""),
             "task": scene_data.get("task"),
             "has_clue": scene_data.get("has_clue", False),
+            "tags": scene_data.get("tags", []),
             "is_branching": scene_data.get("is_branching", False),
             "expected_result": scene_data.get("expected_result"),
             "branches": scene_data.get("branches", {}),

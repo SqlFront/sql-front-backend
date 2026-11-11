@@ -1,3 +1,6 @@
+import logging
+from collections.abc import Mapping
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,6 +23,7 @@ from src.schemas.task import (
     TaskWithStatusResponse,
     DatabaseSchemaResponse,
 )
+
 from src.utils.schema_inspector import schema_inspector
 from src.utils.analytics import log_user_event
 from src.utils.auth import get_current_user
@@ -28,10 +32,45 @@ from src.utils import catalog_model
 import logging
 import re
 
+from src.sql_analysis import (
+    PREVIEW_SELECT_POLICY,
+    SUBMIT_SELECT_POLICY,
+    PostgresDDLAnalyzer,
+    SQLAnalyzer,
+)
+from src.sql_validation import (
+    ComparisonPolicy,
+    QueryResult,
+    ResultComparator,
+    SQLValidationService,
+    ValidationRequest,
+    assess_query_quality,
+    build_analysis_error_detail,
+    build_analysis_payload,
+    build_findings_payload,
+    configure_analysis,
+)
+from src.utils import catalog_model
+from src.utils.analytics import log_user_event
+from src.utils.auth import get_current_user
+from src.utils.sql_executor import SQLExecutor
+
 logger = logging.getLogger("api.task")
 
 router = APIRouter(prefix="/api/missions", tags=["Миссии и задачи"])
 sql_executor = SQLExecutor(settings.GAME_DATABASE_URL)
+sql_result_comparator = ResultComparator()
+sql_analyzer = SQLAnalyzer()
+ddl_analyzer = PostgresDDLAnalyzer()
+sql_validation_service = SQLValidationService(
+    analyzer=sql_analyzer,
+    executor=sql_executor,
+    comparator=sql_result_comparator,
+)
+SUBMIT_COMPARISON_POLICY = ComparisonPolicy(
+    compare_columns=True,
+    row_order_matters=False,
+)
 
 
 def _reveal_expected(task):
@@ -54,6 +93,7 @@ def _reveal_expected(task):
 
 
 
+
 @router.get(
     "/schema",
     summary="Динамическая схема базы данных (ER-диаграмма)",
@@ -66,6 +106,18 @@ async def get_database_schema(refresh: bool = False):
     except Exception as e:
         logger.error(f"Error fetching database schema: {e}")
         raise HTTPException(status_code=500, detail="Не удалось получить схему базы данных")
+
+def _ddl_verification_cases(
+        expected_result: Mapping[str, object],
+) -> tuple[Mapping[str, object], ...]:
+    """Возвращает новые verification_cases или один legacy test_query."""
+    configured = expected_result.get("verification_cases")
+    if isinstance(configured, list):
+        cases = tuple(case for case in configured if isinstance(case, Mapping))
+        if cases:
+            return cases
+    return (expected_result,)
+
 
 @router.get(
     "/get_info",
@@ -275,59 +327,63 @@ async def run_sql_query(
             raise HTTPException(status_code=400, detail="Пустой запрос")
 
         exp_res = task.expected_result or {}
-        tags = task.tags or []
-        is_ddl = (
-            mission_id == 3
-            or exp_res.get("mode") in ("model", "ddl")
-            or "ddl" in tags
+
+        preview_policy, quality_policy = configure_analysis(
+            PREVIEW_SELECT_POLICY,
+            question=getattr(task, "description", ""),
+            expected_result=exp_res,
+            tags=getattr(task, "tags", None),
         )
-
-        if is_ddl:
-            for pat in (r"\bdrop\s+database\b", r"\balter\s+system\b"):
-                if re.search(pat, sql_query, re.IGNORECASE):
-                    raise HTTPException(
-                        status_code=400,
-                        detail="Запрещенная системная операция (DROP DATABASE / ALTER SYSTEM запрещены)",
-                    )
-
-            if exp_res.get("mode") == "model":
-                model = catalog_model.Model(exp_res.get("database", "quest_sandbox"))
-                try:
-                    for stmt in exp_res.get("setup", []):
-                        model.execute(stmt)
-                    model.execute(sql_query)
-                except catalog_model.ModelError as exc:
-                    raise HTTPException(
-                        status_code=400, detail=f"Ошибка выполнения: {str(exc)}"
-                    )
-                op_type = SQLExecutor._extract_operation_type(sql_query)
-                return {
-                    "columns": ["Статус операции"],
-                    "data": [
-                        [
-                            f"Команда успешно выполнена: {op_type} (симуляция завершена успешно)"
-                        ]
-                    ],
-                    "row_count": 1,
-                }
-            elif exp_res.get("mode") in ("ddl", "plpgsql"):
-                test_query = exp_res.get("test_query", "")
-                expect_error = exp_res.get("expect_error", False)
-                if test_query:
-                    return await sql_executor.simulate_ddl(
-                        sql_query, test_query, expect_error=expect_error
-                    )
-                return await sql_executor.execute_sql(
-                    sql_query, allow_ddl_simulation=True
+        if exp_res.get("mode") == "model":
+            ok, message = catalog_model.verify(
+                request.sql_query, exp_res
+            )
+            return {"columns": ["Результат:"], "data": [[message]], "row_count": 1}
+        elif exp_res.get("mode") in ("ddl", "plpgsql"):
+            ddl_analysis = ddl_analyzer.analyze(request.sql_query)
+            if not ddl_analysis.can_execute:
+                raise HTTPException(
+                    status_code=400,
+                    detail=build_analysis_error_detail(
+                        "DDL-запрос заблокирован анализатором",
+                        ddl_analysis.findings,
+                        preview_policy.task_context,
+                        penalty_policy=quality_policy,
+                    ),
                 )
-            else:
-                return await sql_executor.execute_sql(
-                    sql_query, allow_ddl_simulation=True
-                )
+            preview_case = _ddl_verification_cases(exp_res)[0]
+            result = dict(await sql_executor.simulate_analyzed_ddl(
+                request.sql_query,
+                preview_case.get("test_query", ""),
+                expect_error=bool(preview_case.get("expect_error", False)),
+            ))
+            result["analysis"] = build_findings_payload(
+                ddl_analysis.findings,
+                preview_policy.task_context,
+                penalty_policy=quality_policy,
+            )
+            return result
+        analysis = sql_analyzer.analyze(request.sql_query, preview_policy)
+        if not analysis.can_execute:
+            raise HTTPException(
+                status_code=400,
+                detail=build_analysis_error_detail(
+                    "SQL-запрос заблокирован анализатором",
+                    analysis.findings,
+                    preview_policy.task_context,
+                    penalty_policy=quality_policy,
+                ),
+            )
 
-        return await sql_executor.execute_sql(request.sql_query, allow_star=True)
-    except HTTPException as e:
-        raise HTTPException(status_code=400, detail=f"Runtime error: {str(e.detail)}")
+        result = dict(await sql_executor.execute_analyzed_sql(request.sql_query))
+        result["analysis"] = build_analysis_payload(
+            analysis,
+            preview_policy.task_context,
+            penalty_policy=quality_policy,
+        )
+        return result
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
@@ -356,39 +412,132 @@ async def submit_sql_query(
         )
 
     hint = ""
+    quality_issues: list[str] = []
+    quality_penalty = 0
+    analysis_payload = None
     user_result = {}
+    submit_policy, quality_policy = configure_analysis(
+        SUBMIT_SELECT_POLICY,
+        question=getattr(task, "description", ""),
+        expected_result=expected_result,
+        tags=getattr(task, "tags", None),
+    )
     try:
         if expected_result.get("mode") == "model":
             is_correct, hint = catalog_model.verify(request.sql_query, expected_result)
-            user_result = {
-                "columns": ["Статус операции"],
-                "data": [[hint if hint else "Решение успешно проверено"]],
-                "row_count": 1,
-            }
-        elif expected_result.get("mode") in ("ddl", "plpgsql"):
-            test_query = expected_result.get("test_query", "")
-            expect_error = expected_result.get("expect_error", False)
-            user_result = await sql_executor.simulate_ddl(
-                request.sql_query, test_query, expect_error=expect_error
+
+            quality_assessment = (
+                assess_query_quality(
+                    (), settings.TASK_POINTS[mission_id], policy=quality_policy
+                )
+                if is_correct else None
             )
-            if expect_error:
-                is_correct = user_result.get("error_caught", False)
-                hint = "Триггер успешно заблокировал некорректную операцию" if is_correct else ""
+            analysis_payload = build_findings_payload(
+                (),
+                submit_policy.task_context,
+                penalty_policy=quality_policy,
+                quality=quality_assessment,
+            )
+        elif expected_result.get("mode") in ("ddl", "plpgsql"):
+            ddl_analysis = ddl_analyzer.analyze(request.sql_query)
+            if not ddl_analysis.can_execute:
+                is_correct = False
+                hint = "; ".join(
+                    finding.message for finding in ddl_analysis.findings
+                )
             else:
-                user_data = user_result.get("data", [])
-                expected_data = expected_result.get("data", [])
-                try:
-                    is_correct = sorted(user_data) == sorted(expected_data)
-                except TypeError:
-                    is_correct = user_data == expected_data
+                is_correct = True
+                for case_number, verification_case in enumerate(
+                        _ddl_verification_cases(expected_result),
+                        start=1,
+                ):
+                    user_result = await sql_executor.simulate_analyzed_ddl(
+                        request.sql_query,
+                        verification_case.get("test_query", ""),
+                        expect_error=bool(
+                            verification_case.get("expect_error", False)
+                        ),
+                    )
+                    if verification_case.get("expect_error", False):
+                        case_is_correct = user_result.get("error_caught", False)
+                        case_hint = (
+                            "Триггер успешно заблокировал некорректную операцию"
+                            if case_is_correct else "Ожидаемая ошибка не возникла"
+                        )
+                    else:
+                        comparison = sql_result_comparator.compare(
+                            actual=QueryResult.from_mapping(user_result),
+                            expected=QueryResult.from_mapping(verification_case),
+                            policy=ComparisonPolicy(compare_columns=False),
+                        )
+                        case_is_correct = comparison.is_equal
+                        case_hint = "; ".join(
+                            difference.message
+                            for difference in comparison.differences
+                        )
+                    if not case_is_correct:
+                        is_correct = False
+                        hint = f"Проверочный вызов {case_number}: {case_hint}"
+                        break
+                    hint = case_hint
+            quality_assessment = (
+                assess_query_quality(
+                    ddl_analysis.findings,
+                    settings.TASK_POINTS[mission_id],
+                    policy=quality_policy,
+                )
+                if is_correct else None
+            )
+            if quality_assessment is not None:
+                quality_penalty = quality_assessment.penalty_points
+                quality_issues = list(quality_assessment.messages)
+                if quality_issues:
+                    hint = "; ".join(quality_issues)
+            analysis_payload = build_findings_payload(
+                ddl_analysis.findings,
+                submit_policy.task_context,
+                penalty_policy=quality_policy,
+                quality=quality_assessment,
+            )
         else:
-            user_result = await sql_executor.execute_sql(request.sql_query)
-            user_data = user_result.get("data", [])
-            expected_data = expected_result.get("data", [])
-            try:
-                is_correct = sorted(user_data) == sorted(expected_data)
-            except TypeError:
-                is_correct = user_data == expected_data
+            validation = await sql_validation_service.validate(
+                ValidationRequest(
+                    sql=request.sql_query,
+                    analysis_policy=submit_policy,
+                    expected_result=QueryResult.from_mapping(expected_result),
+                    comparison_policy=SUBMIT_COMPARISON_POLICY,
+                )
+            )
+            is_correct = validation.is_correct
+
+            quality_assessment = None
+            if is_correct:
+                quality_assessment = assess_query_quality(
+                    validation.analysis.findings,
+                    settings.TASK_POINTS[mission_id],
+                    policy=quality_policy,
+                )
+                quality_issues = list(quality_assessment.messages)
+                quality_penalty = quality_assessment.penalty_points
+
+            analysis_payload = build_analysis_payload(
+                validation.analysis,
+                submit_policy.task_context,
+                penalty_policy=quality_policy,
+                quality=quality_assessment,
+            )
+
+            if validation.execution is not None:
+                user_result = {
+                    "columns": list(validation.execution.columns),
+                    "data": [list(row) for row in validation.execution.rows],
+                    "row_count": validation.execution.row_count,
+                }
+
+            if quality_issues:
+                hint = "; ".join(quality_issues)
+            elif not is_correct:
+                hint = "; ".join(validation.feedback)
     except HTTPException as e:
         is_correct = False
         hint = str(e.detail)
@@ -396,26 +545,15 @@ async def submit_sql_query(
         is_correct = False
         hint = f"Ошибка выполнения запроса: {str(e)}"
     try:
-        if is_correct:
-            result = await repo.check_and_reward_task(
-                user_id=current_user.user_id,
-                mission_id=mission_id,
-                task_id=task_id,
-                is_correct=is_correct,
-                user_query=request.sql_query,
-            )
-            await repo.add_solved_task(
-                user_id=current_user.user_id,
-                task_id=task.task_global_id,
-                user_query=request.sql_query,
-            )
-        else:
-            result = await repo.check_and_reward_task(
-                user_id=current_user.user_id,
-                mission_id=mission_id,
-                task_id=task_id,
-                is_correct=is_correct,
-            )
+
+        result = await repo.check_and_reward_task(
+            user_id=current_user.user_id,
+            mission_id=mission_id,
+            task_id=task_id,
+            is_correct=is_correct,
+            quality_penalty=quality_penalty if is_correct else 0,
+            user_query=request.sql_query if is_correct else None,
+        )
         await log_user_event(
             session=db,
             user_id=current_user.user_id,
@@ -433,6 +571,8 @@ async def submit_sql_query(
             "columns": user_result.get("columns", []),
             "data": user_result.get("data", []),
             "hint": hint,
+            "quality_issues": quality_issues,
+            "analysis": analysis_payload,
         }
 
     except IndexError:

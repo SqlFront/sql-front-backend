@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from pydantic import BaseModel, EmailStr, StringConstraints
+from pydantic import BaseModel, ConfigDict, EmailStr, StringConstraints
 
 
 class UserBase(BaseModel):
@@ -15,20 +15,16 @@ class UserCreate(UserBase):
 
 
 class UserInDB(UserBase):
+    model_config = ConfigDict(from_attributes=True)
+
     user_id: int
     total_score: int | None = None
-
-    class Config:
-        from_attributes = True
-
 
 class UserPublic(UserBase):
+    model_config = ConfigDict(from_attributes=True)
+
     user_id: int
     total_score: int | None = None
-
-    class Config:
-        from_attributes = True
-
 
 class UserLogin(BaseModel):
     login: str

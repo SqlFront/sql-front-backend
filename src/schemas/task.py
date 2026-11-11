@@ -1,6 +1,8 @@
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
+
+from src.schemas.analysis import SQLAnalysisResponse
 
 
 class TaskBase(BaseModel):
@@ -17,15 +19,13 @@ class TaskCreate(TaskBase):
 
 
 class TaskInfo(TaskBase):
+    model_config = ConfigDict(from_attributes=True)
+
     task_global_id: int
     task_id: int
     title: str
     is_solved: bool
     user_solution: Optional[str] = None
-
-    class Config:
-        from_attributes = True
-
 
 class MissionTasks(BaseModel):
     mission_id: int
@@ -62,6 +62,7 @@ class SQLResponse(BaseModel):
     columns: List[str]
     data: List[List[Any]]
     row_count: int
+    analysis: Optional[SQLAnalysisResponse] = None
 
 
 class SQLRequest(BaseModel):
@@ -125,8 +126,11 @@ class TaskSubmissionResult(BaseModel):
     awarded_achievements: list[AchievementAward]
     current_points: int
     hint: str = ""
+    quality_issues: list[str] = Field(default_factory=list)
     columns: Optional[list] = None
     data: Optional[list] = None
+    analysis: Optional[SQLAnalysisResponse] = None
+
 
 class DatabaseSchemaNodeColumn(BaseModel):
     title: str
@@ -163,4 +167,3 @@ class DatabaseSchemaEdge(BaseModel):
 class DatabaseSchemaResponse(BaseModel):
     nodes: List[DatabaseSchemaNode]
     edges: List[DatabaseSchemaEdge]
-

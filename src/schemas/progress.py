@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class UserProgressBase(BaseModel):
@@ -12,7 +12,6 @@ class UserProgresCreate(UserProgressBase):
 
 
 class UserProgressInDB(UserProgressBase):
-    user_id: int
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+    user_id: int

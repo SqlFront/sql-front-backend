@@ -17,6 +17,7 @@ class SQLExecutor:
         self.engine = create_async_engine(db_url, isolation_level="AUTOCOMMIT")
         self.transaction_engine = create_async_engine(db_url) # For simulating updates
 
+
     @staticmethod
     def _clean_query(query: str) -> str:
         if not query:
@@ -74,47 +75,19 @@ class SQLExecutor:
             return words[0].upper()
         return "DDL"
 
-    async def execute_sql(
-        self,
-        sql_query: str,
-        allow_star: bool = False,
-        allow_ddl_simulation: bool = False,
-    ) -> dict:
+
+    async def execute_sql(self, sql_query: str, allow_star: bool = False) -> dict:
         sql_query = self._clean_query(sql_query)
-        self._validate_sql(
-            sql_query, allow_star=allow_star, allow_ddl=allow_ddl_simulation
-        )
-        if allow_ddl_simulation:
-            try:
-                async with self.transaction_engine.begin() as conn:
-                    await conn.execute(text("SET statement_timeout TO 5000"))
-                    result = await conn.execute(text(sql_query))
-                    op_type = self._extract_operation_type(sql_query)
-                    await conn.rollback()
-                    return {
-                        "columns": ["Статус операции"],
-                        "data": [
-                            [
-                                f"Команда успешно выполнена: {op_type} (симуляция завершена успешно)"
-                            ]
-                        ],
-                        "row_count": 1,
-                    }
-            except QueryCanceledError:
-                raise HTTPException(
-                    status_code=400, detail="Время выполнения запроса превышено"
-                )
-            except StatementError as e:
-                raise HTTPException(
-                    status_code=400, detail=f"Ошибка выполнения: {str(e.orig)}"
-                )
-            except HTTPException:
-                raise
-            except Exception as e:
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"Непредвиденная ошибка базы данных: {str(e)}",
-                )
+        self._validate_sql(sql_query, allow_star=allow_star)
+        return await self._execute_query(sql_query)
+
+    async def execute_analyzed_sql(self, sql_query: str) -> dict:
+        """Выполняет SQL, который уже прошёл проверку SQLAnalyzer."""
+        sql_query = sql_query.rstrip(";").strip()
+        return await self._execute_query(sql_query)
+
+    async def _execute_query(self, sql_query: str) -> dict:
+        """Выполняет подготовленный запрос без повторного анализа AST."""
         try:
             async with self.engine.connect() as conn:
                 await conn.execute(text("SET statement_timeout TO 5000"))
@@ -151,6 +124,63 @@ class SQLExecutor:
         """Безопасное выполнение UPDATE с помощью транзакции и отката"""
         sql_query = self._clean_query(sql_query)
         self._validate_sql(sql_query, allow_update=True, allowed_tables=allowed_tables)
+        return await self._simulate_update(sql_query)
+
+    async def simulate_analyzed_update(self, sql_query: str) -> int:
+        """Имитирует UPDATE, который уже прошёл проверку SQLAnalyzer."""
+        sql_query = sql_query.rstrip(";").strip()
+        return await self._simulate_update(sql_query)
+
+    async def simulate_analyzed_updates(
+        self,
+        sql_queries: list[str] | tuple[str, ...],
+        verification_query: str | None = None,
+    ) -> dict:
+        """Выполняет несколько проверенных UPDATE и контрольный SELECT с откатом."""
+        statements = [query.rstrip(";").strip() for query in sql_queries if query.strip()]
+        if not statements:
+            raise HTTPException(status_code=400, detail="Пустой запрос")
+
+        try:
+            async with self.transaction_engine.begin() as conn:
+                await conn.execute(text("SET statement_timeout TO 5000"))
+                affected_rows = 0
+                for statement in statements:
+                    result = await conn.execute(text(statement))
+                    if result.rowcount and result.rowcount > 0:
+                        affected_rows += result.rowcount
+
+                if verification_query:
+                    verification = await conn.execute(text(verification_query))
+                    response = self._result_to_mapping(verification)
+                    response["affected_rows"] = affected_rows
+                else:
+                    response = {
+                        "columns": [],
+                        "data": [],
+                        "row_count": affected_rows,
+                        "affected_rows": affected_rows,
+                    }
+
+                await conn.rollback()
+                return response
+        except QueryCanceledError:
+            raise HTTPException(
+                status_code=400, detail="Время выполнения запроса превышено"
+            )
+        except StatementError as e:
+            raise HTTPException(
+                status_code=400, detail=f"Ошибка выполнения: {str(e.orig)}"
+            )
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(
+                status_code=400, detail=f"Непредвиденная ошибка базы данных: {str(e)}"
+            )
+
+    async def _simulate_update(self, sql_query: str) -> int:
+        """Выполняет подготовленный UPDATE в откатываемой транзакции."""
         try:
             async with self.transaction_engine.begin() as conn:
                 await conn.execute(text("SET statement_timeout TO 5000"))
@@ -171,6 +201,26 @@ class SQLExecutor:
                 status_code=400, detail=f"Непредвиденная ошибка базы данных: {str(e)}"
             )
 
+    @staticmethod
+    def _result_to_mapping(result) -> dict:
+        """Преобразует результат SQLAlchemy в формат API SQLFront."""
+        if not result.returns_rows:
+            return {"columns": [], "data": [], "row_count": result.rowcount}
+
+        columns = list(result.keys())
+        data = []
+        for row in result.fetchall():
+            processed_row = []
+            for value in row:
+                if isinstance(value, (date, datetime)):
+                    processed_row.append(value.isoformat())
+                elif isinstance(value, Decimal):
+                    processed_row.append(float(value))
+                else:
+                    processed_row.append(value)
+            data.append(processed_row)
+        return {"columns": columns, "data": data, "row_count": len(data)}
+
     async def simulate_ddl(
         self,
         ddl_query: str,
@@ -180,6 +230,33 @@ class SQLExecutor:
         """Безопасное выполнение DDL (функции/процедуры/триггеры) и тестового запроса в изолированной транзакции с ROLLBACK"""
         ddl_query = self._clean_query(ddl_query)
         self._validate_sql(ddl_query, allow_ddl=True)
+        return await self._simulate_ddl_execution(
+            ddl_query,
+            test_query,
+            expect_error,
+        )
+
+    async def simulate_analyzed_ddl(
+        self,
+        ddl_query: str,
+        test_query: str | list[str],
+        expect_error: bool = False,
+    ) -> dict:
+        """Имитирует DDL, проверенный PostgresDDLAnalyzer."""
+        ddl_query = ddl_query.rstrip(";").strip()
+        return await self._simulate_ddl_execution(
+            ddl_query,
+            test_query,
+            expect_error,
+        )
+
+    async def _simulate_ddl_execution(
+        self,
+        ddl_query: str,
+        test_query: str | list[str],
+        expect_error: bool,
+    ) -> dict:
+        """Выполняет подготовленный DDL и тестовые запросы с откатом."""
 
         if isinstance(test_query, str):
             test_statements = [s.strip() for s in test_query.split(";") if s.strip()]

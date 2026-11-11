@@ -36,9 +36,10 @@ services:
 
   frontend:
     container_name: frontend
-    build: ../sql-frontend
+    build: ../sql-front-frontend
     restart: unless-stopped
-    env_file: ../sql-frontend/.env
+
+    env_file: ../sql-front-frontend/.env
     expose:
       - "9000"
     depends_on:

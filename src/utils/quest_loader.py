@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 from pathlib import Path
 from typing import Dict, Any
 from fastapi import HTTPException
@@ -6,7 +7,9 @@ from fastapi import HTTPException
 
 class QuestLoader:
     _cache: Dict[str, dict] = {}
+    _analysis_cache: Dict[str, dict] = {}
     _quests_dir = Path("content/quests")
+    _analysis_dir = _quests_dir / "analysis"
 
     @classmethod
     def get_quest(cls, quest_id: str) -> dict:
@@ -30,7 +33,31 @@ class QuestLoader:
         scene = quest.get("scenes", {}).get(scene_id)
         if not scene:
             raise HTTPException(status_code=404, detail="Сцена не найдена")
-        return scene
+        result = deepcopy(scene)
+        analysis_config = cls._get_analysis_config(quest_id).get(scene_id, {})
+        if analysis_config:
+            expected_result = dict(result.get("expected_result") or {})
+            expected_result.update(deepcopy(analysis_config))
+            result["expected_result"] = expected_result
+        return result
+
+    @classmethod
+    def _get_analysis_config(cls, quest_id: str) -> dict:
+        """Загружает необязательные требования анализа для сцен квеста."""
+        if quest_id in cls._analysis_cache:
+            return cls._analysis_cache[quest_id]
+
+        file_path = cls._analysis_dir / f"{quest_id}.json"
+        if not file_path.exists():
+            cls._analysis_cache[quest_id] = {}
+            return {}
+
+        with open(file_path, "r", encoding="utf-8") as file:
+            config = json.load(file)
+        if not isinstance(config, dict):
+            raise ValueError("Конфигурация анализа квеста должна быть объектом")
+        cls._analysis_cache[quest_id] = config
+        return config
     
     @classmethod
     def get_all_quests(cls) -> list[dict]:

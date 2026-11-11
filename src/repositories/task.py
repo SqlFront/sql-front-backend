@@ -226,7 +226,10 @@ class TaskRepository:
         mission_id: int,
         task_id: int,
         is_correct: bool,
+
         user_query: str | None = None,
+
+        quality_penalty: int = 0,
     ) -> dict:
 
         task_data = await self._get_task_data(mission_id, task_id)
@@ -249,7 +252,9 @@ class TaskRepository:
         actual_penalty = 0
         if is_correct:
             if not already_solved:
-                points_earned = self._get_base_points(mission_id)
+                base_points = self._get_base_points(mission_id)
+                points_penalty = min(max(quality_penalty, 0), base_points)
+                points_earned = base_points - points_penalty
                 await scoring_service.add_points(user_id, points_earned)
                 await self.add_solved_task(user_id, task_global_id, user_query=user_query)
                 
@@ -262,7 +267,13 @@ class TaskRepository:
                     elif mission_id == 2:
                         user_progress.hard_tasks_solved += 1
                         
-                message = f"Правильно! Заработано {points_earned} баллов"
+                if points_penalty:
+                    message = (
+                        f"Правильно! Заработано {points_earned} баллов. "
+                        f"Снижение за качество SQL: {points_penalty} баллов"
+                    )
+                else:
+                    message = f"Правильно! Заработано {points_earned} баллов"
             else:
                 await self.add_solved_task(user_id, task_global_id, user_query=user_query)
                 message = "Правильно! За повторное решение баллы не начисляются"
