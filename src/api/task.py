@@ -1,4 +1,5 @@
 import logging
+import re
 from collections.abc import Mapping
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -335,10 +336,29 @@ async def run_sql_query(
             tags=getattr(task, "tags", None),
         )
         if exp_res.get("mode") == "model":
-            ok, message = catalog_model.verify(
-                request.sql_query, exp_res
-            )
-            return {"columns": ["Результат:"], "data": [[message]], "row_count": 1}
+            if re.search(r"\b(?:DROP\s+DATABASE|ALTER\s+SYSTEM)\b", sql_query, re.IGNORECASE):
+                raise HTTPException(
+                    status_code=400,
+                    detail="DROP DATABASE / ALTER SYSTEM запрещены",
+                )
+            model = catalog_model.Model(exp_res.get("database", "quest_sandbox"))
+            try:
+                for statement in exp_res.get("setup", []):
+                    model.execute(statement)
+                model.execute(sql_query)
+            except catalog_model.ModelError as exc:
+                raise HTTPException(status_code=400, detail=f"Ошибка выполнения: {exc}") from exc
+            operation = SQLExecutor._extract_operation_type(sql_query)
+            return {
+                "columns": ["Статус операции"],
+                "data": [[f"Команда успешно выполнена: {operation} (симуляция завершена успешно)"]],
+                "row_count": 1,
+                "analysis": build_findings_payload(
+                    (),
+                    preview_policy.task_context,
+                    penalty_policy=quality_policy,
+                ),
+            }
         elif exp_res.get("mode") in ("ddl", "plpgsql"):
             ddl_analysis = ddl_analyzer.analyze(request.sql_query)
             if not ddl_analysis.can_execute:

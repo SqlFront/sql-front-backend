@@ -6,6 +6,11 @@ from src.migrations.runner import to_asyncpg_dsn, MIGRATIONS_DIR
 
 
 class TestMigrations(unittest.TestCase):
+    def test_users_migration_numbers_are_unique_and_ordered(self):
+        migration_files = sorted((MIGRATIONS_DIR / "users_db").glob("[0-9][0-9][0-9]_*.sql"))
+        numbers = [int(path.name[:3]) for path in migration_files]
+        self.assertEqual(numbers, list(range(1, 16)))
+
     def test_to_asyncpg_dsn_conversion(self):
         url = "postgresql+asyncpg://postgres:secret@postgres:5432/users_db"
         dsn = to_asyncpg_dsn(url)
