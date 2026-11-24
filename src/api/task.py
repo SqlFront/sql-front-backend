@@ -138,6 +138,8 @@ async def get_task_info(
         "is_solved": is_solved,
         "has_clue1": bool(has_clue1),
         "has_clue2": bool(has_clue2),
+        "clue": task.clue if has_clue1 else None,
+        "expected_result": _reveal_expected(task) if has_clue2 else None,
         "previous": {"mission_id": prev_mission_id, "task_id": prev_task_id},
         "next": {"mission_id": next_mission_id, "task_id": next_task_id},
         "difficulty": difficulty,
@@ -373,7 +375,7 @@ async def submit_sql_query(
             )
             if expect_error:
                 is_correct = user_result.get("error_caught", False)
-                hint = "Триггер успешно заблокировал некорректную операцию" if is_correct else ""
+                hint = "Триггер успешно заблокировал некорректную операцию" if is_correct else "Операция не была заблокирована триггером"
             else:
                 user_data = user_result.get("data", [])
                 expected_data = expected_result.get("data", [])

@@ -104,6 +104,8 @@ class TaskWithStatusResponse(BaseModel):
     user_solution: Optional[str] = None
     has_clue1: bool
     has_clue2: bool
+    clue: Optional[str] = None
+    expected_result: Optional[dict] = None
     previous: dict
     next: dict
     difficulty: Optional[str] = None

@@ -44,6 +44,24 @@ class TestTaskModelAndSchemas(unittest.TestCase):
         )
         self.assertEqual(response.user_solution, "SELECT 42;")
 
+    def test_task_schemas_clue_and_expected_result_fields(self):
+        """Проверяем, что схема TaskWithStatusResponse содержит clue и expected_result."""
+        response = TaskWithStatusResponse(
+            task_id=2,
+            mission_id=1,
+            title="Тестовая задача",
+            description="Описание",
+            is_solved=True,
+            has_clue1=True,
+            has_clue2=True,
+            clue="Подсказка к задаче",
+            expected_result={"columns": ["col"], "data": [["val"]], "row_count": 1},
+            previous={},
+            next={},
+        )
+        self.assertEqual(response.clue, "Подсказка к задаче")
+        self.assertEqual(response.expected_result, {"columns": ["col"], "data": [["val"]], "row_count": 1})
+
 
 class TestTaskRepositorySolutionPersistence(unittest.IsolatedAsyncioTestCase):
     async def test_add_solved_task_insert_new(self):
@@ -198,6 +216,94 @@ class TestTaskApiSolutionPersistence(unittest.IsolatedAsyncioTestCase):
 
         self.assertEqual(result["user_solution"], "SELECT id FROM tank;")
         self.assertTrue(result["is_solved"])
+
+    @patch("src.api.task.log_user_event", new_callable=AsyncMock)
+    @patch("src.api.task.TaskRepository")
+    async def test_get_task_info_endpoint_returns_purchased_clues(
+        self, mock_repo_class, mock_log
+    ):
+        mock_repo = MagicMock()
+        mock_repo_class.return_value = mock_repo
+        fake_task = SimpleNamespace(
+            task_id=3,
+            mission_id=1,
+            task_global_id=40,
+            title="Задача 3",
+            description="Описание задачи",
+            tags=["medium"],
+            clue="Секретная подсказка",
+            expected_result={"columns": ["a"], "data": [[1]], "row_count": 1},
+        )
+        mock_repo.get_task_info_with_status = AsyncMock(
+            return_value=(fake_task, False, None)
+        )
+        mock_repo.session = MagicMock()
+        clue1_res = MagicMock()
+        clue1_res.scalar_one_or_none.return_value = 1
+        clue2_res = MagicMock()
+        clue2_res.scalar_one_or_none.return_value = 2
+        mock_repo.session.execute = AsyncMock(side_effect=[clue1_res, clue2_res])
+        mock_repo.find_prev_task_data = AsyncMock(return_value=(1, 2))
+        mock_repo.find_next_task_data = AsyncMock(return_value=(1, 4))
+
+        current_user = SimpleNamespace(user_id=42, total_score=200)
+        db_session = AsyncMock()
+
+        result = await get_task_info(
+            mission_id=1,
+            task_id=3,
+            current_user=current_user,
+            db=db_session,
+        )
+
+        self.assertTrue(result["has_clue1"])
+        self.assertTrue(result["has_clue2"])
+        self.assertEqual(result["clue"], "Секретная подсказка")
+        self.assertEqual(result["expected_result"], {"columns": ["a"], "data": [[1]], "row_count": 1})
+
+    @patch("src.api.task.log_user_event", new_callable=AsyncMock)
+    @patch("src.api.task.TaskRepository")
+    async def test_get_task_info_endpoint_hides_unpurchased_clues(
+        self, mock_repo_class, mock_log
+    ):
+        mock_repo = MagicMock()
+        mock_repo_class.return_value = mock_repo
+        fake_task = SimpleNamespace(
+            task_id=3,
+            mission_id=1,
+            task_global_id=40,
+            title="Задача 3",
+            description="Описание задачи",
+            tags=["medium"],
+            clue="Секретная подсказка",
+            expected_result={"columns": ["a"], "data": [[1]], "row_count": 1},
+        )
+        mock_repo.get_task_info_with_status = AsyncMock(
+            return_value=(fake_task, False, None)
+        )
+        mock_repo.session = MagicMock()
+        clue1_res = MagicMock()
+        clue1_res.scalar_one_or_none.return_value = None
+        clue2_res = MagicMock()
+        clue2_res.scalar_one_or_none.return_value = None
+        mock_repo.session.execute = AsyncMock(side_effect=[clue1_res, clue2_res])
+        mock_repo.find_prev_task_data = AsyncMock(return_value=(1, 2))
+        mock_repo.find_next_task_data = AsyncMock(return_value=(1, 4))
+
+        current_user = SimpleNamespace(user_id=42, total_score=200)
+        db_session = AsyncMock()
+
+        result = await get_task_info(
+            mission_id=1,
+            task_id=3,
+            current_user=current_user,
+            db=db_session,
+        )
+
+        self.assertFalse(result["has_clue1"])
+        self.assertFalse(result["has_clue2"])
+        self.assertIsNone(result["clue"])
+        self.assertIsNone(result["expected_result"])
 
     @patch("src.api.task.sql_executor")
     @patch("src.api.task.TaskRepository")
