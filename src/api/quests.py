@@ -167,11 +167,17 @@ async def run_quest_sql(
         raise HTTPException(status_code=400, detail="Неверная сцена для выполнения")
 
     try:
-        if scene_data["is_branching"]:
-            raise HTTPException(
-                status_code=403, detail="Пока низя"
-            )
+        exp_res = scene_data.get("expected_result") or {}
+        is_update_scene = scene_data.get("is_branching") or (
+            exp_res.get("query_type") == "UPDATE"
+        )
         cleaned_query = sanitize_quest_query(request.sql_query)
+        if is_update_scene:
+            target_table = exp_res.get("target_table")
+            return await sql_executor.simulate_update(
+                cleaned_query,
+                allowed_tables=[target_table] if target_table else None,
+            )
         return await sql_executor.execute_sql(cleaned_query, allow_star=True)
     except HTTPException as e:
         raise HTTPException(
@@ -212,17 +218,55 @@ async def submit_quest_solution(
     is_correct = False
 
     try:
-        if scene["is_branching"]:
+        exp_res = scene.get("expected_result") or {}
+        if scene.get("is_branching"):
             user_answer_value = _extract_update_value(cleaned_query)
-            target_table = scene.get("expected_result", {}).get("target_table")
+            target_table = exp_res.get("target_table")
             if target_table:
                 # Check safely via transaction rollback
-                await sql_executor.simulate_update(cleaned_query, allowed_tables=[target_table])
+                await sql_executor.simulate_update(
+                    cleaned_query, allowed_tables=[target_table]
+                )
             branches = scene.get("branches", {})
             is_correct = (
                 user_answer_value in branches
                 or str(user_answer_value) in [str(k) for k in branches.keys()]
             )
+        elif exp_res.get("query_type") == "UPDATE":
+            user_answer_value = _extract_update_value(cleaned_query)
+            target_table = exp_res.get("target_table")
+            allowed_tables = [target_table] if target_table else None
+            sim_res = await sql_executor.simulate_update(
+                cleaned_query, allowed_tables=allowed_tables
+            )
+            affected_rows = (
+                sim_res.get("affected_rows", 0)
+                if isinstance(sim_res, dict)
+                else (sim_res or 0)
+            )
+
+            if affected_rows > 0:
+                is_correct = True
+
+                target_column = exp_res.get("target_column")
+                if target_column and target_column.lower() not in cleaned_query.lower():
+                    is_correct = False
+
+                for i in range(1, 5):
+                    req_col = exp_res.get(f"required_where_column_{i}")
+                    if req_col and req_col.lower() not in cleaned_query.lower():
+                        is_correct = False
+                        break
+                    req_val = exp_res.get(f"required_where_value_{i}")
+                    if req_val and str(req_val).lower() not in cleaned_query.lower():
+                        is_correct = False
+                        break
+                    req_cond = exp_res.get(f"required_where_condition_{i}")
+                    if req_cond:
+                        cond_tokens = req_cond.lower().split()
+                        if not all(tok in cleaned_query.lower() for tok in cond_tokens):
+                            is_correct = False
+                            break
         else:
             if scene.get("expected_result"):
                 user_result = await sql_executor.execute_sql(cleaned_query, allow_star=True)

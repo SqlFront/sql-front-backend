@@ -105,20 +105,100 @@ class TestQuestEndpoints(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(res["row_count"], 1)
         mock_sql_executor.execute_sql.assert_awaited_once_with("SELECT id FROM map", allow_star=True)
 
-    async def test_run_quest_sql_branching_scene_forbidden(self):
+    @patch("src.api.quests.sql_executor")
+    async def test_run_quest_sql_branching_scene_simulates_update(self, mock_sql_executor):
         mock_repo = MagicMock()
         mock_repo.get_user_current_scene = AsyncMock(return_value={
             "scene_id": "chapter_4",
             "is_branching": True,
+            "expected_result": {
+                "query_type": "UPDATE",
+                "target_table": "decision",
+                "target_column": "result",
+            },
+        })
+        mock_sql_executor.simulate_update = AsyncMock(return_value={
+            "columns": ["Статус операции", "Затронуто строк"],
+            "data": [["Симуляция UPDATE успешно выполнена", 1]],
+            "row_count": 1,
+            "affected_rows": 1,
         })
 
         user = SimpleNamespace(user_id=1)
         req = QuestRunRequest(scene_id="chapter_4", sql_query="UPDATE decision SET result = 1;")
 
-        with self.assertRaises(HTTPException) as ctx:
-            await run_quest_sql("hope", req, user, mock_repo)
-        self.assertEqual(ctx.exception.status_code, 400)
-        self.assertIn("Пока низя", ctx.exception.detail)
+        res = await run_quest_sql("hope", req, user, mock_repo)
+        self.assertEqual(res["row_count"], 1)
+        self.assertEqual(res["columns"], ["Статус операции", "Затронуто строк"])
+        self.assertEqual(res["data"], [["Симуляция UPDATE успешно выполнена", 1]])
+        mock_sql_executor.simulate_update.assert_awaited_once_with(
+            "UPDATE decision SET result = 1", allowed_tables=["decision"]
+        )
+
+    @patch("src.api.quests.sql_executor")
+    async def test_run_quest_sql_items_update_simulates_update(self, mock_sql_executor):
+        mock_repo = MagicMock()
+        mock_repo.get_user_current_scene = AsyncMock(return_value={
+            "scene_id": "chapter_5_1_20_1",
+            "is_branching": False,
+            "expected_result": {
+                "query_type": "UPDATE",
+                "target_table": "items",
+                "target_column": "assigned_to",
+            },
+        })
+        mock_sql_executor.simulate_update = AsyncMock(return_value={
+            "columns": ["Статус операции", "Затронуто строк"],
+            "data": [["Симуляция UPDATE успешно выполнена", 2]],
+            "row_count": 1,
+            "affected_rows": 2,
+        })
+
+        user = SimpleNamespace(user_id=1)
+        query = "UPDATE items SET assigned_to = 'Sasha' WHERE weight <= 2; UPDATE items SET assigned_to = 'Grisha' WHERE weight > 2;"
+        req = QuestRunRequest(scene_id="chapter_5_1_20_1", sql_query=query)
+
+        res = await run_quest_sql("hope", req, user, mock_repo)
+        self.assertEqual(res["row_count"], 1)
+        self.assertEqual(res["columns"], ["Статус операции", "Затронуто строк"])
+        mock_sql_executor.simulate_update.assert_awaited_once_with(
+            "UPDATE items SET assigned_to = 'Sasha' WHERE weight <= 2; UPDATE items SET assigned_to = 'Grisha' WHERE weight > 2",
+            allowed_tables=["items"],
+        )
+
+    @patch("src.api.quests.sql_executor")
+    async def test_run_quest_sql_track_segments_update_simulates_update(self, mock_sql_executor):
+        mock_repo = MagicMock()
+        mock_repo.get_user_current_scene = AsyncMock(return_value={
+            "scene_id": "chapter_5_2_2",
+            "is_branching": False,
+            "expected_result": {
+                "query_type": "UPDATE",
+                "target_table": "track_segments",
+                "target_column": "status",
+                "required_where_column_1": "bridge",
+                "required_where_value_1": "NorthBridge",
+                "required_where_column_2": "km_marker",
+                "required_where_condition_2": "BETWEEN 120 AND 122",
+            },
+        })
+        mock_sql_executor.simulate_update = AsyncMock(return_value={
+            "columns": ["Статус операции", "Затронуто строк"],
+            "data": [["Симуляция UPDATE успешно выполнена", 3]],
+            "row_count": 1,
+            "affected_rows": 3,
+        })
+
+        user = SimpleNamespace(user_id=1)
+        query = "UPDATE track_segments SET status = 'damaged' WHERE bridge = 'NorthBridge' AND km_marker BETWEEN 120 AND 122;"
+        req = QuestRunRequest(scene_id="chapter_5_2_2", sql_query=query)
+
+        res = await run_quest_sql("hope", req, user, mock_repo)
+        self.assertEqual(res["row_count"], 1)
+        mock_sql_executor.simulate_update.assert_awaited_once_with(
+            "UPDATE track_segments SET status = 'damaged' WHERE bridge = 'NorthBridge' AND km_marker BETWEEN 120 AND 122",
+            allowed_tables=["track_segments"],
+        )
 
     @patch("src.api.quests.sql_executor")
     @patch("src.api.quests.ScoringService")
@@ -182,7 +262,12 @@ class TestQuestEndpoints(unittest.IsolatedAsyncioTestCase):
         mock_scoring.add_points = AsyncMock()
         mock_scoring_cls.return_value = mock_scoring
 
-        mock_sql_executor.simulate_update = AsyncMock(return_value=1)
+        mock_sql_executor.simulate_update = AsyncMock(return_value={
+            "columns": ["Статус операции", "Затронуто строк"],
+            "data": [["Симуляция UPDATE успешно выполнена", 1]],
+            "row_count": 1,
+            "affected_rows": 1,
+        })
 
         user = SimpleNamespace(user_id=1)
         db_mock = AsyncMock()
@@ -200,6 +285,216 @@ class TestQuestEndpoints(unittest.IsolatedAsyncioTestCase):
             user_answer="1",
             is_correct=True,
         )
+
+    @patch("src.api.quests.sql_executor")
+    @patch("src.api.quests.ScoringService")
+    async def test_submit_quest_solution_items_update_success(self, mock_scoring_cls, mock_sql_executor):
+        mock_repo = MagicMock()
+        mock_repo.is_task_solved = AsyncMock(return_value=False)
+        mock_repo.get_user_current_scene = AsyncMock(return_value={
+            "scene_id": "chapter_5_1_20_1",
+            "is_branching": False,
+            "expected_result": {
+                "query_type": "UPDATE",
+                "target_table": "items",
+                "target_column": "assigned_to",
+            },
+        })
+        mock_repo.submit_answer = AsyncMock(return_value={"status": "success"})
+        mock_repo.mark_task_solved = AsyncMock()
+
+        mock_scoring = MagicMock()
+        mock_scoring.add_points = AsyncMock()
+        mock_scoring_cls.return_value = mock_scoring
+
+        mock_sql_executor.simulate_update = AsyncMock(return_value={
+            "columns": ["Статус операции", "Затронуто строк"],
+            "data": [["Симуляция UPDATE успешно выполнена", 2]],
+            "row_count": 1,
+            "affected_rows": 2,
+        })
+
+        user = SimpleNamespace(user_id=1)
+        db_mock = AsyncMock()
+        db_mock.add = MagicMock()
+        query = "UPDATE items SET assigned_to = 'Sasha' WHERE weight <= 2; UPDATE items SET assigned_to = 'Grisha' WHERE weight > 2;"
+        req = QuestSubmitRequest(scene_id="chapter_5_1_20_1", sql_query=query)
+
+        res = await submit_quest_solution("hope", req, user, mock_repo, db_mock)
+        self.assertTrue(res["is_correct"])
+        self.assertEqual(res["points"]["earned"], 100)
+        mock_sql_executor.simulate_update.assert_awaited_once_with(
+            "UPDATE items SET assigned_to = 'Sasha' WHERE weight <= 2; UPDATE items SET assigned_to = 'Grisha' WHERE weight > 2",
+            allowed_tables=["items"],
+        )
+        mock_repo.submit_answer.assert_awaited_once()
+        mock_repo.mark_task_solved.assert_awaited_once()
+
+    @patch("src.api.quests.sql_executor")
+    @patch("src.api.quests.ScoringService")
+    async def test_submit_quest_solution_items_update_zero_affected(self, mock_scoring_cls, mock_sql_executor):
+        mock_repo = MagicMock()
+        mock_repo.is_task_solved = AsyncMock(return_value=False)
+        mock_repo.get_user_current_scene = AsyncMock(return_value={
+            "scene_id": "chapter_5_1_20_1",
+            "is_branching": False,
+            "expected_result": {
+                "query_type": "UPDATE",
+                "target_table": "items",
+                "target_column": "assigned_to",
+            },
+        })
+
+        mock_scoring = MagicMock()
+        mock_scoring.deduct_points = AsyncMock()
+        mock_scoring_cls.return_value = mock_scoring
+
+        # 0 affected rows
+        mock_sql_executor.simulate_update = AsyncMock(return_value={
+            "columns": ["Статус операции", "Затронуто строк"],
+            "data": [["Симуляция UPDATE успешно выполнена", 0]],
+            "row_count": 1,
+            "affected_rows": 0,
+        })
+
+        user = SimpleNamespace(user_id=1)
+        db_mock = AsyncMock()
+        db_mock.add = MagicMock()
+        query = "UPDATE items SET assigned_to = 'Sasha' WHERE 1 = 0;"
+        req = QuestSubmitRequest(scene_id="chapter_5_1_20_1", sql_query=query)
+
+        res = await submit_quest_solution("hope", req, user, mock_repo, db_mock)
+        self.assertFalse(res["is_correct"])
+        self.assertEqual(res["points"]["penalty"], 10)
+
+    @patch("src.api.quests.sql_executor")
+    @patch("src.api.quests.ScoringService")
+    async def test_submit_quest_solution_track_segments_update_success(self, mock_scoring_cls, mock_sql_executor):
+        mock_repo = MagicMock()
+        mock_repo.is_task_solved = AsyncMock(return_value=False)
+        mock_repo.get_user_current_scene = AsyncMock(return_value={
+            "scene_id": "chapter_5_2_2",
+            "is_branching": False,
+            "expected_result": {
+                "query_type": "UPDATE",
+                "target_table": "track_segments",
+                "target_column": "status",
+                "required_where_column_1": "bridge",
+                "required_where_value_1": "NorthBridge",
+                "required_where_column_2": "km_marker",
+                "required_where_condition_2": "BETWEEN 120 AND 122",
+            },
+        })
+        mock_repo.submit_answer = AsyncMock(return_value={"status": "success"})
+        mock_repo.mark_task_solved = AsyncMock()
+
+        mock_scoring = MagicMock()
+        mock_scoring.add_points = AsyncMock()
+        mock_scoring_cls.return_value = mock_scoring
+
+        mock_sql_executor.simulate_update = AsyncMock(return_value={
+            "columns": ["Статус операции", "Затронуто строк"],
+            "data": [["Симуляция UPDATE успешно выполнена", 3]],
+            "row_count": 1,
+            "affected_rows": 3,
+        })
+
+        user = SimpleNamespace(user_id=1)
+        db_mock = AsyncMock()
+        db_mock.add = MagicMock()
+        query = "UPDATE track_segments SET status = 'damaged' WHERE bridge = 'NorthBridge' AND km_marker BETWEEN 120 AND 122;"
+        req = QuestSubmitRequest(scene_id="chapter_5_2_2", sql_query=query)
+
+        res = await submit_quest_solution("hope", req, user, mock_repo, db_mock)
+        self.assertTrue(res["is_correct"])
+        self.assertEqual(res["points"]["earned"], 100)
+        mock_sql_executor.simulate_update.assert_awaited_once_with(
+            "UPDATE track_segments SET status = 'damaged' WHERE bridge = 'NorthBridge' AND km_marker BETWEEN 120 AND 122",
+            allowed_tables=["track_segments"],
+        )
+        mock_repo.submit_answer.assert_awaited_once()
+        mock_repo.mark_task_solved.assert_awaited_once()
+
+    @patch("src.api.quests.sql_executor")
+    @patch("src.api.quests.ScoringService")
+    async def test_submit_quest_solution_track_segments_update_missing_where(self, mock_scoring_cls, mock_sql_executor):
+        mock_repo = MagicMock()
+        mock_repo.is_task_solved = AsyncMock(return_value=False)
+        mock_repo.get_user_current_scene = AsyncMock(return_value={
+            "scene_id": "chapter_5_2_2",
+            "is_branching": False,
+            "expected_result": {
+                "query_type": "UPDATE",
+                "target_table": "track_segments",
+                "target_column": "status",
+                "required_where_column_1": "bridge",
+                "required_where_value_1": "NorthBridge",
+                "required_where_column_2": "km_marker",
+                "required_where_condition_2": "BETWEEN 120 AND 122",
+            },
+        })
+
+        mock_scoring = MagicMock()
+        mock_scoring.deduct_points = AsyncMock()
+        mock_scoring_cls.return_value = mock_scoring
+
+        mock_sql_executor.simulate_update = AsyncMock(return_value={
+            "columns": ["Статус операции", "Затронуто строк"],
+            "data": [["Симуляция UPDATE успешно выполнена", 3]],
+            "row_count": 1,
+            "affected_rows": 3,
+        })
+
+        user = SimpleNamespace(user_id=1)
+        db_mock = AsyncMock()
+        db_mock.add = MagicMock()
+        query = "UPDATE track_segments SET status = 'damaged' WHERE km_marker BETWEEN 120 AND 122;"
+        req = QuestSubmitRequest(scene_id="chapter_5_2_2", sql_query=query)
+
+        res = await submit_quest_solution("hope", req, user, mock_repo, db_mock)
+        self.assertFalse(res["is_correct"])
+        self.assertEqual(res["points"]["penalty"], 10)
+
+
+class TestSQLExecutorUpdateValidation(unittest.TestCase):
+    def setUp(self):
+        self.executor = SQLExecutor.__new__(SQLExecutor)
+
+    def test_validate_multiple_updates_allowed(self):
+        query = (
+            "UPDATE items SET assigned_to = 'Sasha' WHERE weight <= 2; "
+            "UPDATE items SET assigned_to = 'Grisha' WHERE weight > 2;"
+        )
+        # Should not raise exception
+        self.executor._validate_sql(query, allow_update=True, allowed_tables=["items"])
+
+    def test_validate_update_disallowed_table(self):
+        query = "UPDATE secrets SET password = '123' WHERE id = 1;"
+        with self.assertRaises(HTTPException) as ctx:
+            self.executor._validate_sql(query, allow_update=True, allowed_tables=["items"])
+        self.assertEqual(ctx.exception.status_code, 400)
+        self.assertIn("Обновление таблицы secrets не разрешено", ctx.exception.detail)
+
+    def test_validate_update_forbidden_users_table(self):
+        query = "UPDATE users SET is_admin = true WHERE id = 1;"
+        with self.assertRaises(HTTPException) as ctx:
+            self.executor._validate_sql(query, allow_update=True, allowed_tables=["users"])
+        self.assertEqual(ctx.exception.status_code, 400)
+        self.assertIn("запрещенной таблице", ctx.exception.detail)
+
+    def test_validate_update_mixed_with_drop(self):
+        query = "UPDATE items SET assigned_to = 'Sasha'; DROP TABLE items;"
+        with self.assertRaises(HTTPException) as ctx:
+            self.executor._validate_sql(query, allow_update=True, allowed_tables=["items"])
+        self.assertEqual(ctx.exception.status_code, 400)
+        self.assertIn("Запрещенная операция: DROP", ctx.exception.detail)
+
+    def test_validate_update_disallowed_when_not_allow_update(self):
+        query = "UPDATE items SET assigned_to = 'Sasha';"
+        with self.assertRaises(HTTPException) as ctx:
+            self.executor._validate_sql(query, allow_update=False)
+        self.assertEqual(ctx.exception.status_code, 400)
+        self.assertIn("Запрещенная операция: UPDATE", ctx.exception.detail)
 
 
 if __name__ == "__main__":
