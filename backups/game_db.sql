@@ -211,6 +211,26 @@ CREATE TABLE public.military_service (
 ALTER TABLE public.military_service OWNER TO postgres;
 
 --
+-- Name: military_service_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.military_service_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.military_service_id_seq OWNER TO postgres;
+
+--
+-- Name: military_service_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.military_service_id_seq OWNED BY public.military_service.id;
+
+--
 -- Name: military_unit; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -300,6 +320,13 @@ ALTER TABLE public.soldier_medal OWNER TO postgres;
 --
 
 ALTER TABLE ONLY public.equipment_audit ALTER COLUMN id SET DEFAULT nextval('public.equipment_audit_id_seq'::regclass);
+
+
+--
+-- Name: military_service id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.military_service ALTER COLUMN id SET DEFAULT nextval('public.military_service_id_seq'::regclass);
 
 
 --
@@ -764,6 +791,13 @@ SELECT pg_catalog.setval('public.equipment_audit_id_seq', 1, false);
 
 
 --
+-- Name: military_service_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.military_service_id_seq', 40, true);
+
+
+--
 -- Name: schema_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -1073,6 +1107,13 @@ GRANT ALL ON TABLE public.equipment_audit TO sql_runner;
 --
 
 GRANT ALL ON SEQUENCE public.equipment_audit_id_seq TO sql_runner;
+
+
+--
+-- Name: SEQUENCE military_service_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.military_service_id_seq TO sql_runner;
 
 
 --

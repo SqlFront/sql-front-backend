@@ -1,6 +1,7 @@
 from datetime import date, datetime
 from decimal import Decimal
 
+import asyncpg
 from asyncpg.exceptions import QueryCanceledError
 from fastapi import HTTPException
 from sqlalchemy import text
@@ -88,7 +89,14 @@ class SQLExecutor:
             try:
                 async with self.transaction_engine.begin() as conn:
                     await conn.execute(text("SET statement_timeout TO 5000"))
-                    result = await conn.execute(text(sql_query))
+                    raw_conn = await conn.get_raw_connection()
+                    if hasattr(raw_conn, "driver_connection") and hasattr(raw_conn.driver_connection, "execute"):
+                        await raw_conn.driver_connection.execute(sql_query)
+                    else:
+                        from src.utils.catalog_model import split_statements
+                        for stmt in split_statements(sql_query):
+                            if stmt.strip():
+                                await conn.execute(text(stmt))
                     op_type = self._extract_operation_type(sql_query)
                     await conn.rollback()
                     return {
@@ -147,17 +155,35 @@ class SQLExecutor:
                 status_code=400, detail=f"Непредвиденная ошибка базы данных: {str(e)}"
             )
 
-    async def simulate_update(self, sql_query: str, allowed_tables: list[str] = None) -> int:
-        """Безопасное выполнение UPDATE с помощью транзакции и отката"""
+    async def simulate_update(
+        self, sql_query: str, allowed_tables: list[str] = None
+    ) -> dict:
+        """Безопасное выполнение UPDATE в изолированной транзакции с ROLLBACK и возвратом количества измененных строк."""
         sql_query = self._clean_query(sql_query)
         self._validate_sql(sql_query, allow_update=True, allowed_tables=allowed_tables)
         try:
+            from src.utils.catalog_model import split_statements
+
+            statements = split_statements(sql_query)
+            if not statements:
+                statements = [sql_query]
+
             async with self.transaction_engine.begin() as conn:
                 await conn.execute(text("SET statement_timeout TO 5000"))
-                result = await conn.execute(text(sql_query))
-                rowcount = result.rowcount
+                total_rowcount = 0
+                for stmt in statements:
+                    stmt_clean = self._clean_query(stmt)
+                    if stmt_clean:
+                        result = await conn.execute(text(stmt_clean))
+                        if result.rowcount is not None and result.rowcount > 0:
+                            total_rowcount += result.rowcount
                 await conn.rollback()
-                return rowcount
+                return {
+                    "columns": ["Статус операции", "Затронуто строк"],
+                    "data": [["Симуляция UPDATE успешно выполнена", total_rowcount]],
+                    "row_count": 1,
+                    "affected_rows": total_rowcount,
+                }
         except QueryCanceledError:
             raise HTTPException(
                 status_code=400, detail="Время выполнения запроса превышено"
@@ -166,6 +192,8 @@ class SQLExecutor:
             raise HTTPException(
                 status_code=400, detail=f"Ошибка выполнения: {str(e.orig)}"
             )
+        except HTTPException:
+            raise
         except Exception as e:
             raise HTTPException(
                 status_code=400, detail=f"Непредвиденная ошибка базы данных: {str(e)}"
@@ -182,15 +210,34 @@ class SQLExecutor:
         self._validate_sql(ddl_query, allow_ddl=True)
 
         if isinstance(test_query, str):
-            test_statements = [s.strip() for s in test_query.split(";") if s.strip()]
+            from src.utils.catalog_model import split_statements
+            test_statements = split_statements(test_query)
         else:
             test_statements = [s.strip() for s in test_query if s.strip()]
 
-        try:
-            async with self.transaction_engine.begin() as conn:
-                await conn.execute(text("SET statement_timeout TO 5000"))
-                await conn.execute(text(ddl_query))
+        async with self.transaction_engine.begin() as conn:
+            await conn.execute(text("SET statement_timeout TO 5000"))
 
+            # Фаза 1: Компиляция DDL пользователя
+            try:
+                raw_conn = await conn.get_raw_connection()
+                if hasattr(raw_conn, "driver_connection") and hasattr(raw_conn.driver_connection, "execute"):
+                    await raw_conn.driver_connection.execute(ddl_query)
+                else:
+                    from src.utils.catalog_model import split_statements
+                    for stmt in split_statements(ddl_query):
+                        if stmt.strip():
+                            await conn.execute(text(stmt))
+            except Exception as e:
+                await conn.rollback()
+                orig = getattr(e, "orig", e)
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Ошибка выполнения DDL: {orig}",
+                )
+
+            # Фаза 2: Выполнение проверочного скрипта (test_query)
+            try:
                 last_result = None
                 for stmt in test_statements:
                     last_result = await conn.execute(text(stmt))
@@ -233,34 +280,62 @@ class SQLExecutor:
                 await conn.rollback()
                 return res
 
-        except QueryCanceledError:
-            raise HTTPException(
-                status_code=400, detail="Время выполнения запроса превышено"
-            )
-        except StatementError as e:
-            if expect_error:
-                return {
-                    "columns": ["Результат"],
-                    "data": [["Исключение успешно перехвачено: " + str(e.orig)]],
-                    "row_count": 1,
-                    "error_caught": True,
-                }
-            raise HTTPException(
-                status_code=400, detail=f"Ошибка выполнения: {str(e.orig)}"
-            )
-        except HTTPException:
-            raise
-        except Exception as e:
-            if expect_error:
-                return {
-                    "columns": ["Результат"],
-                    "data": [["Исключение успешно перехвачено: " + str(e)]],
-                    "row_count": 1,
-                    "error_caught": True,
-                }
-            raise HTTPException(
-                status_code=400, detail=f"Непредвиденная ошибка базы данных: {str(e)}"
-            )
+            except QueryCanceledError:
+                raise HTTPException(
+                    status_code=400, detail="Время выполнения запроса превышено"
+                )
+            except StatementError as e:
+                orig = e.orig
+                if expect_error:
+                    is_raise_exception = (
+                        isinstance(orig, asyncpg.exceptions.RaiseError)
+                        or getattr(orig, "sqlstate", None) == "P0001"
+                        or getattr(orig, "pgcode", None) == "P0001"
+                        or isinstance(getattr(orig, "__cause__", None), asyncpg.exceptions.RaiseError)
+                    )
+                    if is_raise_exception:
+                        await conn.rollback()
+                        return {
+                            "columns": ["Результат"],
+                            "data": [["Исключение успешно перехвачено: " + str(orig)]],
+                            "row_count": 1,
+                            "error_caught": True,
+                        }
+                    await conn.rollback()
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Ожидалась ошибка валидации триггера (RAISE EXCEPTION), но возникла другая ошибка: {orig}",
+                    )
+                raise HTTPException(
+                    status_code=400, detail=f"Ошибка выполнения: {str(orig)}"
+                )
+            except HTTPException:
+                raise
+            except Exception as e:
+                orig = getattr(e, "orig", e)
+                if expect_error:
+                    is_raise_exception = (
+                        isinstance(orig, asyncpg.exceptions.RaiseError)
+                        or getattr(orig, "sqlstate", None) == "P0001"
+                        or getattr(orig, "pgcode", None) == "P0001"
+                        or isinstance(getattr(orig, "__cause__", None), asyncpg.exceptions.RaiseError)
+                    )
+                    if is_raise_exception:
+                        await conn.rollback()
+                        return {
+                            "columns": ["Результат"],
+                            "data": [["Исключение успешно перехвачено: " + str(orig)]],
+                            "row_count": 1,
+                            "error_caught": True,
+                        }
+                    await conn.rollback()
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Ожидалась ошибка валидации триггера (RAISE EXCEPTION), но возникла другая ошибка: {orig}",
+                    )
+                raise HTTPException(
+                    status_code=400, detail=f"Непредвиденная ошибка базы данных: {str(orig)}"
+                )
 
     def _validate_sql(
         self,
@@ -314,30 +389,48 @@ class SQLExecutor:
                 return
 
         try:
-            parsed = sqlglot.parse_one(clean_query, read="postgres")
+            statements = [
+                s for s in sqlglot.parse(clean_query, read="postgres") if s is not None
+            ]
         except sqlglot.errors.ParseError as e:
             raise HTTPException(status_code=400, detail=f"Ошибка синтаксиса: {str(e)}")
 
-        if not parsed:
+        if not statements:
             raise HTTPException(status_code=400, detail="Пустой запрос")
 
         allowed_keys = ["select", "with", "except", "union", "intersect"]
         if allow_update:
             allowed_keys.append("update")
 
-        if parsed.key not in allowed_keys:
-            raise HTTPException(status_code=400, detail=f"Запрещенная операция: {parsed.key.upper()}")
+        for parsed in statements:
+            if parsed.key not in allowed_keys:
+                raise HTTPException(
+                    status_code=400, detail=f"Запрещенная операция: {parsed.key.upper()}"
+                )
 
-        if not allow_star:
-            for node in parsed.find_all(exp.Star):
-                if not isinstance(node.parent, exp.Count):
-                    raise HTTPException(status_code=400, detail="Использование SELECT * запрещено при финальной отправке, перечислите столбцы явно")
+            if not allow_star:
+                for node in parsed.find_all(exp.Star):
+                    if not isinstance(node.parent, exp.Count):
+                        raise HTTPException(
+                            status_code=400,
+                            detail="Использование SELECT * запрещено при финальной отправке, перечислите столбцы явно",
+                        )
 
-        for table in parsed.find_all(exp.Table):
-            table_name = table.name.lower()
-            if table_name.startswith("pg_") or table_name in ("user", "users") or table_name.startswith("information_schema"):
-                raise HTTPException(status_code=400, detail=f"Доступ к системной или запрещенной таблице ({table.name}) запрещен")
+            for table in parsed.find_all(exp.Table):
+                table_name = table.name.lower()
+                if (
+                    table_name.startswith("pg_")
+                    or table_name in ("user", "users")
+                    or table_name.startswith("information_schema")
+                ):
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Доступ к системной или запрещенной таблице ({table.name}) запрещен",
+                    )
 
-            if allow_update and allowed_tables and parsed.key == "update":
-                if table_name not in [t.lower() for t in allowed_tables]:
-                    raise HTTPException(status_code=400, detail=f"Обновление таблицы {table.name} не разрешено в этой задаче")
+                if allow_update and allowed_tables and parsed.key == "update":
+                    if table_name not in [t.lower() for t in allowed_tables]:
+                        raise HTTPException(
+                            status_code=400,
+                            detail=f"Обновление таблицы {table.name} не разрешено в этой задаче",
+                        )

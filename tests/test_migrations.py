@@ -122,5 +122,24 @@ class TestMigrations(unittest.TestCase):
         self.assertIn("FMMonth", users12_content)
         self.assertIn("battle_units", users12_content)
 
+        users_mig13 = MIGRATIONS_DIR / "users_db" / "013_feedback_nov_2026.sql"
+        self.assertTrue(users_mig13.exists(), "users_db migration 013 must exist")
+        users13_content = users_mig13.read_text(encoding="utf-8")
+        self.assertIn("013_feedback_nov_2026.sql", users13_content)
+        self.assertIn("task_global_id = 25", users13_content)
+        self.assertIn("task_global_id = 38", users13_content)
+        self.assertIn("task_global_id = 78", users13_content)
+        self.assertIn("task_global_id = 44", users13_content)
+        self.assertIn("ms.start_date", users13_content)
+        self.assertIn("DENSE_RANK()", users13_content)
+        self.assertIn("Стратегические битвы", users13_content)
+        self.assertIn("Сталинград", users13_content)
+
+        game_mig3 = MIGRATIONS_DIR / "game_db" / "003_military_service_id_seq.sql"
+        self.assertTrue(game_mig3.exists(), "game_db migration 003 must exist")
+        game3_content = game_mig3.read_text(encoding="utf-8")
+        self.assertIn("military_service_id_seq", game3_content)
+        self.assertIn("ALTER TABLE public.military_service ALTER COLUMN id SET DEFAULT nextval", game3_content)
+
 if __name__ == "__main__":
     unittest.main()
