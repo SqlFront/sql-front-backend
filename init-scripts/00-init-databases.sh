@@ -44,7 +44,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" -d "$db" <<-EOSQL
         IF NOT EXISTS (
             SELECT 1 FROM pg_constraint WHERE conname = 'user_events_pkey'
         ) THEN
-            ALTER TABLE user_events ADD PRIMARY KEY (user_id, task_id, timestamp);
+            ALTER TABLE user_events ADD PRIMARY KEY (id, timestamp);
         END IF;
     END \$\$;
     

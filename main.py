@@ -31,6 +31,7 @@ async def lifespan(app: FastAPI):
         await run_all_migrations()
     except Exception as e:
         logging.getLogger("uvicorn.error").error(f"Migration error during startup: {e}")
+        raise
     yield
 
 
