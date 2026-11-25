@@ -39,6 +39,7 @@ from src.sql_analysis import (
     PostgresDDLAnalyzer,
     SQLAnalyzer,
 )
+from src.sql_analysis.model_quality import analyze_model_quality
 from src.sql_validation import (
     ComparisonPolicy,
     QueryResult,
@@ -354,7 +355,7 @@ async def run_sql_query(
                 "data": [[f"Команда успешно выполнена: {operation} (симуляция завершена успешно)"]],
                 "row_count": 1,
                 "analysis": build_findings_payload(
-                    (),
+                    analyze_model_quality(sql_query),
                     preview_policy.task_context,
                     penalty_policy=quality_policy,
                 ),
@@ -445,15 +446,19 @@ async def submit_sql_query(
     try:
         if expected_result.get("mode") == "model":
             is_correct, hint = catalog_model.verify(request.sql_query, expected_result)
+            findings = analyze_model_quality(request.sql_query)
+            quality_issues = [finding.message for finding in findings]
 
             quality_assessment = (
                 assess_query_quality(
-                    (), settings.TASK_POINTS[mission_id], policy=quality_policy
+                    findings, settings.TASK_POINTS[mission_id], policy=quality_policy
                 )
                 if is_correct else None
             )
+            if quality_assessment is not None:
+                quality_penalty = quality_assessment.penalty_points
             analysis_payload = build_findings_payload(
-                (),
+                findings,
                 submit_policy.task_context,
                 penalty_policy=quality_policy,
                 quality=quality_assessment,

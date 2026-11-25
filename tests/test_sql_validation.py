@@ -1,8 +1,11 @@
 """Проверки сравнения результатов и полного сервиса валидации."""
 
 from collections.abc import Coroutine
+from contextlib import closing
+import sqlite3
 from types import SimpleNamespace
 from typing import Any
+from unittest.mock import AsyncMock
 
 import pytest
 
@@ -26,6 +29,92 @@ def make_result(columns: tuple[str, ...], rows: tuple[tuple, ...]) -> QueryResul
     return QueryResult(columns=columns, rows=rows, row_count=len(rows))
 
 
+@pytest.mark.parametrize("sql", [
+    """
+    WITH counted AS (
+        SELECT m.soldier_id, COUNT(*) AS total_awards
+        FROM soldier_medal m GROUP BY m.soldier_id
+    ), eligible AS (
+        SELECT counted.soldier_id, counted.total_awards
+        FROM counted WHERE counted.total_awards > 1
+    )
+    SELECT s.full_name, e.total_awards
+    FROM soldier s JOIN eligible e ON e.soldier_id = s.id
+    """,
+    """
+    SELECT s.full_name, awards.total_awards
+    FROM soldier s
+    JOIN (
+        SELECT m.soldier_id, COUNT(*) AS total_awards
+        FROM soldier_medal m GROUP BY m.soldier_id
+    ) awards ON awards.soldier_id = s.id
+    WHERE awards.total_awards > 1
+    """,
+    """
+    SELECT s.full_name, (
+        SELECT COUNT(*) FROM soldier_medal m WHERE m.soldier_id = s.id
+    ) AS total_awards
+    FROM soldier s
+    WHERE (
+        SELECT COUNT(*) FROM soldier_medal m WHERE m.soldier_id = s.id
+    ) > 1
+    """,
+    """
+    SELECT s.full_name, (
+        SELECT COUNT(*) FROM soldier_medal m WHERE m.soldier_id = s.id
+    ) AS total_awards
+    FROM soldier s
+    WHERE s.id IN (
+        SELECT s.soldier_id
+        FROM (
+            SELECT m.soldier_id, COUNT(*) AS total_awards
+            FROM soldier_medal m GROUP BY m.soldier_id
+        ) s
+        WHERE s.total_awards > 1
+    )
+    """,
+], ids=["chained-ctes", "derived-table", "correlated-subqueries", "shadowed-alias"])
+def test_equivalent_sql_passes_analysis_and_result_comparison(sql):
+    policy, _ = configure_analysis(
+        SUBMIT_SELECT_POLICY,
+        question="Выведите имена и количество наград для получивших больше одной.",
+        expected_result={
+            "analysis_tables": ["soldier", "soldier_medal"],
+            "analysis_requirements": {
+                "required_tables": ["soldier", "soldier_medal"],
+                "required_output_aliases": ["total_awards"],
+            },
+        },
+        tags=None,
+    )
+
+    with closing(sqlite3.connect(":memory:")) as db:
+        db.executescript("""
+            CREATE TABLE soldier (id integer, full_name text);
+            CREATE TABLE soldier_medal (soldier_id integer, medal_id integer);
+            INSERT INTO soldier VALUES (1, 'Анна'), (2, 'Иван'), (3, 'Мария');
+            INSERT INTO soldier_medal VALUES (1, 1), (1, 2), (2, 1);
+        """)
+
+        class LocalExecutor:
+            async def execute_analyzed_sql(self, sql_query):
+                result = db.execute(sql_query)
+                return make_result(
+                    tuple(column[0] for column in result.description),
+                    tuple(result.fetchall()),
+                )
+
+        validation = resolve_immediate(SQLValidationService(
+            SQLAnalyzer(), LocalExecutor()
+        ).validate(ValidationRequest(
+            sql=sql,
+            analysis_policy=policy,
+            expected_result=make_result(("full_name", "total_awards"), (("Анна", 2),)),
+        )))
+
+    assert validation.status == VerdictStatus.CORRECT, validation.feedback
+
+
 def resolve_immediate(coroutine: Coroutine[Any, Any, Any]) -> Any:
     """Завершает корутину, которая не выполняет реального ввода-вывода."""
     try:
@@ -47,6 +136,48 @@ def test_comparator_ignores_row_order_and_preserves_duplicates() -> None:
 
     assert result.is_equal is True
     assert result.differences == ()
+
+
+@pytest.mark.parametrize(("rate", "expected_penalty"), [(0, 0), (0.1, 30)])
+def test_model_preview_and_submit_expose_advice(monkeypatch, rate, expected_penalty):
+    from src.api import task as task_api
+    from src.schemas.task import SQLRequest
+
+    code = "style.model_implicit_insert_columns"
+    spec = {
+        "mode": "model",
+        "setup": ["CREATE TABLE depots (id integer, name text)"],
+        "expect": [{
+            "probe": "rows",
+            "args": {"table": "depots", "columns": ["id", "name"], "order_by": "id"},
+            "value": [[1, "Склад"]],
+        }],
+    }
+    if rate:
+        spec["quality_policy"] = {"penalty_rates": {code: rate}}
+    repo = AsyncMock()
+    repo.get_task_info.return_value = SimpleNamespace(task_global_id=84, expected_result=spec)
+    repo.check_and_reward_task.return_value = {}
+    monkeypatch.setattr(task_api, "TaskRepository", lambda db: repo)
+    monkeypatch.setattr(task_api, "log_user_event", AsyncMock())
+    kwargs = {
+        "mission_id": 3,
+        "task_id": 1,
+        "request": SQLRequest(sql_query="INSERT INTO depots VALUES (1, 'Склад')"),
+        "current_user": SimpleNamespace(user_id=1),
+        "db": AsyncMock(),
+    }
+
+    preview = resolve_immediate(task_api.run_sql_query(**kwargs))
+    submission = resolve_immediate(task_api.submit_sql_query(**kwargs))
+
+    assert submission["is_correct"] is True, submission["hint"]
+    assert repo.check_and_reward_task.call_args.kwargs["quality_penalty"] == expected_penalty
+    assert submission["quality_issues"]
+    for response in (preview, submission):
+        finding, = response["analysis"]["findings"]
+        assert finding["code"] == code
+        assert "Укажите список столбцов" in finding["message"]
 
 
 def test_comparator_can_require_row_order() -> None:

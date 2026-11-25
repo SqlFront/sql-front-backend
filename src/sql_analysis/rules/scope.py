@@ -131,12 +131,14 @@ def _schema_columns(schema, table: str) -> frozenset[str] | None:
     return frozenset(raw_columns) if raw_columns is not None else None
 
 
-def _visible_table_sources(scope_id, scopes) -> dict[str, str]:
-    sources: dict[str, str] = {}
+def _visible_table_sources(scope_id, scopes) -> dict[str, str | None]:
+    sources: dict[str, str | None] = {}
     current = scopes.get(scope_id)
     while current is not None:
         for source in current.sources:
-            if source.kind == "table":
-                sources.setdefault(source.alias, source.name)
+            # CTE и производная таблица также скрывают одноимённый внешний источник.
+            sources.setdefault(
+                source.alias, source.name if source.kind == "table" else None
+            )
         current = scopes.get(current.parent_scope_id)
     return sources

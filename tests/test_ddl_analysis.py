@@ -137,3 +137,71 @@ def test_analyzer_recommends_explicit_function_properties() -> None:
     explicit_codes = {finding.code for finding in explicit.findings}
     assert "style.ddl_implicit_volatility" not in explicit_codes
     assert "style.ddl_implicit_null_behavior" not in explicit_codes
+
+
+def test_plpgsql_reports_empty_blocks_and_ignores_mentions_in_comments_and_strings() -> None:
+    sql = """CREATE FUNCTION sample(p_input integer) RETURNS integer
+LANGUAGE plpgsql AS $body$
+DECLARE
+    unused_value integer;
+    result_value integer := 7;
+BEGIN
+    -- The p_input parameter and unused_value are only mentioned here.
+    RAISE NOTICE 'p_input unused_value';
+    IF result_value > 0 THEN
+        -- nothing
+    ELSE
+        result_value := result_value + 1;
+    END IF;
+    WHILE FALSE LOOP
+        -- nothing
+    END LOOP;
+    RETURN result_value;
+END;
+$body$;"""
+    result = PostgresDDLAnalyzer().analyze(sql)
+    assert result.can_execute
+    findings = {finding.code: finding for finding in result.findings}
+    assert findings["style.ddl_unused_parameter"].details["parameter"] == "p_input"
+    assert findings["style.plpgsql_unused_variable"].details["variable"] == "unused_value"
+    assert findings["style.plpgsql_empty_branch"].location.line == 9
+    assert findings["style.plpgsql_empty_loop"].location.line == 14
+
+
+def test_plpgsql_keeps_positional_parameters_and_guard_clause_without_false_warnings():
+    result = PostgresDDLAnalyzer().analyze("""
+        CREATE FUNCTION sample(p_input integer) RETURNS integer AS $$
+        BEGIN
+            IF $1 IS NULL THEN
+                RETURN 0;
+            ELSE
+                NULL;
+            END IF;
+            RAISE NOTICE $message$LOOP END LOOP$ message$message$;
+            RETURN $1;
+        END;
+        $$ LANGUAGE plpgsql;
+    """)
+    assert result.can_execute
+    assert {
+        "style.ddl_unused_parameter",
+        "efficiency.ddl_constant_return",
+        "style.plpgsql_empty_branch",
+        "style.plpgsql_empty_loop",
+    }.isdisjoint(finding.code for finding in result.findings)
+
+
+def test_plpgsql_procedure_uses_same_body_advice():
+    result = PostgresDDLAnalyzer().analyze("""
+        CREATE PROCEDURE sample() LANGUAGE plpgsql AS $$
+        BEGIN
+            IF FALSE THEN
+            END IF;
+        END;
+        $$;
+    """)
+    assert result.can_execute
+    assert result.object_types == ("procedure",)
+    assert [finding.code for finding in result.findings] == [
+        "style.plpgsql_empty_branch",
+    ]

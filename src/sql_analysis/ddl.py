@@ -3,11 +3,21 @@
 from dataclasses import dataclass
 import re
 
+from sqlglot.errors import TokenError
+from sqlglot.tokens import TokenType
+
 from src.sql_analysis.findings import (
     AnalysisFinding,
     FindingCategory,
     Severity,
     SourceLocation,
+)
+from src.sql_analysis.plpgsql import (
+    body_tokens,
+    empty_control_blocks,
+    referenced_names,
+    token_spelling,
+    unused_declarations,
 )
 
 
@@ -213,9 +223,28 @@ def _analyze_routine_quality(sql: str, statement: str) -> list[AnalysisFinding]:
     parameters = _input_parameter_names(match.group("parameters"))
     statement_offset = sql.find(statement)
     body_offset = statement_offset + match.start("body") if statement_offset >= 0 else 0
+    options = f"{match.group('header')} {match.group('options')}"
+    is_plpgsql = bool(re.search(
+        r"\bLANGUAGE\s+(?:'plpgsql'|plpgsql)\b", options, re.IGNORECASE
+    ))
 
+    tokens = None
+    if is_plpgsql:
+        try:
+            tokens = body_tokens(body)
+        except TokenError:
+            # Не делаем выводов о качестве по частично разобранному телу.
+            pass
+
+    names = referenced_names(tokens) if tokens is not None else set()
+    positional_parameter = tokens is not None and any(
+        token.token_type == TokenType.PARAMETER for token in tokens
+    )
     for parameter in parameters:
-        if re.search(rf"\b{re.escape(parameter)}\b", body, re.IGNORECASE):
+        if is_plpgsql:
+            if tokens is None or positional_parameter or parameter.casefold() in names:
+                continue
+        elif re.search(rf"\b{re.escape(parameter)}\b", body, re.IGNORECASE):
             continue
         parameter_match = re.search(
             rf"\b{re.escape(parameter)}\b",
@@ -239,13 +268,25 @@ def _analyze_routine_quality(sql: str, statement: str) -> list[AnalysisFinding]:
             details={"parameter": parameter},
         ))
 
-    constant_return = re.search(
-        r"\bRETURN\s+(?P<value>[-+]?\d+(?:\.\d+)?|TRUE|FALSE|NULL|'(?:''|[^'])*')\s*;",
-        body,
-        re.IGNORECASE,
+    words = [
+        token_spelling(body, token).upper() for token in (tokens or ())
+    ]
+    return_end = words.index(";") if ";" in words else 0
+    simple_return = (
+        words[:2] == ["BEGIN", "RETURN"]
+        and return_end > 2
+        and words[return_end + 1:] in (["END"], ["END", ";"])
     )
-    if constant_return is not None:
-        start = body_offset + constant_return.start("value")
+    if simple_return:
+        value_start = tokens[2].start
+        value_end = tokens[return_end - 1].end + 1
+        value = body[value_start:value_end]
+    else:
+        value = ""
+    if re.fullmatch(
+        r"[-+]?\d+(?:\.\d+)?|TRUE|FALSE|NULL|'(?:''|[^'])*'",
+        value, re.IGNORECASE,
+    ):
         findings.append(_quality_finding(
             code="efficiency.ddl_constant_return",
             message=(
@@ -254,22 +295,12 @@ def _analyze_routine_quality(sql: str, statement: str) -> list[AnalysisFinding]:
             ),
             category=FindingCategory.EFFICIENCY,
             sql=sql,
-            start=start,
-            end=body_offset + constant_return.end("value"),
-            details={"value": constant_return.group("value")},
+            start=body_offset + value_start,
+            end=body_offset + value_end,
+            details={"value": value},
         ))
 
-    simple_body = re.fullmatch(
-        r"\s*BEGIN\s+RETURN(?:\s+QUERY)?\s+.+?;\s*END\s*;?\s*",
-        body,
-        re.IGNORECASE | re.DOTALL,
-    )
-    options = match.group("options")
-    if simple_body is not None and re.search(
-            r"\bLANGUAGE\s+(?:'plpgsql'|plpgsql)\b",
-            options,
-            re.IGNORECASE,
-    ):
+    if simple_return and value and words[2] != "NEXT":
         findings.append(_quality_finding(
             code="efficiency.ddl_redundant_plpgsql",
             message=(
@@ -282,8 +313,35 @@ def _analyze_routine_quality(sql: str, statement: str) -> list[AnalysisFinding]:
             end=body_offset + len(body),
         ))
 
+    if tokens is not None:
+        for token in unused_declarations(body, tokens):
+            findings.append(_quality_finding(
+                code="style.plpgsql_unused_variable",
+                message=f"Переменная {token.text} объявлена, но не используется. "
+                        "Уберите объявление, если оно не нужно для решения.",
+                category=FindingCategory.STYLE,
+                sql=sql,
+                start=body_offset + token.start,
+                end=body_offset + token.end + 1,
+                details={"variable": token.text},
+            ))
+        for kind, token in empty_control_blocks(body, tokens):
+            message = (
+                "Тело цикла пустое. Проверьте, какое действие должно повторяться."
+                if kind == "loop" else
+                "Ветка IF пустая. Проверьте, какое действие должно выполняться в ней."
+            )
+            findings.append(_quality_finding(
+                code=f"style.plpgsql_empty_{kind}",
+                message=message,
+                category=FindingCategory.STYLE,
+                sql=sql,
+                start=body_offset + token.start,
+                end=body_offset + token.end + 1,
+            ))
+
     if match.group("object_type").casefold() == "function":
-        routine_properties = f"{match.group('header')} {options}"
+        routine_properties = options
         if not re.search(r"\b(?:IMMUTABLE|STABLE|VOLATILE)\b", routine_properties, re.IGNORECASE):
             findings.append(_quality_finding(
                 code="style.ddl_implicit_volatility",
