@@ -408,6 +408,31 @@ class SQLExecutor:
                     status_code=400, detail=f"Запрещенная операция: {parsed.key.upper()}"
                 )
 
+            forbidden_ast_nodes = [exp.Delete, exp.Insert, exp.Drop]
+            if not allow_update:
+                forbidden_ast_nodes.append(exp.Update)
+
+            for forbidden_node in forbidden_ast_nodes:
+                if list(parsed.find_all(forbidden_node)):
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Запрещенная модифицирующая операция ({forbidden_node.__name__.upper()}) в запросе",
+                    )
+
+            for func in parsed.find_all(exp.Anonymous, exp.Func):
+                func_name = (
+                    func.name
+                    if isinstance(func, exp.Anonymous)
+                    else (func.sql_name() if hasattr(func, "sql_name") else func.key)
+                )
+                func_name = (func_name or "").lower()
+                if func_name.startswith("pg_") or func_name in ("current_setting", "query_to_xml", "dblink"):
+                    if func_name not in ("pg_sleep",):
+                        raise HTTPException(
+                            status_code=400,
+                            detail=f"Вызов системной функции ({func_name}) запрещен",
+                        )
+
             if not allow_star:
                 for node in parsed.find_all(exp.Star):
                     if not isinstance(node.parent, exp.Count):
