@@ -406,11 +406,6 @@ async def submit_sql_query(
                 is_correct=is_correct,
                 user_query=request.sql_query,
             )
-            await repo.add_solved_task(
-                user_id=current_user.user_id,
-                task_id=task.task_global_id,
-                user_query=request.sql_query,
-            )
         else:
             result = await repo.check_and_reward_task(
                 user_id=current_user.user_id,

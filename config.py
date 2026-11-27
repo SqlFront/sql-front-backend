@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ENV_PATH = Path(__file__).resolve().parent / ".env"
 load_dotenv(ENV_PATH)
@@ -31,9 +31,7 @@ class Settings(BaseSettings):
     BACKEND_URL: str = get_env("BACKEND_URL")
     CORS_ORIGINS: str = get_env("CORS_ORIGINS") or ""
 
-    class Config:
-        env_file = str(ENV_PATH)
-        extra = "ignore"
+    model_config = SettingsConfigDict(env_file=str(ENV_PATH), extra="ignore")
 
 
 settings = Settings()

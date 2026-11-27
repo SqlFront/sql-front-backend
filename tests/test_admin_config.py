@@ -1,12 +1,13 @@
 import pytest
 
 def test_admin_dependencies_importable():
+    import importlib.metadata
     import sqladmin
     import itsdangerous
     import jinja2
     import plotly
     assert hasattr(sqladmin, "Admin")
-    assert itsdangerous.__version__
+    assert importlib.metadata.version("itsdangerous")
     assert jinja2.__version__
     assert plotly.__version__
 

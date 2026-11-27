@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class TaskBase(BaseModel):
@@ -23,8 +23,7 @@ class TaskInfo(TaskBase):
     is_solved: bool
     user_solution: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class MissionTasks(BaseModel):

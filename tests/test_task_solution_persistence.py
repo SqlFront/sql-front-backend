@@ -347,9 +347,11 @@ class TestTaskApiSolutionPersistence(unittest.IsolatedAsyncioTestCase):
         )
 
         self.assertTrue(result["is_correct"])
-        mock_repo.add_solved_task.assert_awaited_once_with(
+        mock_repo.check_and_reward_task.assert_awaited_once_with(
             user_id=7,
-            task_id=15,
+            mission_id=0,
+            task_id=5,
+            is_correct=True,
             user_query=submitted_query,
         )
 
